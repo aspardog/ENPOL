@@ -28,7 +28,7 @@
 
 # Required Packages, Fonts, ggplot theme, color palettes, comparison countries and other general routines are
 # loaded from the following script:
-source("Data_cleaning/Code/Settings.R")
+source("National/Data_cleaning/Code/Settings.R")
 
 
 
@@ -40,7 +40,7 @@ source("Data_cleaning/Code/Settings.R")
 
 
 # Loading data
-load(paste0(path2DB,"/Data_cleaning/Input/BD_ENPOL_2021.RData")) 
+load(paste0(path2DB,"/National/Data_cleaning/Input/BD_ENPOL_2021.RData")) 
 
 
 # Subsetting relevant data
@@ -4323,4 +4323,4 @@ Main_database %<>%
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
-save(Main_database, file = "Data_cleaning/Output/Main_database.RData")
+save(Main_database, file = "National/Data_cleaning/Output/Main_database.RData")
