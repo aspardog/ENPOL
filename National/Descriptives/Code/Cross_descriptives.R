@@ -4,13 +4,13 @@
 ##
 ## Author(s):         F. Marcelo Torres González  (marcelo.torresgo@gmail.com)
 ##                    A. Santiago Pardo G.        (spardo@worldjusticeproject.org)
-##                    Cristina Álvarez Venzor     (calvarez@worldjusticeproject.org)
+##                    D. Cristina Álvarez Venzor     (calvarez@worldjusticeproject.org)
 ##
 ## Dependencies:      World Justice Project
 ##
 ## Creation date:     June 22th, 2023
 ##
-## This version:      September 18th, 2023
+## This version:      Octubre 30th, 2023
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -38,10 +38,10 @@ source("National/Data_cleaning/Code/settings.R")
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
-Detenciones <- paste0(path2DB,"National//Descriptives/Output/Detenciones/Detenciones")
-LGBTQ <- paste0(path2DB,"National//Descriptives/Output/Detenciones/LGBTQ")
-Policia <- paste0(path2DB,"National//Descriptives/Output/Detenciones/Policia")
-Tortura <- paste0(path2DB,"National//Descriptives/Output/Detenciones/Tortura")
+Detenciones <- paste0(path2DB,"National/Descriptives/Output/Detenciones/Detenciones")
+LGBTQ <- paste0(path2DB,"National/Descriptives/Output/Detenciones/LGBTQ")
+Policia <- paste0(path2DB,"National/Descriptives/Output/Detenciones/Policia")
+Tortura <- paste0(path2DB,"National/Descriptives/Output/Detenciones/Tortura")
 
 carpetas <- c(Detenciones, LGBTQ, Policia, Tortura)
 
