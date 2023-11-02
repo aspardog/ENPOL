@@ -61,7 +61,7 @@ if (Sys.info()["user"] == "marcelo") {
   path2DB <- paste0("/Users/marcelo/Dropbox/ENPOL/")
   
 } else if (Sys.info()["user"] == "santiagopardo") {
-  path2DB <- paste0("PATH SANTIAGO")
+  path2DB <- paste0("/Users/santiagopardo/OneDrive - World Justice Project/ENPOL/Data")
   
 } else if (Sys.info()["user"] == "USER VERO"){
   path2DB <- paste0("PATH VERO")
@@ -70,7 +70,7 @@ if (Sys.info()["user"] == "marcelo") {
   path2DB <- paste0("/Users/arturoluna/Dropbox/ENPOL/")
   
 } else if (Sys.info()["user"] == "cristinaalvarez"){
-  path2DB <- paste0("/Users/cristinaalvarez/Library/CloudStorage/OneDrive-WorldJusticeProject/LOCAL/ENPOL/National")
+  path2DB <- paste0("/Users/cristinaalvarez/OneDrive-WorldJusticeProject/LOCAL/ENPOL/National")
   
 } else{
   path2DB <- "PLEASE INSERT YOUR PERSONAL PATH TO THE  WJP - DATA ANALYTICS DIRECTORY"
