@@ -3083,7 +3083,7 @@ tabla_excel_fn(dataset = subset, var_prop = P3_15_9, var1 = "P3_2", var2 = NA, v
 
 tabla_excel_fn(dataset = subset, var_prop = P3_15_1, var1 = "Estado_arresto", var2 = "P3_2", var3 = NA, 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Policia", seccion = "Momento-detencion_autoridad", nombre = "Obedecer_autoridad",
+               carpeta = "Policia", seccion = "Momento-detencion_autoridad", nombre = "Obedecer_autoridad_estado",
                Dato = "Proporción de personas que reportaron obedecer las órdenes..., por estado de arresto y autoridad que detiene")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_15_2, var1 = "Estado_arresto", var2 = "P3_2", var3 = NA, 
@@ -3137,7 +3137,8 @@ tabla_excel_fn(dataset = subset, var_prop = P3_15_2, var1 = "P3_2", var2 = "Anio
                Dato = "Proporción de personas que portaban algún arma punzo cortante..., por año de arresto y autoridad que detiene")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_15_3, var1 = "P3_2", var2 = "Anio_arresto", var3 = NA, 
-               varfilter = NA, filtervalue = NA, seccion = "Policia_Parte4", nombre = "D84_3", 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Policia", seccion = "Momento-detencion_autoridad_año", nombre = "Arma-fuego_autoridad_año",
                Dato = "Proporción de personas que portaban algún arma de fuego..., por año de arresto y autoridad que detiene")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_15_4, var1 = "P3_2", var2 = "Anio_arresto", var3 = NA, 
@@ -3177,32 +3178,32 @@ tabla_excel_fn(dataset = subset, var_prop = P3_15_1, var1 = "Estado_arresto", va
 
 tabla_excel_fn(dataset = subset, var_prop = P3_15_2, var1 = "Estado_arresto", var2 = "Anio_arresto", var3 = "P3_2", 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Policia", seccion = "Momento-detencion_autoridad_estado", nombre = "Arma-punzo_autoridad_estado",
+               carpeta = "Policia", seccion = "Momento-detencion_autoridad_estado", nombre = "Arma-punzo_autoridad_estado_año",
                Dato = "Proporción de personas que portaban algún arma punzo cortante..., por estado y año de arresto y autoridad que detiene")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_15_3, var1 = "Estado_arresto", var2 = "Anio_arresto", var3 = "P3_2", 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Policia", seccion = "Momento-detencion_autoridad_estado", nombre = "Arma-fuego_autoridad_estado",
+               carpeta = "Policia", seccion = "Momento-detencion_autoridad_estado", nombre = "Arma-fuego_autoridad_estado_año",
                Dato = "Proporción de personas que portaban algún arma de fuego..., por estado y año de arresto y autoridad que detiene")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_15_4, var1 = "Estado_arresto", var2 = "Anio_arresto", var3 = "P3_2", 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Policia", seccion = "Momento-detencion_autoridad_estado", nombre = "Amenazaron_autoridad_estado",
+               carpeta = "Policia", seccion = "Momento-detencion_autoridad_estado", nombre = "Amenazaron_autoridad_estado_año",
                Dato = "Proporción de personas que amenazaron a alguien con el arma..., por estado y año de arresto y autoridad que detiene")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_15_5, var1 = "Estado_arresto", var2 = "Anio_arresto", var3 = "P3_2", 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Policia", seccion = "Momento-detencion_autoridad_estado", nombre = "Dispararon_autoridad_estado",
+               carpeta = "Policia", seccion = "Momento-detencion_autoridad_estado", nombre = "Dispararon_autoridad_estado_año",
                Dato = "Proporción de personas que dispararon el arma..., por estado y año de arresto y autoridad que detiene")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_15_6, var1 = "Estado_arresto", var2 = "Anio_arresto", var3 = "P3_2", 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Policia", seccion = "Momento-detencion_autoridad_estado", nombre = "Manipularon_autoridad_estado",
+               carpeta = "Policia", seccion = "Momento-detencion_autoridad_estado", nombre = "Manipularon_autoridad_estado_año",
                Dato = "Proporción de personas que manipularon algún objeto..., por estado y año de arresto y autoridad que detiene")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_15_7, var1 = "Estado_arresto", var2 = "Anio_arresto", var3 = "P3_2", 
                varfilter = NA, filtervalue = NA,
-               carpeta = "Policia", seccion = "Momento-detencion_autoridad_estado", nombre = "Sobornaron_autoridad_estado",
+               carpeta = "Policia", seccion = "Momento-detencion_autoridad_estado", nombre = "Sobornaron_autoridad_estado_año",
                Dato = "Proporción de personas que trataron de sobornar..., por estado y año de arresto y autoridad que detiene")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_15_8, var1 = "Estado_arresto", var2 = "Anio_arresto", var3 = "P3_2", 
@@ -3630,7 +3631,7 @@ tabla_excel_fn(dataset = subset, var_prop = P3_17_02, var1 = "Estado_arresto", v
 
 tabla_excel_fn(dataset = subset, var_prop = P3_17_03, var1 = "Estado_arresto", var2 = "Anio_arresto", var3 = "Sexo", 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Policia", seccion = "Autoridad-realizo_año_sexo_estado", nombre = "Amenazaron-cargos_año_sexo_estado",
+               carpeta = "Policia", seccion = "Autoridad-realizo_año_sexo_estado", nombre = "Amenazaron-daño_año_sexo_estado",
                Dato = "Proporción de personas que reportaron que Le amenazaron con hacerle daño a usted, por sexo, estado y año de arresto")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_17_04, var1 = "Estado_arresto", var2 = "Anio_arresto", var3 = "Sexo", 
@@ -3864,7 +3865,8 @@ tabla_excel_fn(dataset = subset, var_prop = P3_17_05, var1 = "Estado_arresto", v
                Dato = "Proporción de personas que reportaron que Le hicieron otro tipo de amenazas, por estado y año de arresto y autoridad que detiene")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_17_06, var1 = "Estado_arresto", var2 = "Anio_arresto", var3 = "P3_2", 
-               varfilter = NA, filtervalue = NA, seccion = "Policia_Parte4", nombre = "D103_6", 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Policia", seccion = "Autoridad-realizo_autoridad_estado_año", nombre = "Presionaron_autoridad_estado_año",
                Dato = "Proporción de personas que reportaron que Le presionaron para denunciar a alguien, por estado y año de arresto y autoridad que detiene")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_17_07, var1 = "Estado_arresto", var2 = "Anio_arresto", var3 = "P3_2", 
@@ -3952,7 +3954,7 @@ tabla_excel_fn(dataset = subset, var_prop = P3_18_11, var1 = NA, var2 = NA, var3
 
 tabla_excel_fn(dataset = subset, var_prop = P3_18_12, var1 = NA, var2 = NA, var3 = NA, 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Policia", seccion = "Agresiones-fisicas", nombre = "Ataron",
+               carpeta = "Policia", seccion = "Agresiones-fisicas", nombre = "Acoso",
                Dato = "Proporción de personas que reportaron que Le agredieron mediante acoso sexual...")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_18_13, var1 = NA, var2 = NA, var3 = NA, 
@@ -4052,72 +4054,72 @@ tabla_excel_fn(dataset = subset, var_prop = P3_18_01, var1 = "Estado_arresto", v
 
 tabla_excel_fn(dataset = subset, var_prop = P3_18_02, var1 = "Estado_arresto", var2 = "Anio_arresto", var3 = NA, 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Policia", seccion = "Agresiones-fisicas_año", nombre = "Asfixiaron_año",
+               carpeta = "Policia", seccion = "Agresiones-fisicas_año", nombre = "Asfixiaron_año_estado",
                Dato = "Proporción de personas que reportaron que Le impidieron respirar asfixiándolo...por estado y año de arresto")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_18_03, var1 = "Estado_arresto", var2 = "Anio_arresto", var3 = NA, 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Policia", seccion = "Agresiones-fisicas_año", nombre = "Impidieron-respirar_año",
+               carpeta = "Policia", seccion = "Agresiones-fisicas_año", nombre = "Impidieron-respirar_año_estado",
                Dato = "Proporción de personas que reportaron que Le impidieron respirar o metieron su cabeza en agua...por estado y año de arresto")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_18_04, var1 = "Estado_arresto", var2 = "Anio_arresto", var3 = NA, 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Policia", seccion = "Agresiones-fisicas_año", nombre = "Patearon_año",
+               carpeta = "Policia", seccion = "Agresiones-fisicas_año", nombre = "Patearon_año_estado",
                Dato = "Proporción de personas que reportaron que Le patearon o golpearon con las manos...por estado y año de arresto")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_18_05, var1 = "Estado_arresto", var2 = "Anio_arresto", var3 = NA, 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Policia", seccion = "Agresiones-fisicas_año", nombre = "Golpearon_año",
+               carpeta = "Policia", seccion = "Agresiones-fisicas_año", nombre = "Golpearon_año_estado",
                Dato = "Proporción de personas que reportaron que Le golpearon con objetos...por estado y año de arresto")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_18_06, var1 = "Estado_arresto", var2 = "Anio_arresto", var3 = NA, 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Policia", seccion = "Agresiones-fisicas_año", nombre = "Quemaron_año",
+               carpeta = "Policia", seccion = "Agresiones-fisicas_año", nombre = "Quemaron_año_estado",
                Dato = "Proporción de personas que reportaron que Le quemaron..por estado y año de arresto")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_18_07, var1 = "Estado_arresto", var2 = "Anio_arresto", var3 = NA, 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Policia", seccion = "Agresiones-fisicas_año", nombre = "Descargas_año",
+               carpeta = "Policia", seccion = "Agresiones-fisicas_año", nombre = "Descargas_año_estado",
                Dato = "Proporción de personas que reportaron que Le dieron descargas eléctricas...por estado y año de arresto")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_18_08, var1 = "Estado_arresto", var2 = "Anio_arresto", var3 = NA, 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Policia", seccion = "Agresiones-fisicas_año", nombre = "Aplastaron_año",
+               carpeta = "Policia", seccion = "Agresiones-fisicas_año", nombre = "Aplastaron_año_estado",
                Dato = "Proporción de personas que reportaron que Aplastaron su cuerpo...por estado y año de arresto")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_18_09, var1 = "Estado_arresto", var2 = "Anio_arresto", var3 = NA, 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Policia", seccion = "Agresiones-fisicas_año", nombre = "Hirieron_año",
+               carpeta = "Policia", seccion = "Agresiones-fisicas_año", nombre = "Hirieron_año_estado",
                Dato = "Proporción de personas que reportaron que Le hirieron con algún cuchillo, navaja...por estado y año de arresto")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_18_10, var1 = "Estado_arresto", var2 = "Anio_arresto", var3 = NA, 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Policia", seccion = "Agresiones-fisicas_año", nombre = "Agujas_año",
+               carpeta = "Policia", seccion = "Agresiones-fisicas_año", nombre = "Agujas_año_estado",
                Dato = "Proporción de personas que reportaron que Le encajaron agujas en dedos...por estado y año de arresto")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_18_11, var1 = "Estado_arresto", var2 = "Anio_arresto", var3 = NA, 
                varfilter = NA, filtervalue = NA,
-               carpeta = "Policia", seccion = "Agresiones-fisicas_año", nombre = "Dispararon_año",
+               carpeta = "Policia", seccion = "Agresiones-fisicas_año", nombre = "Dispararon_año_estado",
                Dato = "Proporción de personas que reportaron que Le hirieron por el disparo...por estado y año de arresto")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_18_12, var1 = "Estado_arresto", var2 = "Anio_arresto", var3 = NA, 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Policia", seccion = "Agresiones-fisicas_año", nombre = "Acoso-sexual_año",
+               carpeta = "Policia", seccion = "Agresiones-fisicas_año", nombre = "Acoso-sexual_año_estado",
                Dato = "Proporción de personas que reportaron que Le agredieron mediante acoso sexual...por estado y año de arresto")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_18_13, var1 = "Estado_arresto", var2 = "Anio_arresto", var3 = NA, 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Policia", seccion = "Agresiones-fisicas_año", nombre = "Organos-sexuales_año",
+               carpeta = "Policia", seccion = "Agresiones-fisicas_año", nombre = "Organos-sexuales_año_estado",
                Dato = "Proporción de personas que reportaron que Le lastimaron sus órganos sexuales...por estado y año de arresto")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_18_14, var1 = "Estado_arresto", var2 = "Anio_arresto", var3 = NA, 
                varfilter = NA, filtervalue = NA,
-               carpeta = "Policia", seccion = "Agresiones-fisicas_año", nombre = "Actividad-sexual_año",
+               carpeta = "Policia", seccion = "Agresiones-fisicas_año", nombre = "Actividad-sexual_año_estado",
                Dato = "Proporción de personas que reportaron que Fue obligado ... actividad sexual no deseada...por estado y año de arresto")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_18_15, var1 = "Estado_arresto", var2 = "Anio_arresto", var3 = NA, 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Policia", seccion = "Agresiones-fisicas_año", nombre = "Otra_año",
+               carpeta = "Policia", seccion = "Agresiones-fisicas_año", nombre = "Otra_año_estado",
                Dato = "Proporción de personas que reportaron que Otra agresión físicapor estado y año de arresto")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_18_01, var1 = "Sexo", var2 = "Anio_arresto", var3 = NA, 
@@ -4151,11 +4153,13 @@ tabla_excel_fn(dataset = subset, var_prop = P3_18_06, var1 = "Sexo", var2 = "Ani
                Dato = "Proporción de personas que reportaron que Le quemaron..por sexo y año de arresto")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_18_07, var1 = "Sexo", var2 = "Anio_arresto", var3 = NA, 
-               varfilter = NA, filtervalue = NA, seccion = "Policia_Parte5", nombre = "D107_7", 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Policia", seccion = "Agresiones-fisicas_año_sexo", nombre = "Descargas_año_sexo",
                Dato = "Proporción de personas que reportaron que Le dieron descargas eléctricas...por sexo y año de arresto")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_18_08, var1 = "Sexo", var2 = "Anio_arresto", var3 = NA, 
-               varfilter = NA, filtervalue = NA, seccion = "Policia_Parte5", nombre = "D107_8", 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Policia", seccion = "Agresiones-fisicas_año_sexo", nombre = "Aplastaron_año_sexo",
                Dato = "Proporción de personas que reportaron que Aplastaron su cuerpo...por sexo y año de arresto")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_18_09, var1 = "Sexo", var2 = "Anio_arresto", var3 = NA, 
@@ -4648,7 +4652,7 @@ tabla_excel_fn(dataset = subset, var_prop = P3_19_98, var1 = NA, var2 = NA, var3
 
 tabla_excel_fn(dataset = subset, var_prop = P3_19_99, var1 = NA, var2 = NA, var3 = NA, 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Policia", seccion = "Llevado", nombre = "No_sabe",
+               carpeta = "Policia", seccion = "Llevado", nombre = "No_responde",
                Dato = "Proporción de personas que reportaron que las llevaron a No_responde")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_19_01, var1 = "Anio_arresto", var2 = NA, var3 = NA, 
@@ -4713,22 +4717,22 @@ tabla_excel_fn(dataset = subset, var_prop = P3_19_12, var1 = "Anio_arresto", var
 
 tabla_excel_fn(dataset = subset, var_prop = P3_19_13, var1 = "Anio_arresto", var2 = NA, var3 = NA, 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Policia", seccion = "Llevado_año", nombre = "Establecimiento_año",
+               carpeta = "Policia", seccion = "Llevado_año", nombre = "Hospital_año",
                Dato = "Proporción de personas que reportaron que las llevaron a un hospital, clínica..., por año de arresto")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_19_14, var1 = "Anio_arresto", var2 = NA, var3 = NA, 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Policia", seccion = "Llevado_año", nombre = "Establecimiento_año",
+               carpeta = "Policia", seccion = "Llevado_año", nombre = "Otro_año",
                Dato = "Proporción de personas que reportaron que las llevaron a otro lugar, por año de arresto")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_19_98, var1 = "Anio_arresto", var2 = NA, var3 = NA, 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Policia", seccion = "Llevado_año", nombre = "Establecimiento_año",
+               carpeta = "Policia", seccion = "Llevado_año", nombre = "No-sabe_año",
                Dato = "Proporción de personas que reportaron que las llevaron a No_sabe, por año de arresto")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_19_99, var1 = "Anio_arresto", var2 = NA, var3 = NA, 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Policia", seccion = "Llevado_año", nombre = "Establecimiento_año",
+               carpeta = "Policia", seccion = "Llevado_año", nombre = "No-responde_año",
                Dato = "Proporción de personas que reportaron que las llevaron a No_responde, por año de arresto")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_19_01, var1 = "Estado_arresto", var2 = "Anio_arresto", var3 = NA, 
@@ -4788,7 +4792,7 @@ tabla_excel_fn(dataset = subset, var_prop = P3_19_11, var1 = "Estado_arresto", v
 
 tabla_excel_fn(dataset = subset, var_prop = P3_19_12, var1 = "Estado_arresto", var2 = "Anio_arresto", var3 = NA, 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Policia", seccion = "Llevado_año_estado", nombre = "Establecimiento_año_estado",
+               carpeta = "Policia", seccion = "Llevado_año_estado", nombre = "Migrantes_año_estado",
                Dato = "Proporción de personas que reportaron que las llevaron a un centro de detención para migrantes, por estado y año de arresto")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_19_13, var1 = "Estado_arresto", var2 = "Anio_arresto", var3 = NA, 
@@ -4823,7 +4827,7 @@ tabla_excel_fn(dataset = subset, var_prop = P3_19_02, var1 = "Sexo", var2 = "Ani
 
 tabla_excel_fn(dataset = subset, var_prop = P3_19_03, var1 = "Sexo", var2 = "Anio_arresto", var3 = NA, 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Policia", seccion = "Llevado_año_sexo", nombre = "Establecimiento_año_sexo",
+               carpeta = "Policia", seccion = "Llevado_año_sexo", nombre = "Policia_año_sexo",
                Dato = "Proporción de personas que reportaron que las llevaron A una instalación de la policía..., por sexo y año de arresto")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_19_04, var1 = "Sexo", var2 = "Anio_arresto", var3 = NA, 
@@ -4891,6 +4895,9 @@ tabla_excel_fn(dataset = subset, var_prop = P3_19_99, var1 = "Sexo", var2 = "Ani
                carpeta = "Policia", seccion = "Llevado_año_sexo", nombre = "No_resopnde_año_sexo",
                Dato = "Proporción de personas que reportaron que las llevaron a No_responde, por sexo y año de arresto")
 
+
+
+
 tabla_excel_fn(dataset = subset, var_prop = P3_19_01, var1 = "Estado_arresto", var2 = "Anio_arresto", var3 = "Sexo", 
                varfilter = NA, filtervalue = NA, 
                carpeta = "Policia", seccion = "Llevado_año_sexo_estado", nombre = "MP_año_sexo_estado",
@@ -4921,9 +4928,9 @@ tabla_excel_fn(dataset = subset, var_prop = P3_19_06, var1 = "Estado_arresto", v
                carpeta = "Policia", seccion = "Llevado_año_sexo_estado", nombre = "Oficina_año_sexo_estado",
                Dato = "Proporción de personas que reportaron que las llevaron a una oficina de gobierno..., por sexo, estado y año de arresto")
 
-tabla_excel_fn(dataset = subset, var_prop = P3_19_07, var1 = "Estado_arresto", var2 = "Casa_arresto", var3 = "Sexo", 
+tabla_excel_fn(dataset = subset, var_prop = P3_19_07, var1 = "Estado_arresto", var2 = "Anio_arresto", var3 = "Sexo", 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Policia", seccion = "Llevado_año_sexo_estado", nombre = "Establecimiento_año_sexo_estado",
+               carpeta = "Policia", seccion = "Llevado_año_sexo_estado", nombre = "Casa_año_sexo_estado",
                Dato = "Proporción de personas que reportaron que las llevaron a una casa particular, por sexo, estado y año de arresto")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_19_08, var1 = "Estado_arresto", var2 = "Anio_arresto", var3 = "Sexo", 
@@ -4953,7 +4960,7 @@ tabla_excel_fn(dataset = subset, var_prop = P3_19_12, var1 = "Estado_arresto", v
 
 tabla_excel_fn(dataset = subset, var_prop = P3_19_13, var1 = "Estado_arresto", var2 = "Anio_arresto", var3 = "Sexo", 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Policia", seccion = "Llevado_año_sexo_estado", nombre = "Establecimiento_año_sexo_estado",
+               carpeta = "Policia", seccion = "Llevado_año_sexo_estado", nombre = "Hospital_año_sexo_estado",
                Dato = "Proporción de personas que reportaron que las llevaron a un hospital, clínica..., por sexo, estado y año de arresto")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_19_14, var1 = "Estado_arresto", var2 = "Anio_arresto", var3 = "Sexo", 
@@ -5118,17 +5125,17 @@ tabla_excel_fn(dataset = subset, var_prop = P3_19_13, var1 = "Estado_arresto", v
 
 tabla_excel_fn(dataset = subset, var_prop = P3_19_14, var1 = "Estado_arresto", var2 = "P3_2", var3 = NA, 
                varfilter = NA, filtervalue = NA,
-               carpeta = "Policia", seccion = "Llevado_autoridad_estado", nombre = "Establecimiento_autoridad_estado",
+               carpeta = "Policia", seccion = "Llevado_autoridad_estado", nombre = "Otro_autoridad_estado",
                Dato = "Proporción de personas que reportaron que las llevaron a otro lugar, por autoridad que detiene, y estado de arresto")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_19_98, var1 = "Estado_arresto", var2 = "P3_2", var3 = NA, 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Policia", seccion = "Llevado_autoridad_estado", nombre = "Establecimiento_autoridad_estado",
+               carpeta = "Policia", seccion = "Llevado_autoridad_estado", nombre = "No_sabe_autoridad_estado",
                Dato = "Proporción de personas que reportaron que las llevaron a No_sabe, por autoridad que detiene, y estado de arresto")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_19_99, var1 = "Estado_arresto", var2 = "P3_2", var3 = NA, 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Policia", seccion = "Llevado_autoridad_estado", nombre = "Establecimiento_autoridad_estado",
+               carpeta = "Policia", seccion = "Llevado_autoridad_estado", nombre = "No_responde_autoridad_estado",
                Dato = "Proporción de personas que reportaron que las llevaron a No_responde, por autoridad que detiene, y estado de arresto")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_19_01, var1 = "P3_2", var2 = "Anio_arresto", var3 = NA, 
@@ -5183,7 +5190,7 @@ tabla_excel_fn(dataset = subset, var_prop = P3_19_10, var1 = "P3_2", var2 = "Ani
 
 tabla_excel_fn(dataset = subset, var_prop = P3_19_11, var1 = "P3_2", var2 = "Anio_arresto", var3 = NA, 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Policia", seccion = "Llevado_autoridad_año", nombre = "Establecimiento_autoridad_año",
+               carpeta = "Policia", seccion = "Llevado_autoridad_año", nombre = "Militar_autoridad_año",
                Dato = "Proporción de personas que reportaron que las llevaron a una zona militar..., por autoridad que detiene y año de arresto")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_19_12, var1 = "P3_2", var2 = "Anio_arresto", var3 = NA, 
@@ -5325,7 +5332,8 @@ tabla_excel_fn(dataset = subset, var_prop = P3_20_06, var1 = NA, var2 = NA, var3
                Dato = "Proporción de personas que reportaron que pasaron de 6 horas hasta 24 horas")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_20_07, var1 = NA, var2 = NA, var3 = NA, 
-               varfilter = NA, filtervalue = NA, seccion = "Policia_Parte5", nombre = "D122_7", 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Policia", seccion = "Tiempo", nombre = "48",
                Dato = "Proporción de personas que reportaron que pasaron de 24 horas hasta 48 horas")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_20_08, var1 = NA, var2 = NA, var3 = NA, 
@@ -6051,7 +6059,6 @@ tabla_excel_fn(dataset = subset, var_prop = P3_12_1, var1 = "Anio_arresto", var2
 
 tabla_excel_fn(dataset = subset, var_prop = P3_12_1, var1 = "Anio_arresto", var2 = "Estado_arresto", var3 = NA, 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Inspecciones", 
                carpeta = "Inspecciones", seccion = "Desvestidas", nombre = "Si_año_estado",
                Dato = "Proporción de personas que fueron desvestidas durante la inspección, por año y estado de arresto")
 
@@ -6136,7 +6143,7 @@ tabla_excel_fn(dataset = subset, var_prop = P3_12_4, var1 = "Anio_arresto", var2
 
 tabla_excel_fn(dataset = subset, var_prop = P3_12_4, var1 = "Anio_arresto", var2 = "Estado_arresto", var3 = "Sexo", 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Inspecciones", seccion = "Sembraron", nombre = "Si_año_estado",
+               carpeta = "Inspecciones", seccion = "Sembraron", nombre = "Si_año_estado_sexo",
                Dato = "Proporción de personas que la autoridad les sembró algún objeto durante la inspección, por año y estado de arresto")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_12_5, var1 = NA, var2 = NA, var3 = NA, 
@@ -6321,7 +6328,7 @@ tabla_excel_fn(dataset = subset, var_prop = proceso_en_libertad, var1 = "Estado_
 
 tabla_excel_fn(dataset = subset, var_prop = sentenciado, var1 = "PPO", var2 = "Anio_arresto", var3 = NA, 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "PPO", seccion = "Libertad", nombre = "Si_año",
+               carpeta = "PPO", seccion = "Libertad", nombre = "Si_año_PPO",
                Dato = "Proporción de personas que ya fueron sentenciadas por delitos de PPO y delitos de no-PPO, por año de arresto")
 
 #### 3.5.2 Delitos -------------------------------------------------------------
@@ -6531,11 +6538,13 @@ tabla_excel_fn(dataset = subset, var_prop = escuchado_x_juez, var1 = "PPO", var2
                Dato = "Proporción de personas sentenciadas que se sintieron algo o mucho escuchadas por el juez, por PPO  vs no PPO y estado de arresto")
 
 tabla_excel_fn(dataset = subset, var_prop = escuchado_x_juez, var1 = "PPO", var2 = "Sexo", var3 = NA, 
-               varfilter = NA, filtervalue = NA, seccion = "PPO_Parte2", nombre ="G29", 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "PPO", seccion = "Escuchadas", nombre = "PPO_estado_sexo",
                Dato = "Proporción de personas sentenciadas que se sintieron algo o mucho escuchadas por el juez, por PPO  vs no PPO y sexo")
 
 tabla_excel_fn(dataset = subset, var_prop = escuchado_x_juez, var1 = "PPO", var2 = "culpabilidad", var3 = NA, 
-               varfilter = NA, filtervalue = NA, seccion = "PPO_Parte2", nombre ="G30", 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "PPO", seccion = "Escuchadas", nombre = "PPO_admision",
                Dato = "Proporción de personas sentenciadas que se sintieron algo o mucho escuchadas por el juez, por PPO  vs no PPO y admisión de culpabilidad")
 
 tabla_excel_fn(dataset = subset, var_prop = escuchado_x_juez, var1 = "proceso_en_libertad", var2 = NA, var3 = NA, 
