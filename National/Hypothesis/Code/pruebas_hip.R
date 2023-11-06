@@ -24,7 +24,7 @@
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-prueba_hip <- function(seccion,subseccion,numero_hipotesis,type,database,dep_var,indep_var,group_vars) {
+prueba_hip <- function(seccion,subseccion,hypo_name,type,database,dep_var,indep_var,group_vars) {
   
   
   nogroups = is.na(group_vars)
@@ -47,15 +47,15 @@ prueba_hip <- function(seccion,subseccion,numero_hipotesis,type,database,dep_var
     
     df = tribble(~Hip, ~Variable_Dependiente, ~Variable_Independiente, ~Grupo, ~EMP_indep_var, ~Método, 
                  ~Significativo10, ~Significativo5, ~Significativo1, ~IC_inferior, ~IC_superior, ~Observaciones, ~Interpretación,
-                 numero_hipotesis, paste0(substitute(dep_var)), paste0(substitute(indep_var)), "-", 
+                 hypo_name, paste0(substitute(dep_var)), paste0(substitute(indep_var)), "-", 
                  margins$AME, "Logit",margins$Significativo10, margins$Significativo5, margins$Significativo1, margins$lower,
                  margins$upper,nobs,"")
     
     # Writing the excel file
     
     write.xlsx(as.data.frame(df), 
-               file      = file.path(paste0("Outline/",seccion,"/",subseccion,"/Tablas/",
-                                            "H",numero_hipotesis,".xlsx"),
+               file      = file.path(paste0("National/Hypothesis/Output/",seccion,"/",subseccion,"/",
+                                            hypo_name,".xlsx"),
                                      fsep = "/"),  
                sheetName = "Resultados Generales",
                append    = T,
@@ -99,7 +99,7 @@ prueba_hip <- function(seccion,subseccion,numero_hipotesis,type,database,dep_var
         
         df_full1_j = tribble(~Hip, ~Variable_Dependiente, ~Variable_Independiente, ~Grupo, ~b, ~Método, 
                              ~Significativo10, ~Significativo5, ~Significativo1, ~Observaciones, ~Interpretación,
-                             numero_hipotesis, paste0(substitute(dep_var)), paste0(modelo_full$rowname[j]), "-",
+                             hypo_name, paste0(substitute(dep_var)), paste0(modelo_full$rowname[j]), "-",
                              modelo_full$Estimate[j], "Logit", modelo_full$Significativo10[j], modelo_full$Significativo5[j], 
                              modelo_full$Significativo1[j], nobs_full,"")
         
@@ -115,7 +115,7 @@ prueba_hip <- function(seccion,subseccion,numero_hipotesis,type,database,dep_var
         
         df_full2_j = tribble(~Hip, ~Variable_Dependiente, ~Variable_Independiente, ~Grupo, ~EMP_indep_var, ~Método, 
                              ~Significativo10, ~Significativo5, ~Significativo1, ~IC_inferior, ~IC_superior, ~Observaciones, ~Interpretación,
-                             numero_hipotesis, paste0(substitute(dep_var)), paste0(margins_full$factor[j]), "-",
+                             hypo_name, paste0(substitute(dep_var)), paste0(margins_full$factor[j]), "-",
                              margins_full$AME[j], "Logit", margins_full$Significativo10[j], margins_full$Significativo5[j], margins_full$Significativo1[j],
                              margins_full$lower[j], margins_full$upper[j], nobs_full, "")
         
@@ -126,16 +126,16 @@ prueba_hip <- function(seccion,subseccion,numero_hipotesis,type,database,dep_var
       # Writing the excel files for marginal effects and full model 
       
       write.xlsx(as.data.frame(df_full1), 
-                 file      = file.path(paste0("Outline/",seccion,"/",subseccion,"/Tablas/",
-                                              "H",numero_hipotesis,".xlsx"),
+                 file      = file.path(paste0("National/Hypothesis/Output/",seccion,"/",subseccion,"/",
+                                              hypo_name,".xlsx"),
                                        fsep = "/"),  
                  sheetName = "Resultados Generales (modelo full)",
                  append    = T,
                  row.names = F)
       
       write.xlsx(as.data.frame(df_full2), 
-                 file      = file.path(paste0("Outline/",seccion,"/",subseccion,"/Tablas/",
-                                              "H",numero_hipotesis,".xlsx"),
+                 file      = file.path(paste0("National/Hypothesis/Output/",seccion,"/",subseccion,"/",
+                                              hypo_name,".xlsx"),
                                        fsep = "/"),  
                  sheetName = "Resultados Generales (efectos mg full)",
                  append    = T,
@@ -173,7 +173,7 @@ prueba_hip <- function(seccion,subseccion,numero_hipotesis,type,database,dep_var
             
             df_j = tribble(~Hip, ~Variable_Dependiente, ~Variable_Independiente, ~Grupo, ~EMP_indep_var, ~Método, 
                            ~Significativo10, ~Significativo5, ~Significativo1, ~IC_inferior, ~IC_superior, ~Observaciones, ~Interpretación,
-                           paste0(numero_hipotesis,"_",i), paste0(substitute(dep_var)), paste0(substitute(indep_var)),
+                           paste0(hypo_name,"_",i), paste0(substitute(dep_var)), paste0(substitute(indep_var)),
                            paste0(j), margins_j$AME, "Logit", margins_j$Significativo10, margins_j$Significativo5, 
                            margins_j$Significativo1, margins_j$lower, margins_j$upper, nobs_j, "")
             
@@ -185,8 +185,8 @@ prueba_hip <- function(seccion,subseccion,numero_hipotesis,type,database,dep_var
         # Writing the excel file
         
         write.xlsx(as.data.frame(df), 
-                   file      = file.path(paste0("Outline/",seccion,"/",subseccion,"/Tablas/",
-                                                "H",numero_hipotesis,".xlsx"),
+                   file      = file.path(paste0("National/Hypothesis/Output/",seccion,"/",subseccion,"/",
+                                                hypo_name,".xlsx"),
                                          fsep = "/"),
                    sheetName = paste0("Por ",i),
                    append    = T,
@@ -210,16 +210,16 @@ prueba_hip <- function(seccion,subseccion,numero_hipotesis,type,database,dep_var
     
     df = tribble(~Hip, ~Variable_Dependiente, ~Variable_Independiente, ~Grupo, ~EMP_indep_var, ~Método, 
                  ~Significativo10, ~Significativo5, ~Significativo1, ~IC_inferior, ~IC_superior, ~Observaciones, ~Interpretación,
-                 numero_hipotesis, paste0(substitute(dep_var)), paste0(substitute(indep_var)), "-", 
+                 hypo_name, paste0(substitute(dep_var)), paste0(substitute(indep_var)), "-", 
                  margins$AME, "Regresión OLS", margins$Significativo10, margins$Significativo5, margins$Significativo1,
                  margins$lower, margins$upper, nobs, "")
     
     # Writing the excel file
     
     write.xlsx(as.data.frame(df), 
-               file      = file.path(paste0("Outline/",seccion,"/",subseccion,"/Tablas/",
-                                            "H",numero_hipotesis,".xlsx"),
-                                     fsep = "/"),  
+               file      = file.path(paste0("National/Hypothesis/Output/",seccion,"/",subseccion,"/",
+                                            hypo_name,".xlsx"),
+                                     fsep = "/"),
                sheetName = "Resultados Generales",
                append    = T,
                row.names = F)
@@ -262,7 +262,7 @@ prueba_hip <- function(seccion,subseccion,numero_hipotesis,type,database,dep_var
         
         df_full1_j = tribble(~Hip, ~Variable_Dependiente, ~Variable_Independiente, ~Grupo, ~b, ~Método, 
                              ~Significativo10, ~Significativo5, ~Significativo1, ~Observaciones, ~Interpretación,
-                             numero_hipotesis, paste0(substitute(dep_var)), paste0(modelo_full$rowname[j]), "-",
+                             hypo_name, paste0(substitute(dep_var)), paste0(modelo_full$rowname[j]), "-",
                              modelo_full$Estimate[j], "Regresión OLS", modelo_full$Significativo10[j], modelo_full$Significativo5[j],
                              modelo_full$Significativo1[j], nobs_full, "")
         
@@ -278,7 +278,7 @@ prueba_hip <- function(seccion,subseccion,numero_hipotesis,type,database,dep_var
         
         df_full2_j = tribble(~Hip, ~Variable_Dependiente, ~Variable_Independiente, ~Grupo, ~EMP_indep_var, ~Método, 
                              ~Significativo10, ~Significativo5, ~Significativo1, ~IC_inferior, ~IC_superior, ~Observaciones, ~Interpretación,
-                             numero_hipotesis, paste0(substitute(dep_var)), paste0(margins_full$factor[j]), "-",
+                             hypo_name, paste0(substitute(dep_var)), paste0(margins_full$factor[j]), "-",
                              margins_full$AME[j], "Regresión OLS", margins_full$Significativo10[j], margins_full$Significativo5[j], 
                              margins_full$Significativo1[j], margins_full$lower[j], margins_full$upper[j], nobs_full, "")
         
@@ -288,16 +288,16 @@ prueba_hip <- function(seccion,subseccion,numero_hipotesis,type,database,dep_var
       # Writing the excel files for marginal effects and full model 
       
       write.xlsx(as.data.frame(df_full1), 
-                 file      = file.path(paste0("Outline/",seccion,"/",subseccion,"/Tablas/",
-                                              "H",numero_hipotesis,".xlsx"),
+                 file      = file.path(paste0("National/Hypothesis/Output/",seccion,"/",subseccion,"/",
+                                              hypo_name,".xlsx"),
                                        fsep = "/"),  
                  sheetName = "Resultados Generales (modelo completo)",
                  append    = T,
                  row.names = F)
       
       write.xlsx(as.data.frame(df_full2), 
-                 file      = file.path(paste0("Outline/",seccion,"/",subseccion,"/Tablas/",
-                                              "H",numero_hipotesis,".xlsx"),
+                 file      = file.path(paste0("National/Hypothesis/Output/",seccion,"/",subseccion,"/",
+                                              hypo_name,".xlsx"),
                                        fsep = "/"),  
                  sheetName = "Resultados Generales (efectos mg completo)",
                  append    = T,
@@ -334,7 +334,7 @@ prueba_hip <- function(seccion,subseccion,numero_hipotesis,type,database,dep_var
             
             df_j = tribble(~Hip, ~Variable_Dependiente, ~Variable_Independiente, ~Grupo, ~EMP_indep_var, ~Método, 
                            ~Significativo10, ~Significativo5, ~Significativo1, ~IC_inferior, ~IC_superior, ~Observaciones, ~Interpretación,
-                           paste0(numero_hipotesis,"_",i), paste0(substitute(dep_var)), paste0(substitute(indep_var)),
+                           paste0(hypo_name,"_",i), paste0(substitute(dep_var)), paste0(substitute(indep_var)),
                            paste0(j), margins_j$AME, "Regresión OLS", margins_j$Significativo10, margins_j$Significativo5, 
                            margins_j$Significativo1, margins_j$lower, margins_j$upper, nobs_j, "")
             
@@ -346,8 +346,8 @@ prueba_hip <- function(seccion,subseccion,numero_hipotesis,type,database,dep_var
         # Writing the excel file
         
         write.xlsx(as.data.frame(df), 
-                   file      = file.path(paste0("Outline/",seccion,"/",subseccion,"/Tablas/",
-                                                "H",numero_hipotesis,".xlsx"),
+                   file      = file.path(paste0("National/Hypothesis/Output/",seccion,"/",subseccion,"/",
+                                                hypo_name,".xlsx"),
                                          fsep = "/"),
                    sheetName = paste0("Por ",i),
                    append    = T,
@@ -379,7 +379,7 @@ prueba_hip <- function(seccion,subseccion,numero_hipotesis,type,database,dep_var
     df = tribble(~Hip, ~Variable_Dependiente, ~Variable_Independiente, ~'Grupo 1', 
                  ~'Media Grupo 1', ~'Observaciones Grupo 1', ~'Grupo 2', ~'Media Grupo 2', ~'Observaciones Grupo 2',
                  ~Método, ~Significativo10, ~Significativo5, ~Significativo1, ~Interpretación,
-                 numero_hipotesis, paste0(substitute(dep_var)), paste0(substitute(indep_var)), 
+                 hypo_name, paste0(substitute(dep_var)), paste0(substitute(indep_var)), 
                  paste0(substitute(indep_var)," = ",indep_groups[1]), ttest$estimate[1], n1,
                  paste0(substitute(indep_var)," = ",indep_groups[2]), ttest$estimate[2], n2,
                  "Diferencia de medias", ttest_sig$Significativo10, ttest_sig$Significativo5, 
@@ -388,8 +388,8 @@ prueba_hip <- function(seccion,subseccion,numero_hipotesis,type,database,dep_var
     # Writing the excel file
     
     write.xlsx(as.data.frame(df), 
-               file      = file.path(paste0("Outline/",seccion,"/",subseccion,"/Tablas/",
-                                            "H",numero_hipotesis,".xlsx"),
+               file      = file.path(paste0("National/Hypothesis/Output/",seccion,"/",subseccion,"/",
+                                            hypo_name,".xlsx"),
                                      fsep = "/"),  
                sheetName = "Resultados Generales",
                append    = T,
@@ -444,7 +444,7 @@ prueba_hip <- function(seccion,subseccion,numero_hipotesis,type,database,dep_var
             df_j = tribble(~Hip, ~Variable_Dependiente, ~Variable_Independiente, ~Corte, ~'Grupo 1', 
                            ~'Media Grupo 1', ~'Observaciones Grupo 1', ~'Grupo 2', ~'Media Grupo 2', ~'Observaciones Grupo 2',
                            ~Método, ~Significativo10, ~Significativo5, ~Significativo1, ~Interpretación,
-                           numero_hipotesis, paste0(substitute(dep_var)), paste0(substitute(indep_var)), 
+                           hypo_name, paste0(substitute(dep_var)), paste0(substitute(indep_var)), 
                            paste0(i," = ",j),
                            paste0(substitute(indep_var)," = ",indep_groups[1]), ttest_j$estimate[1], n1_j,
                            paste0(substitute(indep_var)," = ",indep_groups[2]), ttest_j$estimate[2], n2_j,
@@ -459,8 +459,8 @@ prueba_hip <- function(seccion,subseccion,numero_hipotesis,type,database,dep_var
         # Writing the excel file
         
         write.xlsx(as.data.frame(df), 
-                   file      = file.path(paste0("Outline/",seccion,"/",subseccion,"/Tablas/",
-                                                "H",numero_hipotesis,".xlsx"),
+                   file      = file.path(paste0("National/Hypothesis/Output/",seccion,"/",subseccion,"/",
+                                                hypo_name,".xlsx"),
                                          fsep = "/"),
                    sheetName = paste0("Por ",i),
                    append    = T,
@@ -473,5 +473,7 @@ prueba_hip <- function(seccion,subseccion,numero_hipotesis,type,database,dep_var
     stop("Select a valid type: \"logit\", \"ols\", or \"means\".")
     
   }
+  
+  return(df)
 }
 
