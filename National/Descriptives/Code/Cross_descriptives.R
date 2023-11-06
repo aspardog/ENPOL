@@ -38,10 +38,10 @@ source("National/Data_cleaning/Code/settings.R")
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
-Detenciones <- paste0(path2DB,"National/Descriptives/Output/Detenciones/Detenciones")
-LGBTQ <- paste0(path2DB,"National/Descriptives/Output/Detenciones/LGBTQ")
-Policia <- paste0(path2DB,"National/Descriptives/Output/Detenciones/Policia")
-Tortura <- paste0(path2DB,"National/Descriptives/Output/Detenciones/Tortura")
+Detenciones <- paste0(path2DB,"/National/Descriptives/Output/Detenciones/Detenciones")
+LGBTQ <- paste0(path2DB,"/National/Descriptives/Output/Detenciones/LGBTQ")
+Policia <- paste0(path2DB,"/National/Descriptives/Output/Detenciones/Policia")
+Tortura <- paste0(path2DB,"/National/Descriptives/Output/Detenciones/Tortura")
 
 carpetas <- c(Detenciones, LGBTQ, Policia, Tortura)
 
@@ -805,7 +805,7 @@ tabla_excel_fn(dataset = subset, var_prop = inspeccion, var1 = "Estado_arresto",
                carpeta = "Detenciones", seccion = "despues_inspeccion", nombre = "Estado",
                Dato = "Proporción de personas detenidas con una orden de detención por estado de arresto")
 
-tabla_excel_fn(dataset = subset, var_prop = inspeccion, var1 = "Anio_arresto", var2 = "Estado", var3 = NA, 
+tabla_excel_fn(dataset = subset, var_prop = inspeccion, var1 = "Anio_arresto", var2 = "Estado_arresto", var3 = NA, 
                varfilter = NA, filtervalue = NA, 
                carpeta = "Detenciones", seccion = "despues_inspeccion", nombre = "Año_estado",
                Dato = "Proporción de personas detenidas con una orden de detención por año y estado de arresto")
