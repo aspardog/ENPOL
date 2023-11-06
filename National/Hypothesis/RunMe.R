@@ -30,6 +30,7 @@
 # loaded from the following script:
 source("National/Hypothesis/Code/settings.R")
 source("National/Hypothesis/Code/pruebas_hip.R")
+source("National/Hypothesis/Code/detencion_tipo_event-study.R")
 
 load(paste0(path2DB,"/National/Data_cleaning/Output/Main_database.RData")) 
 
@@ -97,14 +98,18 @@ data_subset_tipo.df <- Main_database %>%
          No_sabe = coalesce(P5_11_98, P5_31_98),
          No_responde = coalesce(P5_11_99, P5_31_99)) %>%
   select(orden_det, inspeccion, flagrancia, flagrancia_const, det_ninguna, detencion_no_inmediata, 
-         months_since_NSJP, years_since_NSJP, Corporacion_grupos, Estado, Sexo,
+         months_since_NSJP, years_since_NSJP, Corporacion_grupos, Estado, Sexo, 
          Robo_vehiculo, Robo_casa_hab, Robo_negocio, Robo_transporte_pub, Robo_transeunte, Robo_autopartes, Robo_otros, Posesion_drogas,
          Comercio_drogas, Lesiones, Hom_culposo, Hom_doloso, Portacion_armas, Incum_asis_fam, Violencia_fam, Danio_prop, Secuestro, Fraude,
          Violacion_sexual, Delincuencia_org, Otros_sexuales, Extorsion, Privacion_de_libertad, Abuso_de_conf, Amenazas, Otros, No_sabe, No_responde) 
 
-tipo <- c("flagrancia", "orden_det", "inspeccion", "det_ninguna") # List of dependent variables from the first analysis
-flag_const <- c("flagrancia_const", "detencion_no_inmediata")     # List of dependent variables from the second analysis
-independent_time_vars <- c("months_since_NSJP", "years_since_NSJP")    # List of independent time variables
+tipo <- c("flagrancia", 
+          "orden_det", 
+          "inspeccion", 
+          "det_ninguna") # List of dependent variables from the first analysis
+
+independent_time_vars <- c("months_since_NSJP", 
+                           "years_since_NSJP")    # List of independent time variables
 
 result_list <- lapply(tipo, function(tipo) {
   lapply(independent_time_vars, function(independent_vars) {
@@ -130,6 +135,9 @@ result_list <- lapply(tipo, function(tipo) {
   })
 })
 
+flag_const <- c("flagrancia_const", 
+                "detencion_no_inmediata")     # List of dependent variables from the second analysis
+
 tipo_flag_const <- list(
   
   result1_2 <- lapply(independent_time_vars, function(independent_vars) {
@@ -140,9 +148,14 @@ tipo_flag_const <- list(
     
     var_type <- if_else(independent_vars == "months_since_NSJP", "months", "years")
     
-    result   <- prueba_hip(seccion = "Detenciones", subseccion = "Tipo", hypo_name = paste0("hyp_detenciones_flagrancia_const_", var_type), 
-                          type = "logit", database = data_list.df, dep_var = flagrancia_const, indep_var = independent, 
-                          group_vars = c("Corporacion_grupos", "Estado", "Sexo", "Robo_vehiculo", "Robo_casa_hab", "Robo_negocio",  
+    result   <- prueba_hip(seccion = "Detenciones", 
+                           subseccion = "Tipo", 
+                           hypo_name = paste0("hyp_detenciones_flagrancia_const_", var_type),
+                           type = "logit", 
+                           database = data_list.df, 
+                           dep_var = flagrancia_const, 
+                           indep_var = independent,
+                           group_vars = c("Corporacion_grupos", "Estado", "Sexo", "Robo_vehiculo", "Robo_casa_hab", "Robo_negocio",  
                                          "Robo_transporte_pub", "Robo_transeunte", "Robo_autopartes", "Robo_otros", "Posesion_drogas",  
                                          "Comercio_drogas", "Lesiones", "Hom_culposo", "Hom_doloso", "Portacion_armas", 
                                          "Violencia_fam", "Danio_prop", "Secuestro", "Violacion_sexual", "Delincuencia_org", 
@@ -165,8 +178,13 @@ tipo_flag_const <- list(
       
     }
     
-    result3_4 <- prueba_hip(seccion = "Detenciones", subseccion = "Tipo",  hypo_name = paste0("hyp_detenciones_",flag_const), 
-                            type = "means", database = data_list.df, dep_var = target, indep_var = Sexo, 
+    result3_4 <- prueba_hip(seccion = "Detenciones", 
+                            subseccion = "Tipo",  
+                            hypo_name = paste0("hyp_detenciones_",flag_const), 
+                            type = "means", 
+                            database = data_list.df, 
+                            dep_var = target, 
+                            indep_var = Sexo, 
                             group_vars = c("Corporacion_grupos", "Estado", "Robo_vehiculo", "Robo_casa_hab", "Robo_negocio",  
                                            "Robo_transporte_pub", "Robo_transeunte", "Robo_autopartes", "Robo_otros", "Posesion_drogas",  
                                            "Comercio_drogas", "Lesiones", "Hom_culposo", "Hom_doloso", "Portacion_armas", "Incum_asis_fam",
@@ -176,7 +194,9 @@ tipo_flag_const <- list(
   })
 )
 
-tipo_list <- list(result_list, tipo_flag_const)
+infographic_data <- hyp_detenciones_event()
+
+tipo_list <- list(result_list, tipo_flag_const, infographic_data)
 
 ### Tortura ----
 
@@ -197,23 +217,36 @@ data_subset_tortura.df <- Main_database %>%
     ) %>%
   select(tortura_tra_p, tortura_tra_f, RND_1, RND_2, RND_3, Estado, Sexo, fuero, Corporacion_grupos, one_year_limit) 
 
+dependent_vars <- c("tortura_tra_p", "tortura_tra_f")
 
-list_tortura <- imap(c(tortura_tra_p = "tortura_psicologica_traslado",
-                       tortura_tra_f = "tortura_fisica_traslado"),
-                     function(setName, var){
-         
-         data_list.df <- data_subset_tortura.df %>%
-           mutate(target = {{var}})
-         
-         result1 <- prueba_hip(seccion = "Detenciones", subseccion = "Tortura", hypo_name = paste0("hyp_",setName,"_RND_+-1_año"), 
-                               type = "means", database = data_list.df %>% filter(one_year_limit == 1), 
-                               dep_var = tortura_tra_p, indep_var = RND_3, group_vars = c("Estado", "Sexo", "fuero", "Corporacion_grupos"))  
-         
-         result2 <- prueba_hip(seccion = "Detenciones", subseccion = "Tortura", hypo_name = paste0("hyp_",setName,"_sin_limite"), 
-                               type = "means", database = data_list.df, dep_var = tortura_tra_p, indep_var = RND_3, 
-                               group_vars = c("Estado", "Sexo", "fuero", "Corporacion_grupos"))
-         
-         return(list(result1, result2))
+list_tortura <- lapply(dependent_vars,
+                       function(dependent_vars){
+                       
+                       var_type <- if_else(dependent_vars == "tortura_tra_p", "tortura_psicologica_traslado", 
+                                           if_else(dependent_vars == "tortura_tra_f","tortura_fisica_traslado",NA_character_))
+                       
+                       data_list.df <- data_subset_tortura.df %>%
+                         rename(target = all_of(dependent_vars))
+                       
+                       result1 <- prueba_hip(seccion = "Detenciones", 
+                                             subseccion = "Tortura", 
+                                             hypo_name = paste0("hyp_",var_type,"_RND_+-1_año"), 
+                                             type = "means", 
+                                             database = data_list.df %>% filter(one_year_limit == 1), 
+                                             dep_var = target, 
+                                             indep_var = RND_3, 
+                                             group_vars = c("Estado", "Sexo", "fuero", "Corporacion_grupos"))  
+                       
+                       result2 <- prueba_hip(seccion = "Detenciones", 
+                                             subseccion = "Tortura", 
+                                             hypo_name = paste0("hyp_",var_type,"_sin_limite"), 
+                                             type = "means", 
+                                             database = data_list.df, 
+                                             dep_var = target, 
+                                             indep_var = RND_3, 
+                                             group_vars = c("Estado", "Sexo", "fuero", "Corporacion_grupos"))
+                       
+                       return(list(result1, result2))
          
        })
 
@@ -231,15 +264,21 @@ data_subset_policia.df <- Main_database %>%
                      T ~ NA_character_)) %>%
   select(tortura, flagrancia, LGBTQ, Estado) 
 
-abuso <- c("tortura", "flagrancia")
+abuso <- c("tortura", 
+           "flagrancia")
 
 list_abuso <- lapply(abuso, function(abuso) {
 
   data_list.df <- data_subset_policia.df %>%
     rename(target = all_of(abuso))
   
-  result1 <- prueba_hip(seccion = "Detenciones", subseccion = "Abuso_policial_lgtbq", hypo_name = paste0("hyp_", abuso), 
-                        type = "means", database = data_list.df, dep_var = target, indep_var = LGBTQ, 
+  result1 <- prueba_hip(seccion = "Detenciones", 
+                        subseccion = "Abuso_policial_lgtbq", 
+                        hypo_name = paste0("hyp_", abuso), 
+                        type = "means", 
+                        database = data_list.df, 
+                        dep_var = target, 
+                        indep_var = LGBTQ, 
                         group_vars = c("Estado"))
   }
 )
@@ -265,8 +304,14 @@ data_subset_ppo.df <- Main_database %>%
   select(percepcion_persona_juzgadora, percepcion_trato_justo_juez, satisfecho_abogado_juicio, sentencia_justa, 
          proceso_no_en_libertad, PPO, culpabilidad)
 
-ppo <- c("percepcion_persona_juzgadora", "percepcion_trato_justo_juez", "satisfecho_abogado_juicio", "sentencia_justa")
-independent_process_vars <- c("PPO", "proceso_no_en_libertad", "culpabilidad")
+ppo <- c("percepcion_persona_juzgadora", 
+         "percepcion_trato_justo_juez", 
+         "satisfecho_abogado_juicio", 
+         "sentencia_justa") # Please insert here your dependent var related to this subsection
+
+independent_process_vars <- c("PPO", 
+                              "proceso_no_en_libertad", 
+                              "culpabilidad") # Please include here your independent var related to this subsection
 
 list_ppo <- lapply(ppo, function(ppo) {
   lapply(independent_process_vars, function(independent_vars) {
@@ -278,9 +323,14 @@ list_ppo <- lapply(ppo, function(ppo) {
       rename(target      = all_of(ppo),
              independent = all_of(independent_vars))
     
-    result <- prueba_hip(seccion = "Jueces", subseccion = "PPO", hypo_name = paste0("hyp_", ppo, "_", var_type), 
-                          type = "means", database = data_list.df, dep_var = target, indep_var = independent, 
-                          group_vars = NA)
+    result <- prueba_hip(seccion = "Jueces", 
+                         subseccion = "PPO", 
+                         hypo_name = paste0("hyp_", ppo, "_", var_type),
+                         type = "means", 
+                         database = data_list.df, 
+                         dep_var = target, 
+                         indep_var = independent, 
+                         group_vars = NA)
     
     return(result)
     })
