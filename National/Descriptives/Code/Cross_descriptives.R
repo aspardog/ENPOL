@@ -2101,6 +2101,7 @@ tabla_excel_fn(dataset = subset, var_prop = P3_13_01, var1 = "Estado_arresto", v
                Dato = "Proporción de personas que la autoridad le indicó que se detuviera..., por estado de arresto")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_13_02, var1 = "Estado_arresto", var2 = NA, var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
                carpeta = "Policia", seccion = "Autoridad-accion_estado", nombre = "Sujeto_estado", 
                Dato = "Proporción de personas que reportan que la autoridad le sujetó..., por estado de arresto")
 
@@ -2274,7 +2275,7 @@ tabla_excel_fn(dataset = subset, var_prop = P3_13_12, var1 = "Estado_arresto", v
                carpeta = "Policia", seccion = "Autoridad-accion_sexo_estado", nombre = "Hirio_sexo_estado",
                Dato = "Proporción de personas que reportan que la autoridad le hirió..., por sexo y estado de arresto")
 
-#D55
+#### 3.4.6 D55 ---------------------------------------------------------------------
 
 
 for (j in c("P3_13_01", "P3_13_02", "P3_13_03", "P3_13_04", "P3_13_05", "P3_13_06", "P3_13_07", "P3_13_08", "P3_13_09",
@@ -2301,7 +2302,7 @@ for (j in c("P3_13_01", "P3_13_02", "P3_13_03", "P3_13_04", "P3_13_05", "P3_13_0
   
   
   write.xlsx(as.data.frame(df_j), 
-             file      = file.path(paste0("Descriptives/Output/Detenciones/Policia/Autoridad-accion_estado_sexo_delito-grupos.xlsx"),
+             file      = file.path(paste0("National/Descriptives/Output/Detenciones/Policia/Autoridad-accion_estado_sexo_delito-grupos.xlsx"),
                                    fsep = "/"),  
              sheetName = paste0("Estado_sexo",j),
              append    = T,
@@ -2348,36 +2349,36 @@ for (j in c("P3_13_01", "P3_13_02", "P3_13_03", "P3_13_04", "P3_13_05", "P3_13_0
 
 
 
-for (j in c("P3_13_01", "P3_13_02", "P3_13_03", "P3_13_04", "P3_13_05", "P3_13_06", "P3_13_07", "P3_13_08", "P3_13_09",
-            "P3_13_10", "P3_13_11", "P3_13_12")){
+#for (j in c("P3_13_01", "P3_13_02", "P3_13_03", "P3_13_04", "P3_13_05", "P3_13_06", "P3_13_07", "P3_13_08", "P3_13_09",
+#            "P3_13_10", "P3_13_11", "P3_13_12")){
   
-  df_j = tibble()
+#  df_j = tibble()
   
-  for(i in delito_grupos) {
+#  for(i in delito_grupos) {
     
-    Dato = paste0("Proporción de personas que reportaron \"sí\" a ",j,", acusadas (entre otros) de ",i,", por sexo, y estado de arresto")
+#    Dato = paste0("Proporción de personas que reportaron \"sí\" a ",j,", acusadas (entre otros) de ",i,", por sexo, y estado de arresto")
     
-    df_i<-
-      subset %>% 
-      filter(.data[[i]]  == 1) %>%
-      group_by(across(c("Estado_arresto","Sexo"))) %>%
-      summarise(Prop = mean(.data[[j]] , na.rm = T)) %>%
-      pivot_wider(names_from = Estado_arresto, values_from = Prop) %>%
-      cbind(Dato,.) %>% 
-      arrange(by_group = Sexo)
+#    df_i<-
+#      subset %>% 
+#      filter(.data[[i]]  == 1) %>%
+#      group_by(across(c("Estado_arresto","Sexo"))) %>%
+#      summarise(Prop = mean(.data[[j]] , na.rm = T)) %>%
+#      pivot_wider(names_from = Estado_arresto, values_from = Prop) %>%
+#      cbind(Dato,.) %>% 
+#      arrange(by_group = Sexo)
+#    
+#    df_j = bind_rows(df_j,df_i)
     
-    df_j = bind_rows(df_j,df_i)
-    
-  }
+#  }
   
   
-  write.xlsx(as.data.frame(df_j), 
-             file      = file.path(paste0("National/Descriptives/Output/Detenciones/Policia/Autoridad-accion_estado_sexo_delito-grupos.xlsx"),
-                                   fsep = "/"),  
-             sheetName = paste0("Estado_delito-grupos_Sexo_",j),
-             append    = T,
-             row.names = F)
-}
+#  write.xlsx(as.data.frame(df_j), 
+#             file      = file.path(paste0("National/Descriptives/Output/Detenciones/Policia/Autoridad-accion_estado_sexo_delito-grupos2.xlsx"),
+#                                   fsep = "/"),  
+#             sheetName = paste0("Estado_delito-grupos_Sexo_2",j),
+#             append    = T,
+#             row.names = F)
+#}
 
 
 
@@ -2395,13 +2396,15 @@ for (i in delito_grupos) {
 
 for (i in delito_unico_grupos) {
   tabla_excel_fn(dataset = subset, var_prop = controles_cooperativos, var1 = NA, var2 = NA, var3 = NA, 
-                 varfilter = i, filtervalue = 1, seccion = "Policia_Parte3", nombre = paste0("D58_unico_",i), 
+                 varfilter = i, filtervalue = 1, 
+                 carpeta = "Policia", seccion = "Policia_Parte3", nombre = paste0("D58_unico_",i), 
                  Dato = paste0("Proporción de personas con un único delito que reportaron controles cooperativos, acusadas por ",i," "))
 }
 
 for (i in delito_unico_grupos) {
   tabla_excel_fn(dataset = subset, var_prop = controles_cooperativos, var1 = "Sexo", var2 = NA, var3 = NA, 
-                 varfilter = i, filtervalue = 1, seccion = "Policia_Parte3", nombre = paste0("D58_unico_sexo",i), 
+                 varfilter = i, filtervalue = 1, 
+                 carpeta = "Policia", seccion = "Policia_Parte3", nombre = paste0("D58_unico_sexo",i), 
                  Dato = paste0("Proporción de personas con un único delito que reportaron controles cooperativos, acusadas  por ",i,", por sexo "))
 }
 
@@ -2415,13 +2418,15 @@ for (i in delitos) {
 
 for (i in delito_unico_grupos) {
   tabla_excel_fn(dataset = subset, var_prop = controles_cooperativos, var1 = NA, var2 = NA, var3 = NA, 
-                 varfilter = i, filtervalue = 1, seccion = "Policia_Parte3", nombre = paste0("D58_unico_",i), 
+                 varfilter = i, filtervalue = 1, 
+                 carpeta = "Policia", seccion = "Policia_Parte3", nombre = paste0("D58_unico_",i), 
                  Dato = paste0("Proporción de personas con un único delito que reportaron controles cooperativos, acusadas por ",i," "))
 }
 
 for (i in delito_unico_grupos) {
   tabla_excel_fn(dataset = subset, var_prop = controles_cooperativos, var1 = "Sexo", var2 = NA, var3 = NA, 
-                 varfilter = i, filtervalue = 1, seccion = "Policia_Parte3", nombre = paste0("D58_unico_sexo",i), 
+                 varfilter = i, filtervalue = 1, 
+                 carpeta = "Policia", seccion = "Policia_Parte3", nombre = paste0("D58_unico_sexo",i), 
                  Dato = paste0("Proporción de personas con un único delito que reportaron controles cooperativos, acusadas  por ",i,", por sexo "))
 }
 
@@ -2457,13 +2462,15 @@ for (i in delitos) {
 
 for (i in delito_grupos) {
   tabla_excel_fn(dataset = subset, var_prop = sometimiento, var1 = "Sexo", var2 = NA, var3 = NA, 
-                 varfilter = i, filtervalue = 1, seccion = "Policia_Parte3", nombre = paste0("D62_unico",i), 
+                 varfilter = i, filtervalue = 1,
+                 carpeta = "Policia", seccion = "Policia_Parte3", nombre = paste0("D62_unico",i), 
                  Dato = paste0("Proporción de personas que reportaron técnicas de sometimiento, acusadas (entre otros) por ",i," por sexo"))
 }
 
 for (i in delito_unico_grupos) {
   tabla_excel_fn(dataset = subset, var_prop = sometimiento, var1 = NA, var2 = NA, var3 = NA, 
-                 varfilter = i, filtervalue = 1, seccion = "Policia_Parte3", nombre = paste0("D62_unico",i), 
+                 varfilter = i, filtervalue = 1,
+                 carpeta = "Policia", seccion = "Policia_Parte3", nombre = paste0("D62_unico",i), 
                  Dato = paste0("Proporción de personas con un único delito que reportaron técnicas de sometimiento, acusadas por ",i,""))
 }
 
@@ -2484,13 +2491,15 @@ for (i in delitos) {
 
 for (i in delito_unico_grupos) {
   tabla_excel_fn(dataset = subset, var_prop = tacticas_defensivas, var1 = NA, var2 = NA, var3 = NA, 
-                 varfilter = i, filtervalue = 1, seccion = "Policia_Parte3", nombre = paste0("D64_unico",i), 
+                 varfilter = i, filtervalue = 1,
+                 carpeta = "Policia", seccion = "Policia_Parte3", nombre = paste0("D64_unico",i), 
                  Dato = paste0("Proporción de personas con un único delito que reportaron tacticas defensivas, acusadas por ",i,""))
 }
 
 for (i in delito_unico_grupos) {
   tabla_excel_fn(dataset = subset, var_prop = tacticas_defensivas, var1 = "Sexo", var2 = NA, var3 = NA, 
-                 varfilter = i, filtervalue = 1, seccion = "Policia_Parte3", nombre = paste0("D64_unico_sexo",i), 
+                 varfilter = i, filtervalue = 1,
+                 carpeta = "Policia", seccion = "Policia_Parte3", nombre = paste0("D64_unico_sexo",i), 
                  Dato = paste0("Proporción de personas con un único delito que reportaron tacticas defensivas, acusadas por ",i," por sexo"))
 }
 
@@ -2513,13 +2522,15 @@ for (i in delitos) {
 
 for (i in delito_grupos) {
   tabla_excel_fn(dataset = subset, var_prop = fuerza_letal, var1 = "Sexo", var2 = NA, var3 = NA, 
-                 varfilter = i, filtervalue = 1, seccion = "Policia_Parte3", nombre = paste0("D66_",i), 
+                 varfilter = i, filtervalue = 1,
+                 carpeta = "Policia", seccion = "Policia_Parte3", nombre = paste0("D66_",i), 
                  Dato = paste0("Proporción de personas que reportaron fuerza letal, acusadas (entre otros) por ",i," por sexo"))
 }
 
 for (i in delito_unico_grupos) {
   tabla_excel_fn(dataset = subset, var_prop = fuerza_letal, var1 = NA, var2 = NA, var3 = NA, 
-                 varfilter = i, filtervalue = 1, seccion = "Policia_Parte3", nombre = paste0("D66_unico",i), 
+                 varfilter = i, filtervalue = 1,
+                 carpeta = "Policia", seccion = "Policia_Parte3", nombre = paste0("D66_unico",i), 
                  Dato = paste0("Proporción de personas con un único delito que reportaron fuerza letal, acusadas por ",i,""))
 }
 
@@ -2533,7 +2544,7 @@ tabla_excel_fn(dataset = subset, var_prop = P3_14_1, var1 = NA, var2 = NA, var3 
                Dato = "Proporción de personas que reportaron que la autoridad se identificó...")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_14_2, var1 = NA, var2 = NA, var3 = NA, 
-               carpeta = "Policia", 
+               varfilter = NA, filtervalue = NA, 
                carpeta = "Policia", seccion = "Policia-hizo_nacional", nombre = "Informo",
                Dato = "Proporción de personas que reportaron que la autoridad le informó...")
 
@@ -2574,7 +2585,7 @@ tabla_excel_fn(dataset = subset, var_prop = P3_14_3, var1 = "Anio_arresto", var2
 
 tabla_excel_fn(dataset = subset, var_prop = P3_14_4, var1 = "Anio_arresto", var2 = NA, var3 = NA, 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Policia", seccion = "Policia-hizo_año", nombre = "Identifico_año",
+               carpeta = "Policia", seccion = "Policia-hizo_año", nombre = "Dijo_año",
                Dato = "Proporción de personas que reportaron que le dijeron por qué lo(a) detuvieron?, por año de arresto")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_14_5, var1 = "Anio_arresto", var2 = NA, var3 = NA, 
@@ -2619,12 +2630,12 @@ tabla_excel_fn(dataset = subset, var_prop = P3_14_6, var1 = "Estado_arresto", va
 
 tabla_excel_fn(dataset = subset, var_prop = P3_14_1, var1 = "Sexo", var2 = "Anio_arresto", var3 = NA, 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Policia", seccion = "Policia-hizo_año_estado", nombre = "Uniformado_año_estado",
+               carpeta = "Policia", seccion = "Policia-hizo_año_estado", nombre = "Identifico_año_sexo",
                Dato = "Proporción de personas que reportaron que la autoridad se identificó..., por sexo, añode arresto")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_14_2, var1 = "Sexo", var2 = "Anio_arresto", var3 = NA, 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Policia", seccion = "Policia-hizo_año_estado", nombre = "Uniformado_año_estado",
+               carpeta = "Policia", seccion = "Policia-hizo_año_estado", nombre = "Informo_año_sexo",
                Dato = "Proporción de personas que reportaron que la autoridad le informó..., por sexo, año  de arresto")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_14_3, var1 = "Sexo", var2 = "Anio_arresto", var3 = NA, 
