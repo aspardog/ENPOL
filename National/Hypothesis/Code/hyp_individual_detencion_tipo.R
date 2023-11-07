@@ -140,5 +140,50 @@ hyp_detenciones_event <- function() {
   
   openxlsx::write.xlsx(unlist(data2analysis, recursive = F),
                        "National/Hypothesis/Output/Detenciones/Tipo/hyp_detenciones_infografia.xlsx")
-  
+  return(data2analysis)
 }
+
+data2analyze <- hyp_detenciones_event()
+
+data2plot <- data2analyze[[1]][["National_changes_time"]] %>%
+  pivot_longer(cols = c(orden_det, flagrancia, inspeccion, irregular),
+               names_to = "detention", values_to = "value") %>%
+  mutate(colors = 
+           case_when(
+             detention == "orden_det"  ~ "Orden de detencion",
+             detention == "flagrancia" ~ "Flagrancia",
+             detention == "inspeccion"  ~ "Inspeccion",
+             detention == "irregular"  ~ "Detenciones irregulares"
+           ))
+
+ggplot(data = data2plot,
+       aes(x = reorder(period, order_value),
+           y = value,
+           group = detention,
+           color = colors)) + 
+  geom_line() +
+  geom_point() +
+  geom_vline(xintercept = "implementation_year", color = "red") +
+  labs(x = "Year", y = "Outcome") +
+  theme_bw(base_size=16) +
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.major.y = element_line(colour = "#d1cfd1"),
+        axis.title.x       = element_blank(),
+        axis.title.y       = element_blank(),
+        axis.text.x        = element_text(angle = 45),
+        axis.line.x        = element_line(color    = "#d1cfd1"),
+        axis.ticks.x       = element_line(color    = "#d1cfd1",
+                                          linetype = "solid")) +
+  scale_y_continuous(limits = c(0, 0.5),
+                     expand = c(0,0),
+                     breaks = seq(0,0.5,0.1),
+                     labels = paste0(seq(0,50,10), "%")) 
+
+
+detenciones_estado <- data2analyze[[2]][["Estado_change_rate"]] %>%
+  filter(type == "orden_det") %>%
+  arrange(-rate_change_pct)
+
+detenciones_corporacion <- data2analyze[[3]][["Corporacion_grupos_change_rate"]] %>%
+  filter(type == "orden_det") %>%
+  arrange(rate_change_pct)
