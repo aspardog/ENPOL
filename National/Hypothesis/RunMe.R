@@ -30,9 +30,8 @@
 # loaded from the following script:
 source("National/Hypothesis/Code/settings.R")
 source("National/Hypothesis/Code/pruebas_hip.R")
-source("National/Hypothesis/Code/hyp_individual_detencion_tipo.R")
-
 load(paste0(path2DB,"/National/Data_cleaning/Output/Main_database.RData")) 
+source("National/Hypothesis/Code/hyp_individual_detencion_tipo.R")
 
 # Remove previous files
 
