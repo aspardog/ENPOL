@@ -42,6 +42,8 @@ Detenciones <- paste0(path2DB,"/National/Descriptives/Output/Detenciones/Detenci
 LGBTQ <- paste0(path2DB,"/National/Descriptives/Output/Detenciones/LGBTQ")
 Policia <- paste0(path2DB,"/National/Descriptives/Output/Detenciones/Policia")
 Tortura <- paste0(path2DB,"/National/Descriptives/Output/Detenciones/Tortura")
+PPO <- paste0(path2DB,"/National/Descriptives/Output/Detenciones/PPO")
+Inspecciones <- paste0(path2DB,"/National/Descriptives/Output/Detenciones/Inspecciones")
 
 carpetas <- c(Detenciones, LGBTQ, Policia, Tortura)
 
@@ -99,6 +101,9 @@ tabla_excel_fn <- function(dataset,var_prop,var1,var2,var3,varfilter,filtervalue
             summarise(Prop = mean({{var_prop}}, na.rm = T)) %>%
             pivot_wider(names_from = .data[[var1]], values_from = Prop) %>%
             cbind(Dato,.)
+          if (var1 == "Sexo"){
+            df <-  df %>% 
+              mutate(Gap = df$Masculino - df$Femenino)}
           
         }
         
@@ -115,6 +120,14 @@ tabla_excel_fn <- function(dataset,var_prop,var1,var2,var3,varfilter,filtervalue
           pivot_wider(names_from = .data[[var1]], values_from = Prop) %>%
           cbind(Dato,.) %>% 
           arrange(by_group = .data[[var2]])
+        if (var1 == "Sexo"){
+          df <-  df %>% 
+            mutate(Gap = df$Masculino - df$Femenino)}
+        if (var2 == "Sexo"){ 
+          row_to_subtract <- df[3,] 
+          row_to_subtract_from <- df[2,] 
+          diff_row <- row_to_subtract_from - row_to_subtract
+          df <- bind_rows(df, diff_row)}
         
       } 
       
@@ -185,7 +198,9 @@ tabla_excel_fn <- function(dataset,var_prop,var1,var2,var3,varfilter,filtervalue
             summarise(Prop = mean({{var_prop}}, na.rm = T)) %>%
             pivot_wider(names_from = .data[[var1]], values_from = Prop) %>%
             cbind(Dato,.)
-          
+          if (var1 == "Sexo"){
+            df <-  df %>% 
+              mutate(Gap = df$Masculino - df$Femenino)}
         }
         
       } else {
@@ -202,6 +217,14 @@ tabla_excel_fn <- function(dataset,var_prop,var1,var2,var3,varfilter,filtervalue
           pivot_wider(names_from = .data[[var1]], values_from = Prop) %>%
           cbind(Dato,.) %>% 
           arrange(by_group = .data[[var2]])
+        if (var1 == "Sexo"){
+          df <-  df %>% 
+            mutate(Gap = df$Masculino - df$Femenino)}
+        if (var2 == "Sexo"){ 
+          row_to_subtract <- df[3,] 
+          row_to_subtract_from <- df[2,] 
+          diff_row <- row_to_subtract_from - row_to_subtract
+          df <- bind_rows(df, diff_row)}
         
       } 
       
