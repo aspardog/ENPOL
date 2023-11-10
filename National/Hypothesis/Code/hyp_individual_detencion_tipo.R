@@ -23,19 +23,28 @@
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-hyp_detenciones_event <- function() {
+hyp_detenciones_event <- function(data.df= Main_database) {
 
-  master_data.df <- Main_database %>%
+  master_data.df <- data.df %>%
     select(P3_3, orden_det, flagrancia, flagrancia_const, inspeccion, det_ninguna, 
            months_since_NSJP, years_since_NSJP, 
-           Corporacion_grupos, Sexo) %>%
+           Corporacion_grupos, Sexo, starts_with("Del_")) %>%
     mutate(
-      Estado             = case_when(P3_3 == "98" ~ NA_character_,
-                                     P3_3 == "99" ~ NA_character_,
-                                     T ~ P3_3),
-      Corporacion_grupos = case_when(Corporacion_grupos == "NS/NR" ~ NA_character_,
-                                     T ~ Corporacion_grupos)
+      Estado =
+        case_when(
+          P3_3 == "98" ~ NA_character_,
+          P3_3 == "99" ~ NA_character_,
+          T ~ P3_3),
+      Corporacion_grupos = 
+        case_when(
+          Corporacion_grupos == "NS/NR" ~ NA_character_,
+          T ~ Corporacion_grupos)
     ) %>%
+    mutate(
+      across(starts_with("Del_"),
+            as.numeric)
+    ) %>% 
+
     select(!c(P3_3)) %>%
     mutate(before_nsjp = 
              if_else(years_since_NSJP < 0, 1, 0),
