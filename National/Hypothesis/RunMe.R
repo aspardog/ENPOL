@@ -30,9 +30,9 @@
 # loaded from the following script:
 source("National/Hypothesis/Code/settings.R")
 source("National/Hypothesis/Code/pruebas_hip.R")
+source("National/Hypothesis/Code/hyp_individual_detencion_tipo.R")
 
 load(paste0(path2DB,"/National/Data_cleaning/Output/Main_database.RData")) 
-source("National/Hypothesis/Code/hyp_individual_detencion_tipo.R")
 
 # Remove previous files
 
@@ -101,7 +101,7 @@ data_subset_tipo.df <- Main_database %>%
          months_since_NSJP, years_since_NSJP, Corporacion_grupos, Estado, Sexo, 
          Robo_vehiculo, Robo_casa_hab, Robo_negocio, Robo_transporte_pub, Robo_transeunte, Robo_autopartes, Robo_otros, Posesion_drogas,
          Comercio_drogas, Lesiones, Hom_culposo, Hom_doloso, Portacion_armas, Incum_asis_fam, Violencia_fam, Danio_prop, Secuestro, Fraude,
-         Violacion_sexual, Delincuencia_org, Otros_sexuales, Extorsion, Privacion_de_libertad, Abuso_de_conf, Amenazas, Otros, No_sabe, No_responde) 
+         Violacion_sexual, Delincuencia_org, Otros_sexuales, Extorsion, Privacion_de_libertad, Abuso_de_conf, Amenazas, Otros, No_sabe, No_responde)
 
 tipo <- c("flagrancia", 
           "orden_det", 
