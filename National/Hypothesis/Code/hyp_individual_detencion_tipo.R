@@ -73,13 +73,17 @@ hyp_detenciones_event <- function(data.df= Main_database) {
                years_since_NSJP > 7 & years_since_NSJP < 8 ~ "seven_years_after",
                years_since_NSJP > 8 & years_since_NSJP < 9 ~ "eight_years_after",
                years_since_NSJP > 9 & years_since_NSJP < 10 ~ "nine_years_after",
-               years_since_NSJP > 10 & years_since_NSJP < 11 ~ "ten_years_after"
+               years_since_NSJP > 10 & years_since_NSJP < 11 ~ "ten_years_after",
+               years_since_NSJP > 11 & years_since_NSJP < 12 ~ "eleven_years_after",
+               years_since_NSJP > 13 & years_since_NSJP < 14 ~ "twelve_years_after",
+               years_since_NSJP > 14 & years_since_NSJP < 15 ~ "thirteen_years_after"
              )) %>%
     filter(!is.na(period)) %>%
     arrange(years_since_NSJP) %>%
     mutate(National = "National")
   
-  variables2analyze <- c("National","Estado", "Corporacion_grupos", "Sexo")
+  variables2analyze <- c("National","Estado", "Corporacion_grupos", "Sexo",
+                         names(master_data.df %>% select(starts_with("Del_"))))
   
   data2analysis <- lapply(variables2analyze, function(vars){
     
@@ -114,12 +118,13 @@ hyp_detenciones_event <- function(data.df= Main_database) {
                  period == "seven_years_after"   ~ 7,
                  period == "eight_years_after"   ~ 8,
                  period == "nine_years_after"    ~ 9,
-                 period == "ten_years_after"     ~ 10
-                 
+                 period == "ten_years_after"     ~ 10,
+                 period == "eleven_years_after"  ~ 11,
+                 period == "twelve_years_after"   ~ 12
                )
       ) %>%
       arrange(all_of(vars), order_value) %>%
-      filter(order_value > -6 & order_value < 8)
+      filter(order_value > -6)
     
     change_pct_rate <-  changes_time %>%
       select(!order_value) %>%
@@ -127,22 +132,28 @@ hyp_detenciones_event <- function(data.df= Main_database) {
                    names_to = "type", values_to = "values") %>%
       pivot_wider(id_cols = c(type, group), names_from = "period", values_from = "values") %>%
       select(type, group, implementation_year, ends_with("after")) %>%
-      mutate(first_year_rate_change_pct     = ((one_year_after - implementation_year)/implementation_year),
-             second_year_rate_change_pct    = ((two_years_after - one_year_after)/one_year_after),
-             third_year_rate_change_pct     = ((three_years_after - two_years_after)/two_years_after),
-             fourth_year_rate_change_pct    = ((four_years_after - three_years_after)/three_years_after),
-             fifth_year_rate_change_pct     = ((five_years_after - four_years_after)/four_years_after),
-             sixth_year_rate_change_pct     = ((six_years_after - five_years_after)/five_years_after),
-             seventh_year_rate_change_pct   = ((seven_years_after - six_years_after)/six_years_after)
+      mutate(first_year_rate_change_pct     = ((one_year_after       - implementation_year)/implementation_year),
+             second_year_rate_change_pct    = ((two_years_after      - one_year_after)/one_year_after),
+             third_year_rate_change_pct     = ((three_years_after    - two_years_after)/two_years_after),
+             fourth_year_rate_change_pct    = ((four_years_after     - three_years_after)/three_years_after),
+             fifth_year_rate_change_pct     = ((five_years_after     - four_years_after)/four_years_after),
+             sixth_year_rate_change_pct     = ((six_years_after      - five_years_after)/five_years_after),
+             seventh_year_rate_change_pct   = ((seven_years_after    - six_years_after)/six_years_after),
+             eighth_year_rate_change_pct    = ((eight_years_after    - seven_years_after)/seven_years_after),
+             nineth_year_rate_change_pct    = ((nine_years_after     - eight_years_after)/eight_years_after),
+             tenth_year_rate_change_pct     = ((ten_years_after      - nine_years_after)/nine_years_after),
+             eleventh_year_rate_change_pct  = ((eleven_years_after   - ten_years_after)/ten_years_after),
+             twelfth_year_rate_change_pct   = ((twelve_years_after   - eleven_years_after)/eleven_years_after),
       ) %>%
       group_by(type, group) %>%
       summarise(rate_change_pct = mean(c(first_year_rate_change_pct, second_year_rate_change_pct, third_year_rate_change_pct, 
                                          fourth_year_rate_change_pct, fifth_year_rate_change_pct, sixth_year_rate_change_pct, 
-                                         seventh_year_rate_change_pct), na.rm = T) *100)
+                                         seventh_year_rate_change_pct, eighth_year_rate_change_pct, nineth_year_rate_change_pct,
+                                         tenth_year_rate_change_pct, eleventh_year_rate_change_pct, twelfth_year_rate_change_pct), na.rm = T) *100)
     
     listResults <- list(changes_time, change_pct_rate )
-    names(listResults) <- c(paste0(vars, "_changes_time"),
-                            paste0(vars, "_change_rate"))
+    names(listResults) <- c(paste0(vars, "_time"),
+                            paste0(vars, "_rate"))
     return(listResults)
     
   })
@@ -151,48 +162,48 @@ hyp_detenciones_event <- function(data.df= Main_database) {
                        "National/Hypothesis/Output/Detenciones/Tipo/hyp_detenciones_infografia.xlsx")
   return(data2analysis)
 }
-
-data2analyze <- hyp_detenciones_event()
-
-data2plot <- data2analyze[[1]][["National_changes_time"]] %>%
-  pivot_longer(cols = c(orden_det, flagrancia, inspeccion, irregular),
-               names_to = "detention", values_to = "value") %>%
-  mutate(colors = 
-           case_when(
-             detention == "orden_det"  ~ "Orden de detencion",
-             detention == "flagrancia" ~ "Flagrancia",
-             detention == "inspeccion"  ~ "Inspeccion",
-             detention == "irregular"  ~ "Detenciones irregulares"
-           ))
-
-ggplot(data = data2plot,
-       aes(x = reorder(period, order_value),
-           y = value,
-           group = detention,
-           color = colors)) + 
-  geom_line() +
-  geom_point() +
-  geom_vline(xintercept = "implementation_year", color = "red") +
-  labs(x = "Year", y = "Outcome") +
-  theme_bw(base_size=16) +
-  theme(panel.grid.major.x = element_blank(),
-        panel.grid.major.y = element_line(colour = "#d1cfd1"),
-        axis.title.x       = element_blank(),
-        axis.title.y       = element_blank(),
-        axis.text.x        = element_text(angle = 45),
-        axis.line.x        = element_line(color    = "#d1cfd1"),
-        axis.ticks.x       = element_line(color    = "#d1cfd1",
-                                          linetype = "solid")) +
-  scale_y_continuous(limits = c(0, 0.5),
-                     expand = c(0,0),
-                     breaks = seq(0,0.5,0.1),
-                     labels = paste0(seq(0,50,10), "%")) 
-
-
-detenciones_estado <- data2analyze[[2]][["Estado_change_rate"]] %>%
-  filter(type == "orden_det") %>%
-  arrange(-rate_change_pct)
-
-detenciones_corporacion <- data2analyze[[3]][["Corporacion_grupos_change_rate"]] %>%
-  filter(type == "orden_det") %>%
-  arrange(rate_change_pct)
+# 
+# data2analyze <- hyp_detenciones_event()
+# 
+# data2plot <- data2analyze[[1]][["National_changes_time"]] %>%
+#   pivot_longer(cols = c(orden_det, flagrancia, inspeccion, irregular),
+#                names_to = "detention", values_to = "value") %>%
+#   mutate(colors = 
+#            case_when(
+#              detention == "orden_det"  ~ "Orden de detencion",
+#              detention == "flagrancia" ~ "Flagrancia",
+#              detention == "inspeccion"  ~ "Inspeccion",
+#              detention == "irregular"  ~ "Detenciones irregulares"
+#            ))
+# 
+# ggplot(data = data2plot,
+#        aes(x = reorder(period, order_value),
+#            y = value,
+#            group = detention,
+#            color = colors)) + 
+#   geom_line() +
+#   geom_point() +
+#   geom_vline(xintercept = "implementation_year", color = "red") +
+#   labs(x = "Year", y = "Outcome") +
+#   theme_bw(base_size=16) +
+#   theme(panel.grid.major.x = element_blank(),
+#         panel.grid.major.y = element_line(colour = "#d1cfd1"),
+#         axis.title.x       = element_blank(),
+#         axis.title.y       = element_blank(),
+#         axis.text.x        = element_text(angle = 45),
+#         axis.line.x        = element_line(color    = "#d1cfd1"),
+#         axis.ticks.x       = element_line(color    = "#d1cfd1",
+#                                           linetype = "solid")) +
+#   scale_y_continuous(limits = c(0, 0.5),
+#                      expand = c(0,0),
+#                      breaks = seq(0,0.5,0.1),
+#                      labels = paste0(seq(0,50,10), "%")) 
+# 
+# 
+# detenciones_estado <- data2analyze[[2]][["Estado_change_rate"]] %>%
+#   filter(type == "orden_det") %>%
+#   arrange(-rate_change_pct)
+# 
+# detenciones_corporacion <- data2analyze[[3]][["Corporacion_grupos_change_rate"]] %>%
+#   filter(type == "orden_det") %>%
+#   arrange(rate_change_pct)
