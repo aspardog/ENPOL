@@ -101,7 +101,8 @@ data_subset_tipo.df <- Main_database %>%
          months_since_NSJP, years_since_NSJP, Corporacion_grupos, Estado, Sexo, 
          Robo_vehiculo, Robo_casa_hab, Robo_negocio, Robo_transporte_pub, Robo_transeunte, Robo_autopartes, Robo_otros, Posesion_drogas,
          Comercio_drogas, Lesiones, Hom_culposo, Hom_doloso, Portacion_armas, Incum_asis_fam, Violencia_fam, Danio_prop, Secuestro, Fraude,
-         Violacion_sexual, Delincuencia_org, Otros_sexuales, Extorsion, Privacion_de_libertad, Abuso_de_conf, Amenazas, Otros, No_sabe, No_responde)
+         Violacion_sexual, Delincuencia_org, Otros_sexuales, Extorsion, Privacion_de_libertad, Abuso_de_conf, Amenazas, Otros, No_sabe, No_responde,
+         Traslados_30= P3_20_01, LGBTQ, Edad, Traslado_MP = P3_19_01, proporcionalidad_uso_fuerza)
 
 tipo <- c("flagrancia", 
           "orden_det", 
@@ -134,6 +135,37 @@ result_list <- lapply(tipo, function(tipo) {
     return(result)
   })
 })
+
+tipo <- c("Traslados_30", 
+          "Traslado_MP") # List of dependent variables from the first analysis
+
+independent_time_vars <- c("months_since_NSJP", 
+                           "years_since_NSJP")    # List of independent time variables
+
+result_list <- lapply(tipo, function(tipo) {
+  lapply(independent_time_vars, function(independent_vars) {
+    
+    var_type <- if_else(independent_vars == "months_since_NSJP", "months", "years")
+    
+    data_list.df <- data_subset_tipo.df %>%
+      rename(target = all_of(tipo),
+             independent = all_of(independent_vars))
+    
+    result <- prueba_hip(
+      seccion = "Detenciones",
+      subseccion = "Tipo",
+      hypo_name = paste0("hyp_detenciones_", tipo, "_", var_type),
+      type = "logit",
+      database = data_list.df,
+      dep_var = target,
+      indep_var = independent,
+      group_vars = c("Corporacion_grupos", "Sexo", "LGBTQ")
+    )
+    
+    return(result)
+  })
+})
+
 
 flag_const <- c("flagrancia_const", 
                 "detencion_no_inmediata")     # List of dependent variables from the second analysis
@@ -191,7 +223,39 @@ tipo_flag_const <- list(
                                            "Violencia_fam", "Danio_prop", "Secuestro", "Violacion_sexual", "Delincuencia_org", 
                                            "Otros_sexuales", "Extorsion", "Privacion_de_libertad","Abuso_de_conf", "Amenazas"))
     return(result3_4)
+  }), 
+  result3_4 <- lapply(flag_const, function(flag_const){
+    
+    if(flag_const == "flagrancia_const"){
+      
+      data_list.df <- data_subset_tipo.df %>%
+        filter(flagrancia == 1) %>%
+        rename(target = all_of(flag_const))
+      
+    } else {
+      
+      data_list.df <- data_subset_tipo.df %>%
+        filter(inspeccion == 1) %>%
+        rename(target = all_of(flag_const))
+      
+    }
+    
+    result3_4 <- prueba_hip(seccion = "Detenciones", 
+                            subseccion = "Tipo",  
+                            hypo_name = paste0("hyp_detenciones_",flag_const), 
+                            type = "means", 
+                            database = data_list.df, 
+                            dep_var = target, 
+                            indep_var = Sexo, 
+                            group_vars = c("Corporacion_grupos", "Estado", "Robo_vehiculo", "Robo_casa_hab", "Robo_negocio",  
+                                           "Robo_transporte_pub", "Robo_transeunte", "Robo_autopartes", "Robo_otros", "Posesion_drogas",  
+                                           "Comercio_drogas", "Lesiones", "Hom_culposo", "Hom_doloso", "Portacion_armas", "Incum_asis_fam",
+                                           "Violencia_fam", "Danio_prop", "Secuestro", "Violacion_sexual", "Delincuencia_org", 
+                                           "Otros_sexuales", "Extorsion", "Privacion_de_libertad","Abuso_de_conf", "Amenazas"))
+    return(result3_4)
   })
+  
+  
 )
 
 infographic_data <- hyp_detenciones_event()
@@ -283,6 +347,7 @@ list_abuso <- lapply(abuso, function(abuso) {
   }
 )
 
+
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
 ## 2. MP                                                                                     ----
@@ -336,4 +401,39 @@ list_ppo <- lapply(ppo, function(ppo) {
     })
 }
 )
+
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##
+## 4. Policía                                                                                     ----
+##
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+tipo <- c("proporcionalidad_uso_fuerza") # List of dependent variables from the first analysis
+
+independent_time_vars <- c("months_since_NSJP", 
+                           "years_since_NSJP")    # List of independent time variables
+
+result_list <- lapply(tipo, function(tipo) {
+  lapply(independent_time_vars, function(independent_vars) {
+    
+    var_type <- if_else(independent_vars == "months_since_NSJP", "months", "years")
+    
+    data_list.df <- data_subset_tipo.df %>%
+      rename(target = all_of(tipo),
+             independent = all_of(independent_vars))
+    
+    result <- prueba_hip(
+      seccion = "Detenciones",
+      subseccion = "Policia",
+      hypo_name = paste0("hyp_detenciones_", tipo, "_", var_type),
+      type = "logit",
+      database = data_list.df,
+      dep_var = target,
+      indep_var = independent,
+      group_vars = c("Corporacion_grupos", "Sexo", "LGBTQ")
+    )
+    
+    return(result)
+  })
+})
 
