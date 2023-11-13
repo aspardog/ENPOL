@@ -120,14 +120,6 @@ tabla_excel_fn <- function(dataset,var_prop,var1,var2,var3,varfilter,filtervalue
           pivot_wider(names_from = .data[[var1]], values_from = Prop) %>%
           cbind(Dato,.) %>% 
           arrange(by_group = .data[[var2]])
-        if (var1 == "Sexo"){
-          df <-  df %>% 
-            mutate(Gap = df$Masculino - df$Femenino)}
-        if (var2 == "Sexo"){ 
-          row_to_subtract <- df[3,] 
-          row_to_subtract_from <- df[2,] 
-          diff_row <- row_to_subtract_from - row_to_subtract
-          df <- bind_rows(df, diff_row)}
         
       } 
       
@@ -217,15 +209,6 @@ tabla_excel_fn <- function(dataset,var_prop,var1,var2,var3,varfilter,filtervalue
           pivot_wider(names_from = .data[[var1]], values_from = Prop) %>%
           cbind(Dato,.) %>% 
           arrange(by_group = .data[[var2]])
-        if (var1 == "Sexo"){
-          df <-  df %>% 
-            mutate(Gap = df$Masculino - df$Femenino)}
-        if (var2 == "Sexo"){ 
-          row_to_subtract <- df[3,] 
-          row_to_subtract_from <- df[2,] 
-          diff_row <- row_to_subtract_from - row_to_subtract
-          df <- bind_rows(df, diff_row)}
-        
       } 
       
     } else {
@@ -466,92 +449,7 @@ subset <- Main_database %>%
          P3_16_9 = case_when(P3_16 == "9" ~ 1,
                              P3_16 == "1" | P3_16 == "2" | P3_16 == "8" ~ 0,
                              T ~ NA),
-         
-         # Grupos de P3_19
-         P3_19_01 = case_when(P3_19 == "01" ~ 1,
-                              is.na(P3_19) == TRUE ~ NA,
-                              T ~ 0),
-         P3_19_02 = case_when(P3_19 == "02" ~ 1,
-                              is.na(P3_19) == TRUE ~ NA,
-                              T ~ 0),
-         P3_19_03 = case_when(P3_19 == "03" ~ 1,
-                              is.na(P3_19) == TRUE ~ NA,
-                              T ~ 0),
-         P3_19_04 = case_when(P3_19 == "04" ~ 1,
-                              is.na(P3_19) == TRUE ~ NA,
-                              T ~ 0),
-         P3_19_05 = case_when(P3_19 == "05" ~ 1,
-                              is.na(P3_19) == TRUE ~ NA,
-                              T ~ 0),
-         P3_19_06 = case_when(P3_19 == "06" ~ 1,
-                              is.na(P3_19) == TRUE ~ NA,
-                              T ~ 0),
-         P3_19_07 = case_when(P3_19 == "07" ~ 1,
-                              is.na(P3_19) == TRUE ~ NA,
-                              T ~ 0),
-         P3_19_08 = case_when(P3_19 == "08" ~ 1,
-                              is.na(P3_19) == TRUE ~ NA,
-                              T ~ 0),
-         P3_19_09 = case_when(P3_19 == "09" ~ 1,
-                              is.na(P3_19) == TRUE ~ NA,
-                              T ~ 0),
-         P3_19_10 = case_when(P3_19 == "10" ~ 1,
-                              is.na(P3_19) == TRUE ~ NA,
-                              T ~ 0),
-         P3_19_11 = case_when(P3_19 == "11" ~ 1,
-                              is.na(P3_19) == TRUE ~ NA,
-                              T ~ 0),
-         P3_19_12 = case_when(P3_19 == "12" ~ 1,
-                              is.na(P3_19) == TRUE ~ NA,
-                              T ~ 0),
-         P3_19_13 = case_when(P3_19 == "13" ~ 1,
-                              is.na(P3_19) == TRUE ~ NA,
-                              T ~ 0),
-         P3_19_14 = case_when(P3_19 == "14" ~ 1,
-                              is.na(P3_19) == TRUE ~ NA,
-                              T ~ 0),
-         P3_19_98 = case_when(P3_19 == "98" ~ 1,
-                              is.na(P3_19) == TRUE ~ NA,
-                              T ~ 0),
-         P3_19_99 = case_when(P3_19 == "99" ~ 1,
-                              is.na(P3_19) == TRUE ~ NA,
-                              T ~ 0),
-         
-         # Grupos de P3_20
-         P3_20_01 = case_when(P3_20 == "01" ~ 1,
-                              is.na(P3_20) == TRUE ~ NA,
-                              T ~ 0),
-         P3_20_02 = case_when(P3_20 == "02" ~ 1,
-                              is.na(P3_20) == TRUE ~ NA,
-                              T ~ 0),
-         P3_20_03 = case_when(P3_20 == "03" ~ 1,
-                              is.na(P3_20) == TRUE ~ NA,
-                              T ~ 0),
-         P3_20_04 = case_when(P3_20 == "04" ~ 1,
-                              is.na(P3_20) == TRUE ~ NA,
-                              T ~ 0),
-         P3_20_05 = case_when(P3_20 == "05" ~ 1,
-                              is.na(P3_20) == TRUE ~ NA,
-                              T ~ 0),
-         P3_20_06 = case_when(P3_20 == "06" ~ 1,
-                              is.na(P3_20) == TRUE ~ NA,
-                              T ~ 0),
-         P3_20_07 = case_when(P3_20 == "07" ~ 1,
-                              is.na(P3_20) == TRUE ~ NA,
-                              T ~ 0),
-         P3_20_08 = case_when(P3_20 == "08" ~ 1,
-                              is.na(P3_20) == TRUE ~ NA,
-                              T ~ 0),
-         P3_20_09 = case_when(P3_20 == "09" ~ 1,
-                              is.na(P3_20) == TRUE ~ NA,
-                              T ~ 0),
-         P3_20_98 = case_when(P3_20 == "98" ~ 1,
-                              is.na(P3_20) == TRUE ~ NA,
-                              T ~ 0),
-         P3_20_99 = case_when(P3_20 == "99" ~ 1,
-                              is.na(P3_20) == TRUE ~ NA,
-                              T ~ 0),
-         
+
          # Grupos de P3_21
          P3_21_1_1 = case_when(P3_21_1 == "1" ~ 1,
                                is.na(P3_21_1) == TRUE ~ NA,
@@ -2451,7 +2349,7 @@ for (i in delito_unico_grupos) {
 for (i in delito_unico_grupos) {
   tabla_excel_fn(dataset = subset, var_prop = controles_cooperativos, var1 = "Sexo", var2 = NA, var3 = NA, 
                  varfilter = i, filtervalue = 1, 
-                 carpeta = "Policia", seccion = "Controles_cooperativos_delito-grupo-unico_sexo", nombre = paste0("",i),
+                 carpeta = "Policia", seccion = "Controles_cooperativos_delito-grupo-unicosexo", nombre = paste0("",i),
                  Dato = paste0("Proporción de personas con un único delito que reportaron controles cooperativos, acusadas  por ",i,", por sexo "))
 }
 
@@ -2459,7 +2357,7 @@ for (i in delito_unico_grupos) {
 for (i in delitos) {
   tabla_excel_fn(dataset = subset, var_prop = controles_cooperativos, var1 = "Estado_arresto", var2 = "Sexo", var3 = NA, 
                  varfilter = i, filtervalue = "1", 
-                 carpeta = "Policia", seccion = "Controles_cooperativos_delito_sexo_estado", nombre = paste0("",i),
+                 carpeta = "Policia", seccion = "Controles_cooperativos_delito_sexo_estado", nombre = paste0("estado_sexo",i),
                  Dato = paste0("Proporción de personas que reportaron controles cooperativos, acusadas (entre otros) por ",i," por sexo y estado de arresto"))
 }
 
@@ -2471,7 +2369,7 @@ for (i in delitos) {
 for (i in delito_grupos) {
   tabla_excel_fn(dataset = subset, var_prop = control_contacto, var1 = "Sexo", var2 = NA, var3 = NA, 
                  varfilter = i, filtervalue = 1, 
-                 carpeta = "Policia", seccion = "Controles_contacto_delito-grupo_sexo", nombre = paste0("",i),
+                 carpeta = "Policia", seccion = "Controles_contacto_delito-grupo_sexo", nombre = paste0("Sexo_",i),
                  Dato = paste0("Proporción de personas que reportaron controles de contacto, acusadas (entre otros) por ",i," por sexo"))
 }
 
@@ -2485,7 +2383,7 @@ for (i in delito_unico_grupos) {
 for (i in delito_unico_grupos) {
   tabla_excel_fn(dataset = subset, var_prop = control_contacto, var1 = "Sexo", var2 = NA, var3 = NA, 
                  varfilter = i, filtervalue = 1, 
-                 carpeta = "Policia", seccion = "Controles_cooperativos_delito-grupo-unico_sexo", nombre = paste0("",i), 
+                 carpeta = "Policia", seccion = "Controles_cooperativos_delito-grupo-unico-sexo", nombre = paste0("",i), 
                  Dato = paste0("Proporción de personas con un único delito que reportaron controles cooperativos, acusadas  por ",i,", por sexo "))
 }
 
