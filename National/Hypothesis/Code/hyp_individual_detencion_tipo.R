@@ -28,7 +28,7 @@ hyp_detenciones_event <- function(data.df= Main_database) {
   master_data.df <- data.df %>%
     select(P3_3, orden_det, flagrancia, flagrancia_const, inspeccion, det_ninguna, 
            months_since_NSJP, years_since_NSJP, 
-           Corporacion_grupos, Sexo, starts_with("Del_")) %>%
+           Corporacion_grupos, Sexo, starts_with("Del_"), traslados_30= P3_20_01, traslados_6h = P3_20_06) %>%
     mutate(
       Estado =
         case_when(
@@ -92,10 +92,12 @@ hyp_detenciones_event <- function(data.df= Main_database) {
     
     changes_time <- data_subset.df %>% 
       group_by(period, group) %>%
-      summarise(orden_det  = mean(orden_det, na.rm = T),
-                flagrancia = mean(flagrancia, na.rm = T),
-                inspeccion = mean(inspeccion, na.rm = T),
-                irregular  = mean(det_ninguna, na.rm = T)) %>%
+      summarise(orden_det    = mean(orden_det, na.rm = T),
+                flagrancia   = mean(flagrancia, na.rm = T),
+                inspeccion   = mean(inspeccion, na.rm = T),
+                irregular    = mean(det_ninguna, na.rm = T),
+                traslados_30 = mean(traslados_30, na.rm = T),
+                traslados_6h = mean(traslados_6h, na.rm = T)) %>%
       mutate(order_value = 
                case_when(
                  period == "ten_years_before"    ~ -10,
@@ -115,12 +117,12 @@ hyp_detenciones_event <- function(data.df= Main_database) {
                  period == "four_years_after"    ~ 4,
                  period == "five_years_after"    ~ 5,
                  period == "six_years_after"     ~ 6,
-                 period == "seven_years_after"   ~ 7,
-                 period == "eight_years_after"   ~ 8,
-                 period == "nine_years_after"    ~ 9,
-                 period == "ten_years_after"     ~ 10,
-                 period == "eleven_years_after"  ~ 11,
-                 period == "twelve_years_after"   ~ 12
+                 period == "seven_years_after"   ~ 7
+                 # period == "eight_years_after"   ~ 8,
+                 # period == "nine_years_after"    ~ 9,
+                 # period == "ten_years_after"     ~ 10,
+                 # period == "eleven_years_after"  ~ 11,
+                 # period == "twelve_years_after"   ~ 12
                )
       ) %>%
       arrange(all_of(vars), order_value) %>%
@@ -128,7 +130,7 @@ hyp_detenciones_event <- function(data.df= Main_database) {
     
     change_pct_rate <-  changes_time %>%
       select(!order_value) %>%
-      pivot_longer(cols = c(orden_det, flagrancia, inspeccion, irregular),
+      pivot_longer(cols = c(orden_det, flagrancia, inspeccion, irregular, traslados_30, traslados_6h),
                    names_to = "type", values_to = "values") %>%
       pivot_wider(id_cols = c(type, group), names_from = "period", values_from = "values") %>%
       select(type, group, implementation_year, ends_with("after")) %>%
@@ -138,18 +140,17 @@ hyp_detenciones_event <- function(data.df= Main_database) {
              fourth_year_rate_change_pct    = ((four_years_after     - three_years_after)/three_years_after),
              fifth_year_rate_change_pct     = ((five_years_after     - four_years_after)/four_years_after),
              sixth_year_rate_change_pct     = ((six_years_after      - five_years_after)/five_years_after),
-             seventh_year_rate_change_pct   = ((seven_years_after    - six_years_after)/six_years_after),
-             eighth_year_rate_change_pct    = ((eight_years_after    - seven_years_after)/seven_years_after),
-             nineth_year_rate_change_pct    = ((nine_years_after     - eight_years_after)/eight_years_after),
-             tenth_year_rate_change_pct     = ((ten_years_after      - nine_years_after)/nine_years_after),
-             eleventh_year_rate_change_pct  = ((eleven_years_after   - ten_years_after)/ten_years_after),
-             twelfth_year_rate_change_pct   = ((twelve_years_after   - eleven_years_after)/eleven_years_after),
+             seventh_year_rate_change_pct   = ((seven_years_after    - six_years_after)/six_years_after)
+             # eighth_year_rate_change_pct    = ((eight_years_after    - seven_years_after)/seven_years_after),
+             # nineth_year_rate_change_pct    = ((nine_years_after     - eight_years_after)/eight_years_after),
+             # tenth_year_rate_change_pct     = ((ten_years_after      - nine_years_after)/nine_years_after),
+             # eleventh_year_rate_change_pct  = ((eleven_years_after   - ten_years_after)/ten_years_after),
+             # twelfth_year_rate_change_pct   = ((twelve_years_after   - eleven_years_after)/eleven_years_after),
       ) %>%
       group_by(type, group) %>%
       summarise(rate_change_pct = mean(c(first_year_rate_change_pct, second_year_rate_change_pct, third_year_rate_change_pct, 
                                          fourth_year_rate_change_pct, fifth_year_rate_change_pct, sixth_year_rate_change_pct, 
-                                         seventh_year_rate_change_pct, eighth_year_rate_change_pct, nineth_year_rate_change_pct,
-                                         tenth_year_rate_change_pct, eleventh_year_rate_change_pct, twelfth_year_rate_change_pct), na.rm = T) *100)
+                                         seventh_year_rate_change_pct), na.rm = T) *100)
     
     listResults <- list(changes_time, change_pct_rate )
     names(listResults) <- c(paste0(vars, "_time"),
@@ -163,41 +164,121 @@ hyp_detenciones_event <- function(data.df= Main_database) {
   return(data2analysis)
 }
 # 
-# data2analyze <- hyp_detenciones_event()
-# 
-# data2plot <- data2analyze[[1]][["National_changes_time"]] %>%
-#   pivot_longer(cols = c(orden_det, flagrancia, inspeccion, irregular),
-#                names_to = "detention", values_to = "value") %>%
-#   mutate(colors = 
-#            case_when(
-#              detention == "orden_det"  ~ "Orden de detencion",
-#              detention == "flagrancia" ~ "Flagrancia",
-#              detention == "inspeccion"  ~ "Inspeccion",
-#              detention == "irregular"  ~ "Detenciones irregulares"
-#            ))
-# 
-# ggplot(data = data2plot,
-#        aes(x = reorder(period, order_value),
-#            y = value,
-#            group = detention,
-#            color = colors)) + 
-#   geom_line() +
-#   geom_point() +
-#   geom_vline(xintercept = "implementation_year", color = "red") +
-#   labs(x = "Year", y = "Outcome") +
-#   theme_bw(base_size=16) +
-#   theme(panel.grid.major.x = element_blank(),
-#         panel.grid.major.y = element_line(colour = "#d1cfd1"),
-#         axis.title.x       = element_blank(),
-#         axis.title.y       = element_blank(),
-#         axis.text.x        = element_text(angle = 45),
-#         axis.line.x        = element_line(color    = "#d1cfd1"),
-#         axis.ticks.x       = element_line(color    = "#d1cfd1",
-#                                           linetype = "solid")) +
-#   scale_y_continuous(limits = c(0, 0.5),
-#                      expand = c(0,0),
-#                      breaks = seq(0,0.5,0.1),
-#                      labels = paste0(seq(0,50,10), "%")) 
+data2analyze <- hyp_detenciones_event()
+ 
+data2plot <- data2analyze[[1]][["National_time"]] %>%
+  select(period, group, starts_with("traslados"), order_value) %>%
+  pivot_longer(cols = c(traslados_30, traslados_6h),
+               names_to = "traslados", values_to = "value") %>%
+  mutate(colors =
+           case_when(
+             traslados == "traslados_30"  ~ "Traslados en 30 minutos",
+             traslados == "traslados_6h" ~  "Traslados en 6 a 24 horas"
+           ))
+
+traslados <- ggplot(data = data2plot,
+       aes(x = reorder(period, order_value),
+           y = value,
+           group = traslados,
+           color = colors)) +
+  geom_line() +
+  geom_point() +
+  geom_vline(xintercept = "implementation_year", color = "red") +
+  labs(x = "Year", y = "Outcome") +
+  theme_bw(base_size=16) +
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.major.y = element_line(colour = "#d1cfd1"),
+        axis.title.x       = element_blank(),
+        axis.title.y       = element_blank(),
+        axis.text.x        = element_text(angle = 45),
+        axis.line.x        = element_line(color    = "#d1cfd1"),
+        axis.ticks.x       = element_line(color    = "#d1cfd1",
+                                          linetype = "solid"), 
+        legend.position = "top", legend.title = element_blank()) +
+  scale_y_continuous(limits = c(0, 0.5),
+                     expand = c(0,0),
+                     breaks = seq(0,0.5,0.1),
+                     labels = paste0(seq(0,50,10), "%"))
+ggsave(plot = traslados, paste0(path2DB, "/National/Hypothesis/Output/Detenciones/Tipo/traslados_seven.svg"), width = 10, height = 7)
+
+data2plot <- data2analyze[[4]][["Sexo_time"]] %>%
+  select(period, group, starts_with("traslados"), order_value) %>%
+  pivot_longer(cols = c(traslados_30, traslados_6h),
+               names_to = "traslados", values_to = "value") %>%
+  pivot_wider(id_cols = c(period, order_value), names_from = c("group", "traslados"), values_from = "value") %>%
+  pivot_longer(cols = c("Femenino_traslados_30", "Femenino_traslados_6h", "Masculino_traslados_30", "Masculino_traslados_6h"),
+               names_to = "traslados", values_to = "value") %>%
+  mutate(colors =
+           case_when(
+             traslados == "Femenino_traslados_30"  ~ "Traslados en 30 minutos: Mujer",
+             traslados == "Femenino_traslados_6h" ~  "Traslados en 6 a 24 horas: Mujer",
+             traslados == "Masculino_traslados_30"  ~ "Traslados en 30 minutos: Hombre",
+             traslados == "Masculino_traslados_6h" ~  "Traslados en 6 a 24 horas: Hombre"
+           ))
+
+traslados_sexo <- ggplot(data = data2plot,
+                    aes(x = reorder(period, order_value),
+                        y = value,
+                        group = traslados,
+                        color = colors)) +
+  geom_line() +
+  geom_point() +
+  geom_vline(xintercept = "implementation_year", color = "red") +
+  labs(x = "Year", y = "Outcome") +
+  theme_bw(base_size=16) +
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.major.y = element_line(colour = "#d1cfd1"),
+        axis.title.x       = element_blank(),
+        axis.title.y       = element_blank(),
+        axis.text.x        = element_text(angle = 45),
+        axis.line.x        = element_line(color    = "#d1cfd1"),
+        axis.ticks.x       = element_line(color    = "#d1cfd1",
+                                          linetype = "solid"), 
+        legend.position = "top", legend.title = element_blank()) +
+  scale_y_continuous(limits = c(0, 0.5),
+                     expand = c(0,0),
+                     breaks = seq(0,0.5,0.1),
+                     labels = paste0(seq(0,50,10), "%"))
+
+ggsave(plot = traslados_sexo, paste0(path2DB, "/National/Hypothesis/Output/Detenciones/Tipo/traslados_sexo_seven.svg"), width = 15, height = 7)
+
+data2plot <- data2analyze[[1]][["National_time"]] %>%
+  select(period, group, !starts_with("traslados"), order_value) %>%
+  pivot_longer(cols = c("orden_det", "flagrancia", "inspeccion", "irregular"),
+               names_to = "detention", values_to = "value") %>%
+  mutate(colors =
+           case_when(
+             detention == "orden_det"  ~ "Orden de detencion",
+             detention == "flagrancia" ~ "Flagrancia",
+             detention == "inspeccion"  ~ "Inspeccion",
+             detention == "irregular"  ~ "Detenciones irregulares"
+           ))
+
+traslados <- ggplot(data = data2plot,
+                    aes(x = reorder(period, order_value),
+                        y = value,
+                        group = detention,
+                        color = colors)) +
+  geom_line() +
+  geom_point() +
+  geom_vline(xintercept = "implementation_year", color = "red") +
+  labs(x = "Year", y = "Outcome") +
+  theme_bw(base_size=16) +
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.major.y = element_line(colour = "#d1cfd1"),
+        axis.title.x       = element_blank(),
+        axis.title.y       = element_blank(),
+        axis.text.x        = element_text(angle = 45),
+        axis.line.x        = element_line(color    = "#d1cfd1"),
+        axis.ticks.x       = element_line(color    = "#d1cfd1",
+                                          linetype = "solid"), 
+        legend.position = "top", legend.title = element_blank()) +
+  scale_y_continuous(limits = c(0, 0.5),
+                     expand = c(0,0),
+                     breaks = seq(0,0.5,0.1),
+                     labels = paste0(seq(0,50,10), "%"))
+ggsave(plot = traslados, paste0(path2DB, "/National/Hypothesis/Output/Detenciones/Tipo/detenciones_twelve.svg"), width = 15, height = 7)
+
 # 
 # 
 # detenciones_estado <- data2analyze[[2]][["Estado_change_rate"]] %>%
