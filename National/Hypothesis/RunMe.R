@@ -129,7 +129,11 @@ result_list <- lapply(tipo, function(tipo) {
       database = data_list.df,
       dep_var = target,
       indep_var = independent,
-      group_vars = c("Corporacion_grupos", "Estado", "Sexo")
+      group_vars = c("Corporacion_grupos", "Estado", "Sexo", "Robo_vehiculo", "Robo_casa_hab", "Robo_negocio",  
+                     "Robo_transporte_pub", "Robo_transeunte", "Robo_autopartes", "Robo_otros", "Posesion_drogas",  
+                     "Comercio_drogas", "Lesiones", "Hom_culposo", "Hom_doloso", "Portacion_armas", 
+                     "Violencia_fam", "Danio_prop", "Secuestro", "Violacion_sexual", "Delincuencia_org", 
+                     "Otros_sexuales", "Extorsion", "Privacion_de_libertad","Abuso_de_conf", "Amenazas")
     )
     
     return(result)
