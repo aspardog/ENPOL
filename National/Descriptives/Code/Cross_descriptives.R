@@ -252,7 +252,8 @@ tabla_excel_fn <- function(dataset,var_prop,var1,var2,var3,varfilter,filtervalue
   }
   
   write.xlsx(as.data.frame(df), 
-             file      = file.path(paste0("National/Descriptives/Output/Detenciones/", 
+             file      = file.path(paste0(path2DB,
+                                          "/National/Descriptives/Output/Detenciones/", 
                                           carpeta,"/desc_", seccion,".xlsx"),
                                    fsep = "/"),  
              sheetName = paste0(nombre),
