@@ -252,7 +252,8 @@ tabla_excel_fn <- function(dataset,var_prop,var1,var2,var3,varfilter,filtervalue
   }
   
   write.xlsx(as.data.frame(df), 
-             file      = file.path(paste0("National/Descriptives/Output/Detenciones/", 
+             file      = file.path(paste0(path2DB,
+                                          "/National/Descriptives/Output/Detenciones/", 
                                           carpeta,"/desc_", seccion,".xlsx"),
                                    fsep = "/"),  
              sheetName = paste0(nombre),
@@ -2376,14 +2377,14 @@ for (i in delito_grupos) {
 for (i in delito_unico_grupos) {
   tabla_excel_fn(dataset = subset, var_prop = control_contacto, var1 = NA, var2 = NA, var3 = NA, 
                  varfilter = i, filtervalue = 1, 
-                 carpeta = "Policia", seccion = "Controles_cooperativos_delito-grupo-unico", nombre = paste0("",i), 
+                 carpeta = "Policia", seccion = "Controles_contacto_delito-grupo-unico", nombre = paste0("",i), 
                  Dato = paste0("Proporción de personas con un único delito que reportaron controles cooperativos, acusadas por ",i," "))
 }
 
 for (i in delito_unico_grupos) {
   tabla_excel_fn(dataset = subset, var_prop = control_contacto, var1 = "Sexo", var2 = NA, var3 = NA, 
                  varfilter = i, filtervalue = 1, 
-                 carpeta = "Policia", seccion = "Controles_cooperativos_delito-grupo-unico-sexo", nombre = paste0("",i), 
+                 carpeta = "Policia", seccion = "Controles_contacto_delito-grupo-unico-sexo", nombre = paste0("",i), 
                  Dato = paste0("Proporción de personas con un único delito que reportaron controles cooperativos, acusadas  por ",i,", por sexo "))
 }
 
@@ -2424,7 +2425,7 @@ for (i in delito_unico_grupos) {
 for (i in delitos) {
   tabla_excel_fn(dataset = subset, var_prop = sometimiento, var1 = "Estado_arresto", var2 = "Sexo", var3 = NA, 
                  varfilter = i, filtervalue = "1", 
-                 carpeta = "Policia", seccion = "Controles_contacto_delito_sexo_estado", nombre = paste0("",i),
+                 carpeta = "Policia", seccion = "Controles_sometimiento_delito_sexo_estado", nombre = paste0("",i),
                  Dato = paste0("Proporción de personas que reportaron técnicas de sometimiento, acusadas (entre otros) por ",i," por sexo y estado de arresto"))
 }
 
@@ -4816,6 +4817,7 @@ tabla_excel_fn(dataset = subset, var_prop = P3_19_08, var1 = "Sexo", var2 = "Ani
                Dato = "Proporción de personas que reportaron que las llevaron a un establecimiento comercial..., por sexo y año de arresto")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_19_09, var1 = "Sexo", var2 = "Anio_arresto", var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
                carpeta = "Policia", seccion = "Llevado_año_sexo", nombre = "Vehiculo_año_sexo", 
                Dato = "Proporción de personas que reportaron que las mantuvieron en un vehículo, por sexo y año de arresto")
 
@@ -6337,8 +6339,8 @@ tabla_excel_fn(dataset = subset, var_prop = P3_14_3, var1 = "Corporacion_grupos"
 
 tabla_excel_fn(dataset = subset, var_prop = P3_14_3, var1 = "Estado_arresto", var2 = NA, var3 = NA, 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Inspecciones", seccion = "Uniformada", nombre = "Nacional",
-               Dato = "Proporción de personas que reportan que la autoridad estaba uniformada, por año de arresto")
+               carpeta = "Inspecciones", seccion = "Uniformada", nombre = "Estado",
+               Dato = "Proporción de personas que reportan que la autoridad estaba uniformada, por Estado de arresto")
 
 #### 3.5.1 Dijo por que -------------------------------------------------------------
 
@@ -6350,23 +6352,18 @@ tabla_excel_fn(dataset = subset, var_prop = P3_14_4, var1 = NA, var2 = NA, var3 
 
 tabla_excel_fn(dataset = subset, var_prop = P3_14_4, var1 = "Sexo", var2 = NA, var3 = NA, 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Inspecciones", seccion = "Dijo-por-que", nombre = "Nacional",
+               carpeta = "Inspecciones", seccion = "Dijo-por-que", nombre = "Sexo",
                Dato = "Proporción de personas que reportan que la autoridad le dijo por qué le detuvieron, por sexo")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_14_4, var1 = "Anio_arresto", var2 = NA, var3 = NA, 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Inspecciones", seccion = "Dijo-por-que", nombre = "Nacional",
+               carpeta = "Inspecciones", seccion = "Dijo-por-que", nombre = "Año",
                Dato = "Proporción de personas que reportan que la autoridad le dijo por qué le detuvieron, por año de arresto")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_14_4, var1 = "Corporacion_grupos", var2 = NA, var3 = NA, 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Inspecciones", seccion = "Dijo-por-que", nombre = "Nacional",
+               carpeta = "Inspecciones", seccion = "Dijo-por-que", nombre = "Corporacion",
                Dato = "Proporción de personas que reportan que la autoridad le dijo por qué le detuvieron, por autoridad que realizó la detención")
-
-tabla_excel_fn(dataset = subset, var_prop = P3_14_4, var1 = "Anio_arresto", var2 = NA, var3 = NA, 
-               varfilter = NA, filtervalue = NA, 
-               carpeta = "Inspecciones", seccion = "Dijo-por-que", nombre = "Nacional",
-               Dato = "Proporción de personas que reportan que la autoridad le dijo por qué le detuvieron, por año de arresto")
 
 #### 3.5.1 Silencio -------------------------------------------------------------
 
@@ -6378,23 +6375,18 @@ tabla_excel_fn(dataset = subset, var_prop = P3_14_5, var1 = NA, var2 = NA, var3 
 
 tabla_excel_fn(dataset = subset, var_prop = P3_14_5, var1 = "Sexo", var2 = NA, var3 = NA, 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Inspecciones", seccion = "Silencio", nombre = "Nacional",
+               carpeta = "Inspecciones", seccion = "Silencio", nombre = "Sexo",
                Dato = "Proporción de personas que reportan que la autoridad le informó sobre guardar silencio y no declarar sin abogado, por sexo")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_14_5, var1 = "Anio_arresto", var2 = NA, var3 = NA, 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Inspecciones", seccion = "Silencio", nombre = "Nacional",
+               carpeta = "Inspecciones", seccion = "Silencio", nombre = "Año",
                Dato = "Proporción de personas que reportan que la autoridad le informó sobre guardar silencio y no declarar sin abogado, por año de arresto")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_14_5, var1 = "Corporacion_grupos", var2 = NA, var3 = NA, 
                varfilter = NA, filtervalue = NA,
-               carpeta = "Inspecciones", seccion = "Silencio", nombre = "Nacional",
+               carpeta = "Inspecciones", seccion = "Silencio", nombre = "Corporacion",
                Dato = "Proporción de personas que reportan que la autoridad le informó sobre guardar silencio y no declarar sin abogado, por autoridad que realizó la detención")
-
-tabla_excel_fn(dataset = subset, var_prop = P3_14_5, var1 = "Anio_arresto", var2 = NA, var3 = NA, 
-               varfilter = NA, filtervalue = NA, 
-               carpeta = "Inspecciones", seccion = "Silencio", nombre = "Nacional",
-               Dato = "Proporción de personas que reportan que la autoridad le informó sobre guardar silencio y no declarar sin abogado, por año de arresto")
 
 
 #### 3.5.1 Dijo llevaría -------------------------------------------------------------
@@ -6407,24 +6399,18 @@ tabla_excel_fn(dataset = subset, var_prop = P3_14_6, var1 = NA, var2 = NA, var3 
 
 tabla_excel_fn(dataset = subset, var_prop = P3_14_6, var1 = "Sexo", var2 = NA, var3 = NA, 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Inspecciones", seccion = "Dijo-llevaria", nombre = "Nacional",
+               carpeta = "Inspecciones", seccion = "Dijo-llevaria", nombre = "Sexo",
                Dato = "Proporción de personas que reportan que la autoridad le dijo a dónde le llevaría, por sexo")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_14_6, var1 = "Anio_arresto", var2 = NA, var3 = NA, 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Inspecciones", seccion = "Dijo-llevaria", nombre = "Nacional",
+               carpeta = "Inspecciones", seccion = "Dijo-llevaria", nombre = "Año",
                Dato = "Proporción de personas que reportan que la autoridad le dijo a dónde le llevaría, por año de arresto")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_14_6, var1 = "Corporacion_grupos", var2 = NA, var3 = NA, 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Inspecciones", seccion = "Dijo-llevaria", nombre = "Nacional",
+               carpeta = "Inspecciones", seccion = "Dijo-llevaria", nombre = "Corporacion",
                Dato = "Proporción de personas que reportan que la autoridad le dijo a dónde le llevaría, por autoridad que realizó la detención")
-
-tabla_excel_fn(dataset = subset, var_prop = P3_14_6, var1 = "Anio_arresto", var2 = NA, var3 = NA, 
-               varfilter = NA, filtervalue = NA, 
-               carpeta = "Inspecciones", seccion = "Dijo-llevaria", nombre = "Nacional",
-               Dato = "Proporción de personas que reportan que la autoridad le dijo a dónde le llevaría, por año de arresto")
-
 
 
 ### 3.6 PPO ---------------------------------------------------------------------
@@ -7024,3 +7010,4 @@ tabla_excel_fn(dataset = subset, var_prop = ambos_fueros, var1 = "Estado_arresto
                varfilter = NA, filtervalue = NA, 
                carpeta = "PPO", seccion = "Fuero-ambos", nombre = "Estado_año",
                Dato = "Proporción de personas que fueron arrestadas sólo por delitos de ambos fueros, por año y  estado de arresto")
+

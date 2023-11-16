@@ -3918,7 +3918,7 @@ Main_database %<>%
   # Creating dummies for ACU, RND and PPO
   mutate(
     NSJP = case_when(
-      (P5_13_1 == "1" | P5_33_1 == "1") & (P5_13_2 == "1" | P5_33_2 == "1") & (fecha_sis_NSJP_fed < fecha_arresto | fecha_sis_NSJP_com < fecha_arresto) ~ 1,
+      (P5_13_1 == "1" | P5_33_1 == "1") & (P5_13_2 == "1" | P5_33_2 == "1") & (fecha_sis_NSJP_fed < fecha_arresto & fecha_sis_NSJP_com < fecha_arresto) ~ 1,
       (P5_13_1 == "1" | P5_33_1 == "1") & ((P5_13_2 == "0" | is.na(P5_13_2) == TRUE) & (P5_33_2 == "0" | is.na(P5_33_2) == TRUE)) & (fecha_sis_NSJP_fed < fecha_arresto) ~ 1,
       ((P5_13_1 == "0" | is.na(P5_13_1) == TRUE) & (P5_33_1 == "0" | is.na(P5_33_1) == TRUE)) & (P5_13_2 == "1" | P5_33_2 == "1") & (fecha_sis_NSJP_com < fecha_arresto) ~ 1,
       (P5_13_1 == "1" | P5_33_1 == "1") & (P5_13_2 == "1" | P5_33_2 == "1") & (fecha_sis_NSJP_fed >= fecha_arresto & fecha_sis_NSJP_com >= fecha_arresto) ~ 0,

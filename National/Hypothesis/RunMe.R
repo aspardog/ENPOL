@@ -102,7 +102,7 @@ data_subset_tipo.df <- Main_database %>%
          Robo_vehiculo, Robo_casa_hab, Robo_negocio, Robo_transporte_pub, Robo_transeunte, Robo_autopartes, Robo_otros, Posesion_drogas,
          Comercio_drogas, Lesiones, Hom_culposo, Hom_doloso, Portacion_armas, Incum_asis_fam, Violencia_fam, Danio_prop, Secuestro, Fraude,
          Violacion_sexual, Delincuencia_org, Otros_sexuales, Extorsion, Privacion_de_libertad, Abuso_de_conf, Amenazas, Otros, No_sabe, No_responde,
-         Traslados_30= P3_20_01, LGBTQ, Edad, Traslado_MP = P3_19_01, proporcionalidad_uso_fuerza)
+         Traslados_30 = P3_20_01, LGBTQ, Edad, Traslado_MP = P3_19_01, proporcionalidad_uso_fuerza)
 
 tipo <- c("flagrancia", 
           "orden_det", 

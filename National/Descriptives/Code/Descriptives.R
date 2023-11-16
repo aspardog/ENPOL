@@ -26,12 +26,12 @@
 
 # Required Packages, Fonts, ggplot theme, color palettes, comparison countries and other general routines are
 # loaded from the following script:
-source("Data_cleaning/Code/settings.R")
+source("National/Data_cleaning/Code/settings.R")
 
 
 # Remove previous files
 
-outPaths <- c("/Descriptives/Output/")
+outPaths <- c("National/Descriptives/Output/")
 
 # Listing previous outputs
 prevOutputs <- list.files(outPaths, 
@@ -50,7 +50,7 @@ rm(outPaths,prevOutputs)
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-load(paste0(path2DB,"/Data_cleaning/Output/Main_database.RData")) 
+load(paste0(path2DB,"/National/Data_cleaning/Output/Main_database.RData")) 
 
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -709,7 +709,8 @@ for (i in Detencion_a) {
   # Writing the excel file
   
   write.xlsx(as.data.frame(df_i), 
-             file      = file.path(paste0("Descriptives/Output/Detenciones/",
+             file      = file.path(paste0(path2DB, 
+                                          "/National/Descriptives/Output/Detenciones/",
                                           "Detencion",".xlsx"),
                                    fsep = "/"),  
              sheetName = paste0(i),
@@ -760,7 +761,8 @@ for (i in MP_a) {
   # Writing the excel file
   
   write.xlsx(as.data.frame(df_i), 
-             file      = file.path(paste0("Descriptives/Output/MP/",
+             file      = file.path(paste0(path2DB,
+                                          "/National/Descriptives/Output/MP/",
                                           "MP",".xlsx"),
                                    fsep = "/"),  
              sheetName = paste0(i),
@@ -804,10 +806,12 @@ for (i in Proceso_a) {
   # Writing the excel file
   
   write.xlsx(as.data.frame(df_i), 
-             file      = file.path(paste0("Descriptives/Output/Jueces/",
+             file      = file.path(paste0(path2DB,
+                                          "/National/Descriptives/Output/Jueces/",
                                           "Proceso",".xlsx"),
                                    fsep = "/"),  
              sheetName = paste0(i),
              append    = T,
              row.names = F)
 }
+
