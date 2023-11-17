@@ -5,12 +5,13 @@
 ## Author(s):         F. Marcelo Torres González  (marcelo.torresgo@gmail.com)
 ##                    Arturo Luna                 ()
 ##                    A. Santiago Pardo G.        (spardo@worldjusticeproject.org)
+##                    Cristina Alvarez        (@worldjusticeproject.org)
 ##
 ## Dependencies:      World Justice Project
 ##
 ## Creation date:     June 13th, 2023
 ##
-## This version:      September 18th, 2023
+## This version:      November 16th, 2023
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -45,7 +46,7 @@ load(paste0(path2DB,"/National/Data_cleaning/Input/BD_ENPOL_2021.RData"))
 
 # Subsetting relevant data
 
-Main_database <- purrr::reduce(list(ENPOL2021_SOC,ENPOL2021_2_3,ENPOL2021_4,ENPOL2021_5,ENPOL2021_6), 
+Main_database <- purrr::reduce(list(ENPOL2021_SOC,ENPOL2021_2_3,ENPOL2021_4,ENPOL2021_5,ENPOL2021_6,ENPOL2021_8_9_10_11), 
                                dplyr::left_join, by = "ID_PER") 
 rm(ENPOL2021_SOC,ENPOL2021_2_3,ENPOL2021_4,ENPOL2021_5,ENPOL2021_6,ENPOL2021_7,ENPOL2021_8_9_10_11)
 
@@ -4457,7 +4458,42 @@ Main_database %<>%
     P3_19_99 = case_when(P3_19 == "99" ~ 1,
                          is.na(P3_19) == TRUE ~ NA,
                          T ~ 0),
-    
+
+    # Color de piel
+    Color_piel_1 = case_when(P10_10 == "A" ~ 1 ,
+                           P10_10 == "B" ~ 2 ,
+                           P10_10 == "C" ~ 3 ,
+                           P10_10 == "D" ~ 4 ,
+                           P10_10 == "E" ~ 5 ,
+                           P10_10 == "F" ~ 6 ,
+                           P10_10 == "G" ~ 7 ,
+                           P10_10 == "H" ~ 8 ,
+                           P10_10 == "I" ~ 9 ,
+                           P10_10 == "J" ~ 10 ,
+                           P10_10 == "K" ~ 11 ,
+                           T ~ NA),
+    Color_piel_2 = case_when(P10_11 == "A" ~ 1 ,
+                             P10_11 == "B" ~ 2 ,
+                             P10_11 == "C" ~ 3 ,
+                             P10_11 == "D" ~ 4 ,
+                             P10_11 == "E" ~ 5 ,
+                             P10_11 == "F" ~ 6 ,
+                             P10_11 == "G" ~ 7 ,
+                             P10_11 == "H" ~ 8 ,
+                             P10_11 == "I" ~ 9 ,
+                             P10_11 == "J" ~ 10 ,
+                             P10_11 == "K" ~ 11 ,
+                             T ~ NA),
+    Color_piel_promedio = round(case_when(is.na(Color_piel_2) == T ~ Color_piel_1, 
+                                    is.na(Color_piel_1) == T ~ Color_piel_2, 
+                                    is.na(Color_piel_1) & is.na(Color_piel_1) == T ~ NA,
+                                    T ~ (Color_piel_1+Color_piel_2)/2)), 
+    Color_piel_categ = case_when(Color_piel_promedio <= 3  ~ "Blanco", 
+                                 Color_piel_promedio == 4  ~ "Moreno Claro", 
+                                 Color_piel_promedio == 5  ~ "Moreno", 
+                                 Color_piel_promedio == 6  ~ "Moreno Obscuro", 
+                                 Color_piel_promedio >= 7  ~ "Moreno Muy Obscuro", 
+                                 T ~ NA),
   )
 
 
