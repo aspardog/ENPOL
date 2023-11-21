@@ -9,7 +9,7 @@ This project aims to analyze the Criminal Justice System (SJPA, for its acronym 
 
 The present repository is structured based in the following filing system:
 
-<img width="400" alt="FILE" src="https://github.com/aspardog/ENPOL/assets/85714147/3cb8f7f4-4e77-4e0f-bb05-1141138535ac">
+<img width="500" alt="FILE" src="https://github.com/aspardog/ENPOL/assets/85714147/3cb8f7f4-4e77-4e0f-bb05-1141138535ac">
 
 Under this system you will find three main structures:
 
