@@ -7,7 +7,7 @@ This project aims to analyze the Criminal Justice System (SJPA, for its acronym 
 
 ## Files description
 
-<img width="300" alt="FILE" src="https://github.com/aspardog/ENPOL/assets/85714147/3cb8f7f4-4e77-4e0f-bb05-1141138535ac">
+<img width="400" alt="FILE" src="https://github.com/aspardog/ENPOL/assets/85714147/3cb8f7f4-4e77-4e0f-bb05-1141138535ac">
 
 ## Flujo de trabajo
 
