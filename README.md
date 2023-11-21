@@ -9,7 +9,7 @@ This project aims to analyze the Criminal Justice System (SJPA, for its acronym 
 
 
 
-![alt text]("/Users/cristinaalvarez/Desktop/File system.png")
+![](/Users/cristinaalvarez/Library/CloudStorage/OneDrive-WorldJusticeProject/LOCAL/ENPOL/File.png)
 
 ## Flujo de trabajo
 
