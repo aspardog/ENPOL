@@ -4450,7 +4450,7 @@ Main_database %<>%
       No_sabe = coalesce(P5_11_98, P5_31_98),
       No_responde = coalesce(P5_11_99, P5_31_99),
     
-    # Tipo de delito
+    # Tipo de delito con prefijo
     Del_Robo_vehiculo = coalesce(P5_11_01, P5_31_01),
            Del_Robo_casa_hab = coalesce(P5_11_02, P5_31_02),
            Del_Robo_negocio = coalesce(P5_11_03, P5_31_03),
@@ -4480,7 +4480,7 @@ Main_database %<>%
            Del_No_sabe = coalesce(P5_11_98, P5_31_98),
            Del_No_responde = coalesce(P5_11_99, P5_31_99),         
     
-    # Grupos de P3_20
+    # Grupos de P3_20: tiempo que pasó de la detención hasta MP o juez
     P3_20_01 = case_when(P3_20 == "01" ~ 1,
                          is.na(P3_20) == TRUE ~ NA,
                          T ~ 0),
@@ -4515,7 +4515,7 @@ Main_database %<>%
                          is.na(P3_20) == TRUE ~ NA,
                          T ~ 0),
     
-    # Grupos de P3_19
+    # Grupos de P3_19: Lugares a donde fueron llevados después de la detención
     P3_19_01 = case_when(P3_19 == "01" ~ 1,
                          is.na(P3_19) == TRUE ~ NA,
                          T ~ 0),
@@ -4600,7 +4600,95 @@ Main_database %<>%
                                  Color_piel_promedio == 6  ~ "Moreno Obscuro", 
                                  Color_piel_promedio >= 7  ~ "Moreno Muy Obscuro", 
                                  T ~ NA),
-  )
+  ) %>% 
+  
+  rowwise() %>% mutate(Delito_unico = ifelse(sum(c(Delito_gr_1_robos,
+                                                   Delito_gr_2_drogas,
+                                                   Delito_gr_3_del_org,
+                                                   Delito_gr_4_lesiones,
+                                                   Delito_gr_5_hom_cul,
+                                                   Delito_gr_6_hom_dol,
+                                                   Delito_gr_7_armas, 
+                                                   Delito_gr_8_viol_fam,
+                                                   Delito_gr_9_secuestro,
+                                                   Delito_gr_10_sexuales,
+                                                   Delito_gr_11_extorsion,
+                                                   Delito_gr_12_fraude,
+                                                   Delito_gr_13_amenazas,
+                                                   Delito_gr_14_otro,
+                                                   Delito_gr_15_ns_nr)) == 1, 1, 0)) %>% 
+  
+  mutate(Delito_unico_1_robos = case_when(Delito_gr_1_robos == 1 
+                                          & Delito_unico == 1 ~ 1, 
+                                          T ~ 0),
+         Delito_unico_2_drogas = case_when(Delito_gr_2_drogas == 1 
+                                           & Delito_unico == 1 ~ 1,
+                                           T ~ 0),
+         Delito_unico_3_del_org = case_when(Delito_gr_3_del_org == 1 
+                                            & Delito_unico == 1 ~ 1,
+                                            T ~ 0),
+         Delito_unico_4_lesiones = case_when(Delito_gr_4_lesiones == 1 
+                                             & Delito_unico == 1 ~ 1,
+                                             T ~ 0),
+         Delito_unico_5_hom_cul = case_when(Delito_gr_5_hom_cul == 1 
+                                            & Delito_unico == 1 ~ 1,
+                                            T ~ 0),
+         Delito_unico_6_hom_dol = case_when(Delito_gr_6_hom_dol == 1 
+                                            & Delito_unico == 1 ~ 1,
+                                            T ~ 0),
+         Delito_unico_7_armas = case_when(Delito_gr_7_armas == 1
+                                          & Delito_unico == 1 ~ 1,
+                                          T ~ 0),
+         Delito_unico_8_viol_fam = case_when(Delito_gr_8_viol_fam == 1 
+                                             & Delito_unico == 1 ~ 1,
+                                             T ~ 0),
+         Delito_unico_9_secuestro = case_when(Delito_gr_9_secuestro == 1 
+                                              & Delito_unico == 1 ~ 1,
+                                              T ~ 0),
+         Delito_unico_10_sexuales = case_when(Delito_gr_10_sexuales == 1 
+                                              & Delito_unico == 1 ~ 1,
+                                              T ~ 0),
+         Delito_unico_11_extorsion = case_when(  Delito_gr_11_extorsion == 1 
+                                                 & Delito_unico == 1 ~ 1,
+                                                 T ~ 0),
+         Delito_unico_12_fraude = case_when(  Delito_gr_12_fraude == 1 
+                                              & Delito_unico == 1 ~ 1,
+                                              T ~ 0),
+         Delito_unico_13_amenazas = case_when(  Delito_gr_13_amenazas == 1 
+                                                & Delito_unico == 1 ~ 1,
+                                                T ~ 0),
+         Delito_unico_14_otro = case_when(  Delito_gr_14_otro == 1 
+                                            & Delito_unico == 1 ~ 1,
+                                            T ~ 0),
+         Delito_unico_15_ns_nr = case_when(  Delito_gr_15_ns_nr == 1 
+                                             & Delito_unico == 1 ~ 1,
+                                             T ~ 0)) %>%
+  mutate(Delito_unico_categ = case_when(
+    Delito_unico_1_robos == 1 ~ "robos",
+    Delito_unico_2_drogas == 1 ~ "drogas",
+    Delito_unico_3_del_org == 1 ~ "org",
+    Delito_unico_4_lesiones == 1 ~ "lesiones",
+    Delito_unico_5_hom_cul == 1 ~ "hom_cul",
+    Delito_unico_6_hom_dol == 1 ~ "hom_dol",
+    Delito_unico_7_armas == 1 ~ "armas",
+    Delito_unico_8_viol_fam == 1 ~ "viol_fam",
+    Delito_unico_9_secuestro == 1 ~ "secuestro",
+    Delito_unico_10_sexuales == 1 ~ "sexuales",
+    Delito_unico_11_extorsion == 1 ~ "extorsion",
+    Delito_unico_12_fraude == 1 ~ "fraude",
+    Delito_unico_13_amenazas == 1 ~ "amenazas",
+    Delito_unico_14_otro == 1 ~ "otro",
+    Delito_unico_15_ns_nr == 1 ~ "ns_nr",
+    TRUE ~ NA_character_
+  ))
+
+age_breaks <- c(0, 18, 30, 40, 60, Inf)
+age_labels <- c("0-18", "19-30", "31-40", "41-60", "61+")
+  
+Main_database <- Main_database %>%
+  mutate(Edad_categ = cut(Edad, breaks = age_breaks, labels = age_labels, include.lowest = TRUE))
+
+  
 
 
 
@@ -4611,4 +4699,4 @@ Main_database %<>%
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
-save(Main_database, file = "National/Data_cleaning/Output/Main_database.RData")
+save(Main_database, file = paste0(path2DB,"National/Data_cleaning/Output/Main_database.RData"))

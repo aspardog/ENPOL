@@ -482,69 +482,8 @@ subset <- Main_database %>%
                                                                                          "2" = 0,
                                                                                          "8" = NA_real_,
                                                                                          "9" = NA_real_)))  %>% 
-  filter(Post_2008 == 1)  %>% 
-  
-  rowwise() %>% mutate(Delito_unico = ifelse(sum(c(Delito_gr_1_robos,
-                                                   Delito_gr_2_drogas,
-                                                   Delito_gr_3_del_org,
-                                                   Delito_gr_4_lesiones,
-                                                   Delito_gr_5_hom_cul,
-                                                   Delito_gr_6_hom_dol,
-                                                   Delito_gr_7_armas, 
-                                                   Delito_gr_8_viol_fam,
-                                                   Delito_gr_9_secuestro,
-                                                   Delito_gr_10_sexuales,
-                                                   Delito_gr_11_extorsion,
-                                                   Delito_gr_12_fraude,
-                                                   Delito_gr_13_amenazas,
-                                                   Delito_gr_14_otro,
-                                                   Delito_gr_15_ns_nr)) <= 1, 1, 0)) %>% 
-  
-  mutate(Delito_unico_1_robos = case_when(Delito_gr_1_robos == 1 
-                                          & Delito_unico == 1 ~ 1,
-                                          T ~ 0),
-         Delito_unico_2_drogas = case_when(Delito_gr_2_drogas == 1 
-                                           & Delito_unico == 1 ~ 1,
-                                           T ~ 0),
-         Delito_unico_3_del_org = case_when(Delito_gr_3_del_org == 1 
-                                            & Delito_unico == 1 ~ 1,
-                                            T ~ 0),
-         Delito_unico_4_lesiones = case_when(Delito_gr_4_lesiones == 1 
-                                             & Delito_unico == 1 ~ 1,
-                                             T ~ 0),
-         Delito_unico_5_hom_cul = case_when(Delito_gr_5_hom_cul == 1 
-                                            & Delito_unico == 1 ~ 1,
-                                            T ~ 0),
-         Delito_unico_6_hom_dol = case_when(Delito_gr_6_hom_dol == 1 
-                                            & Delito_unico == 1 ~ 1,
-                                            T ~ 0),
-         Delito_unico_7_armas = case_when(Delito_gr_7_armas == 1
-                                          & Delito_unico == 1 ~ 1,
-                                          T ~ 0),
-         Delito_unico_8_viol_fam = case_when(Delito_gr_8_viol_fam == 1 
-                                             & Delito_unico == 1 ~ 1,
-                                             T ~ 0),
-         Delito_unico_9_secuestro = case_when(Delito_gr_9_secuestro == 1 
-                                              & Delito_unico == 1 ~ 1,
-                                              T ~ 0),
-         Delito_unico_10_sexuales = case_when(Delito_gr_10_sexuales == 1 
-                                              & Delito_unico == 1 ~ 1,
-                                              T ~ 0),
-         Delito_unico_11_extorsion = case_when(  Delito_gr_11_extorsion == 1 
-                                                 & Delito_unico == 1 ~ 1,
-                                                 T ~ 0),
-         Delito_unico_12_fraude = case_when(  Delito_gr_12_fraude == 1 
-                                              & Delito_unico == 1 ~ 1,
-                                              T ~ 0),
-         Delito_unico_13_amenazas = case_when(  Delito_gr_13_amenazas == 1 
-                                                & Delito_unico == 1 ~ 1,
-                                                T ~ 0),
-         Delito_unico_14_otro = case_when(  Delito_gr_14_otro == 1 
-                                            & Delito_unico == 1 ~ 1,
-                                            T ~ 0),
-         Delito_unico_15_ns_nr = case_when(  Delito_gr_15_ns_nr == 1 
-                                             & Delito_unico == 1 ~ 1,
-                                             T ~ 0))
+  filter(Post_2008 == 1)
+
 
 rm(Main_database)
 
@@ -1128,6 +1067,11 @@ tabla_excel_fn(dataset = subset, var_prop = tortura, var1 = "genero", var2 = NA,
                carpeta = "Tortura", seccion = "Tortura_traslado", nombre = "LGBTQ+",
                Dato = "Proporción de personas que reportaron ser torturadas durante el traslado, por género")
 
+tabla_excel_fn(dataset = subset, var_prop = tortura, var1 = "Color_piel_categ", var2 = NA, var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_traslado", nombre = "Color_piel",
+               Dato = "Proporción de personas que reportaron ser torturadas durante el traslado, por color de piel")
+
 tabla_excel_fn(dataset = subset, var_prop = tortura, var1 = "fuero", var2 = NA, var3 = NA, 
                varfilter = NA, filtervalue = NA, 
                carpeta = "Tortura", seccion = "Tortura_traslado", nombre = "Fuero",
@@ -1255,7 +1199,7 @@ tabla_excel_fn(dataset = subset, var_prop = P3_17_10, var1 = "genero", var2 = NA
 
 tabla_excel_fn(dataset = subset, var_prop = P3_17_11, var1 = "genero", var2 = NA, var3 = NA, 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Tortura", seccion = "Tortura_psicologica_traslad_genero", nombre = "Cburieron-ojos_genero",
+               carpeta = "Tortura", seccion = "Tortura_psicologica_traslado_genero", nombre = "Cburieron-ojos_genero",
                Dato = "Proporción de personas que reportaron que Le vendaron los ojos o cubirieron la cabeza para que no viera , por género")
 
 tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "RND_3", var2 = NA, var3 = NA, 
@@ -1292,6 +1236,11 @@ tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "genero", var2
                varfilter = NA, filtervalue = NA, 
                carpeta = "Tortura", seccion = "Tortura_psicologica", nombre = "Genero",
                Dato = "Proporción de personas que reportaron ser torturadas psicológicamente durante el traslado, por género")
+
+tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "Color_piel_categ", var2 = NA, var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_psicologica", nombre = "Color_piel",
+               Dato = "Proporción de personas que reportaron ser torturadas psicológicamente durante el traslado, por color de piel")
 
 tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "fuero", var2 = NA, var3 = NA, 
                varfilter = NA, filtervalue = NA, 
@@ -1463,47 +1412,53 @@ tabla_excel_fn(dataset = subset, var_prop = P3_18_15, var1 = "genero", var2 = NA
 
 tabla_excel_fn(dataset = subset, var_prop = tortura_tra_f, var1 = "RND_3", var2 = NA, var3 = NA, 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Tortura", seccion = "Tortura_fisica_traslado", nombre = "RND",
+               carpeta = "Tortura", seccion = "Tortura_fisica", nombre = "RND",
                Dato = "Proporción de personas que reportaron ser torturadas físicamente durante el traslado, por RND_3")
 
 tabla_excel_fn(dataset = subset, var_prop = tortura_tra_f, var1 = "RND_3", var2 = "fuero", var3 = NA, 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Tortura", seccion = "Tortura_fisica_traslado", nombre = "RND_fueron",
+               carpeta = "Tortura", seccion = "Tortura_fisica", nombre = "RND_fueron",
                Dato = "Proporción de personas que reportaron ser torturadas físicamente durante el traslado, por RND_3 y fuero")
 
 tabla_excel_fn(dataset = subset, var_prop = tortura_tra_f, var1 = "RND_3", var2 = "Estado_arresto", var3 = NA, 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Tortura", seccion = "Tortura_fisica_traslado", nombre = "RND_estado",
+               carpeta = "Tortura", seccion = "Tortura_fisica", nombre = "RND_estado",
                Dato = "Proporción de personas que reportaron ser torturadas físicamente durante el traslado, por RND_3 y estado de arresto")
 
 tabla_excel_fn(dataset = subset, var_prop = tortura_tra_f, var1 = "RND_3", var2 = "genero", var3 = NA, 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Tortura", seccion = "Tortura_fisica_traslado", nombre = "RND_genero",
+               carpeta = "Tortura", seccion = "Tortura_fisica", nombre = "RND_genero",
                Dato = "Proporción de personas que reportaron ser torturadas físicamente durante el traslado, por RND_3 y genero")
 
 tabla_excel_fn(dataset = subset, var_prop = tortura_tra_f, var1 = "Estado_arresto", var2 = NA, var3 = NA, 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Tortura", seccion = "Tortura_fisica_traslado", nombre = "Estado",
+               carpeta = "Tortura", seccion = "Tortura_fisica", nombre = "Estado",
                Dato = "Proporción de personas que reportaron ser torturadas físicamente durante el traslado")
 
 tabla_excel_fn(dataset = subset, var_prop = tortura_tra_f, var1 = "Sexo", var2 = NA, var3 = NA, 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Tortura", seccion = "Tortura_fisica_traslado", nombre = "Sexo",
+               carpeta = "Tortura", seccion = "Tortura_fisica", nombre = "Sexo",
                Dato = "Proporción de personas que reportaron ser torturadas físicamente durante el traslado, por sexo")
 
 tabla_excel_fn(dataset = subset, var_prop = tortura_tra_f, var1 = "genero", var2 = NA, var3 = NA, 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Tortura", seccion = "Tortura_fisica_traslado", nombre = "Genero",
+               carpeta = "Tortura", seccion = "Tortura_fisica", nombre = "Genero",
                Dato = "Proporción de personas que reportaron ser torturadas físicamente durante el traslado, por género")
 
 tabla_excel_fn(dataset = subset, var_prop = tortura_tra_f, var1 = "fuero", var2 = NA, var3 = NA, 
                varfilter = NA, filtervalue = NA,
-               carpeta = "Tortura", seccion = "Tortura_fisica_traslado", nombre = "Fuero",
+               carpeta = "Tortura", seccion = "Tortura_fisica", nombre = "Fuero",
+               Dato = "Proporción de personas que reportaron ser torturadas físicamente durante el traslado, por fuero")
+
+
+tabla_excel_fn(dataset = subset, var_prop = tortura_tra_f, var1 = "Color_piel_categ", var2 = NA, var3 = NA, 
+               varfilter = NA, filtervalue = NA,
+               carpeta = "Tortura", seccion = "Tortura_fisica", nombre = "Color_piel",
                Dato = "Proporción de personas que reportaron ser torturadas físicamente durante el traslado, por fuero")
 
 tabla_excel_fn(dataset = subset, var_prop = tortura_tra_f, var1 = "RND_3", var2 = "P3_2", var3 = NA, 
                varfilter = NA, filtervalue = NA, 
-               carpeta = "Tortura", seccion = "Tortura_fisica_traslado", nombre = "RND_corporacion",
+               carpeta = "Tortura", seccion = "Tortura_fisica", nombre = "RND_corporacion",
                Dato = "Proporción de personas que reportaron ser torturadas físicamente durante el traslado, por RND_3 y corporación que detiene")
 
 
@@ -6029,6 +5984,10 @@ tabla_excel_fn(dataset = subset, var_prop = proporcionalidad_uso_fuerza, var1 = 
                carpeta = "Policia", seccion = "Prop_fuerza", nombre = "Sí_educación",
                Dato = "Proporción de personas clasificadas con uso proporcional de la fuerza, por escolaridad")
 
+tabla_excel_fn(dataset = subset, var_prop = proporcionalidad_uso_fuerza, var1 = "Color_piel_categ", var2 = NA, var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Policia", seccion = "Prop_fuerza", nombre = "Sí_color-piel",
+               Dato = "Proporción de personas clasificadas con uso proporcional de la fuerza, por color de piel")
 
 
 
@@ -6078,6 +6037,11 @@ tabla_excel_fn(dataset = subset, var_prop = P3_12_1, var1 = "LGBTQ", var2 = NA, 
                varfilter = NA, filtervalue = NA, 
                carpeta = "Inspecciones", seccion = "Desvestidas", nombre = "Si_LGBTQ",
                Dato = "Proporción de personas que fueron desvestidas durante la inspección, por población LGBT+")
+
+tabla_excel_fn(dataset = subset, var_prop = P3_12_1, var1 = "Color_piel_categ", var2 = NA, var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Inspecciones", seccion = "Desvestidas", nombre = "Si_color-piel",
+               Dato = "Proporción de personas que fueron desvestidas durante la inspección, por color de piel")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_12_1, var1 = "Corporacion_grupos", var2 = NA, var3 = NA, 
                varfilter = NA, filtervalue = NA, 
@@ -6191,6 +6155,11 @@ tabla_excel_fn(dataset = subset, var_prop = P3_12_4, var1 = "LGBTQ", var2 = NA, 
                carpeta = "Inspecciones", seccion = "Sembraron", nombre = "Si_LGBTQ",
                Dato = "Proporción de personas que la autoridad les sembró algún objeto durante la inspección, por población LGBT+")
 
+tabla_excel_fn(dataset = subset, var_prop = P3_12_4, var1 = "Color_piel_categ", var2 = NA, var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Inspecciones", seccion = "Sembraron", nombre = "Si_color-piel",
+               Dato = "Proporción de personas que la autoridad les sembró algún objeto durante la inspección, por color de piel")
+
 tabla_excel_fn(dataset = subset, var_prop = P3_12_4, var1 = "Corporacion_grupos", var2 = NA, var3 = NA, 
                varfilter = NA, filtervalue = NA, 
                carpeta = "Inspecciones", seccion = "Sembraron", nombre = "Si_corporacion",
@@ -6225,6 +6194,12 @@ tabla_excel_fn(dataset = subset, var_prop = P3_12_5, var1 = "LGBTQ", var2 = NA, 
                carpeta = "Inspecciones", seccion = "Videograbo", nombre = "Si_LGBTQ",
                Dato = "Proporción de personas que reportan que la autoridad videograbó la inspección durante la inspección, por población LGBT+")
 
+tabla_excel_fn(dataset = subset, var_prop = P3_12_5, var1 = "Color_piel_categ", var2 = NA, var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Inspecciones", seccion = "Videograbo", nombre = "Si_color-piel",
+               Dato = "Proporción de personas que reportan que la autoridad videograbó la inspección durante la inspección, por color de piel")
+
+
 tabla_excel_fn(dataset = subset, var_prop = P3_12_5, var1 = "Corporacion_grupos", var2 = NA, var3 = NA, 
                varfilter = NA, filtervalue = NA, 
                carpeta = "Inspecciones", seccion = "Videograbo", nombre = "Si_corporacion",
@@ -6241,22 +6216,27 @@ tabla_excel_fn(dataset = subset, var_prop = P3_12_2, var1 = NA, var2 = NA, var3 
 tabla_excel_fn(dataset = subset, var_prop = P3_12_2, var1 = "Sexo", var2 = NA, var3 = NA, 
                varfilter = NA, filtervalue = NA, 
                carpeta = "Inspecciones", seccion = "Objeto_buscaba", nombre = "Si_sexo",
-               Dato = "Proporción de personas que reportan que la autoridad le dijo qué objeto buscaba durante la inspección")
+               Dato = "Proporción de personas que reportan que la autoridad le dijo qué objeto buscaba durante la inspección, por sexo")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_12_2, var1 = "Anio_arresto", var2 = NA, var3 = NA, 
                varfilter = NA, filtervalue = NA, 
                carpeta = "Inspecciones", seccion = "Objeto_buscaba", nombre = "Si_año",
-               Dato = "Proporción de personas que reportan que la autoridad le dijo qué objeto buscaba durante la inspección")
+               Dato = "Proporción de personas que reportan que la autoridad le dijo qué objeto buscaba durante la inspección, por año")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_12_2, var1 = "LGBTQ", var2 = NA, var3 = NA, 
                varfilter = NA, filtervalue = NA, 
                carpeta = "Inspecciones", seccion = "Objeto_buscaba", nombre = "Si_LGBTQ",
-               Dato = "Proporción de personas que reportan que la autoridad le dijo qué objeto buscaba durante la inspección")
+               Dato = "Proporción de personas que reportan que la autoridad le dijo qué objeto buscaba durante la inspección, por población LGBTQ+")
+
+tabla_excel_fn(dataset = subset, var_prop = P3_12_2, var1 = "Color_piel_categ", var2 = NA, var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Inspecciones", seccion = "Objeto_buscaba", nombre = "Si_color-piel",
+               Dato = "Proporción de personas que reportan que la autoridad le dijo qué objeto buscaba durante la inspección, por color de piel")
 
 tabla_excel_fn(dataset = subset, var_prop = P3_12_2, var1 = "Corporacion_grupos", var2 = NA, var3 = NA, 
                varfilter = NA, filtervalue = NA, 
                carpeta = "Inspecciones", seccion = "Objeto_buscaba", nombre = "Si_corporacion",
-               Dato = "Proporción de personas que reportan que la autoridad le dijo qué objeto buscaba durante la inspección")
+               Dato = "Proporción de personas que reportan que la autoridad le dijo qué objeto buscaba durante la inspección, por corporación")
 
 #### 3.5.1 Placa -------------------------------------------------------------
 
