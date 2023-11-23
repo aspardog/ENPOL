@@ -49,6 +49,9 @@ po/*~
 rsconnect/
 .DS_Store
 
+# RStudio files
+National/Directorio.xlsx
+
 #Outputs
 National/Data_cleaning/Output
 National/Descriptives/Output
