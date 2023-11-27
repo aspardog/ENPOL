@@ -30,7 +30,7 @@
 # loaded from the following script:
 source("National/Hypothesis/Code/settings.R")
 source("National/Hypothesis/Code/pruebas_hip.R")
-source("National/Hypothesis/Code/hyp_individual_detencion_tipo.R")
+#source("National/Hypothesis/Code/hyp_individual_detencion_tipo.R")
 
 load(paste0(path2DB,"/National/Data_cleaning/Output/Main_database.RData")) 
 
@@ -118,8 +118,8 @@ result_list <- lapply(tipo, function(tipo) {
     var_type <- if_else(independent_vars == "months_since_NSJP", "months", "years")
     
     data_list.df <- data_subset_tipo.df %>%
-      rename(target = all_of(tipo),
-             independent = all_of(independent_vars))
+      rename(target_var = all_of(tipo),
+             AA_main_independent_var = all_of(independent_vars))
     
     result <- prueba_hip(
       seccion = "Detenciones",
@@ -127,11 +127,12 @@ result_list <- lapply(tipo, function(tipo) {
       hypo_name = paste0("hyp_detenciones_", tipo, "_", var_type),
       type = "logit",
       database = data_list.df,
-      dep_var = target,
-      indep_var = independent,
-      group_vars = c("Corporacion_grupos", "Estado", "Sexo", "Robo_vehiculo", "Robo_casa_hab", "Robo_negocio",  
+      dep_var = target_var,
+      indep_var = AA_main_independent_var,
+      group_vars = c("Corporacion_grupos", "Estado", "Sexo", "Delito_unico",
+                     "Robo_vehiculo", "Robo_casa_hab", "Robo_negocio",  
                      "Robo_transporte_pub", "Robo_transeunte", "Robo_autopartes", "Robo_otros", "Posesion_drogas",  
-                     "Comercio_drogas", "Lesiones", "Hom_culposo", "Hom_doloso", "Portacion_armas", 
+                     "Comercio_drogas", "Lesiones", "Hom_culposo", "Hom_doloso", "Portacion_armas", "Incum_asis_fam",
                      "Violencia_fam", "Danio_prop", "Secuestro", "Violacion_sexual", "Delincuencia_org", 
                      "Otros_sexuales", "Extorsion", "Privacion_de_libertad","Abuso_de_conf", "Amenazas")
     )
@@ -152,8 +153,8 @@ result_list <- lapply(tipo, function(tipo) {
     var_type <- if_else(independent_vars == "months_since_NSJP", "months", "years")
     
     data_list.df <- data_subset_tipo.df %>%
-      rename(target = all_of(tipo),
-             independent = all_of(independent_vars))
+      rename(target_var = all_of(tipo),
+             AA_main_independent_var = all_of(independent_vars))
     
     result <- prueba_hip(
       seccion = "Detenciones",
@@ -161,8 +162,8 @@ result_list <- lapply(tipo, function(tipo) {
       hypo_name = paste0("hyp_detenciones_", tipo, "_", var_type),
       type = "logit",
       database = data_list.df,
-      dep_var = target,
-      indep_var = independent,
+      dep_var = target_var,
+      indep_var = AA_main_independent_var,
       group_vars = c("Corporacion_grupos", "Sexo", "LGBTQ")
     )
     
@@ -180,7 +181,7 @@ tipo_flag_const <- list(
     
     data_list.df <- data_subset_tipo.df %>%
       filter(flagrancia == 1) %>%
-      rename(independent = all_of(independent_vars))
+      rename(AA_main_independent_var = all_of(independent_vars))
     
     var_type <- if_else(independent_vars == "months_since_NSJP", "months", "years")
     
@@ -190,12 +191,13 @@ tipo_flag_const <- list(
                            type = "logit", 
                            database = data_list.df, 
                            dep_var = flagrancia_const, 
-                           indep_var = independent,
-                           group_vars = c("Corporacion_grupos", "Estado", "Sexo", "Robo_vehiculo", "Robo_casa_hab", "Robo_negocio",  
-                                         "Robo_transporte_pub", "Robo_transeunte", "Robo_autopartes", "Robo_otros", "Posesion_drogas",  
-                                         "Comercio_drogas", "Lesiones", "Hom_culposo", "Hom_doloso", "Portacion_armas", 
-                                         "Violencia_fam", "Danio_prop", "Secuestro", "Violacion_sexual", "Delincuencia_org", 
-                                         "Otros_sexuales", "Extorsion", "Privacion_de_libertad","Abuso_de_conf", "Amenazas"))
+                           indep_var = AA_main_independent_var,
+                           group_vars = c("Corporacion_grupos", "Estado", "Sexo", "Delito_unico",
+                                          "Robo_vehiculo", "Robo_casa_hab", "Robo_negocio",  
+                                          "Robo_transporte_pub", "Robo_transeunte", "Robo_autopartes", "Robo_otros", "Posesion_drogas",  
+                                          "Comercio_drogas", "Lesiones", "Hom_culposo", "Hom_doloso", "Portacion_armas", "Incum_asis_fam",
+                                          "Violencia_fam", "Danio_prop", "Secuestro", "Violacion_sexual", "Delincuencia_org", 
+                                          "Otros_sexuales", "Extorsion", "Privacion_de_libertad","Abuso_de_conf", "Amenazas"))
     return(result)
   }), 
   result3_4 <- lapply(flag_const, function(flag_const){
@@ -204,13 +206,13 @@ tipo_flag_const <- list(
       
       data_list.df <- data_subset_tipo.df %>%
         filter(flagrancia == 1) %>%
-        rename(target = all_of(flag_const))
+        rename(AA_target_var = all_of(flag_const))
       
     } else {
       
       data_list.df <- data_subset_tipo.df %>%
         filter(inspeccion == 1) %>%
-        rename(target = all_of(flag_const))
+        rename(AA_target_var = all_of(flag_const))
       
     }
     
@@ -219,9 +221,10 @@ tipo_flag_const <- list(
                             hypo_name = paste0("hyp_detenciones_",flag_const), 
                             type = "means", 
                             database = data_list.df, 
-                            dep_var = target, 
+                            dep_var = AA_target_var, 
                             indep_var = Sexo, 
-                            group_vars = c("Corporacion_grupos", "Estado", "Robo_vehiculo", "Robo_casa_hab", "Robo_negocio",  
+                            group_vars = c("Corporacion_grupos", "Estado", "Sexo", "Delito_unico",
+                                           "Robo_vehiculo", "Robo_casa_hab", "Robo_negocio",  
                                            "Robo_transporte_pub", "Robo_transeunte", "Robo_autopartes", "Robo_otros", "Posesion_drogas",  
                                            "Comercio_drogas", "Lesiones", "Hom_culposo", "Hom_doloso", "Portacion_armas", "Incum_asis_fam",
                                            "Violencia_fam", "Danio_prop", "Secuestro", "Violacion_sexual", "Delincuencia_org", 
@@ -234,13 +237,13 @@ tipo_flag_const <- list(
       
       data_list.df <- data_subset_tipo.df %>%
         filter(flagrancia == 1) %>%
-        rename(target = all_of(flag_const))
+        rename(AA_target_var = all_of(flag_const))
       
     } else {
       
       data_list.df <- data_subset_tipo.df %>%
         filter(inspeccion == 1) %>%
-        rename(target = all_of(flag_const))
+        rename(AA_target_var = all_of(flag_const))
       
     }
     
@@ -249,9 +252,10 @@ tipo_flag_const <- list(
                             hypo_name = paste0("hyp_detenciones_",flag_const), 
                             type = "means", 
                             database = data_list.df, 
-                            dep_var = target, 
+                            dep_var = AA_target_var, 
                             indep_var = Sexo, 
-                            group_vars = c("Corporacion_grupos", "Estado", "Robo_vehiculo", "Robo_casa_hab", "Robo_negocio",  
+                            group_vars = c("Corporacion_grupos", "Estado", "Sexo", "Delito_unico",
+                                           "Robo_vehiculo", "Robo_casa_hab", "Robo_negocio",  
                                            "Robo_transporte_pub", "Robo_transeunte", "Robo_autopartes", "Robo_otros", "Posesion_drogas",  
                                            "Comercio_drogas", "Lesiones", "Hom_culposo", "Hom_doloso", "Portacion_armas", "Incum_asis_fam",
                                            "Violencia_fam", "Danio_prop", "Secuestro", "Violacion_sexual", "Delincuencia_org", 
@@ -294,14 +298,14 @@ list_tortura <- lapply(dependent_vars,
                                            if_else(dependent_vars == "tortura_tra_f","tortura_fisica_traslado",NA_character_))
                        
                        data_list.df <- data_subset_tortura.df %>%
-                         rename(target = all_of(dependent_vars))
+                         rename(AA_target_var = all_of(dependent_vars))
                        
                        result1 <- prueba_hip(seccion = "Detenciones", 
                                              subseccion = "Tortura", 
                                              hypo_name = paste0("hyp_",var_type,"_RND_+-1_año"), 
                                              type = "means", 
                                              database = data_list.df %>% filter(one_year_limit == 1), 
-                                             dep_var = target, 
+                                             dep_var = AA_target_var, 
                                              indep_var = RND_3, 
                                              group_vars = c("Estado", "Sexo", "fuero", "Corporacion_grupos"))  
                        
@@ -310,7 +314,7 @@ list_tortura <- lapply(dependent_vars,
                                              hypo_name = paste0("hyp_",var_type,"_sin_limite"), 
                                              type = "means", 
                                              database = data_list.df, 
-                                             dep_var = target, 
+                                             dep_var = AA_target_var, 
                                              indep_var = RND_3, 
                                              group_vars = c("Estado", "Sexo", "fuero", "Corporacion_grupos"))
                        
@@ -338,14 +342,14 @@ abuso <- c("tortura",
 list_abuso <- lapply(abuso, function(abuso) {
 
   data_list.df <- data_subset_policia.df %>%
-    rename(target = all_of(abuso))
+    rename(AA_target_var = all_of(abuso))
   
   result1 <- prueba_hip(seccion = "Detenciones", 
                         subseccion = "Abuso_policial_lgtbq", 
                         hypo_name = paste0("hyp_", abuso), 
                         type = "means", 
                         database = data_list.df, 
-                        dep_var = target, 
+                        dep_var = AA_target_var, 
                         indep_var = LGBTQ, 
                         group_vars = c("Estado"))
   }
@@ -390,7 +394,7 @@ list_ppo <- lapply(ppo, function(ppo) {
     
     data_list.df <- data_subset_ppo.df %>%
       rename(target      = all_of(ppo),
-             independent = all_of(independent_vars))
+             AA_main_independent_var = all_of(independent_vars))
     
     result <- prueba_hip(seccion = "Jueces", 
                          subseccion = "PPO", 
@@ -398,7 +402,7 @@ list_ppo <- lapply(ppo, function(ppo) {
                          type = "means", 
                          database = data_list.df, 
                          dep_var = target, 
-                         indep_var = independent, 
+                         indep_var = AA_main_independent_var, 
                          group_vars = NA)
     
     return(result)
@@ -423,8 +427,8 @@ result_list <- lapply(tipo, function(tipo) {
     var_type <- if_else(independent_vars == "months_since_NSJP", "months", "years")
     
     data_list.df <- data_subset_tipo.df %>%
-      rename(target = all_of(tipo),
-             independent = all_of(independent_vars))
+      rename(target_var = all_of(tipo),
+             AA_main_independent_var = all_of(independent_vars))
     
     result <- prueba_hip(
       seccion = "Detenciones",
@@ -432,8 +436,8 @@ result_list <- lapply(tipo, function(tipo) {
       hypo_name = paste0("hyp_detenciones_", tipo, "_", var_type),
       type = "logit",
       database = data_list.df,
-      dep_var = target,
-      indep_var = independent,
+      dep_var = target_var,
+      indep_var = AA_main_independent_var,
       group_vars = c("Corporacion_grupos", "Sexo", "LGBTQ")
     )
     
