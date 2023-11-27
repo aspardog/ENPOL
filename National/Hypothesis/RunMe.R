@@ -102,7 +102,7 @@ data_subset_tipo.df <- Main_database %>%
          Robo_vehiculo, Robo_casa_hab, Robo_negocio, Robo_transporte_pub, Robo_transeunte, Robo_autopartes, Robo_otros, Posesion_drogas,
          Comercio_drogas, Lesiones, Hom_culposo, Hom_doloso, Portacion_armas, Incum_asis_fam, Violencia_fam, Danio_prop, Secuestro, Fraude,
          Violacion_sexual, Delincuencia_org, Otros_sexuales, Extorsion, Privacion_de_libertad, Abuso_de_conf, Amenazas, Otros, No_sabe, No_responde,
-         Traslados_30 = P3_20_01, LGBTQ, Edad, Traslado_MP = P3_19_01, proporcionalidad_uso_fuerza)
+         Traslados_30 = P3_20_01, LGBTQ, Edad, Traslado_MP = P3_19_01, proporcionalidad_uso_fuerza, Delito_unico)
 
 tipo <- c("flagrancia", 
           "orden_det", 
@@ -285,7 +285,7 @@ data_subset_tortura.df <- Main_database %>%
                                    T ~ NA_character_),
     Corporacion_grupos = case_when(Corporacion_grupos == "NS/NR" ~ NA_character_,
                                    T ~ Corporacion_grupos),
-    one_year_limit     = if_else(months_since_RND_3 <= 12 & months_since_RND_3 >= -12, 1, 0)
+    one_year_limit     = if_else(RND_3 <= 12 & 3 >= -12, 1, 0)
     ) %>%
   select(tortura_tra_p, tortura_tra_f, RND_1, RND_2, RND_3, Estado, Sexo, fuero, Corporacion_grupos, one_year_limit) 
 
