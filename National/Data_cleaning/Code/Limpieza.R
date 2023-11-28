@@ -4682,8 +4682,8 @@ Main_database %<>%
     TRUE ~ NA_character_
   ))
 
-age_breaks <- c(0, 18, 30, 40, 60, Inf)
-age_labels <- c("0-18", "19-30", "31-40", "41-60", "61+")
+age_breaks <- c(18, 29, 44, 59, Inf)
+age_labels <- c("18-29", "30-44", "45-59", "60+")
   
 Main_database <- Main_database %>%
   mutate(Edad_categ = cut(Edad, breaks = age_breaks, labels = age_labels, include.lowest = TRUE))
