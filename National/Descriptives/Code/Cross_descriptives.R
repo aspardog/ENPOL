@@ -339,36 +339,6 @@ subset <- Main_database %>%
          Anio_arresto = P3_5_A,
          Mes_arresto = P3_5_M) %>%
   
-  # Tipo de delito
-  mutate(Robo_vehiculo = coalesce(P5_11_01, P5_31_01),
-         Robo_casa_hab = coalesce(P5_11_02, P5_31_02),
-         Robo_negocio = coalesce(P5_11_03, P5_31_03),
-         Robo_transporte_pub = coalesce(P5_11_04, P5_31_04),
-         Robo_transeunte = coalesce(P5_11_05, P5_31_05),
-         Robo_autopartes = coalesce(P5_11_06, P5_31_06),
-         Robo_otros = coalesce(P5_11_07, P5_31_07),
-         Posesion_drogas = coalesce(P5_11_08, P5_31_08),
-         Comercio_drogas = coalesce(P5_11_09, P5_31_09),
-         Lesiones = coalesce(P5_11_10, P5_31_10),
-         Hom_culposo = coalesce(P5_11_11, P5_31_11),
-         Hom_doloso = coalesce(P5_11_12, P5_31_12),
-         Portacion_armas = coalesce(P5_11_13, P5_31_13),
-         Incum_asis_fam = coalesce(P5_11_14, P5_31_14),
-         Violencia_fam = coalesce(P5_11_15, P5_31_15),
-         Danio_prop = coalesce(P5_11_16, P5_31_16),
-         Secuestro = coalesce(P5_11_17, P5_31_17),
-         Violacion_sexual = coalesce(P5_11_18, P5_31_18),
-         Fraude = coalesce(P5_11_19, P5_31_19),
-         Delincuencia_org = coalesce(P5_11_20, P5_31_20),
-         Otros_sexuales = coalesce(P5_11_21, P5_31_21),
-         Extorsion = coalesce(P5_11_22, P5_31_22),
-         Privacion_de_libertad = coalesce(P5_11_23, P5_31_23),
-         Abuso_de_conf = coalesce(P5_11_24, P5_31_24),
-         Amenazas = coalesce(P5_11_25, P5_31_25),
-         Otros = coalesce(P5_11_26, P5_31_26),
-         No_sabe = coalesce(P5_11_98, P5_31_98),
-         No_responde = coalesce(P5_11_99, P5_31_99)) %>%
-  
   # Tipo de tortura psicológica
   mutate(across(c("P3_17_01","P3_17_02", "P3_17_03", "P3_17_04", "P3_17_05", "P3_17_06","P3_17_07", "P3_17_08",
                   "P3_17_09", "P3_17_10","P3_17_11"), ~ recode(.x,
@@ -2205,7 +2175,7 @@ for (j in c("P3_13_01", "P3_13_02", "P3_13_03", "P3_13_04", "P3_13_05", "P3_13_0
   write.xlsx(as.data.frame(df_j), 
              file      = file.path(paste0("National/Descriptives/Output/Detenciones/Policia/Autoridad-accion_estado_sexo_delito-grupos.xlsx"),
                                    fsep = "/"),  
-             sheetName = paste0("Estado_sexo",j),
+             sheetName = paste0("",j),
              append    = T,
              row.names = F)
 }
@@ -2239,9 +2209,9 @@ for (j in c("P3_13_01", "P3_13_02", "P3_13_03", "P3_13_04", "P3_13_05", "P3_13_0
   
   
   write.xlsx(as.data.frame(df_j), 
-             file      = file.path(paste0("National/Descriptives/Output/Detenciones/Policia/Autoridad-accion_sexo_delito.xlsx"),
+             file      = file.path(paste0("National/Descriptives/Output/Detenciones/Policia/desc_Autoridad-accion_sexo_delito.xlsx"),
                                    fsep = "/"),  
-             sheetName = paste0("Delito_estado_sexo",j),
+             sheetName = paste0("",j),
              append    = T,
              row.names = F)
 }
@@ -2250,36 +2220,36 @@ for (j in c("P3_13_01", "P3_13_02", "P3_13_03", "P3_13_04", "P3_13_05", "P3_13_0
 
 
 
-#for (j in c("P3_13_01", "P3_13_02", "P3_13_03", "P3_13_04", "P3_13_05", "P3_13_06", "P3_13_07", "P3_13_08", "P3_13_09",
-#            "P3_13_10", "P3_13_11", "P3_13_12")){
+for (j in c("P3_13_01", "P3_13_02", "P3_13_03", "P3_13_04", "P3_13_05", "P3_13_06", "P3_13_07", "P3_13_08", "P3_13_09",
+            "P3_13_10", "P3_13_11", "P3_13_12")){
   
-#  df_j = tibble()
+  df_j = tibble()
   
-#  for(i in delito_grupos) {
+  for(i in delito_grupos) {
     
-#    Dato = paste0("Proporción de personas que reportaron \"sí\" a ",j,", acusadas (entre otros) de ",i,", por sexo, y estado de arresto")
+    Dato = paste0("Proporción de personas que reportaron \"sí\" a ",j,", acusadas (entre otros) de ",i,", por sexo, y estado de arresto")
     
-#    df_i<-
-#      subset %>% 
-#      filter(.data[[i]]  == 1) %>%
-#      group_by(across(c("Estado_arresto","Sexo"))) %>%
-#      summarise(Prop = mean(.data[[j]] , na.rm = T)) %>%
-#      pivot_wider(names_from = Estado_arresto, values_from = Prop) %>%
-#      cbind(Dato,.) %>% 
-#      arrange(by_group = Sexo)
-#    
-#    df_j = bind_rows(df_j,df_i)
+    df_i<-
+      subset %>% 
+      filter(.data[[i]]  == 1) %>%
+      group_by(across(c("Estado_arresto","Sexo"))) %>%
+      summarise(Prop = mean(.data[[j]] , na.rm = T)) %>%
+      pivot_wider(names_from = Estado_arresto, values_from = Prop) %>%
+      cbind(Dato,.) %>% 
+      arrange(by_group = Sexo)
     
-#  }
+    df_j = bind_rows(df_j,df_i)
+    
+  }
   
   
-#  write.xlsx(as.data.frame(df_j), 
-#             file      = file.path(paste0("National/Descriptives/Output/Detenciones/Policia/Autoridad-accion_estado_sexo_delito-grupos2.xlsx"),
-#                                   fsep = "/"),  
-#             sheetName = paste0("Estado_delito-grupos_Sexo_2",j),
-#             append    = T,
-#             row.names = F)
-#}
+  write.xlsx(as.data.frame(df_j), 
+             file      = file.path(paste0("National/Descriptives/Output/Detenciones/Policia/desc_autoridad-accion_estado_sexo_delito-grupos.xlsx"),
+                                   fsep = "/"),  
+             sheetName = paste0("",j),
+             append    = T,
+             row.names = F)
+}
 
 
 
@@ -2480,6 +2450,45 @@ tabla_excel_fn(dataset = subset, var_prop = P3_14_6, var1 = NA, var2 = NA, var3 
                varfilter = NA, filtervalue = NA, 
                carpeta = "Policia", seccion = "Policia-hizo_nacional", nombre = "Dijo-donde",
                Dato = "Proporción de personas que reportaron que la autoridad le dijo a dónde...")
+
+
+
+tabla_excel_fn(dataset = subset, var_prop = P3_14_1, var1 = "Estado_arresto", var2 = NA, var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Policia", seccion = "Policia-hizo_estado", nombre = "Identifico",
+               Dato = "Proporción de personas que reportaron que la autoridad se identificó...")
+
+tabla_excel_fn(dataset = subset, var_prop = P3_14_2, var1 = "Estado_arresto", var2 = NA, var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Policia", seccion = "Policia-hizo_estado", nombre = "Informo",
+               Dato = "Proporción de personas que reportaron que la autoridad le informó...")
+
+tabla_excel_fn(dataset = subset, var_prop = P3_14_3, var1 = "Estado_arresto", var2 = NA, var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Policia", seccion = "Policia-hizo_estado", nombre = "Uniformado",
+               Dato = "Proporción de personas que reportaron que la autoridad estaba uniformado?")
+
+tabla_excel_fn(dataset = subset, var_prop = P3_14_4, var1 = "Estado_arresto", var2 = NA, var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Policia", seccion = "Policia-hizo_estado", nombre = "Dijo-detencion",
+               Dato = "Proporción de personas que reportaron que le dijeron por qué lo(a) detuvieron?")
+
+tabla_excel_fn(dataset = subset, var_prop = P3_14_5, var1 = "Estado_arresto", var2 = NA, var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Policia", seccion = "Policia-hizo_estado", nombre = "Informo-derechos",
+               Dato = "Proporción de personas que reportaron la autoridad le informó sobre sus derechos...")
+
+tabla_excel_fn(dataset = subset, var_prop = P3_14_6, var1 = "Estado_arresto", var2 = NA, var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Policia", seccion = "Policia-hizo_estado", nombre = "Dijo-donde",
+               Dato = "Proporción de personas que reportaron que la autoridad le dijo a dónde...")
+
+
+
+
+
+
+
 
 tabla_excel_fn(dataset = subset, var_prop = P3_14_1, var1 = "Anio_arresto", var2 = NA, var3 = NA, 
                varfilter = NA, filtervalue = NA, 
