@@ -4688,10 +4688,6 @@ age_labels <- c("18-29", "30-44", "45-59", "60+")
 Main_database <- Main_database %>%
   mutate(Edad_categ = cut(Edad, breaks = age_breaks, labels = age_labels, include.lowest = TRUE))
 
-  
-
-
-
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
 ## 5.  Saving the Output database                                                                        ----
@@ -4699,4 +4695,4 @@ Main_database <- Main_database %>%
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
-save(Main_database, file = paste0(path2DB,"National/Data_cleaning/Output/Main_database.RData"))
+save(Main_database, file = paste0(path2DB,"/National/Data_cleaning/Output/Main_database.RData"))
