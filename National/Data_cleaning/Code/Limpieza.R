@@ -29,7 +29,7 @@
 
 # Required Packages, Fonts, ggplot theme, color palettes, comparison countries and other general routines are
 # loaded from the following script:
-source("National/Data_cleaning/Code/Settings.R")
+source("Settings.R")
 
 
 
@@ -4666,7 +4666,8 @@ Main_database %<>%
          Delito_unico_15_ns_nr = case_when(  Delito_gr_15_ns_nr == 1 
                                              & Delito_unico == 1 ~ 1,
                                              T ~ 0)) %>%
-  mutate(Delito_unico_categ = case_when(
+  mutate(
+    Delito_unico_categ = case_when(
     Delito_unico_1_robos == 1 ~ "robos",
     Delito_unico_2_drogas == 1 ~ "drogas",
     Delito_unico_3_del_org == 1 ~ "org",

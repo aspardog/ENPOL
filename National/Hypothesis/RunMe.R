@@ -37,11 +37,11 @@ source("Code/event_study.R")
 load(paste0(path2SP,"/National/Data_cleaning/Output/Main_database.RData")) 
 
 # Remove previous files
-args[1] <- "Detenciones"
-args[2] <- "Tortura"
 
 section     <- args[1]
+cat(section)
 subsection  <- args[2]
+cat(subsection)
 
 if(section == "Detenciones"){
   
@@ -74,7 +74,11 @@ prevOutputs <- list.files(outPaths,
                           include.dirs = F,
                           full.names   = T,
                           recursive    = T)
+
 # Deleting previous outputs and remove objects used for this cleaning process
+nombre_archivos <- sub(".*/([^/]+\\.xlsx)$", "\\1", prevOutputs)
+cat(paste0("El siguiente archivo fue eliminado: ", nombre_archivos))
+
 file.remove(prevOutputs)
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -347,9 +351,27 @@ if(section == "Detenciones") {
                              
                            })
     
+    ### Policia ----
+    
   } else if (subsection == "Policia") {
     
     tipo <- c("proporcionalidad_uso_fuerza") # List of dependent variables from the first analysis
+    
+    
+    independent_time_vars <- c("months_since_NSJP", 
+                               "years_since_NSJP") 
+    
+    data_subset_tipo.df <- Main_database %>% 
+      filter(NSJP == 1) %>% 
+      mutate(Estado = case_when(P3_3 == "98" ~ NA_character_,
+                                P3_3 == "99" ~ NA_character_,
+                                T ~ P3_3),
+             Corporacion_grupos = case_when(Corporacion_grupos == "NS/NR" ~ NA_character_,
+                                            T ~ Corporacion_grupos)) %>%
+      select(orden_det, inspeccion, flagrancia, flagrancia_const, det_ninguna, detencion_no_inmediata, 
+             months_since_NSJP, years_since_NSJP, Corporacion_grupos, Estado, Sexo, starts_with("Del_"),
+             Traslados_30 = P3_20_01, Traslados_6h = P3_20_06, LGBTQ, Edad, Traslado_MP = P3_19_01, 
+             proporcionalidad_uso_fuerza, Delito_unico)
     
     result_list_policia <- lapply(tipo, function(tipo) {
       
@@ -476,3 +498,4 @@ if(section == "Detenciones") {
   }
 
 }
+cat(paste0("Se terminó de producir los archivos para la sección: ", section, "/", subsection))

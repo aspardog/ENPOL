@@ -26,7 +26,6 @@
 
 prueba_hip <- function(seccion,subseccion,hypo_name,type,database,dep_var,indep_var,group_vars) {
   
-  
   nogroups = is.na(group_vars)
   
   
@@ -506,4 +505,3 @@ prueba_hip <- function(seccion,subseccion,hypo_name,type,database,dep_var,indep_
   
   return(df)
 }
-
