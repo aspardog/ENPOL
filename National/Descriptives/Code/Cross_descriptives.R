@@ -341,7 +341,7 @@ subset <- Main_database %>%
   
   # Tipo de tortura psicológica
   mutate(across(c("P3_17_01","P3_17_02", "P3_17_03", "P3_17_04", "P3_17_05", "P3_17_06","P3_17_07", "P3_17_08",
-                  "P3_17_09", "P3_17_10","P3_17_11"), ~ recode(.x,
+                  "P3_17_09", "P3_17_10","P3_17_11", "P5_26A"), ~ recode(.x,
                                                                "1" = 1, 
                                                                "2" = 0, 
                                                                "8" = NA_real_, 
@@ -354,6 +354,15 @@ subset <- Main_database %>%
                                                                                         "2" = 0,
                                                                                         "8" = NA_real_,
                                                                                         "9" = NA_real_))) %>%
+  # Tortura
+  mutate(across(c("P4_1_09", "P4_1_10", "P4_1_11", "P4_1_12", "P4_3A_7", "P4_3A_8", "P4_3A_9", "P4_6_4",
+                  "P5_15_01", "P5_15_02", "P5_15_03", "P5_15_04", "P5_15_05","P5_15_06", "P5_15_07", "P5_15_08", "P5_15_09",
+                  "P5_15_10", "P5_15_11", "P5_26A"), ~ recode(.x, 
+                                                                                        "1" = 1,
+                                                                                        "2" = 0,
+                                                                                        "8" = NA_real_,
+                                                                                        "9" = NA_real_))) %>%
+  
   
   # Grupos de P5_25
   mutate(Antes_del_juicio = case_when(P5_25 == "1" ~ 1,
@@ -1050,7 +1059,7 @@ tabla_excel_fn(dataset = subset, var_prop = tortura, var1 = "fuero", var2 = NA, 
 tabla_excel_fn(dataset = subset, var_prop = tortura, var1 = "RND_3", var2 = "P3_2", var3 = NA, 
                varfilter = NA, filtervalue = NA, 
                carpeta = "Tortura", seccion = "Tortura_traslado", nombre = "Aprobacion-RND_corporacion",
-               Dato = "Proporción de personas que reportaron ser torturadas durante el traslado, por RND_3 y corporación que detiene")
+               Dato = "Proporción de personas que reportaron ser torturadas durante el traslado, por RND_3 y autoridad que detiene")
 
 
 #### 3.2.2 Torura psicologica -------------------------------------------------------
@@ -1221,6 +1230,268 @@ tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "RND_3", var2 
                varfilter = NA, filtervalue = NA, 
                carpeta = "Tortura", seccion = "Tortura_psicologica", nombre = "RND_corporacion",
                Dato = "Proporción de personas que reportaron ser torturadas psicológicamente durante el traslado, por RND_3 y corporación que detiene")
+
+tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "P3_2", var2 = NA , var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_psicologica", nombre = "autoridad",
+               Dato = "Proporción de personas que reportaron ser torturadas psicológicamente durante el traslado, por tipo autoridad que detiene")
+
+tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "Corporacion_grupos", var2 = NA , var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_psicologica", nombre = "Corporacion_grupos",
+               Dato = "Proporción de personas que reportaron ser torturadas psicológicamente durante el traslado, por corporación que detiene")
+
+
+#### 3.2.3 Tortura psicológica tipo de delito ----------------------------------------------------------
+
+for (i in delitos) {
+  tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = NA, var2 = NA , var3 = NA, 
+                 varfilter = i, filtervalue = "1", 
+                 carpeta = "Policia", seccion = "Tortura_psicologica_tipo_delito", nombre = paste0("",i),
+                 Dato = paste0("Proporción de personas que reportaron ser torturadas psicológicamente durante el traslado, acusadas (entre otros) por ",i," "))
+}
+
+#### 3.2.3 Tortura psicológica culpabilidad ----------------------------------------------------------
+
+tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "culpabilidad", var2 = NA , var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_psicologica_culpabilidad", nombre = "culpabilidad",
+               Dato = "Proporción de personas que reportaron ser torturadas psicológicamente durante el traslado, 
+               por reconocimiento de culpabilidad")
+
+tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "culpabilidad", var2 = "P4_3A_7" , var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_psicologica_culpabilidad", nombre = "culpabilidad_maltratado",
+               Dato = "Proporción de personas que reportaron ser torturadas psicológicamente durante el traslado, 
+               por reconocimiento de culpabilidad y  golpeado o
+               maltratado para acpetar hechos falsos o echarse la culpa")
+
+tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "culpabilidad", var2 = "P4_6_4" , var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_psicologica_culpabilidad", nombre = "culpabilidad_declaro-MP",
+               Dato = "Proporción de personas que reportaron ser torturadas psicológicamente durante el traslado, 
+               por reconocimiento de culpabilidad y  se declaró culpable de los hechos de los que se le acusó en el MP")
+
+
+#### 3.2.3 Tortura psicológica Tipo de puebas ----------------------------------------------------------
+
+tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "culpabilidad", var2 = "P5_15_01" , var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_psicologica_culpabilidad", nombre = "culpabilidad_confesion",
+               Dato = "Proporción de personas que reportaron ser torturadas psicológicamente durante el traslado, 
+               por reconocimiento de culpabilidad y confesión de lo que hizo")
+
+tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "culpabilidad", var2 = "P5_15_02" , var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_psicologica_culpabilidad", nombre = "culpabilidad_declaracion-victima",
+               Dato = "Proporción de personas que reportaron ser torturadas psicológicamente durante el traslado, 
+               por reconocimiento de culpabilidad y declaraciones de la víctima")
+
+tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "culpabilidad", var2 = "P5_15_03" , var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_psicologica_culpabilidad", nombre = "culpabilidad_declaracion-testigos",
+               Dato = "Proporción de personas que reportaron ser torturadas psicológicamente durante el traslado, 
+               por reconocimiento de culpabilidad y declaraciones de testigos")
+
+tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "culpabilidad", var2 = "P5_15_04" , var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_psicologica_culpabilidad", nombre = "culpabilidad_declaracion-conocidos",
+               Dato = "Proporción de personas que reportaron ser torturadas psicológicamente durante el traslado, 
+               por reconocimiento de culpabilidad y declaraciones de conocidos sobre sus antecedentes")
+
+tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "culpabilidad", var2 = "P5_15_05" , var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_psicologica_culpabilidad", nombre = "culpabilidad_declaracion-complices",
+               Dato = "Proporción de personas que reportaron ser torturadas psicológicamente durante el traslado, 
+               por reconocimiento de culpabilidad y declaraciones de supuestos cómplices")
+
+tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "culpabilidad", var2 = "P5_15_06" , var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_psicologica_culpabilidad", nombre = "culpabilidad_declaracion-personas",
+               Dato = "Proporción de personas que reportaron ser torturadas psicológicamente durante el traslado, 
+               por reconocimiento de culpabilidad y declaraciones de otras personas detenidas")
+
+tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "culpabilidad", var2 = "P5_15_07" , var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_psicologica_culpabilidad", nombre = "culpabilidad_documentales",
+               Dato = "Proporción de personas que reportaron ser torturadas psicológicamente durante el traslado, 
+               por reconocimiento de culpabilidad y pruebas documentales")
+
+tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "culpabilidad", var2 = "P5_15_08" , var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_psicologica_culpabilidad", nombre = "culpabilidad_objetos",
+               Dato = "Proporción de personas que reportaron ser torturadas psicológicamente durante el traslado, 
+               por reconocimiento de culpabilidad y objetos relacionados con la comisión de un delito")
+
+tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "culpabilidad", var2 = "P5_15_09" , var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_psicologica_culpabilidad", nombre = "culpabilidad_periciales",
+               Dato = "Proporción de personas que reportaron ser torturadas psicológicamente durante el traslado, 
+               por reconocimiento de culpabilidad y pruebas periciales")
+
+tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "culpabilidad", var2 = "P5_15_10" , var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_psicologica_culpabilidad", nombre = "culpabilidad_psicologicas",
+               Dato = "Proporción de personas que reportaron ser torturadas psicológicamente durante el traslado, 
+               por reconocimiento de culpabilidad y evaluaciones psicológicas")
+
+tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "culpabilidad", var2 = "P5_15_11" , var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_psicologica_culpabilidad", nombre = "culpabilidad_otro",
+               Dato = "Proporción de personas que reportaron ser torturadas psicológicamente durante el traslado, 
+               por reconocimiento de culpabilidad y Otro tipo de prueba")
+
+
+#### 3.2.3 Tortura psicológica MP ----------------------------------------------------------
+
+tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "P4_1_09", var2 = NA , var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_psicologica_MP", nombre = "lesiones",
+               Dato = "Proporción de personas que reportaron ser torturadas psicológicamente durante el traslado, 
+               por tenía lesiones ocasionadas en la detención al momento de llegar al MP")
+
+tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "P4_1_10", var2 = NA , var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_psicologica_MP", nombre = "medico",
+               Dato = "Proporción de personas que reportaron ser torturadas psicológicamente durante el traslado, 
+               por le evaluó un médico al momento de llegar al MP")
+
+tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "P4_1_11", var2 = NA , var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_psicologica_MP", nombre = "registro-lesiones",
+               Dato = "Proporción de personas que reportaron ser torturadas psicológicamente durante el traslado, 
+               por el médico registró por escrito lesiones al momento de llegar al MP")
+
+tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "P4_1_12", var2 = NA , var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_psicologica_MP", nombre = "fotogafia-lesiones",
+               Dato = "Proporción de personas que reportaron ser torturadas psicológicamente durante el traslado, 
+               por  el médico tomó fotografías de lesiones al momento de llegar al MP")
+
+
+#### 3.2.3 Tortura psicológica interrogatorio ----------------------------------------------------------
+
+tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "P4_3A_7", var2 = NA , var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_psicologica_interrogatorio", nombre = "golpeado",
+               Dato = "Proporción de personas que reportaron ser torturadas psicológicamente durante el traslado, 
+               por golpeado para echarse la culpa en el interrogatorio")
+
+tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "P4_3A_8", var2 = NA , var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_psicologica_interrogatorio", nombre = "golpeado_alguien",
+               Dato = "Proporción de personas que reportaron ser torturadas psicológicamente durante el traslado, 
+               por golpeado para inculpar a alguien más en el interrogatorio")
+
+tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "P4_3A_9", var2 = NA , var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_psicologica_interrogatorio", nombre = "culpable",
+               Dato = "Proporción de personas que reportaron ser torturadas psicológicamente durante el traslado, 
+               por se declaró culpable en el interrogatorio")
+
+
+#### 3.2.3 Tortura psicológica razones ----------------------------------------------------------
+
+tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "P4_6_4", var2 = NA , var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_psicologica_razones", nombre = "culpable",
+               Dato = "Proporción de personas que reportaron ser torturadas psicológicamente durante el traslado, 
+               por se declaró culpable de los hechos de los que se le acusó")
+
+tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "P4_7", var2 = NA , var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_psicologica_razones", nombre = "razones",
+               Dato = "Proporción de personas que reportaron ser torturadas psicológicamente durante el traslado, 
+               por razón por la que se declaró culpable")
+
+tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "P5_6", var2 = NA , var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_psicologica_razones", nombre = "producto",
+               Dato = "Proporción de personas que reportaron ser torturadas psicológicamente durante el traslado, 
+               por producto por el que fue basada la sentencia")
+
+tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "P5_6", var2 = NA , var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_psicologica_razones", nombre = "producto",
+               Dato = "Proporción de personas que reportaron ser torturadas psicológicamente durante el traslado, 
+               por producto por el que fue basada la sentencia")
+
+
+#### 3.2.3 Tortura psicológica tipo de prueba ----------------------------------------------------------
+
+tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "P5_15_01", var2 = NA, var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_psicologica_prueba", nombre = "confesion",
+               Dato = "Proporción de personas que reportaron ser torturadas psicológicamente durante el traslado, 
+               por confesión de lo que hizo")
+
+tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "P5_15_02", var2 = NA, var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_psicologica_prueba", nombre = "declaracion-victima",
+               Dato = "Proporción de personas que reportaron ser torturadas psicológicamente durante el traslado, 
+               por  declaraciones de la víctima")
+
+tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "P5_15_03", var2 = NA , var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_psicologica_prueba", nombre = "declaracion-testigos",
+               Dato = "Proporción de personas que reportaron ser torturadas psicológicamente durante el traslado, 
+               por reconocimiento de culpabilidad y declaraciones de testigos")
+
+tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "P5_15_04", var2 = NA, var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_psicologica_prueba", nombre = "declaracion-conocidos",
+               Dato = "Proporción de personas que reportaron ser torturadas psicológicamente durante el traslado, 
+               por declaraciones de conocidos sobre sus antecedentes")
+
+tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "P5_15_05", var2 = NA , var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_psicologica_prueba", nombre = "declaracion-complices",
+               Dato = "Proporción de personas que reportaron ser torturadas psicológicamente durante el traslado, 
+               por declaraciones de supuestos cómplices")
+
+tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "P5_15_06", var2 = NA , var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_psicologica_prueba", nombre = "declaracion-personas",
+               Dato = "Proporción de personas que reportaron ser torturadas psicológicamente durante el traslado, 
+               por declaraciones de otras personas detenidas")
+
+tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "P5_15_07", var2 = NA , var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_psicologica_prueba", nombre = "documentales",
+               Dato = "Proporción de personas que reportaron ser torturadas psicológicamente durante el traslado, 
+               por pruebas documentales")
+
+tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "P5_15_08", var2 = NA , var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_psicologica_prueba", nombre = "objetos",
+               Dato = "Proporción de personas que reportaron ser torturadas psicológicamente durante el traslado, 
+               por objetos relacionados con la comisión de un delito")
+
+tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "P5_15_09", var2 = NA , var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_psicologica_prueba", nombre = "periciales",
+               Dato = "Proporción de personas que reportaron ser torturadas psicológicamente durante el traslado, 
+               por pruebas periciales")
+
+tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "P5_15_10", var2 = NA , var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_psicologica_prueba", nombre = "psicologicas",
+               Dato = "Proporción de personas que reportaron ser torturadas psicológicamente durante el traslado, 
+               por evaluaciones psicológicas")
+
+tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "P5_15_11", var2 = NA , var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_psicologica_prueba", nombre = "otro",
+               Dato = "Proporción de personas que reportaron ser torturadas psicológicamente durante el traslado, 
+               por otro tipo de prueba")
+
+#### 3.2.3 Tortura psicológica trato----------------------------------------------------------
+
+tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "P5_15_11", var2 = NA , var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_psicologica_trato", nombre = "otro",
+               Dato = "Proporción de personas que reportaron ser torturadas psicológicamente durante el traslado, 
+               por otro tipo de prueba")
 
 #### 3.2.3 Tortura física ----------------------------------------------------------
 
@@ -1429,11 +1700,145 @@ tabla_excel_fn(dataset = subset, var_prop = tortura_tra_f, var1 = "Color_piel_ca
 tabla_excel_fn(dataset = subset, var_prop = tortura_tra_f, var1 = "RND_3", var2 = "P3_2", var3 = NA, 
                varfilter = NA, filtervalue = NA, 
                carpeta = "Tortura", seccion = "Tortura_fisica", nombre = "RND_corporacion",
-               Dato = "Proporción de personas que reportaron ser torturadas físicamente durante el traslado, por RND_3 y corporación que detiene")
+               Dato = "Proporción de personas que reportaron ser torturadas físicamente durante el traslado, por RND_3 y autoridad que detiene")
+
+tabla_excel_fn(dataset = subset, var_prop = tortura_tra_f, var1 = "Corporacion_grupos", var2 = NA, var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_fisica", nombre = "corporacion_grupo",
+               Dato = "Proporción de personas que reportaron ser torturadas físicamente durante el traslado, por Corporación grupo que detiene")
+
+#### 3.2.3 Tortura general ----------------------------------------------------------
+
+for (i in delitos) {
+  tabla_excel_fn(dataset = subset, var_prop = tortura, var1 = NA, var2 = NA , var3 = NA, 
+                 varfilter = i, filtervalue = "1", 
+                 carpeta = "Tortura", seccion = "Tortura_general", nombre = paste0("",i),
+                 Dato = paste0("Proporción de personas que reportaron ser torturadas, acusadas (entre otros) por ",i," "))
+}
+
+tabla_excel_fn(dataset = subset, var_prop = tortura, var1 = "culpabilidad", var2 = NA, var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_general", nombre = "culpabilidad",
+               Dato = "Proporción de personas que reportaron ser torturadas, por culpabilidad")
+
+tabla_excel_fn(dataset = subset, var_prop = tortura, var1 = "culpabilidad", var2 = "P4_3A_7", var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_general", nombre = "culpabilidad_golpeado",
+               Dato = "Proporción de personas que reportaron ser torturadas, por culpabilidad y golpeado para echarse la culpa o aceptar hechos falsos en el interrogatorio")
+
+tabla_excel_fn(dataset = subset, var_prop = tortura, var1 = "culpabilidad", var2 = "P4_6_4", var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_general", nombre = "culpabilidad_declaro-culpable",
+               Dato = "Proporción de personas que reportaron ser torturadas, por culpabilidad y se declaró culpable de los hechos de los que se le acusó al momento de rendir o firmar su declaración ")
+
+tabla_excel_fn(dataset = subset, var_prop = tortura, var1 = "P4_1_09", var2 = NA, var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_general", nombre = "lesiones_MP",
+               Dato = "Proporción de personas que reportaron ser torturadas, por tenía lesiones al llegar al MP")
+
+tabla_excel_fn(dataset = subset, var_prop = tortura, var1 = "P4_1_10", var2 = NA, var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_general", nombre = "medico",
+               Dato = "Proporción de personas que reportaron ser torturadas, por lo evaluó un médico al llegar al MP")
+
+tabla_excel_fn(dataset = subset, var_prop = tortura, var1 = "P4_1_11", var2 = NA, var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_general", nombre = "medico-registro",
+               Dato = "Proporción de personas que reportaron ser torturadas, por médico registró por escrito que usted tenía lesiones al llegar al MP")
+
+tabla_excel_fn(dataset = subset, var_prop = tortura, var1 = "P4_1_12", var2 = NA, var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_general", nombre = "medico-fotografias",
+               Dato = "Proporción de personas que reportaron ser torturadas, por el médico le tomó fotografías o video de sus lesiones al llegar al MP")
+
+tabla_excel_fn(dataset = subset, var_prop = tortura, var1 = "P4_3A_7", var2 = NA, var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_general", nombre = "golpeado",
+               Dato = "Proporción de personas que reportaron ser torturadas, por ser golpeado para echarse la culpa en el interrogatorio")
+
+tabla_excel_fn(dataset = subset, var_prop = tortura, var1 = "P4_3A_8", var2 = NA, var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_general", nombre = "golpeado-alguien",
+               Dato = "Proporción de personas que reportaron ser torturadas, por ser golpeado para inculpar a alguien más en el interrogatorio")
+
+tabla_excel_fn(dataset = subset, var_prop = tortura, var1 = "P4_6_4", var2 = NA, var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_general", nombre = "declaro-culpable",
+               Dato = "Proporción de personas que reportaron ser torturadas, por  se declaró culpable de los hechos de los que se le acusó Al momento de rendir o firmar su declaración")
+
+tabla_excel_fn(dataset = subset, var_prop = tortura, var1 = "P4_7", var2 = NA, var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_general", nombre = "razon-culpable",
+               Dato = "Proporción de personas que reportaron ser torturadas, por principal razón por la que se declaró culpable")
 
 
 
+#### 3.2.3 Culpabilidad ----------------------------------------------------------
 
+tabla_excel_fn(dataset = subset, var_prop = culpabilidad, var1 = "P4_3A_7", var2 = NA, var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Culpabilidad", nombre = "presion",
+               Dato = "Proporción de personas que se reportaron culpables, por ser golpeado para echarse la culpa en el interrogatorio")
+
+tabla_excel_fn(dataset = subset, var_prop = culpabilidad, var1 = "P4_6_4", var2 = NA, var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Culpabilidad", nombre = "culpable",
+               Dato = "Proporción de personas que se reportaron culpables, por se declaró culpable de los hechos de los que se le acusó en el MP")
+
+tabla_excel_fn(dataset = subset, var_prop = culpabilidad, var1 = "P5_15_01", var2 = NA, var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Culpabilidad", nombre = "confesion",
+               Dato = "Proporción de personas que se reportaron culpables, confesión como tipo de prueba en contra")
+
+tabla_excel_fn(dataset = subset, var_prop = culpabilidad, var1 = "P5_15_02", var2 = NA, var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Culpabilidad", nombre = "victima",
+               Dato = "Proporción de personas que se reportaron culpables, delcaración de la victima como tipo de prueba en contra")
+
+tabla_excel_fn(dataset = subset, var_prop = culpabilidad, var1 = "P5_15_03", var2 = NA, var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Culpabilidad", nombre = "testigos",
+               Dato = "Proporción de personas que se reportaron culpables, delcaración de la testigos como tipo de prueba en contra")
+
+tabla_excel_fn(dataset = subset, var_prop = culpabilidad, var1 = "P5_15_04", var2 = NA, var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Culpabilidad", nombre = "conocidos",
+               Dato = "Proporción de personas que se reportaron culpables, delcaración de conocidos sobre sus antecedentes como tipo de prueba en contra")
+
+tabla_excel_fn(dataset = subset, var_prop = culpabilidad, var1 = "P5_15_05", var2 = NA, var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Culpabilidad", nombre = "complices",
+               Dato = "Proporción de personas que se reportaron culpables, delcaración de complices como tipo de prueba en contra")
+
+tabla_excel_fn(dataset = subset, var_prop = culpabilidad, var1 = "P5_15_06", var2 = NA, var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Culpabilidad", nombre = "personas",
+               Dato = "Proporción de personas que se reportaron culpables, delcaración de otras personas como tipo de prueba en contra")
+
+tabla_excel_fn(dataset = subset, var_prop = culpabilidad, var1 = "P5_15_07", var2 = NA, var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Culpabilidad", nombre = "registros",
+               Dato = "Proporción de personas que se reportaron culpables, registros como tipo de prueba en contra")
+
+tabla_excel_fn(dataset = subset, var_prop = culpabilidad, var1 = "P5_15_08", var2 = NA, var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Culpabilidad", nombre = "objetos",
+               Dato = "Proporción de personas que se reportaron culpables, objetos relacionados como tipo de prueba en contra")
+
+tabla_excel_fn(dataset = subset, var_prop = culpabilidad, var1 = "P5_15_09", var2 = NA, var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Culpabilidad", nombre = "huellas",
+               Dato = "Proporción de personas que se reportaron culpables, huellas como tipo de prueba en contra")
+
+tabla_excel_fn(dataset = subset, var_prop = culpabilidad, var1 = "P5_15_10", var2 = NA, var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Culpabilidad", nombre = "evaluaciones",
+               Dato = "Proporción de personas que se reportaron culpables, evaluaciones psicológicas como tipo de prueba en contra")
+
+tabla_excel_fn(dataset = subset, var_prop = culpabilidad, var1 = "P5_15_11", var2 = NA, var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Culpabilidad", nombre = "otro",
+               Dato = "Proporción de personas que se reportaron culpables, otro tipo como tipo de prueba en contra")
 
 
 ### 3.3 LGBTQ -------------------------------------------------------------------
@@ -2288,6 +2693,10 @@ for (i in delitos) {
 }
 
 
+tabla_excel_fn(dataset = subset, var_prop = controles_cooperativos, var1 = "Corporacion_grupos", var2 = NA, var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Policia", seccion = "Controles_cooperativos", nombre = "Nacional",
+               Dato = "Proporción de personas que reportaron controles cooperativos, por corporación grupos")
 
 
 #### 3.4.9 Controles contacto  --------
@@ -2322,6 +2731,13 @@ for (i in delitos) {
                  Dato = paste0("Proporción de personas que reportaron controles de contacto, acusadas (entre otros) por ",i," por sexo y estado de arresto"))
 }
 
+
+tabla_excel_fn(dataset = subset, var_prop = control_contacto, var1 = "Corporacion_grupos", var2 = NA, var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Policia", seccion = "Controles_contacto", nombre = "Nacional",
+               Dato = "Proporción de personas que reportaron controles contacto, por corporación grupos")
+
+
 #### 3.4.10 Controles sometimiento  --------
 
 for (i in delito_grupos) {
@@ -2355,6 +2771,11 @@ for (i in delitos) {
 }
 
 
+tabla_excel_fn(dataset = subset, var_prop = sometimiento, var1 = "Corporacion_grupos", var2 = NA, var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Policia", seccion = "Controles_sometimiento", nombre = "Nacional",
+               Dato = "Proporción de personas que reportaron controles sometimiento, por corporación grupos")
+
 
 
 #### 3.4.11 Tácticas defensivas  --------
@@ -2386,6 +2807,15 @@ for (i in delito_unico_grupos) {
                  Dato = paste0("Proporción de personas con un único delito que reportaron tacticas defensivas, acusadas por ",i," por sexo"))
 }
 
+
+
+tabla_excel_fn(dataset = subset, var_prop = tacticas_defensivas, var1 = "Corporacion_grupos", var2 = NA, var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Policia", seccion = "tacticas_defensivas", nombre = "Nacional",
+               Dato = "Proporción de personas que reportaron tacticas defensivas, por corporación grupos")
+
+
+
 #### 3.4.12 Fuerza Letal --------
 
 for (i in delito_grupos) {
@@ -2406,7 +2836,7 @@ for (i in delitos) {
 for (i in delito_unico_grupos) {
   tabla_excel_fn(dataset = subset, var_prop = fuerza_letal, var1 = "Sexo", var2 = NA, var3 = NA, 
                  varfilter = i, filtervalue = 1,
-                 carpeta = "Policia", seccion = "Fuerza-letal_delito-grupo_sexo", nombre = paste0("",i),
+                 carpeta = "Policia", seccion = "Fuerza-letal_delito-grupo-unico_sexo", nombre = paste0("",i),
                  Dato = paste0("Proporción de personas que reportaron fuerza letal, acusadas (entre otros) por ",i," por sexo"))
 }
 
@@ -2417,6 +2847,12 @@ for (i in delito_unico_grupos) {
                  Dato = paste0("Proporción de personas con un único delito que reportaron fuerza letal, acusadas por ",i,""))
 }
 
+
+
+tabla_excel_fn(dataset = subset, var_prop = fuerza_letal, var1 = NA, var2 = NA, var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Policia", seccion = "Fuerza-letal-corporación-grupos", nombre = "Corporacion",
+               Dato = "Proporción de personas con un único delito que reportaron fuerza letal, por corporación")
 
 #### 3.4.13 Policia hizo -------------------------------------------------------------
 
