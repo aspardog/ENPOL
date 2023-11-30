@@ -58,22 +58,22 @@ p_load(char = c(
 # You can find out your username by inputting Sys.info()["user"] on the R Console.
 
 if (Sys.info()["user"] == "marcelo") {
-  path2DB <- paste0("/Users/marcelo/Dropbox/ENPOL/")
+  path2SP <- paste0("/Users/marcelo/Dropbox/ENPOL/")
   
 } else if (Sys.info()["user"] == "santiagopardo") {
-  path2DB <- paste0("/Users/santiagopardo/OneDrive - World Justice Project/ENPOL/Data")
+  path2SP <- paste0("/Users/santiagopardo/OneDrive - World Justice Project/ENPOL/Data")
   
 } else if (Sys.info()["user"] == "USER VERO"){
-  path2DB <- paste0("PATH VERO")
+  path2SP <- paste0("PATH VERO")
   
 } else if (Sys.info()["user"] == "arturoluna"){
-  path2DB <- paste0("/Users/arturoluna/Dropbox/ENPOL/")
+  path2SP <- paste0("/Users/arturoluna/Dropbox/ENPOL/")
   
 } else if (Sys.info()["user"] == "cristinaalvarez"){
-  path2DB <- paste0("/Users/cristinaalvarez/Library/CloudStorage/OneDrive-WorldJusticeProject/LOCAL/ENPOL")
+  path2SP <- paste0("/Users/cristinaalvarez/Library/CloudStorage/OneDrive-WorldJusticeProject/LOCAL/ENPOL")
   
 } else{
-  path2DB <- "PLEASE INSERT YOUR PERSONAL PATH TO THE  WJP - DATA ANALYTICS DIRECTORY"
+  path2SP <- "PLEASE INSERT YOUR PERSONAL PATH TO THE  WJP - DATA ANALYTICS DIRECTORY"
 }
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

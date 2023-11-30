@@ -54,7 +54,10 @@ prueba_hip <- function(seccion,subseccion,hypo_name,type,database,dep_var,indep_
     # Writing the excel file
     
     write.xlsx(as.data.frame(df), 
-               file      = file.path(paste0("National/Hypothesis/Output/",seccion,"/",subseccion,"/",
+               file      = file.path(paste0(path2SP,
+                                            "/National/Hypothesis/Output/",
+                                            seccion,"/",
+                                            subseccion,"/",
                                             hypo_name,".xlsx"),
                                      fsep = "/"),  
                sheetName = "Resultados Generales",
@@ -126,7 +129,10 @@ prueba_hip <- function(seccion,subseccion,hypo_name,type,database,dep_var,indep_
       # Writing the excel files for marginal effects and full model 
       
       write.xlsx(as.data.frame(df_full1), 
-                 file      = file.path(paste0("National/Hypothesis/Output/",seccion,"/",subseccion,"/",
+                 file      = file.path(paste0(path2SP,
+                                              "/National/Hypothesis/Output/",
+                                              seccion,"/",
+                                              subseccion,"/",
                                               hypo_name,".xlsx"),
                                        fsep = "/"),  
                  sheetName = "Resultados Generales (modelo full)",
@@ -134,7 +140,10 @@ prueba_hip <- function(seccion,subseccion,hypo_name,type,database,dep_var,indep_
                  row.names = F)
       
       write.xlsx(as.data.frame(df_full2), 
-                 file      = file.path(paste0("National/Hypothesis/Output/",seccion,"/",subseccion,"/",
+                 file      = file.path(paste0(path2SP,
+                                              "/National/Hypothesis/Output/",
+                                              seccion,"/",
+                                              subseccion,"/",
                                               hypo_name,".xlsx"),
                                        fsep = "/"),  
                  sheetName = "Resultados Generales (efectos mg full)",
@@ -185,7 +194,10 @@ prueba_hip <- function(seccion,subseccion,hypo_name,type,database,dep_var,indep_
         # Writing the excel file
         
         write.xlsx(as.data.frame(df), 
-                   file      = file.path(paste0("National/Hypothesis/Output/",seccion,"/",subseccion,"/",
+                   file      = file.path(paste0(path2SP,
+                                                "/National/Hypothesis/Output/",
+                                                seccion,"/",
+                                                subseccion,"/",
                                                 hypo_name,".xlsx"),
                                          fsep = "/"),
                    sheetName = paste0("Por ",i),
@@ -217,7 +229,10 @@ prueba_hip <- function(seccion,subseccion,hypo_name,type,database,dep_var,indep_
     # Writing the excel file
     
     write.xlsx(as.data.frame(df), 
-               file      = file.path(paste0("National/Hypothesis/Output/",seccion,"/",subseccion,"/",
+               file      = file.path(paste0(path2SP, 
+                                            "/National/Hypothesis/Output/",
+                                            seccion,"/",
+                                            subseccion,"/",
                                             hypo_name,".xlsx"),
                                      fsep = "/"),
                sheetName = "Resultados Generales",
@@ -288,7 +303,10 @@ prueba_hip <- function(seccion,subseccion,hypo_name,type,database,dep_var,indep_
       # Writing the excel files for marginal effects and full model 
       
       write.xlsx(as.data.frame(df_full1), 
-                 file      = file.path(paste0("National/Hypothesis/Output/",seccion,"/",subseccion,"/",
+                 file      = file.path(paste0(path2SP,
+                                              "/National/Hypothesis/Output/",
+                                              seccion,"/",
+                                              subseccion,"/",
                                               hypo_name,".xlsx"),
                                        fsep = "/"),  
                  sheetName = "Resultados Generales (modelo completo)",
@@ -296,7 +314,10 @@ prueba_hip <- function(seccion,subseccion,hypo_name,type,database,dep_var,indep_
                  row.names = F)
       
       write.xlsx(as.data.frame(df_full2), 
-                 file      = file.path(paste0("National/Hypothesis/Output/",seccion,"/",subseccion,"/",
+                 file      = file.path(paste0(path2SP,
+                                              "/National/Hypothesis/Output/",
+                                              seccion,"/",
+                                              subseccion,"/",
                                               hypo_name,".xlsx"),
                                        fsep = "/"),  
                  sheetName = "Resultados Generales (efectos mg completo)",
@@ -346,7 +367,10 @@ prueba_hip <- function(seccion,subseccion,hypo_name,type,database,dep_var,indep_
         # Writing the excel file
         
         write.xlsx(as.data.frame(df), 
-                   file      = file.path(paste0("National/Hypothesis/Output/",seccion,"/",subseccion,"/",
+                   file      = file.path(paste0(path2SP,
+                                                "/National/Hypothesis/Output/",
+                                                seccion,"/",
+                                                subseccion,"/",
                                                 hypo_name,".xlsx"),
                                          fsep = "/"),
                    sheetName = paste0("Por ",i),
@@ -388,7 +412,10 @@ prueba_hip <- function(seccion,subseccion,hypo_name,type,database,dep_var,indep_
     # Writing the excel file
     
     write.xlsx(as.data.frame(df), 
-               file      = file.path(paste0("National/Hypothesis/Output/",seccion,"/",subseccion,"/",
+               file      = file.path(paste0(path2SP,
+                                            "/National/Hypothesis/Output/",
+                                            seccion,"/",
+                                            subseccion,"/",
                                             hypo_name,".xlsx"),
                                      fsep = "/"),  
                sheetName = "Resultados Generales",
@@ -459,7 +486,10 @@ prueba_hip <- function(seccion,subseccion,hypo_name,type,database,dep_var,indep_
         # Writing the excel file
         
         write.xlsx(as.data.frame(df), 
-                   file      = file.path(paste0("National/Hypothesis/Output/",seccion,"/",subseccion,"/",
+                   file      = file.path(paste0(path2SP,
+                                                "/National/Hypothesis/Output/",
+                                                seccion,"/",
+                                                subseccion,"/",
                                                 hypo_name,".xlsx"),
                                          fsep = "/"),
                    sheetName = paste0("Por ",i),

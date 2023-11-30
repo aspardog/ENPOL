@@ -28,7 +28,8 @@ hyp_detenciones_event <- function(data.df= Main_database) {
   master_data.df <- data.df %>%
     select(P3_3, orden_det, flagrancia, flagrancia_const, inspeccion, det_ninguna, 
            months_since_NSJP, years_since_NSJP, 
-           Corporacion_grupos, Sexo, starts_with("Del_"), traslados_30= P3_20_01, traslados_6h = P3_20_06) %>%
+           Corporacion_grupos, Sexo, starts_with("Del_"), 
+           traslados_30= P3_20_01, traslados_6h = P3_20_06) %>%
     mutate(
       Estado =
         case_when(
@@ -44,7 +45,6 @@ hyp_detenciones_event <- function(data.df= Main_database) {
       across(starts_with("Del_"),
             as.numeric)
     ) %>% 
-
     select(!c(P3_3)) %>%
     mutate(before_nsjp = 
              if_else(years_since_NSJP < 0, 1, 0),
