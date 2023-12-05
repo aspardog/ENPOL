@@ -4567,6 +4567,78 @@ Main_database %<>%
     P3_19_99 = case_when(P3_19 == "99" ~ 1,
                          is.na(P3_19) == TRUE ~ NA,
                          T ~ 0),
+    # Estado de arresto
+    P3_6 = case_when(P3_6 == "01" ~ "Aguascalientes",
+                     P3_6 == "02" ~ "Baja California" ,
+                     P3_6 == "03" ~ "Baja California Sur",
+                     P3_6 == "04" ~ "Campeche" ,
+                     P3_6 == "05" ~ "Coahuila de Zaragoza",
+                     P3_6 == "06" ~ "Colima" ,
+                     P3_6 == "07" ~ "Chiapas" ,
+                     P3_6 == "08" ~ "Chihuahua" ,
+                     P3_6 == "09" ~ "Distrito Federal" ,
+                     P3_6 == "10" ~ "Durango" ,
+                     P3_6 == "11" ~ "Guanajuato" ,
+                     P3_6 == "12" ~ "Guerrero" ,
+                     P3_6 == "13" ~ "Hidalgo" ,
+                     P3_6 == "14" ~ "Jalisco" ,
+                     P3_6 == "15" ~ "México" ,
+                     P3_6 == "16" ~ "Michoacán de Ocampo" ,
+                     P3_6 == "17" ~ "Morelos" ,
+                     P3_6 == "18" ~ "Nayarit" ,
+                     P3_6 == "19" ~ "Nuevo León" ,
+                     P3_6 == "20" ~ "Oaxaca" ,
+                     P3_6 == "21" ~ "Puebla" ,
+                     P3_6 == "22" ~ "Querétaro" ,
+                     P3_6 == "23" ~ "Quintana Roo" ,
+                     P3_6 == "24" ~ "San Luis Potosí" ,
+                     P3_6 == "25" ~ "Sinaloa" ,
+                     P3_6 == "26" ~ "Sonora" ,
+                     P3_6 == "27" ~ "Tabasco" ,
+                     P3_6 == "28" ~ "Tamaulipas" ,
+                     P3_6 == "29" ~ "Tlaxcala" ,
+                     P3_6 == "30" ~ "Veracruz de Ignacio de la Llave" ,
+                     P3_6 == "31" ~ "Yucatán" ,
+                     P3_6 == "32" ~ "Zacatecas" ,
+                     P3_6 == "97" ~ NA_character_ ,
+                     P3_6 == "99" ~ NA_character_ ,
+                     T ~ NA_character_),
+    # Estado de arresto
+    P3_3 = case_when(P3_3 == "01" ~ "Aguascalientes",
+                     P3_3 == "02" ~ "Baja California" ,
+                     P3_3 == "03" ~ "Baja California Sur",
+                     P3_3 == "04" ~ "Campeche" ,
+                     P3_3 == "05" ~ "Coahuila de Zaragoza",
+                     P3_3 == "06" ~ "Colima" ,
+                     P3_3 == "07" ~ "Chiapas" ,
+                     P3_3 == "08" ~ "Chihuahua" ,
+                     P3_3 == "09" ~ "Distrito Federal" ,
+                     P3_3 == "10" ~ "Durango" ,
+                     P3_3 == "11" ~ "Guanajuato" ,
+                     P3_3 == "12" ~ "Guerrero" ,
+                     P3_3 == "13" ~ "Hidalgo" ,
+                     P3_3 == "14" ~ "Jalisco" ,
+                     P3_3 == "15" ~ "México" ,
+                     P3_3 == "16" ~ "Michoacán de Ocampo" ,
+                     P3_3 == "17" ~ "Morelos" ,
+                     P3_3 == "18" ~ "Nayarit" ,
+                     P3_3 == "19" ~ "Nuevo León" ,
+                     P3_3 == "20" ~ "Oaxaca" ,
+                     P3_3 == "21" ~ "Puebla" ,
+                     P3_3 == "22" ~ "Querétaro" ,
+                     P3_3 == "23" ~ "Quintana Roo" ,
+                     P3_3 == "24" ~ "San Luis Potosí" ,
+                     P3_3 == "25" ~ "Sinaloa" ,
+                     P3_3 == "26" ~ "Sonora" ,
+                     P3_3 == "27" ~ "Tabasco" ,
+                     P3_3 == "28" ~ "Tamaulipas" ,
+                     P3_3 == "29" ~ "Tlaxcala" ,
+                     P3_3 == "30" ~ "Veracruz de Ignacio de la Llave" ,
+                     P3_3 == "31" ~ "Yucatán" ,
+                     P3_3 == "32" ~ "Zacatecas" ,
+                     P3_3 == "97" ~ NA_character_ ,
+                     P3_3 == "99" ~ NA_character_ ,
+                     T ~ NA_character_),
 
     # Color de piel
     Color_piel_1 = case_when(P10_10 == "A" ~ 1 ,
@@ -4603,6 +4675,50 @@ Main_database %<>%
                                  Color_piel_promedio == 6  ~ "Moreno Obscuro", 
                                  Color_piel_promedio >= 7  ~ "Moreno Muy Obscuro", 
                                  T ~ NA),
+    
+    # Educación obligatoria (Bachillerato y homologos 15 de educación)
+    
+    Educacion_obligatoria = case_when(Escolaridad == "Ninguno" ~ 0, 
+                                      Escolaridad == "Preescolar" ~ 0,
+                                      Escolaridad == "Primaria" ~ 0,
+                                      Escolaridad == "Secundaria" ~ 0,
+                                      Escolaridad == "Preparatoria o bachillerato" ~ 0,
+                                      Escolaridad == "Normal básica con secundaria" ~ 0,
+                                      Escolaridad == "Carrera técnica con secundaria" ~ 0,
+                                      Escolaridad == "Carrera técnica con preparatoria" ~ 1,
+                                      Escolaridad == "Licenciatura o profesional" ~ 1,
+                                      Escolaridad == "Maestría o doctorado" ~ 1,
+                                      T ~ NA),
+    # Pertenencia a un grupo etnico
+    Etnia = case_when(P1_15 == "1" ~ 1,
+                      P1_15 == "2" ~ 1,
+                      P1_15 == "3" ~ 0,
+                      P1_15 == "8" ~ NA,
+                      P1_15 == "9" ~ NA,
+                      T ~ NA),
+    
+    Edad_arresto = as.numeric(P1_3) - (as.numeric(P3_5_A) - 2021),
+    
+    Edad_menor30 = case_when(Edad_arresto < 30 ~ 1, 
+                             Edad_arresto >= 30 ~ 0,
+                             T ~ NA),
+    Ingreso_inseguro = case_when(Ingreso == "0" ~ 1, 
+                                 Ingreso == "< 3 mil" ~ 1,
+                                 Ingreso == "3 mil a 5.5 mil" ~ 0,
+                                 Ingreso == "5.5 mil a 7.5 mil" ~ 0,
+                                 Ingreso == "7.5 mil a 9 mil" ~ 0,
+                                 Ingreso == "9 mil a 11 mil" ~ 0,
+                                 Ingreso == "> 11 mil" ~ 0,
+                                 T ~ NA
+                                 ),
+    #Color de piel dicotómica
+    Colo_piel_claro = case_when(Color_piel_categ == "Blanco" ~ 1,
+                                Color_piel_categ == "Moreno Claro" ~ 1,
+                                Color_piel_categ == "Moreno" ~ 0,
+                                Color_piel_categ == "Moreno Obscuro" ~ 0,
+                                Color_piel_categ == "Moreno Muy Obscuro" ~ 0,
+                                T ~ NA)
+    
   ) %>% 
   
   rowwise() %>% mutate(Delito_unico = ifelse(sum(c(Delito_gr_1_robos,
@@ -4686,11 +4802,10 @@ Main_database %<>%
     TRUE ~ NA_character_
   ))
 
-age_breaks <- c(18, 29, 44, 59, Inf)
-age_labels <- c("18-29", "30-44", "45-59", "60+")
-  
 Main_database <- Main_database %>%
-  mutate(Edad_categ = cut(Edad, breaks = age_breaks, labels = age_labels, include.lowest = TRUE))
+  rename(Estado_arresto = P3_6,
+         Anio_arresto = P3_5_A,
+         Mes_arresto = P3_5_M)
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
