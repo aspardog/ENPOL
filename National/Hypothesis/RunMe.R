@@ -43,7 +43,11 @@ cat(section)
 subsection  <- args[2]
 cat(subsection)
 
-if(section == "Detenciones"){
+if(section == "All") {
+  
+  outPaths <- c(paste0(path2SP,"/National/Hypothesis/Output/"))
+
+} else if(section == "Detenciones"){
   
   outPathsSection <- c(paste0(path2SP,"/National/Hypothesis/Output/Detenciones/"))
   
@@ -87,7 +91,7 @@ file.remove(prevOutputs)
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-if(section == "Detenciones") {
+if(section %in% c("Detenciones", "All")) {
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -96,7 +100,7 @@ if(section == "Detenciones") {
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 ### Tipo ----
-  if (subsection == "Tipo") {
+  if (subsection %in% c("Tipo", "All")) {
     
     # Create the database to be used
     
@@ -297,7 +301,7 @@ if(section == "Detenciones") {
                                          name = "hyp_traslados_event")
     
     
-  } else if (subsection == "Tortura") {
+  } else if (subsection %in% c("Tortura", "All")) {
     
     ### Tortura ----
     
@@ -353,7 +357,7 @@ if(section == "Detenciones") {
     
     ### Policia ----
     
-  } else if (subsection == "Policia") {
+  } else if (subsection %in% c("Policia", "All")) {
     
     tipo <- c("proporcionalidad_uso_fuerza") # List of dependent variables from the first analysis
     
@@ -433,7 +437,7 @@ if(section == "Detenciones") {
       
   }
 
-} else if(section == "MP") {
+} else if(section %in% c("MP", "All")) {
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -450,7 +454,7 @@ if(section == "Detenciones") {
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-  if(subsection == "PPO") {
+  if(subsection %in% c("PPO", "All")) {
     
     ### PPO ----
     
