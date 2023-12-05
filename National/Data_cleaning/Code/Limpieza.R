@@ -4057,9 +4057,12 @@ Main_database %<>%
       months_since_PPO_2 < 0 & months_since_PPO_1 >= 0 & if_any(delitos_PPO1, ~ .x %in% "1") ~ 1,
       months_since_PPO_2 < 0 & months_since_PPO_1 >= 0 & if_any(delitos_PPO1, ~ .x %in% "0") ~ 0,
       months_since_PPO_2 < 0 & months_since_PPO_1 < 0 ~ 0),
-    months_since_RND_3 = case_when((P5_13_1 == "0"| P5_13_2 == "1") & is.na(RND_3) == F ~ interval(fecha_RND_com, fecha_arresto) %/% months(1),
-                                   (P5_13_1 == "1"| P5_13_2 == "0") & is.na(RND_3) == F ~ interval(fecha_RND_fed, fecha_arresto) %/% months(1),
-                                   T ~ NA)) %>%
+    months_since_RND_3 = case_when((P5_13_1 == "0"| P5_13_2 == "1") & is.na(RND_3) == F ~ time_length(difftime(fecha_arresto, fecha_RND_com),"months"),
+                                   (P5_13_1 == "1"| P5_13_2 == "0") & is.na(RND_3) == F ~ time_length(difftime(fecha_arresto, fecha_RND_fed),"months"),
+                                   T ~ NA),
+    years_since_RND_3 = case_when((P5_13_1 == "0"| P5_13_2 == "1") & is.na(RND_3) == F ~ time_length(difftime(fecha_arresto, fecha_RND_com),"years"),
+                                  (P5_13_1 == "1"| P5_13_2 == "0") & is.na(RND_3) == F ~ time_length(difftime(fecha_arresto, fecha_RND_fed),"years"),
+                                  T ~ NA)) %>%
   
   # Months and years since NSJP (fixed)
   
