@@ -295,7 +295,7 @@ if(section %in% c("Detenciones", "All")) {
                                        T ~ Corporacion_grupos),
         one_year_limit     = if_else(months_since_RND_3 <= 12 & months_since_RND_3 >= -12, 1, 0, 0)
       ) %>%
-      select(tortura_tra_p, tortura_tra_f, months_since_RND_3, Estado, Sexo, fuero, Corporacion_grupos, one_year_limit, RND_3) 
+      select(tortura_tra_p, tortura_tra_f, months_since_RND_3, Estado, Sexo, fuero, Corporacion_grupos, one_year_limit, RND_3, Delito_unico, Delito_unico_categ) 
     
     dependent_vars <- c("tortura_tra_p", "tortura_tra_f")
     
@@ -349,7 +349,7 @@ if(section %in% c("Detenciones", "All")) {
       select(orden_det, inspeccion, flagrancia, flagrancia_const, det_ninguna, detencion_no_inmediata, 
              months_since_NSJP, years_since_NSJP, Corporacion_grupos, Estado, Sexo, starts_with("Del_"),
              Traslados_30 = P3_20_01, Traslados_6h = P3_20_06, LGBTQ, Edad, Traslado_MP = P3_19_01, 
-             proporcionalidad_uso_fuerza, Delito_unico)
+             proporcionalidad_uso_fuerza, Delito_unico, Delito_unico_categ)
     
     result_list_policia <- lapply(tipo, function(tipo) {
       
@@ -389,7 +389,7 @@ if(section %in% c("Detenciones", "All")) {
           Sexo = case_when(SEXO.x == "1" ~ "Masculino",
                            SEXO.x == "2" ~ "Femenino",
                            T ~ NA_character_)) %>%
-        select(tortura, flagrancia, LGBTQ, Estado) 
+        select(tortura, flagrancia, LGBTQ, Estado, Delito_unico, Delito_unico_categ) 
       
       abuso <- c("tortura", 
                  "flagrancia")

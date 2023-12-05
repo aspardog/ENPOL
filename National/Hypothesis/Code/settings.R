@@ -70,7 +70,7 @@ if (Sys.info()["user"] == "marcelo") {
   path2SP <- paste0("/Users/arturoluna/Dropbox/ENPOL/")
   
 } else if (Sys.info()["user"] == "cristinaalvarez"){
-  path2SP <- paste0("/Users/cristinaalvarez/Library/CloudStorage/OneDrive-WorldJusticeProject/LOCAL/ENPOL")
+  path2SP <- paste0("/Users/cristinaalvarez/Library/CloudStorage/OneDrive-WorldJusticeProject/ENPOL/Data/")
   
 } else{
   path2SP <- "PLEASE INSERT YOUR PERSONAL PATH TO THE  WJP - DATA ANALYTICS DIRECTORY"
