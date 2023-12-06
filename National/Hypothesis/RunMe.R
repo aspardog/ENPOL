@@ -243,14 +243,10 @@ if(section %in% c("Detenciones")) {
                                        T ~ Corporacion_grupos),
         one_year_limit     = if_else(months_since_RND_3 <= 12 & months_since_RND_3 >= -12, 1, 0, 0)
       ) %>%
-<<<<<<< Updated upstream
-      select(tortura_tra_p, tortura_tra_f, months_since_RND_3, Estado, Sexo, fuero, Corporacion_grupos, one_year_limit, RND_3, Delito_unico, Delito_unico_categ) 
-=======
       select(tortura_tra_p, tortura_tra_f, 
              months_since_RND_3, one_year_limit, Delito_unico, Delito_unico_categ,
              Estado, Sexo, fuero, Corporacion_grupos) 
->>>>>>> Stashed changes
-    
+
     dependent_vars <- c("tortura_tra_p", "tortura_tra_f")
     
     list_tortura <- lapply(dependent_vars,
@@ -307,17 +303,11 @@ if(section %in% c("Detenciones")) {
              Corporacion_grupos = case_when(Corporacion_grupos == "NS/NR" ~ NA_character_,
                                             T ~ Corporacion_grupos)) %>%
       select(orden_det, inspeccion, flagrancia, flagrancia_const, det_ninguna, detencion_no_inmediata, 
-<<<<<<< Updated upstream
-             months_since_NSJP, years_since_NSJP, Corporacion_grupos, Estado, Sexo, starts_with("Del_"),
-             Traslados_30 = P3_20_01, Traslados_6h = P3_20_06, LGBTQ, Edad, Traslado_MP = P3_19_01, 
-             proporcionalidad_uso_fuerza, Delito_unico, Delito_unico_categ)
-=======
              months_since_NSJP, years_since_NSJP, 
              Corporacion_grupos, Estado, Sexo, Delito_unico_categ, Delito_unico, LGBTQ, Edad, 
              Traslados_30 = P3_20_01, Traslados_6h = P3_20_06, Traslado_MP = P3_19_01, 
              proporcionalidad_uso_fuerza)
->>>>>>> Stashed changes
-    
+
     list_policia <- lapply(tipo, 
                            function(tipo) {
                              
@@ -358,14 +348,10 @@ if(section %in% c("Detenciones")) {
           Sexo = case_when(SEXO.x == "1" ~ "Masculino",
                            SEXO.x == "2" ~ "Femenino",
                            T ~ NA_character_)) %>%
-<<<<<<< Updated upstream
-        select(tortura, flagrancia, LGBTQ, Estado, Delito_unico, Delito_unico_categ) 
-=======
         select(tortura, 
                flagrancia, 
                LGBTQ, Estado, Delito_unico_categ, Delito_unico) 
->>>>>>> Stashed changes
-      
+
       abuso <- c("tortura", 
                  "flagrancia")
       
