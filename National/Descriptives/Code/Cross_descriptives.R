@@ -334,134 +334,7 @@ delito_unico_grupos <- c("Delito_unico_1_robos",
                          "Delito_unico_15_ns_nr")
 
 
-subset <- Main_database %>%
-  rename(Estado_arresto = P3_6,
-         Anio_arresto = P3_5_A,
-         Mes_arresto = P3_5_M) %>%
-  
-  # Tipo de tortura psicológica
-  mutate(across(c("P3_17_01","P3_17_02", "P3_17_03", "P3_17_04", "P3_17_05", "P3_17_06","P3_17_07", "P3_17_08",
-                  "P3_17_09", "P3_17_10","P3_17_11", "P5_26A"), ~ recode(.x,
-                                                               "1" = 1, 
-                                                               "2" = 0, 
-                                                               "8" = NA_real_, 
-                                                               "9" = NA_real_))) %>%
-  
-  # Tipo de tortura física
-  mutate(across(c("P3_18_01", "P3_18_02", "P3_18_03", "P3_18_04", "P3_18_05", "P3_18_06", "P3_18_07", "P3_18_08", "P3_18_09", 
-                  "P3_18_10", "P3_18_12", "P3_18_13", "P3_18_14", "P3_18_15"), ~ recode(.x, 
-                                                                                        "1" = 1,
-                                                                                        "2" = 0,
-                                                                                        "8" = NA_real_,
-                                                                                        "9" = NA_real_))) %>%
-  # Tortura
-  mutate(across(c("P4_1_09", "P4_1_10", "P4_1_11", "P4_1_12", "P4_3A_7", "P4_3A_8", "P4_3A_9", "P4_6_4",
-                  "P5_15_01", "P5_15_02", "P5_15_03", "P5_15_04", "P5_15_05","P5_15_06", "P5_15_07", "P5_15_08", "P5_15_09",
-                  "P5_15_10", "P5_15_11", "P5_26A"), ~ recode(.x, 
-                                                                                        "1" = 1,
-                                                                                        "2" = 0,
-                                                                                        "8" = NA_real_,
-                                                                                        "9" = NA_real_))) %>%
-  
-  
-  # Grupos de P5_25
-  mutate(Antes_del_juicio = case_when(P5_25 == "1" ~ 1,
-                                      P5_25 == "2" 
-                                      | P5_25 == "3" 
-                                      | P5_25 == "8" 
-                                      | P5_25 == "9" ~ 0 ,
-                                      T ~ NA),
-         Despues_de_las_pruebas = case_when(P5_25 == "2" ~ 1,
-                                            P5_25 == "1" 
-                                            | P5_25 == "3" 
-                                            | P5_25 == "8" 
-                                            | P5_25 == "9" ~ 0 ,
-                                            T ~ NA),
-         Nunca_vio_al_juez = case_when(P5_25 == "3" ~ 1,
-                                       P5_25 == "1" 
-                                       | P5_25 == "2" 
-                                       | P5_25 == "8" 
-                                       | P5_25 == "9" ~ 0 ,
-                                       T ~ NA),
-         
-         
-         # RND-related
-         pre_RND = case_when(fecha_RND_fed <= fecha_arresto ~ 0,
-                             fecha_RND_fed > fecha_arresto ~ 1,
-                             T ~ NA),
-         inter_RND = case_when(fecha_RND_fed < fecha_arresto & fecha_arresto <= fecha_RND_com ~ 1,
-                               fecha_RND_fed >= fecha_arresto ~ 0,
-                               fecha_RND_com < fecha_arresto ~ 0,
-                               T ~ NA),
-         post_RND = case_when(fecha_RND_com < fecha_arresto ~ 1,
-                              fecha_RND_com >= fecha_arresto ~ 0,
-                              T ~ NA),
-         solo_fuero_f = case_when(fuero == "Sólo federal" ~ 1,
-                                  fuero == "Sólo común" ~ 0,
-                                  fuero == "Algunos delitos de fuero común y algunos de fuero federal" ~ 0,
-                                  T ~ NA),
-         solo_fuero_c = case_when(fuero == "Sólo federal" ~ 0,
-                                  fuero == "Sólo común" ~ 1,
-                                  fuero == "Algunos delitos de fuero común y algunos de fuero federal" ~ 0,
-                                  T ~ NA),
-         ambos_fueros = case_when(fuero == "Sólo federal" ~ 0,
-                                  fuero == "Sólo común" ~ 0,
-                                  fuero == "Algunos delitos de fuero común y algunos de fuero federal" ~ 1,
-                                  T ~ NA),
-         Post_2008 = case_when(as.numeric(Anio_arresto) >= 2008 ~ 1,
-                               T ~ NA_real_),
-         
-         # Detencion no inmediata
-         detencion_no_inmediata = case_when(P3_9 == "1" ~ 0,
-                                            P3_9 == "2" | P3_9 == "3"| P3_9 == "4"| P3_9 == "5"| P3_9 == "6" ~ 1,
-                                            T ~ NA),
-         
-         # Grupos de P3_16
-         P3_16_1 = case_when(P3_16 == "1" ~ 1,
-                             P3_16 == "2" | P3_16 == "8" | P3_16 == "9" ~ 0,
-                             T ~ NA),
-         P3_16_2 = case_when(P3_16 == "2" ~ 1,
-                             P3_16 == "1" | P3_16 == "8" | P3_16 == "9" ~ 0,
-                             T ~ NA),
-         P3_16_8 = case_when(P3_16 == "8" ~ 1,
-                             P3_16 == "1" | P3_16 == "2" | P3_16 == "9" ~ 0,
-                             T ~ NA),
-         P3_16_9 = case_when(P3_16 == "9" ~ 1,
-                             P3_16 == "1" | P3_16 == "2" | P3_16 == "8" ~ 0,
-                             T ~ NA),
-
-         # Grupos de P3_21
-         P3_21_1_1 = case_when(P3_21_1 == "1" ~ 1,
-                               is.na(P3_21_1) == TRUE ~ NA,
-                               T ~ 0),
-         P3_21_1_2 = case_when(P3_21_1 == "2" ~ 1,
-                               is.na(P3_21_1) == TRUE ~ NA,
-                               T ~ 0),
-         P3_21_1_8 = case_when(P3_21_1 == "8" ~ 1,
-                               is.na(P3_21_1) == TRUE ~ NA,
-                               T ~ 0),
-         P3_21_1_9 = case_when(P3_21_1 == "9" ~ 1,
-                               is.na(P3_21_1) == TRUE ~ NA,
-                               T ~ 0)) %>%
-  
-  mutate(
-    # Eventos de inspeccion
-    across(c("P3_12_1","P3_12_2", "P3_12_3", "P3_12_4", "P3_12_5"), ~ recode(.x,
-                                                                             "1" = 1,
-                                                                             "2" = 0,
-                                                                             "8" = NA_real_,
-                                                                             "9" = NA_real_))) %>%
-  mutate(
-    # Eventos de detención
-    across(c("P3_13_01","P3_13_02", "P3_13_03", "P3_13_04", "P3_13_05","P3_13_06","P3_13_07",
-             "P3_13_08","P3_13_09","P3_13_10","P3_13_11","P3_13_12", "P3_14_1", "P3_14_2",
-             "P3_14_3", "P3_14_4", "P3_14_5", "P3_14_6", "P3_15_1", "P3_15_2", "P3_15_3",
-             "P3_15_4", "P3_15_5", "P3_15_6", "P3_15_7", "P3_15_8", "P3_15_9"), ~ recode(.x,
-                                                                                         "1" = 1,
-                                                                                         "2" = 0,
-                                                                                         "8" = NA_real_,
-                                                                                         "9" = NA_real_)))  %>% 
-  filter(Post_2008 == 1)
+subset <- Main_database %>% filter(Post_2008 == 1)
 
 
 rm(Main_database)
@@ -2849,7 +2722,7 @@ for (i in delito_unico_grupos) {
 
 
 
-tabla_excel_fn(dataset = subset, var_prop = fuerza_letal, var1 = NA, var2 = NA, var3 = NA, 
+tabla_excel_fn(dataset = subset, var_prop = fuerza_letal, var1 = "Corporacion_grupos", var2 = NA, var3 = NA, 
                varfilter = NA, filtervalue = NA, 
                carpeta = "Policia", seccion = "Fuerza-letal-corporación-grupos", nombre = "Corporacion",
                Dato = "Proporción de personas con un único delito que reportaron fuerza letal, por corporación")
