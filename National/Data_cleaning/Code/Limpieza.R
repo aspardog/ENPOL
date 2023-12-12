@@ -70,10 +70,13 @@ tortura_t_p     <- c("P3_17_01","P3_17_02", "P3_17_03", "P3_17_04", "P3_17_05", 
                      "P3_17_09", "P3_17_10","P3_17_11")
 tortura_t_f     <- c("P3_18_01", "P3_18_02", "P3_18_03", "P3_18_04", "P3_18_05", "P3_18_06", "P3_18_07", "P3_18_08", "P3_18_09", 
                      "P3_18_10", "P3_18_12", "P3_18_13", "P3_18_14", "P3_18_15")
+tortura_mp_p    <- names(Main_database)[grepl("^P4_8_", names(Main_database))]
+tortura_mp_f    <- names(Main_database)[grepl("^P4_9_", names(Main_database))]
+tortura_general  <- c(tortura_t_p,tortura_t_f, tortura_mp_p, tortura_mp_f )
 desempenio      <- c("P5_24_2", "P5_25", "P5_44_2", "P5_26", "P5_26A",  "P5_26B") 
 
 relevant_vars   <- c(dates_day, dates_month, dates_year, delitos_PPO1, delitos_PPO2, sociodem, arrest_vars,
-                     tortura_arr_f, justifica_f, tortura_t_p, tortura_t_f, desempenio)
+                     tortura_arr_f, justifica_f, tortura_t_p, tortura_t_f, tortura_mp_p, tortura_mp_f, desempenio, tortura_general)
 
 
 
@@ -4182,6 +4185,9 @@ Main_database %<>%
       tortura_tra_p == 1 | tortura_tra_f == 1 ~ 1,
       T ~ 0),
     
+    # Torture_general
+    tortura_generalizada = case_when( if_any(tortura_general, ~ .x == "1") ~ 1, T ~ 0),
+    
     # Variables for judge and attorney performance
     proceso_justo = case_when(
       P5_26A == "1" ~ 1,
@@ -4304,7 +4310,8 @@ Main_database %<>%
                              P3_13_10 == "2" & P3_13_11 == "2" & P3_13_12 == "2" ~ 0,
                              P3_13_10 == "2" & P3_13_11 == "2" & is.na(P3_13_12) == TRUE ~ 0,
                              T ~ NA_real_),
-    proporcionalidad_uso_fuerza = case_when(P3_15_1 == "1" & (P3_13_01 == "1" | P3_13_02 == "1" | P3_13_03 == "1") ~ 1,
+    
+    proporcionalidad_uso_fuerza_SP = case_when(P3_15_1 == "1" & (P3_13_01 == "1" | P3_13_02 == "1" | P3_13_03 == "1") ~ 1,
                                             P3_15_4 == "1" & (P3_13_01 == "1" | P3_13_02 == "1" | P3_13_03 == "1" |
                                                                 P3_13_04 == "1" | P3_13_05 == "1" | P3_13_06 == "1" |
                                                                 P3_13_07 == "1" | P3_13_08 == "1" | P3_13_09 == "1") ~ 1,
@@ -4330,7 +4337,47 @@ Main_database %<>%
                                                                 P3_13_10 == "1" | P3_13_11 == "1" | P3_13_12 == "1") ~ 0,
                                             T ~ NA_real_),
     
-    
+    proporcionalidad_uso_fuerza = case_when((P3_15_4 == "2" | is.na(P3_15_4) == T)  &
+                                              (P3_13_04 == "1" | P3_13_05 == "1" | P3_13_06 == "1" |
+                                                 P3_13_07 == "1" | P3_13_08 == "1" | P3_13_09 == "1" |
+                                                 P3_13_10 == "1" | P3_13_11 == "1" | P3_13_12 == "1")  ~ 0,
+                                            P3_15_4 == "1" &
+                                              (P3_13_10 == "1" | P3_13_11 == "1" | P3_13_12 == "1")  ~ 0,
+                                            (P3_15_4 == "2" | is.na(P3_15_4) == T)  &
+                                              (P3_13_01 == "1" | P3_13_02 == "1" | P3_13_03 == "1" ) &
+                                              ((P3_13_04 == "2" | is.na(P3_13_04) == T) & 
+                                                 (P3_13_05 == "2" | is.na(P3_13_05) == T) & 
+                                                 (P3_13_06 == "2" | is.na(P3_13_06) == T) &
+                                                 (P3_13_07 == "2" | is.na(P3_13_07) == T) & 
+                                                 (P3_13_08 == "2" | is.na(P3_13_08) == T) & 
+                                                 (P3_13_09 == "2" | is.na(P3_13_09) == T) &
+                                                 (P3_13_10 == "2" | is.na(P3_13_10) == T) & 
+                                                 (P3_13_11 == "2" | is.na(P3_13_11) == T) & 
+                                                 (P3_13_12 == "2" | is.na(P3_13_12) == T)) ~ 1,
+                                            P3_15_4 == "1" &
+                                              (P3_13_01 == "1" | P3_13_02 == "1" | P3_13_03 == "1" ) &
+                                              ((P3_13_04 == "2" | is.na(P3_13_04) == T) & 
+                                                 (P3_13_05 == "2" | is.na(P3_13_05) == T) & 
+                                                 (P3_13_06 == "2" | is.na(P3_13_06) == T) &
+                                                 (P3_13_07 == "2" | is.na(P3_13_07) == T) & 
+                                                 (P3_13_08 == "2" | is.na(P3_13_08) == T) & 
+                                                 (P3_13_09 == "2" | is.na(P3_13_09) == T) &
+                                                 (P3_13_10 == "2" | is.na(P3_13_10) == T) & 
+                                                 (P3_13_11 == "2" | is.na(P3_13_11) == T) & 
+                                                 (P3_13_12 == "2" | is.na(P3_13_12) == T)) ~ 1,
+                                            P3_15_5 == "1" & (P3_13_01 == "1" | P3_13_02 == "1" | P3_13_03 == "1" |
+                                                                P3_13_04 == "1" | P3_13_05 == "1" | P3_13_06 == "1" |
+                                                                P3_13_07 == "1" | P3_13_08 == "1" | P3_13_09 == "1" |
+                                                                P3_13_10 == "1" | P3_13_11 == "1" | P3_13_12 == "1") ~ 1,
+                                            P3_15_6 == "1" & (P3_13_01 == "1" | P3_13_02 == "1" | P3_13_03 == "1" |
+                                                                P3_13_04 == "1" | P3_13_05 == "1" | P3_13_06 == "1" |
+                                                                P3_13_07 == "1" | P3_13_08 == "1" | P3_13_09 == "1" |
+                                                                P3_13_10 == "1" | P3_13_11 == "1" | P3_13_12 == "1")  ~ 1,
+                                            (P3_13_01 == "2" & P3_13_02 == "2" & P3_13_03 == "2" &
+                                               P3_13_04 == "2" & P3_13_05 == "2" & P3_13_06 == "2" &
+                                               P3_13_07 == "2" & P3_13_08 == "2" & P3_13_09 == "2" &
+                                               P3_13_10 == "2" & P3_13_11 == "2" & (P3_13_12 == "2" | is.na(P3_13_12))) ~ NA_real_,
+                                            T ~ NA_real_),
     
     # Resistance to being arrested
     resistencia_pasiva = case_when(P3_15_1 == "1" | P3_13_07 == "1" | P3_13_08 == "1" | P3_13_09 == "1" ~ 1,
@@ -4685,9 +4732,9 @@ Main_database %<>%
                                       Escolaridad == "Preescolar" ~ 0,
                                       Escolaridad == "Primaria" ~ 0,
                                       Escolaridad == "Secundaria" ~ 0,
-                                      Escolaridad == "Preparatoria o bachillerato" ~ 0,
-                                      Escolaridad == "Normal básica con secundaria" ~ 0,
-                                      Escolaridad == "Carrera técnica con secundaria" ~ 0,
+                                      Escolaridad == "Preparatoria o bachillerato" ~ 1,
+                                      Escolaridad == "Normal básica con secundaria" ~ 1,
+                                      Escolaridad == "Carrera técnica con secundaria" ~ 1,
                                       Escolaridad == "Carrera técnica con preparatoria" ~ 1,
                                       Escolaridad == "Licenciatura o profesional" ~ 1,
                                       Escolaridad == "Maestría o doctorado" ~ 1,
@@ -4702,8 +4749,8 @@ Main_database %<>%
     
     Edad_arresto = as.numeric(P1_3) - (as.numeric(P3_5_A) - 2021),
     
-    Edad_menor30 = case_when(Edad_arresto < 30 ~ 1, 
-                             Edad_arresto >= 30 ~ 0,
+    Edad_menor30 = case_when(Edad_arresto <= 30 ~ 1, 
+                             Edad_arresto > 30 ~ 0,
                              T ~ NA),
     Ingreso_inseguro = case_when(Ingreso == "0" ~ 1, 
                                  Ingreso == "< 3 mil" ~ 1,
@@ -4724,21 +4771,147 @@ Main_database %<>%
     
   ) %>% 
   
-  rowwise() %>% mutate(Delito_unico = ifelse(sum(c(Delito_gr_1_robos,
-                                                   Delito_gr_2_drogas,
-                                                   Delito_gr_3_del_org,
-                                                   Delito_gr_4_lesiones,
-                                                   Delito_gr_5_hom_cul,
-                                                   Delito_gr_6_hom_dol,
-                                                   Delito_gr_7_armas, 
-                                                   Delito_gr_8_viol_fam,
-                                                   Delito_gr_9_secuestro,
-                                                   Delito_gr_10_sexuales,
-                                                   Delito_gr_11_extorsion,
-                                                   Delito_gr_12_fraude,
-                                                   Delito_gr_13_amenazas,
-                                                   Delito_gr_14_otro,
-                                                   Delito_gr_15_ns_nr)) == 1, 1, 0)) %>% 
+  rename(Estado_arresto = P3_6,
+         Anio_arresto = P3_5_A,
+         Mes_arresto = P3_5_M) %>%
+  # Tipo de tortura psicológica
+  mutate(across(c("P3_17_01","P3_17_02", "P3_17_03", "P3_17_04", "P3_17_05", "P3_17_06","P3_17_07", "P3_17_08",
+                  "P3_17_09", "P3_17_10","P3_17_11", "P5_26A"), ~ recode(.x,
+                                                                         "1" = 1, 
+                                                                         "2" = 0, 
+                                                                         "8" = NA_real_, 
+                                                                         "9" = NA_real_))) %>%
+  
+  # Tipo de tortura física
+  mutate(across(c("P3_18_01", "P3_18_02", "P3_18_03", "P3_18_04", "P3_18_05", "P3_18_06", "P3_18_07", "P3_18_08", "P3_18_09", 
+                  "P3_18_10", "P3_18_12", "P3_18_13", "P3_18_14", "P3_18_15"), ~ recode(.x, 
+                                                                                        "1" = 1,
+                                                                                        "2" = 0,
+                                                                                        "8" = NA_real_,
+                                                                                        "9" = NA_real_))) %>%
+  # Tortura
+  mutate(across(c("P4_1_09", "P4_1_10", "P4_1_11", "P4_1_12", "P4_3A_7", "P4_3A_8", "P4_3A_9", "P4_6_4",
+                  "P5_15_01", "P5_15_02", "P5_15_03", "P5_15_04", "P5_15_05","P5_15_06", "P5_15_07", "P5_15_08", "P5_15_09",
+                  "P5_15_10", "P5_15_11", "P5_26A"), ~ recode(.x, 
+                                                              "1" = 1,
+                                                              "2" = 0,
+                                                              "8" = NA_real_,
+                                                              "9" = NA_real_))) %>%
+  
+  
+  # Grupos de P5_25
+  mutate(Antes_del_juicio = case_when(P5_25 == "1" ~ 1,
+                                      P5_25 == "2" 
+                                      | P5_25 == "3" 
+                                      | P5_25 == "8" 
+                                      | P5_25 == "9" ~ 0 ,
+                                      T ~ NA),
+         Despues_de_las_pruebas = case_when(P5_25 == "2" ~ 1,
+                                            P5_25 == "1" 
+                                            | P5_25 == "3" 
+                                            | P5_25 == "8" 
+                                            | P5_25 == "9" ~ 0 ,
+                                            T ~ NA),
+         Nunca_vio_al_juez = case_when(P5_25 == "3" ~ 1,
+                                       P5_25 == "1" 
+                                       | P5_25 == "2" 
+                                       | P5_25 == "8" 
+                                       | P5_25 == "9" ~ 0 ,
+                                       T ~ NA),
+         
+         
+         # RND-related
+         pre_RND = case_when(fecha_RND_fed <= fecha_arresto ~ 0,
+                             fecha_RND_fed > fecha_arresto ~ 1,
+                             T ~ NA),
+         inter_RND = case_when(fecha_RND_fed < fecha_arresto & fecha_arresto <= fecha_RND_com ~ 1,
+                               fecha_RND_fed >= fecha_arresto ~ 0,
+                               fecha_RND_com < fecha_arresto ~ 0,
+                               T ~ NA),
+         post_RND = case_when(fecha_RND_com < fecha_arresto ~ 1,
+                              fecha_RND_com >= fecha_arresto ~ 0,
+                              T ~ NA),
+         solo_fuero_f = case_when(fuero == "Sólo federal" ~ 1,
+                                  fuero == "Sólo común" ~ 0,
+                                  fuero == "Algunos delitos de fuero común y algunos de fuero federal" ~ 0,
+                                  T ~ NA),
+         solo_fuero_c = case_when(fuero == "Sólo federal" ~ 0,
+                                  fuero == "Sólo común" ~ 1,
+                                  fuero == "Algunos delitos de fuero común y algunos de fuero federal" ~ 0,
+                                  T ~ NA),
+         ambos_fueros = case_when(fuero == "Sólo federal" ~ 0,
+                                  fuero == "Sólo común" ~ 0,
+                                  fuero == "Algunos delitos de fuero común y algunos de fuero federal" ~ 1,
+                                  T ~ NA),
+         Post_2008 = case_when(as.numeric(Anio_arresto) >= 2008 ~ 1,
+                               T ~ NA_real_),
+         
+         # Detencion no inmediata
+         detencion_no_inmediata = case_when(P3_9 == "1" ~ 0,
+                                            P3_9 == "2" | P3_9 == "3"| P3_9 == "4"| P3_9 == "5"| P3_9 == "6" ~ 1,
+                                            T ~ NA),
+         
+         # Grupos de P3_16
+         P3_16_1 = case_when(P3_16 == "1" ~ 1,
+                             P3_16 == "2" | P3_16 == "8" | P3_16 == "9" ~ 0,
+                             T ~ NA),
+         P3_16_2 = case_when(P3_16 == "2" ~ 1,
+                             P3_16 == "1" | P3_16 == "8" | P3_16 == "9" ~ 0,
+                             T ~ NA),
+         P3_16_8 = case_when(P3_16 == "8" ~ 1,
+                             P3_16 == "1" | P3_16 == "2" | P3_16 == "9" ~ 0,
+                             T ~ NA),
+         P3_16_9 = case_when(P3_16 == "9" ~ 1,
+                             P3_16 == "1" | P3_16 == "2" | P3_16 == "8" ~ 0,
+                             T ~ NA),
+         
+         # Grupos de P3_21
+         P3_21_1_1 = case_when(P3_21_1 == "1" ~ 1,
+                               is.na(P3_21_1) == TRUE ~ NA,
+                               T ~ 0),
+         P3_21_1_2 = case_when(P3_21_1 == "2" ~ 1,
+                               is.na(P3_21_1) == TRUE ~ NA,
+                               T ~ 0),
+         P3_21_1_8 = case_when(P3_21_1 == "8" ~ 1,
+                               is.na(P3_21_1) == TRUE ~ NA,
+                               T ~ 0),
+         P3_21_1_9 = case_when(P3_21_1 == "9" ~ 1,
+                               is.na(P3_21_1) == TRUE ~ NA,
+                               T ~ 0)) %>%
+  
+  mutate(
+    # Eventos de inspeccion
+    across(c("P3_12_1","P3_12_2", "P3_12_3", "P3_12_4", "P3_12_5"), ~ recode(.x,
+                                                                             "1" = 1,
+                                                                             "2" = 0,
+                                                                             "8" = NA_real_,
+                                                                             "9" = NA_real_))) %>%
+  mutate(
+    # Eventos de detención
+    across(c("P3_13_01","P3_13_02", "P3_13_03", "P3_13_04", "P3_13_05","P3_13_06","P3_13_07",
+             "P3_13_08","P3_13_09","P3_13_10","P3_13_11","P3_13_12", "P3_14_1", "P3_14_2",
+             "P3_14_3", "P3_14_4", "P3_14_5", "P3_14_6", "P3_15_1", "P3_15_2", "P3_15_3",
+             "P3_15_4", "P3_15_5", "P3_15_6", "P3_15_7", "P3_15_8", "P3_15_9"), ~ recode(.x,
+                                                                                         "1" = 1,
+                                                                                         "2" = 0,
+                                                                                         "8" = NA_real_,
+                                                                                         "9" = NA_real_))) 
+
+Main_database <- Main_database %>%  rowwise() %>% mutate(Delito_unico = ifelse(sum(c(Delito_gr_1_robos,
+                                                                                     Delito_gr_2_drogas,
+                                                                                     Delito_gr_3_del_org,
+                                                                                     Delito_gr_4_lesiones,
+                                                                                     Delito_gr_5_hom_cul,
+                                                                                     Delito_gr_6_hom_dol,
+                                                                                     Delito_gr_7_armas, 
+                                                                                     Delito_gr_8_viol_fam,
+                                                                                     Delito_gr_9_secuestro,
+                                                                                     Delito_gr_10_sexuales,
+                                                                                     Delito_gr_11_extorsion,
+                                                                                     Delito_gr_12_fraude,
+                                                                                     Delito_gr_13_amenazas,
+                                                                                     Delito_gr_14_otro,
+                                                                                     Delito_gr_15_ns_nr)) == 1, 1, 0)) %>% 
   
   mutate(Delito_unico_1_robos = case_when(Delito_gr_1_robos == 1 
                                           & Delito_unico == 1 ~ 1, 
@@ -4787,28 +4960,23 @@ Main_database %<>%
                                              T ~ 0)) %>%
   mutate(
     Delito_unico_categ = case_when(
-    Delito_unico_1_robos == 1 ~ "robos",
-    Delito_unico_2_drogas == 1 ~ "drogas",
-    Delito_unico_3_del_org == 1 ~ "org",
-    Delito_unico_4_lesiones == 1 ~ "lesiones",
-    Delito_unico_5_hom_cul == 1 ~ "hom_cul",
-    Delito_unico_6_hom_dol == 1 ~ "hom_dol",
-    Delito_unico_7_armas == 1 ~ "armas",
-    Delito_unico_8_viol_fam == 1 ~ "viol_fam",
-    Delito_unico_9_secuestro == 1 ~ "secuestro",
-    Delito_unico_10_sexuales == 1 ~ "sexuales",
-    Delito_unico_11_extorsion == 1 ~ "extorsion",
-    Delito_unico_12_fraude == 1 ~ "fraude",
-    Delito_unico_13_amenazas == 1 ~ "amenazas",
-    Delito_unico_14_otro == 1 ~ "otro",
-    Delito_unico_15_ns_nr == 1 ~ "ns_nr",
-    TRUE ~ NA_character_
-  ))
-
-Main_database <- Main_database %>%
-  rename(Estado_arresto = P3_6,
-         Anio_arresto = P3_5_A,
-         Mes_arresto = P3_5_M)
+      Delito_unico_1_robos == 1 ~ "robos",
+      Delito_unico_2_drogas == 1 ~ "drogas",
+      Delito_unico_3_del_org == 1 ~ "org",
+      Delito_unico_4_lesiones == 1 ~ "lesiones",
+      Delito_unico_5_hom_cul == 1 ~ "hom_cul",
+      Delito_unico_6_hom_dol == 1 ~ "hom_dol",
+      Delito_unico_7_armas == 1 ~ "armas",
+      Delito_unico_8_viol_fam == 1 ~ "viol_fam",
+      Delito_unico_9_secuestro == 1 ~ "secuestro",
+      Delito_unico_10_sexuales == 1 ~ "sexuales",
+      Delito_unico_11_extorsion == 1 ~ "extorsion",
+      Delito_unico_12_fraude == 1 ~ "fraude",
+      Delito_unico_13_amenazas == 1 ~ "amenazas",
+      Delito_unico_14_otro == 1 ~ "otro",
+      Delito_unico_15_ns_nr == 1 ~ "ns_nr",
+      TRUE ~ NA_character_
+    )) 
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
