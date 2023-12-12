@@ -6307,6 +6307,30 @@ tabla_excel_fn(dataset = subset, var_prop = proporcionalidad_uso_fuerza, var1 = 
                carpeta = "Policia", seccion = "Prop_fuerza", nombre = "Sí_color-piel",
                Dato = "Proporción de personas clasificadas con uso proporcional de la fuerza, por color de piel")
 
+tabla_excel_fn(dataset = subset, var_prop = proporcionalidad_uso_fuerza, var1 = "Etnia", var2 = NA, var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Policia", seccion = "Prop_fuerza", nombre = "Sí_etnia",
+               Dato = "Proporción de personas clasificadas con uso proporcional de la fuerza, por pertenencia a una etnia")
+
+tabla_excel_fn(dataset = subset, var_prop = proporcionalidad_uso_fuerza, var1 = "Edad_menor30", var2 = NA, var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Policia", seccion = "Prop_fuerza", nombre = "Sí_Edad_menor30",
+               Dato = "Proporción de personas clasificadas con uso proporcional de la fuerza, por edad menor o igual a 30 año al momento de ser arrestados")
+
+tabla_excel_fn(dataset = subset, var_prop = proporcionalidad_uso_fuerza, var1 = "Ingreso_inseguro", var2 = NA, var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Policia", seccion = "Prop_fuerza", nombre = "Sí_Ingreso_inseguro",
+               Dato = "Proporción de personas clasificadas con uso proporcional de la fuerza, por ingreso menor a 3 mil pesos al momento de ser arrestado")
+
+tabla_excel_fn(dataset = subset, var_prop = proporcionalidad_uso_fuerza, var1 = "Colo_piel_claro", var2 = NA, var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Policia", seccion = "Prop_fuerza", nombre = "Sí_Colo_piel_claro",
+               Dato = "Proporción de personas clasificadas con uso proporcional de la fuerza, por color de piel claro o moreno claro")
+
+tabla_excel_fn(dataset = subset, var_prop = proporcionalidad_uso_fuerza, var1 = "Educacion_obligatoria", var2 = NA, var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Policia", seccion = "Prop_fuerza", nombre = "Sí_Educacion_obligatoria",
+               Dato = "Proporción de personas clasificadas con uso proporcional de la fuerza, por si cumple con educación obligatoria")
 
 
 
