@@ -260,7 +260,7 @@ if(section %in% c("Detenciones")) {
                              result1 <- prueba_hip(seccion = "Detenciones", 
                                                    subseccion = "Tortura", 
                                                    hypo_name = paste0("hyp_",var_type,"_RND_+-1_año"), 
-                                                   type = "means", 
+                                                   type = "logit", 
                                                    database = data_list.df %>% filter(one_year_limit == 1), 
                                                    dep_var = AA_target_var, 
                                                    indep_var = months_since_RND_3, 
@@ -272,14 +272,14 @@ if(section %in% c("Detenciones")) {
                                                                   "Delito_unico_categ")
                                                    )  
                              
-                             # result2 <- prueba_hip(seccion = "Detenciones",
-                             #                       subseccion = "Tortura",
-                             #                       hypo_name = paste0("hyp_",var_type,"_sin_limite"),
-                             #                       type = "means",
-                             #                       database = data_list.df,
-                             #                       dep_var = AA_target_var,
-                             #                       indep_var = months_since_RND_3,
-                             #                       group_vars = c("Estado", "Sexo", "fuero", "Corporacion_grupos"))
+                             result2 <- prueba_hip(seccion = "Detenciones",
+                                                   subseccion = "Tortura",
+                                                   hypo_name = paste0("hyp_",var_type,"_sin_limite"),
+                                                   type = "logit",
+                                                   database = data_list.df,
+                                                   dep_var = AA_target_var,
+                                                   indep_var = months_since_RND_3,
+                                                   group_vars = c("Estado", "Sexo", "fuero", "Corporacion_grupos"))
                              
                              return(list(result1))
                              
@@ -293,8 +293,6 @@ if(section %in% c("Detenciones")) {
     
   } else if (subsection %in% c("Policia")) {
     
-    tipo <- c("proporcionalidad_uso_fuerza") # List of dependent variables from the first analysis
-    
     data_subset_policia.df <- Main_database %>% 
       filter(NSJP == 1) %>% 
       mutate(Estado = case_when(P3_3 == "98" ~ NA_character_,
@@ -307,29 +305,26 @@ if(section %in% c("Detenciones")) {
              Corporacion_grupos, Estado, Sexo, Delito_unico_categ, Delito_unico, LGBTQ, Edad, 
              Traslados_30 = P3_20_01, Traslados_6h = P3_20_06, Traslado_MP = P3_19_01, 
              proporcionalidad_uso_fuerza)
-
-    list_policia <- lapply(tipo, 
-                           function(tipo) {
-                             
-                             data_list.df <- data_subset_policia.df %>%
-                               rename(target_var = all_of(tipo),
-                                      AA_years_since_NSJP = years_since_NSJP) %>%
-                               prueba_hip(
-                               seccion = "Detenciones",
-                               subseccion = "Policia",
-                               hypo_name = paste0("hyp_detenciones_", tipo),
-                               type = "logit",
-                               database = .,
-                               dep_var = target_var,
-                               indep_var = AA_years_since_NSJP,
-                               group_vars = c("Corporacion_grupos", 
-                                              "Sexo", 
-                                              "LGBTQ", 
-                                              "Delito_unico", 
-                                              "Delito_unico_categ", 
-                                              "Estado")
-                             )
-                             })
+    
+    data_list.df <- data_subset_policia.df %>%
+      rename(AA_years_since_NSJP = years_since_NSJP) 
+      
+    
+    uso_fuerza <- prueba_hip(
+      seccion = "Detenciones",
+      subseccion = "Policia",
+      hypo_name = paste0("hyp_detenciones_", "proporcionalidad_fuerza"),
+      type = "logit",
+      database = data_list.df,
+      dep_var = proporcionalidad_uso_fuerza,
+      indep_var = AA_years_since_NSJP,
+      group_vars = c("Corporacion_grupos", 
+                     "Sexo", 
+                     "LGBTQ", 
+                     "Delito_unico", 
+                     "Delito_unico_categ", 
+                     "Estado")
+    )
     
     } else {
     
