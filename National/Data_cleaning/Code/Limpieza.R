@@ -4113,6 +4113,15 @@ Main_database %<>%
       P3_1 == "3" | P3_1 == "4" | P3_1 == "5" ~ 0,
       T ~ NA),
     
+    #Variable of self culpability recognition
+    declaro_culpable = case_when(
+      P4_6_4 == 1 ~ 1, 
+      T ~ 0),
+    
+    prueba_inculpatoria = case_when(
+      P5_15_01 == 1 | P5_15_06 == 1 ~ 1,
+      T ~ 0),
+    
     # Dummies for flagrancy, arrest orders, instantaneous crimes, etc.
     flagrancia_P3_10_1 = case_when(
       P3_10 == "1"  ~ 1,
@@ -4184,6 +4193,13 @@ Main_database %<>%
     tortura = case_when(
       tortura_tra_p == 1 | tortura_tra_f == 1 ~ 1,
       T ~ 0),
+    tortura_mp_f = case_when(
+      if_any(tortura_mp_f, ~ .x == "1") ~ 1,
+      T ~ 0), 
+    tortura_mp_p = case_when(
+      if_any(tortura_mp_p, ~ .x == "1") ~ 1,
+      T ~ 0),    
+    
     
     # Torture_general
     tortura_generalizada = case_when( if_any(tortura_general, ~ .x == "1") ~ 1, T ~ 0),
