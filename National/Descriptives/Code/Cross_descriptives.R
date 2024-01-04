@@ -1678,12 +1678,20 @@ for (i in delito_grupos) {
                  Dato = paste0("Proporción de personas que reportaron ser torturadas, acusadas (entre otros) por ",i," por culpabilidad, declaración de culpabilidad y prueba_inculpatoria"))
 }
 
-tabla_excel_fn(dataset = subset, var_prop = tortura, var1 = "PPO", var2 = "declaro_culpable", var3 = NA, 
+for (i in delito_grupos) {
+  tabla_excel_fn(dataset = subset, var_prop = tortura_generalizada, var1 = NA, var2 = NA, var3 = NA, 
+                 varfilter = i, filtervalue = 1, 
+                 carpeta = "Tortura", seccion = "Tortura_general_delito", nombre = paste0("",i),
+                 Dato = paste0("Proporción de personas que reportaron ser torturadas, acusadas (entre otros) por ",i))
+}
+
+
+tabla_excel_fn(dataset = subset, var_prop = tortura, var1 = "PPO", var2 = "proceso_no_en_libertad", var3 = NA, 
                varfilter = NA, filtervalue = NA, 
                carpeta = "Tortura", seccion = "Tortura_PP", nombre = "traslado",
                Dato = "Proporción de personas que reportaron ser torturadas durante el traslado, por prisión preventiva oficiosa y prisión preventiva")
 
-tabla_excel_fn(dataset = subset, var_prop = tortura_mp, var1 = "PPO", var2 = "declaro_culpable", var3 = NA, 
+tabla_excel_fn(dataset = subset, var_prop = tortura_mp, var1 = "PPO", var2 = "proceso_no_en_libertad", var3 = NA, 
                varfilter = NA, filtervalue = NA, 
                carpeta = "Tortura", seccion = "Tortura_PP", nombre = "MP",
                Dato = "Proporción de personas que reportaron ser torturadas durante el traslado, por prisión preventiva oficiosa y prisión preventiva")
