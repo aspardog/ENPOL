@@ -4198,7 +4198,10 @@ Main_database %<>%
       T ~ 0), 
     tortura_mp_p = case_when(
       if_any(tortura_mp_p, ~ .x == "1") ~ 1,
-      T ~ 0),    
+      T ~ 0),  
+    tortura_mp = case_when(
+      tortura_mp_p == 1 | tortura_mp_f == 1 ~ 1,
+      T ~ 0),
     
     
     # Torture_general
