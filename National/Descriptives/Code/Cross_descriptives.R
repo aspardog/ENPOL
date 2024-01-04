@@ -1124,7 +1124,7 @@ for (i in delitos) {
                  Dato = paste0("Proporción de personas que reportaron ser torturadas psicológicamente durante el traslado, acusadas (entre otros) por ",i," "))
 }
 
-#### 3.2.3 Tortura psicológica culpabilidad ----------------------------------------------------------
+#### 3.2.4 Tortura psicológica culpabilidad ----------------------------------------------------------
 
 tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "culpabilidad", var2 = NA , var3 = NA, 
                varfilter = NA, filtervalue = NA, 
@@ -1146,7 +1146,7 @@ tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "culpabilidad"
                por reconocimiento de culpabilidad y  se declaró culpable de los hechos de los que se le acusó en el MP")
 
 
-#### 3.2.3 Tortura psicológica Tipo de puebas ----------------------------------------------------------
+#### 3.2.5 Tortura psicológica Tipo de puebas ----------------------------------------------------------
 
 tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "culpabilidad", var2 = "P5_15_01" , var3 = NA, 
                varfilter = NA, filtervalue = NA, 
@@ -1215,7 +1215,7 @@ tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "culpabilidad"
                por reconocimiento de culpabilidad y Otro tipo de prueba")
 
 
-#### 3.2.3 Tortura psicológica MP ----------------------------------------------------------
+#### 3.2.6 Tortura psicológica MP ----------------------------------------------------------
 
 tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "P4_1_09", var2 = NA , var3 = NA, 
                varfilter = NA, filtervalue = NA, 
@@ -1242,7 +1242,7 @@ tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "P4_1_12", var
                por  el médico tomó fotografías de lesiones al momento de llegar al MP")
 
 
-#### 3.2.3 Tortura psicológica interrogatorio ----------------------------------------------------------
+#### 3.2.7 Tortura psicológica interrogatorio ----------------------------------------------------------
 
 tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "P4_3A_7", var2 = NA , var3 = NA, 
                varfilter = NA, filtervalue = NA, 
@@ -1263,7 +1263,7 @@ tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "P4_3A_9", var
                por se declaró culpable en el interrogatorio")
 
 
-#### 3.2.3 Tortura psicológica razones ----------------------------------------------------------
+#### 3.2.8 Tortura psicológica razones ----------------------------------------------------------
 
 tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "P4_6_4", var2 = NA , var3 = NA, 
                varfilter = NA, filtervalue = NA, 
@@ -1290,7 +1290,7 @@ tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "P5_6", var2 =
                por producto por el que fue basada la sentencia")
 
 
-#### 3.2.3 Tortura psicológica tipo de prueba ----------------------------------------------------------
+#### 3.2.9 Tortura psicológica tipo de prueba ----------------------------------------------------------
 
 tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "P5_15_01", var2 = NA, var3 = NA, 
                varfilter = NA, filtervalue = NA, 
@@ -1358,7 +1358,7 @@ tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "P5_15_11", va
                Dato = "Proporción de personas que reportaron ser torturadas psicológicamente durante el traslado, 
                por otro tipo de prueba")
 
-#### 3.2.3 Tortura psicológica trato----------------------------------------------------------
+#### 3.2.10 Tortura psicológica trato----------------------------------------------------------
 
 tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "P5_15_11", var2 = NA , var3 = NA, 
                varfilter = NA, filtervalue = NA, 
@@ -1366,7 +1366,7 @@ tabla_excel_fn(dataset = subset, var_prop = tortura_tra_p, var1 = "P5_15_11", va
                Dato = "Proporción de personas que reportaron ser torturadas psicológicamente durante el traslado, 
                por otro tipo de prueba")
 
-#### 3.2.3 Tortura física ----------------------------------------------------------
+#### 3.2.11 Tortura física ----------------------------------------------------------
 
 
 tabla_excel_fn(dataset = subset, var_prop = tortura_tra_f, var1 = NA, var2 = NA, var3 = NA, 
@@ -1580,7 +1580,7 @@ tabla_excel_fn(dataset = subset, var_prop = tortura_tra_f, var1 = "Corporacion_g
                carpeta = "Tortura", seccion = "Tortura_fisica", nombre = "corporacion_grupo",
                Dato = "Proporción de personas que reportaron ser torturadas físicamente durante el traslado, por Corporación grupo que detiene")
 
-#### 3.2.3 Tortura general ----------------------------------------------------------
+#### 3.2.12 Tortura general ----------------------------------------------------------
 
 for (i in delitos) {
   tabla_excel_fn(dataset = subset, var_prop = tortura, var1 = NA, var2 = NA , var3 = NA, 
@@ -1644,9 +1644,52 @@ tabla_excel_fn(dataset = subset, var_prop = tortura, var1 = "P4_7", var2 = NA, v
                carpeta = "Tortura", seccion = "Tortura_general", nombre = "razon-culpable",
                Dato = "Proporción de personas que reportaron ser torturadas, por principal razón por la que se declaró culpable")
 
+#### 3.2.13 Tortura general y PPO ----------------------------------------------------------
+
+tabla_excel_fn(dataset = subset, var_prop = tortura_generalizada, var1 = "PPO", var2 = "proceso_no_en_libertad", var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_general_PP", nombre = "prision-preventiva",
+               Dato = "Proporción de personas que reportaron ser torturadas, por prisipon preventiva y presión preventiva Oficiosa")
+
+for (i in delito_grupos) {
+  tabla_excel_fn(dataset = subset, var_prop = tortura_generalizada, var1 = "culpabilidad", var2 = "declaro_culpable", var3 = NA, 
+                 varfilter = i, filtervalue = 1, 
+                 carpeta = "Tortura", seccion = "Tortura_general_PP_delito", nombre = paste0("",i),
+                 Dato = paste0("Proporción de personas que reportaron ser torturadas, acusadas (entre otros) por ",i," por culpabilidad y declaración de culpabilidad"))
+}
+
+for (i in delito_grupos) {
+  tabla_excel_fn(dataset = subset, var_prop = tortura_generalizada, var1 = "PPO", var2 = "proceso_no_en_libertad", var3 = NA, 
+                 varfilter = i, filtervalue = 1, 
+                 carpeta = "Tortura", seccion = "Tortura_general_culpabilidad_delito", nombre = paste0("",i),
+                 Dato = paste0("Proporción de personas que reportaron ser torturadas, acusadas (entre otros) por ",i," por prisipon preventiva y presión preventiva Oficiosa"))
+}
 
 
-#### 3.2.3 Culpabilidad ----------------------------------------------------------
+tabla_excel_fn(dataset = subset, var_prop = tortura_generalizada, var1 = "culpabilidad", var2 = "declaro_culpable", var3 = "prueba_inculpatoria", 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_general_culpabilidad", nombre = "culpa",
+               Dato = "Proporción de personas que reportaron ser torturadas, por culpabilidad, declaración de culpabilidad y prueba_inculpatoria ")
+
+for (i in delito_grupos) {
+  tabla_excel_fn(dataset = subset, var_prop = tortura_generalizada, var1 = "culpabilidad", var2 = "declaro_culpable", var3 = "prueba_inculpatoria", 
+                 varfilter = i, filtervalue = 1, 
+                 carpeta = "Tortura", seccion = "Tortura_general_culpabilidad", nombre = paste0("",i),
+                 Dato = paste0("Proporción de personas que reportaron ser torturadas, acusadas (entre otros) por ",i," por culpabilidad, declaración de culpabilidad y prueba_inculpatoria"))
+}
+
+tabla_excel_fn(dataset = subset, var_prop = tortura, var1 = "PPO", var2 = "declaro_culpable", var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_PP", nombre = "traslado",
+               Dato = "Proporción de personas que reportaron ser torturadas durante el traslado, por prisión preventiva oficiosa y prisión preventiva")
+
+tabla_excel_fn(dataset = subset, var_prop = tortura_mp, var1 = "PPO", var2 = "declaro_culpable", var3 = NA, 
+               varfilter = NA, filtervalue = NA, 
+               carpeta = "Tortura", seccion = "Tortura_PP", nombre = "MP",
+               Dato = "Proporción de personas que reportaron ser torturadas durante el traslado, por prisión preventiva oficiosa y prisión preventiva")
+
+
+#### 3.2.13 Culpabilidad ----------------------------------------------------------
 
 tabla_excel_fn(dataset = subset, var_prop = culpabilidad, var1 = "P4_3A_7", var2 = NA, var3 = NA, 
                varfilter = NA, filtervalue = NA, 
