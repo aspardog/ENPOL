@@ -4817,6 +4817,11 @@ Main_database %<>%
                                                               "8" = NA_real_,
                                                               "9" = NA_real_))) %>%
   
+  #Variable to asignated false culpability recognition
+  
+  mutate(falsa_culpabilidad = case_when(culpabilidad == 0 & P4_6_4 == "1" ~ 1, 
+                                         T ~ 0)) %>% 
+  
   
   # Grupos de P5_25
   mutate(Antes_del_juicio = case_when(P5_25 == "1" ~ 1,
