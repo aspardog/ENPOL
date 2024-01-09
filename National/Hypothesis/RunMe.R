@@ -243,7 +243,8 @@ if(section %in% c("Detenciones")) {
                                        T ~ Corporacion_grupos),
         one_year_limit     = if_else(months_since_RND_3 <= 12 & months_since_RND_3 >= -12, 1, 0, 0)
       ) %>%
-      select(tortura_tra_p, tortura_tra_f, 
+      select(tortura_tra_p, tortura_tra_f, AA_tortura_generalizada = tortura_generalizada, falsa_culpabilidad, prueba_inculpatoria,
+             culpabilidad, declaro_culpable,
              months_since_RND_3, one_year_limit, Delito_unico, Delito_unico_categ,
              Estado, Sexo, fuero, Corporacion_grupos) 
 
@@ -284,6 +285,28 @@ if(section %in% c("Detenciones")) {
                              return(list(result1))
                              
                            })
+    
+    list_tortura_culpabilidad <- list(
+      
+      falsa_culpabilidad <- prueba_hip(seccion = "Detenciones",
+                                       subseccion = "Tortura",
+                                       hypo_name = paste0("hyp_tortura_","falsa_culpabilidad"),
+                                       type = "means",
+                                       database = data_subset_tortura.df,
+                                       dep_var = falsa_culpabilidad,
+                                       indep_var = AA_tortura_generalizada,
+                                       group_vars = NULL),
+      
+      prueba_inculpatoria <- prueba_hip(seccion = "Detenciones",
+                                        subseccion = "Tortura",
+                                        hypo_name = paste0("hyp_tortura_","prueba_inculpatoria"),
+                                        type = "logit",
+                                        database = data_subset_tortura.df,
+                                        dep_var = prueba_inculpatoria,
+                                        indep_var = AA_tortura_generalizada,
+                                        group_vars = c("culpabilidad", "declaro_culpable", "falsa_culpabilidad"))
+      )
+    
     
   ### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   ###
