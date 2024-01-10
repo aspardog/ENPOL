@@ -58,7 +58,7 @@ p_load(char = c(
 # You can find out your username by inputting Sys.info()["user"] on the R Console.
 
 if (Sys.info()["user"] == "marcelo") {
-  path2SP <- paste0("/Users/marcelo/Dropbox/ENPOL/")
+  path2SP <- paste0("/Users/marcelo/Library/CloudStorage/OneDrive-SharedLibraries-WorldJusticeProject/Mexico - ENPOL/")
   
 } else if (Sys.info()["user"] == "santiagopardo") {
   path2SP <- paste0("/Users/santiagopardo/OneDrive - World Justice Project/ENPOL/Data")
