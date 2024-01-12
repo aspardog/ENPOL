@@ -43,7 +43,7 @@ p_load(char = c(
   "margins", "english", "quarto", "kableExtra", "sysfonts", "magrittr",
   
   # Good 'ol Tidyverse
-  "tidyverse"
+  "tidyverse", "expss"
   
 ))
 
