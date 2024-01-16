@@ -42,11 +42,11 @@ p_load(char = c(
   # Utilities
   "margins", "english", "quarto", "kableExtra", "sysfonts", "magrittr",
   
-  # Good 'ol Tidyverse
-  "tidyverse", "expss",
-  
   # Plots
-  "gridExtra"
+  "gridExtra",
+  
+  # Good 'ol Tidyverse
+  "tidyverse"
   
 ))
 
