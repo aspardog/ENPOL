@@ -375,7 +375,7 @@ lineChartData.fn <-function(data = Main_database,
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
-groupBarData <- function(data = Main_database, 
+groupBarData.fn <- function(data = Main_database, 
                          group_var = group_var, 
                          prop_var = prop_var) { 
   data2table <- data %>%
@@ -393,7 +393,8 @@ groupBarData <- function(data = Main_database,
     ) %>%
     rename(category = {{group_var}}) %>% 
     mutate(value2plot = values * 100,
-           figure = paste0(round(value2plot, 0), "%"))
+           figure = paste0(round(value2plot, 0), "%")) %>%
+    filter(!is.na(category) & category != "NS/NR")
   
   return(data2table)
 }
@@ -405,7 +406,7 @@ groupBarData <- function(data = Main_database,
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-simpleBarData <- function(data = Main_database, 
+simpleBarData.fn <- function(data = Main_database, 
                           group_var = group_var) {
   data2table <- data %>%
     group_by({{group_var}}) %>%
@@ -413,7 +414,8 @@ simpleBarData <- function(data = Main_database,
               values = (n() / nrow(data))) %>%
     mutate(value2plot = values * 100,
            figure = paste0(round(value2plot, 0), "%")) %>%
-    rename(category = {{group_var}})
+    rename(category = {{group_var}}) %>%
+    filter(!is.na(category) & category != "NS/NR")
   
   return(data2table)
 }
