@@ -96,14 +96,26 @@ ggsave(plot   = lineChart,
 
 ## Figura 2.2
 
+data2plot <- logit_dataBase.fn(dependent_var = "tortura_generalizada")
+
+logitPlot <- logit_demo_panel(mainData = data2plot)
+
+ggsave(plot   = logitPlot,
+       file   = paste0("Visualizations/Figure2/Figure2_2.svg"), 
+       width  = 175, 
+       height = 65,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
 
 
 ## Figura 2.3
 
-
+data2plot <- simpleBarData.fn(group_var = tortura_lugar)
 
 ## Figrua 2.4
 
+data2plot <- simpleBarData.fn(group_var = tortura_tipo)
 
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
