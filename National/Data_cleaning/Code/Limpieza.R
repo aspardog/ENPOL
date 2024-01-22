@@ -4204,8 +4204,22 @@ Main_database %<>%
       T ~ 0),
     
     
-    # Torture_general
+    # Torture_generalizada
     tortura_generalizada = case_when( if_any(tortura_general, ~ .x == "1") ~ 1, T ~ 0),
+    
+    # Torture MP or Detention
+    
+    tortura_lugar = case_when(
+      tortura_mp_p == 1 | tortura_mp_f == 1 ~  "Ministerio Público",
+      tortura_tra_p == 1 | tortura_tra_f == 1 ~  "Traslado",
+      T ~ NA),
+    
+    # Torture physical or psychological torture
+    
+    tortura_tipo = case_when(
+      tortura_tra_f == 1 | tortura_mp_f == 1 ~  "Física",
+      tortura_tra_p == 1 | tortura_mp_p == 1 ~  "Psicológica",
+      T ~ NA),
     
     # Variables for judge and attorney performance
     proceso_justo = case_when(
