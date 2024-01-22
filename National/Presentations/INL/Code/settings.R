@@ -393,7 +393,8 @@ groupBarData.fn <- function(data = Main_database,
     ) %>%
     rename(category = {{group_var}}) %>% 
     mutate(value2plot = values * 100,
-           figure = paste0(round(value2plot, 0), "%")) %>%
+           figure = paste0(round(value2plot, 0), "%"),
+           labels = category) %>%
     filter(!is.na(category) & category != "NS/NR")
   
   return(data2table)
@@ -413,7 +414,8 @@ simpleBarData.fn <- function(data = Main_database,
     summarize(frequency = n(),
               values = (n() / nrow(data))) %>%
     mutate(value2plot = values * 100,
-           figure = paste0(round(value2plot, 0), "%")) %>%
+           figure = paste0(round(value2plot, 0), "%"),
+           labels = {{group_var}}) %>%
     rename(category = {{group_var}}) %>%
     filter(!is.na(category) & category != "NS/NR")
   
