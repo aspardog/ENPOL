@@ -44,7 +44,7 @@ colors4plot <- c("dependent_cmpl" = "#003B88",
 
 data2plot <- lineChartData.fn(dependent_var = "proporcionalidad_uso_fuerza")
 
-lineChart <- lineChartViz(data = data2plot)
+lineChart <- lineChartViz(data = data2plot);lineChart
 
 ggsave(plot   = lineChart,
        file   = paste0("Visualizations/Figure1/Figure1_1.svg"), 
@@ -69,6 +69,8 @@ ggsave(plot   = logitPlot,
        device = "svg")
 
 ## Figrua 1.3
+
+data2plot <- groupBarData.fn(group_var = Corporacion_grupos, prop_var = proporcionalidad_uso_fuerza )
 
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -140,4 +142,8 @@ ggsave(plot   = logitPlot,
 
 ## Figura 3.3
 
+data2plot <- simpleBarData.fn(group_var = Primer_lugar_traslado)
+
 ## Figrua 3.4
+
+data2plot <- simpleBarData.fn(group_var = Tiempo_traslado)
