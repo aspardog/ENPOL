@@ -1,6 +1,6 @@
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
-## Script:            ENPOL 2023 - Piloto de Hipótesis
+## Script:            Settings Presentations
 ##
 ## Author(s):         F. Marcelo Torres González  (marcelo.torresgo@gmail.com)
 ##                    A. Santiago Pardo G.        (spardo@worldjusticeproject.org)
@@ -9,9 +9,9 @@
 ##
 ## Dependencies:      World Justice Project
 ##
-## Creation date:     June 7th, 2023
+## Creation date:     January 22th, 2024
 ##
-## This version:      June 7th, 2023
+## This version:      January 22th, 2024
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -36,6 +36,9 @@ library(pacman)
 
 p_load(char = c(
   
+  # Visualizations
+  "showtext", "ggtext", "gridExtra",
+  
   # Data Loading
   "haven", "foreign", "openxlsx", "readxl", "writexl", "xlsx",
   
@@ -43,10 +46,7 @@ p_load(char = c(
   "margins", "english", "quarto", "kableExtra", "sysfonts", "magrittr",
   
   # Good 'ol Tidyverse
-  "tidyverse",
-  
-  # Plots
-  "gridExtra"
+  "tidyverse"
   
 ))
 
@@ -86,6 +86,21 @@ if (Sys.info()["user"] == "marcelo") {
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #Loading fonts
+path2fonts <- paste0(path2SP, "6. Country Reports/0. Fonts/")
+font_add(family     = "Lato Full",
+         regular    = paste0(path2fonts, "Lato-Regular.ttf"),
+         italic     = paste0(path2fonts, "Lato-LightItalic.ttf"),
+         bold       = paste0(path2fonts, "Lato-Bold.ttf"),
+         bolditalic = paste0(path2fonts, "Lato-BoldItalic.ttf"))
+font_add(family  = "Lato Light",
+         regular = paste0(path2fonts, "Lato-Light.ttf"))
+font_add(family  = "Lato Black",
+         regular = paste0(path2fonts, "Lato-Black.ttf"))
+font_add(family  = "Lato Black Italic",
+         regular = paste0(path2fonts, "Lato-BlackItalic.ttf"))
+font_add(family  = "Lato Medium",
+         regular = paste0(path2fonts, "Lato-Medium.ttf"))
+showtext_auto()
 
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -142,31 +157,196 @@ rosePalette    <- c("#20204a", "#12006b", "#2e2e95", "#4e43dd", "#756ef9", "#9c9
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
-## 7.  Loading hypothesis testing function                                                                  ----
+## 7.  logit database                                                               ----
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-#source("Settings/prueba_hip.R")
+logit_dataBase.fn <- function(data = Main_database,
+                              selectables = c("Sexo", 
+                                              "Educacion_obligatoria", 
+                                              "Colo_piel_claro", 
+                                              "LGBTQ", 
+                                              "Etnia", 
+                                              "Edad_menor30", 
+                                              "Ingreso_inseguro"),
+                              dependent_var
+) {
+  
+  master_data.df <- Main_database %>%
+    filter(NSJP == 1) %>%
+    filter(Delito_unico == 1) %>%
+    mutate(
+      Educacion_obligatoria = 
+        case_when(
+          Educacion_obligatoria == 1 ~ "Título de bachiller o más",
+          Educacion_obligatoria == 0 ~ "No cuenta con título de bachiller"
+        ),
+      Colo_piel_claro       =
+        case_when(
+          Colo_piel_claro      == 1 ~ "Color de piel clara",
+          Colo_piel_claro      == 0 ~ "Color de piel oscura",
+        ),
+      LGBTQ                 = 
+        case_when(
+          LGBTQ                 == 1 ~ "Pertenece a la comunidad LGBTQ",
+          LGBTQ                 == 0 ~ "No pertenece a la comunidad LGBTQ"
+        ),
+      Etnia                 =
+        case_when(
+          Etnia                 == 1 ~ "Afroamericano o indígena",
+          Etnia                 == 0 ~ "No se identifica con ninguna etnia"
+        ),
+      Ingreso_inseguro      =
+        case_when(
+          Ingreso_inseguro      == 1 ~ "Financieramente inseguro",
+          Ingreso_inseguro      == 0 ~ "Financieramente seguro"
+        ),
+      Edad_menor30          =
+        case_when(
+          Edad_menor30          == 1 ~ "Menor a 30 años",
+          Edad_menor30          == 0 ~ "Mayor a 30 años"
+        )
+    )
+  
+  selectables <- selectables
+  
+  logit_data <- master_data.df %>%
+    select(all_of(selectables),
+           all_of(dependent_var)) %>%
+    mutate(
+      Educacion_obligatoria =
+        if_else(
+          Educacion_obligatoria %in% "No cuenta con título de bachiller",
+          "ZNo cuenta con título de bachiller", Educacion_obligatoria
+        ),
+      Sexo                  =
+        if_else(
+          Sexo %in% "Femenino",
+          "ZFemenino", Sexo
+        ),
+      Colo_piel_claro       =
+        if_else(
+          Colo_piel_claro %in% "Color de piel oscura",
+          "ZColor de piel oscura", Colo_piel_claro
+        ),
+      LGBTQ                 =
+        if_else(
+          LGBTQ %in% "Pertenece a la comunidad LGBTQ",
+          "ZPertenece a la comunidad LGBTQ", LGBTQ
+        ),
+      Etnia                 =
+        if_else(
+          Etnia %in% "Afroamericano o indígena",
+          "ZAfroamericano o indígena", Etnia
+        ),
+      Ingreso_inseguro      =
+        if_else(
+          Ingreso_inseguro %in% "Financieramente inseguro",
+          "ZFinancieramente inseguro", Ingreso_inseguro
+        ),
+      Edad_menor30          =
+        if_else(
+          Edad_menor30 %in% "Menor a 30 años",
+          "ZMenor a 30 años", Edad_menor30
+        ),
+    ) %>%
+    arrange(Sexo, Educacion_obligatoria, Colo_piel_claro, LGBTQ, Etnia, Edad_menor30, Ingreso_inseguro)
+  
+  formula <- selectables %>%
+    t() %>%
+    as.data.frame() %>%
+    unite(., formula, sep = "+") %>%
+    as.character()
+  
+  depVar <- dependent_var
+  
+  formula  <- as.formula(paste(depVar, "~", formula))
+  logit    <- glm(formula,
+                  data   = logit_data, 
+                  family = "binomial")
+  
+  summaryLogit <- bind_rows(
+    as.data.frame(coef(logit))
+  )
+  
+  margEff      <- as.data.frame(
+    margins_summary(logit, data = logit$data)
+  )
+  
+  margEff$factor <-recode(margEff$factor,
+                          "SexoZFemenino" = "Mujer",
+                          "LGBTQZPertenece a la comunidad LGBTQ"                     = "Perteneciente a \ncomunidad LGBTQ",
+                          "Ingreso_inseguroZFinancieramente inseguro"                = "Financieramente inseguro/a",
+                          "EtniaZAfroamericano o indígena"                           = "Afroamericano/a o indígena",
+                          "Educacion_obligatoriaZNo cuenta con título de bachiller"  = "Sin diploma bachiller",
+                          "Edad_menor30ZMenor a 30 años"                             = "Menor a 30 años",
+                          "Colo_piel_claroZColor de piel oscura"                     = "Color de piel oscura"
+  )
+  
+  data2table <- margEff %>%
+    mutate(order_variable =
+             case_when(
+               factor == "Mujer"                              ~ 1,
+               factor == "Perteneciente a \ncomunidad LGBTQ"  ~ 2,
+               factor == "Menor a 30 años"                    ~ 3,
+               factor == "Sin diploma bachiller"              ~ 4,
+               factor == "Financieramente inseguro/a"         ~ 5,
+               factor == "Afroamericano/a o indígena"         ~ 6,
+               factor == "Color de piel oscura"               ~ 7
+             ),
+           dependent_var  =
+             dependent_var
+    )
+  
+  return(data2table)
+  
+}
+
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
-## 7.  Creating a function that will reset the Outputs directory                                            ----
+## 8.  Line Chart Data Base                                        ----
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-# Defining a function to delete previous outputs and create the country directory
-#ordnung.fn <- function(targetSection){
+lineChartData.fn <-function(data = Main_database,
+                            dependent_var = dependent_var){
   
-  # Defining the section directory in the Outputs
-#  outPaths <- c(paste0(file.path(path2DB,"Outline/",targetSection,"/Tablas/")))
+  dependent_var <- dependent_var
   
-  # Listing previous outputs
-#  prevOutputs <- list.files(outPaths, 
-#                            include.dirs = F, 
-#                            full.names   = T, 
-#                            recursive    = T)
+  event_study_tipo <- event_study(data.df = data, 
+                                  var_analysis = dependent_var,
+                                  var_groups = c("National"))
   
-  # Deleting previous outputs
-#  file.remove(prevOutputs)
+  data2table <- event_study_tipo[[1]]
   
-#}
+  data2plot <- data2table %>%
+    filter(order_value > -1) %>%
+    rename(dependent_var = all_of(dependent_var)) %>%
+    mutate(
+      dependent_cmpl = 1 - dependent_var
+    ) %>%
+    drop_na() %>%
+    pivot_longer(cols = c(dependent_var, dependent_cmpl), names_to = "category", values_to = "value2plot") %>%
+    mutate(
+      period = 
+        case_when(
+          period == "implementation_year" ~ "Año de implementación",
+          period == "one_year_after" ~ "Un año",
+          period == "two_years_after" ~ "Dos años",
+          period == "three_years_after" ~ "Tres años",
+          period == "four_years_after" ~ "Cuatro años",
+          period == "five_years_after" ~ "Cinco años",
+          period == "six_years_after" ~ "Seis años",
+          period == "seven_years_after" ~ "Siete años",
+          period == "eight_years_after" ~ "Ocho años",
+          period == "nine_years_after" ~ "Nueve años",
+          period == "ten_years_after" ~ "Diez años",
+          period == "eleven_years_after" ~ "Once años",
+          period == "twelve_years_after" ~ "Doce años",
+        ),
+      value2plot = value2plot*100,
+      labels = paste0(round(value2plot,0), "%")
+    )
+  
+}

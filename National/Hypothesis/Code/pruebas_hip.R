@@ -417,7 +417,7 @@ prueba_hip <- function(seccion,subseccion,hypo_name,type,database,dep_var,indep_
                                             subseccion,"/",
                                             hypo_name,".xlsx"),
                                      fsep = "/"),  
-               sheetName = "Resultados Generales",
+               sheetName = paste0("Resultados Generales",indep_groups[1]),
                append    = T,
                row.names = F)
     

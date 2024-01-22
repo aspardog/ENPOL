@@ -121,7 +121,7 @@ if(section %in% c("Detenciones")) {
                                             T ~ Corporacion_grupos)) %>%
       select(orden_det, inspeccion, flagrancia, flagrancia_const, det_ninguna, detencion_no_inmediata, 
              months_since_NSJP, years_since_NSJP, 
-             Corporacion_grupos, Estado, Sexo, Delito_unico_categ, Delito_unico, LGBTQ, Edad, 
+             Corporacion_grupos, Estado, Sexo, Delito_unico_categ, Delito_unico, LGBTQ, Edad, Etnia,
              Traslados_30 = P3_20_01, Traslados_6h = P3_20_06, Traslado_MP = P3_19_01, 
              proporcionalidad_uso_fuerza)
     
@@ -464,3 +464,5 @@ if(section %in% c("Detenciones")) {
 
 }
 cat(paste0("Se terminó de producir los archivos para la sección: ", section, "/", subsection))
+
+
