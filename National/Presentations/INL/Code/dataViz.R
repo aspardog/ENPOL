@@ -76,7 +76,7 @@ lineChartViz <- function(data = data2plot,
                          colors = category) {
   # Creating ggplot
   plt <- ggplot(data2plot, 
-                aes(x     = reorder(period,order_value),
+                aes(x     = reorder(period, order_value),
                     y     = value2plot,
                     color = category,
                     label = labels,
@@ -97,6 +97,25 @@ lineChartViz <- function(data = data2plot,
                     direction          = "y",
                     force              = 5,
                     force_pull         = 1) +
+    scale_y_continuous(limits = c(0, 105),
+                       expand = c(0,0),
+                       breaks = seq(0,100,20),
+                       labels = paste0(seq(0,100,20), "%")) +
+    scale_x_discrete("period",
+                     labels = c("Implementación" = "Implementación",
+                     "Un año" = " ",
+                     "Dos años" = "Dos años",
+                     "Tres años" = " ",
+                     "Cuatro años" = "Cuatro años",
+                     "Cinco años" = " ",
+                     "Seis años" = "Seis años",
+                     "Siete años" = " ",
+                     "Ocho años" = "Ocho años",
+                     "Nueve años" = " ",
+                     "Diez años" = "Diez años",
+                     "Once años" = " ",
+                     "Doce años" = "Doce años")
+    ) +
     scale_color_manual(values = colors4plot) +
     WJP_theme() +
     theme(panel.grid.major.x = element_blank(),

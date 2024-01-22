@@ -331,7 +331,7 @@ lineChartData.fn <-function(data = Main_database,
     mutate(
       period = 
         case_when(
-          period == "implementation_year" ~ "Año de implementación",
+          period == "implementation_year" ~ "Implementación",
           period == "one_year_after" ~ "Un año",
           period == "two_years_after" ~ "Dos años",
           period == "three_years_after" ~ "Tres años",
@@ -346,7 +346,24 @@ lineChartData.fn <-function(data = Main_database,
           period == "twelve_years_after" ~ "Doce años",
         ),
       value2plot = value2plot*100,
-      labels = paste0(round(value2plot,0), "%")
+      labels = paste0(round(value2plot,0), "%"),
+      period_labels =
+        case_when(
+          period == "Implementación" ~ "Implementación",
+          period == "Un año" ~ " ",
+          period == "Dos años" ~ "Dos años",
+          period == "Tres años" ~ " ",
+          period == "Cuatro años" ~ "Cuatro años",
+          period == "Cinco años" ~ " ",
+          period == "Seis años" ~ "Seis años",
+          period == "Siete años" ~ " ",
+          period == "Ocho años" ~ "Ocho años",
+          period == "Nueve años" ~ " ",
+          period == "Diez años" ~ "Diez años",
+          period == "Once años" ~ " ",
+          period == "Doce años" ~ "Doce años",
+          
+        )
     )
   
 }
