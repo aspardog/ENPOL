@@ -350,3 +350,53 @@ lineChartData.fn <-function(data = Main_database,
     )
   
 }
+
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##
+## 9.  Group bars Data Base                                      ----
+##
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+groupBarData <- function(data = Main_database, 
+                         group_var = group_var, 
+                         prop_var = prop_var) { 
+  data2table <- data %>%
+    group_by({{group_var}}) %>%
+    summarize(
+      sí = mean({{prop_var}} == 1, na.rm = TRUE),
+      no = mean({{prop_var}} == 0, na.rm = TRUE)
+    ) %>% 
+    arrange(sí) %>%
+    mutate(legend_order = row_number()) %>% 
+    pivot_longer(
+      cols = !c({{group_var}}, legend_order), 
+      names_to = "group_var", 
+      values_to = "values"
+    ) %>%
+    rename(category = {{group_var}}) %>% 
+    mutate(value2plot = values * 100,
+           figure = paste0(round(value2plot, 0), "%"))
+  
+  return(data2table)
+}
+
+
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##
+## 10.  Simple bars Data Base                                      ----
+##
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+simpleBarData <- function(data = Main_database, 
+                          group_var = group_var) {
+  data2table <- data %>%
+    group_by({{group_var}}) %>%
+    summarize(frequency = n(),
+              values = (n() / nrow(data))) %>%
+    mutate(value2plot = values * 100,
+           figure = paste0(round(value2plot, 0), "%")) %>%
+    rename(category = {{group_var}})
+  
+  return(data2table)
+}
