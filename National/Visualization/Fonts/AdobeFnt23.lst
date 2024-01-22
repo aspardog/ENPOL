@@ -1,0 +1,207 @@
+%!Adobe-FontList 1.23
+%Locale:0x409
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:Invalid
+OutlineFileName:/Users/marsmariana/Creative Cloud Files/Guatemala 04:08/Carpeta report-as-of-04/Document fonts/AdobeFnt23.lst
+FileLength:4475
+FileModTime:671137515
+%EndFont
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:Type1
+FontName:Archer-Book
+FamilyName:Archer
+StyleName:Book
+MenuName:Archer Book
+StyleBits:0
+WeightClass:325
+WidthClass:5
+AngleClass:0
+FullName:Archer Book
+WritingScript:Roman
+OutlineFileName:/Users/marsmariana/Creative Cloud Files/Guatemala 04:08/Carpeta report-as-of-04/Document fonts/Archer-Book-Pro.otf
+DataFormat:sfntData
+UsesStandardEncoding:yes
+isCFF:yes
+hasSVG:no
+VariableFontType:NonVariableFont
+FileLength:436140
+FileModTime:437557978
+NameArray:0,Mac,4,Archer Book
+NameArray:0,Win,1,Archer Book
+NameArray:0,Win,16,Archer
+%EndFont
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:Type1
+FontName:Archer-Medium
+FamilyName:Archer
+StyleName:Medium
+MenuName:Archer Medium
+StyleBits:0
+WeightClass:350
+WidthClass:5
+AngleClass:0
+FullName:Archer Medium
+WritingScript:Roman
+OutlineFileName:/Users/marsmariana/Creative Cloud Files/Guatemala 04:08/Carpeta report-as-of-04/Document fonts/Archer-Medium.otf
+DataFormat:sfntData
+UsesStandardEncoding:yes
+isCFF:yes
+hasSVG:no
+VariableFontType:NonVariableFont
+FileLength:84416
+FileModTime:415839560
+NameArray:0,Mac,4,Archer Medium
+NameArray:0,Win,1,Archer Medium
+NameArray:0,Win,16,Archer
+%EndFont
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:TrueType
+FontName:Lato-Black
+FamilyName:Lato
+StyleName:Black
+MenuName:Lato Black
+StyleBits:0
+WeightClass:900
+WidthClass:5
+AngleClass:0
+FullName:Lato Black
+WritingScript:Roman
+OutlineFileName:/Users/marsmariana/Creative Cloud Files/Guatemala 04:08/Carpeta report-as-of-04/Document fonts/Lato-Black.ttf
+DataFormat:sfntData
+hasSVG:no
+VariableFontType:NonVariableFont
+FileLength:614544
+FileModTime:627420836
+NameArray:0,Mac,4,Lato Black
+NameArray:0,Win,1,Lato Black
+NameArray:0,Win,16,Lato
+%EndFont
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:TrueType
+FontName:Lato-Bold
+FamilyName:Lato
+StyleName:Bold
+MenuName:Lato
+StyleBits:2
+WeightClass:700
+WidthClass:5
+AngleClass:0
+FullName:Lato Bold
+WritingScript:Roman
+OutlineFileName:/Users/marsmariana/Creative Cloud Files/Guatemala 04:08/Carpeta report-as-of-04/Document fonts/Lato-Bold.ttf
+DataFormat:sfntData
+hasSVG:no
+VariableFontType:NonVariableFont
+FileLength:657188
+FileModTime:627420836
+NameArray:0,Mac,4,Lato Bold
+NameArray:0,Win,1,Lato
+%EndFont
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:TrueType
+FontName:Lato-Light
+FamilyName:Lato
+StyleName:Light
+MenuName:Lato Light
+StyleBits:0
+WeightClass:300
+WidthClass:5
+AngleClass:0
+FullName:Lato Light
+WritingScript:Roman
+OutlineFileName:/Users/marsmariana/Creative Cloud Files/Guatemala 04:08/Carpeta report-as-of-04/Document fonts/Lato-Light.ttf
+DataFormat:sfntData
+hasSVG:no
+VariableFontType:NonVariableFont
+FileLength:644556
+FileModTime:627420836
+NameArray:0,Mac,4,Lato Light
+NameArray:0,Win,1,Lato Light
+NameArray:0,Win,16,Lato
+%EndFont
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:TrueType
+FontName:Lato-LightItalic
+FamilyName:Lato
+StyleName:Light Italic
+MenuName:Lato Light
+StyleBits:1
+WeightClass:300
+WidthClass:5
+AngleClass:1
+FullName:Lato Light Italic
+WritingScript:Roman
+OutlineFileName:/Users/marsmariana/Creative Cloud Files/Guatemala 04:08/Carpeta report-as-of-04/Document fonts/Lato-LightItalic.ttf
+DataFormat:sfntData
+hasSVG:no
+VariableFontType:NonVariableFont
+FileLength:658212
+FileModTime:627420836
+NameArray:0,Mac,4,Lato Light Italic
+NameArray:0,Win,1,Lato Light
+NameArray:0,Win,16,Lato
+%EndFont
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:TrueType
+FontName:Lato-Regular
+FamilyName:Lato
+StyleName:Regular
+MenuName:Lato
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:Lato Regular
+WritingScript:Roman
+OutlineFileName:/Users/marsmariana/Creative Cloud Files/Guatemala 04:08/Carpeta report-as-of-04/Document fonts/Lato-Regular.ttf
+DataFormat:sfntData
+hasSVG:no
+VariableFontType:NonVariableFont
+FileLength:657212
+FileModTime:627420836
+NameArray:0,Mac,4,Lato Regular
+NameArray:0,Win,1,Lato
+%EndFont
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:Type1
+FontName:MinionPro-Regular
+FamilyName:Minion Pro
+StyleName:Regular
+MenuName:Minion Pro
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:Minion Pro
+WritingScript:Roman
+OutlineFileName:/Users/marsmariana/Creative Cloud Files/Guatemala 04:08/Carpeta report-as-of-04/Document fonts/MinionPro-Regular.otf
+DataFormat:sfntData
+UsesStandardEncoding:yes
+isCFF:yes
+hasSVG:no
+VariableFontType:NonVariableFont
+FileLength:218640
+FileModTime:635882771
+DesignSize:110
+NameArray:0,Mac,4,Minion Pro
+NameArray:0,Win,1,Minion Pro
+%EndFont
+
