@@ -32,6 +32,8 @@ source("Code/dataViz.R")
 
 load(paste0(path2SP,"/National/Data_cleaning/Output/Main_database.RData")) 
 
+colors4plot <- c("dependent_cmpl" = "#003B88", 
+                 "dependent_var" = "#fa4d57")
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
 ## 1. Uso Excesivo de la fuerza                                                                             ----
