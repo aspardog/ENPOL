@@ -40,27 +40,19 @@ load(paste0(path2SP,"/National/Data_cleaning/Output/Main_database.RData"))
 
 ## Figura 1.1
 
-
-
-## Figura 1.2
-
-
-
-## Figura 1.3
-
 data2plot <- lineChartData.fn(dependent_var = "proporcionalidad_uso_fuerza")
 
 lineChart <- lineChartViz(data = data2plot)
 
 ggsave(plot   = lineChart,
-       file   = paste0("Visualizations/Figure1/Figure1_3.svg"), 
+       file   = paste0("Visualizations/Figure1/Figure1_1.svg"), 
        width  = 175, 
        height = 85,
        units  = "mm",
        dpi    = 72,
        device = "svg")
 
-## Figrua 1.4
+## Figrua 1.2
 
 data2plot <- logit_dataBase.fn(dependent_var = "proporcionalidad_uso_fuerza")
 
@@ -74,6 +66,9 @@ ggsave(plot   = logitPlot,
        dpi    = 72,
        device = "svg")
 
+## Figrua 1.3
+
+
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
 ## 2. Integridad Personal                                                                            ----
@@ -82,6 +77,17 @@ ggsave(plot   = logitPlot,
 
 ## Figura 2.1
 
+data2plot <- lineChartData.fn(dependent_var = "tortura_generalizada")
+
+lineChart <- lineChartViz(data = data2plot)
+
+ggsave(plot   = lineChart,
+       file   = paste0("Visualizations/Figure1/Figure2_1.svg"), 
+       width  = 175, 
+       height = 85,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
 
 
 ## Figura 2.2
@@ -104,6 +110,18 @@ ggsave(plot   = logitPlot,
 
 ## Figura 3.1
 
+data2plot <- lineChartData.fn(dependent_var = "det_ninguna")
+
+lineChart <- lineChartViz(data = data2plot)
+
+ggsave(plot   = lineChart,
+       file   = paste0("Visualizations/Figure1/Figure3_1.svg"), 
+       width  = 175, 
+       height = 85,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
+
 ## Figura 3.2
 
 data2plot <- logit_dataBase.fn(dependent_var = "det_ninguna")
@@ -111,8 +129,7 @@ data2plot <- logit_dataBase.fn(dependent_var = "det_ninguna")
 logitPlot <- logit_demo_panel(mainData = data2plot)
 
 ggsave(plot   = logitPlot,
-       file   = paste0(path2SP, 
-                       "National/Presentations/Visualizations/Figure3/Figure3_2.svg"), 
+       file   = paste0("Visualizations/Figure3/Figure3_2.svg"), 
        width  = 175, 
        height = 85,
        units  = "mm",
