@@ -63,7 +63,7 @@ data2plot <- logit_dataBase.fn(dependent_var = "proporcionalidad_uso_fuerza")
 logitPlot <- logit_demo_panel(mainData = data2plot)
 
 ggsave(plot   = logitPlot,
-       file   = paste0("Visualizations/Figure1/Figure1_2.svg"), 
+       file   = paste0("Visualizations/Figure1/Figure1_2_2015.svg"), 
        width  = 175, 
        height = 85,
        units  = "mm",
@@ -122,7 +122,7 @@ data2plot <- logit_dataBase.fn(dependent_var = "tortura_generalizada")
 logitPlot <- logit_demo_panel(mainData = data2plot)
 
 ggsave(plot   = logitPlot,
-       file   = paste0("Visualizations/Figure2/Figure2_2.svg"), 
+       file   = paste0("Visualizations/Figure2/Figure2_2_2015.svg"), 
        width  = 175, 
        height = 65,
        units  = "mm",
@@ -189,7 +189,7 @@ data2plot <- logit_dataBase.fn(dependent_var = "det_ninguna")
 logitPlot <- logit_demo_panel(mainData = data2plot, line_size = 2)
 
 ggsave(plot   = logitPlot,
-       file   = paste0("Visualizations/Figure3/Figure3_2.svg"), 
+       file   = paste0("Visualizations/Figure3/Figure3_2_2015.svg"), 
        width  = 175, 
        height = 85,
        units  = "mm",
