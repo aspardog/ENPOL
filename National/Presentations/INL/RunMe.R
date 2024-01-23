@@ -32,8 +32,6 @@ source("Code/dataViz.R")
 
 load(paste0(path2SP,"/National/Data_cleaning/Output/Main_database.RData")) 
 
-colors4plot <- c("dependent_cmpl" = "#003B88", 
-                 "dependent_var" = "#fa4d57")
 colors4bars <- c("sí" = "#003B88", 
                  "no" = "#fa4d57")
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -43,6 +41,8 @@ colors4bars <- c("sí" = "#003B88",
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 ## Figura 1.1
+colors4plot <- c("dependent_var" = "#003B88", 
+                 "dependent_cmpl" = "#fa4d57")
 
 data2plot <- lineChartData.fn(dependent_var = "proporcionalidad_uso_fuerza")
 
@@ -102,6 +102,9 @@ ggsave(plot   = barsPlot,
 
 ## Figura 2.1
 
+colors4plot <- c("dependent_cmpl" = "#003B88", 
+                 "dependent_var" = "#fa4d57")
+
 data2plot <- lineChartData.fn(dependent_var = "tortura_generalizada")
 
 lineChart <- lineChartViz(data = data2plot)
@@ -124,7 +127,7 @@ logitPlot <- logit_demo_panel(mainData = data2plot)
 ggsave(plot   = logitPlot,
        file   = paste0("Visualizations/Figure2/Figure2_2_2015.svg"), 
        width  = 175, 
-       height = 65,
+       height = 85,
        units  = "mm",
        dpi    = 72,
        device = "svg")
@@ -169,6 +172,9 @@ ggsave(plot   = barChart,
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 ## Figura 3.1
+
+colors4plot <- c("dependent_cmpl" = "#003B88", 
+                 "dependent_var" = "#fa4d57")
 
 data2plot <- lineChartData.fn(dependent_var = "det_ninguna")
 
