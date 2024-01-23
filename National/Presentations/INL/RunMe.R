@@ -134,7 +134,7 @@ ggsave(plot   = logitPlot,
 
 data2plot <- simpleBarData.fn(group_var = tortura_lugar)
 
-barChart <- BarSimpleChartViz(fill_colors = c("Ministerio Público" = "#003B88",
+barChart <- BarSimpleChartVizVertical(fill_colors = c("Ministerio Público" = "#003B88",
                                               "Traslado" = "#99b0cf"))
 
 ggsave(plot   = barChart,
@@ -148,6 +148,8 @@ ggsave(plot   = barChart,
 ## Figrua 2.4
 
 data2plot <- simpleBarData.fn(group_var = tortura_tipo)
+data2plot <- data2plot %>%
+  mutate(order_var = rank(-value2plot, ties.method = "min"))
 
 barChart <- BarSimpleChartViz(fill_colors = c("Física" = "#003B88", 
                                               "Psicológica" = "#99b0cf"))
@@ -197,6 +199,8 @@ ggsave(plot   = logitPlot,
 ## Figura 3.3
 
 data2plot <- simpleBarData.fn(group_var = Primer_lugar_traslado)
+data2plot <- data2plot %>%
+  mutate(order_var = rank(-value2plot, ties.method = "min"))
 
 barChart <- BarSimpleChartViz(fill_colors = c("Agencia del Ministerio Público" = "#003B88",
                                               "Juez de lo penal" = "#99b0cf",
@@ -224,13 +228,26 @@ ggsave(plot   = barChart,
 ## Figrua 3.4
 
 data2plot <- simpleBarData.fn(group_var = Tiempo_traslado)
+data2plot <- data2plot %>%
+  mutate(order_var = case_when(
+    category == "Hasta 30 minutos"                    ~ 1,
+    category == "Más de 30 minutos hasta 1 hora"      ~ 2,
+    category == "Más de 1 hora hasta 2 horas"         ~ 3,
+    category == "Más de 2 horas hasta 4 horas"        ~ 4,
+    category == "Más de 4 horas hasta 6 horas"        ~ 5,
+    category == "Más de 6 horas hasta 24 horas"       ~ 6,
+    category == "Más de 24 horas hasta 48 horas"      ~ 7,
+    category == "Más de 48 horas hasta 72 horas"      ~ 8,
+    category == "Más de 72 horas"                    ~ 8,
+    TRUE                                               ~ NA_integer_
+  ))
 
 barChart <- BarSimpleChartViz(fill_colors = c("Hasta 30 minutos" = "#003B88",
                                               "Más de 30 minutos hasta 1 hora" = "#99b0cf",
                                               "Más de 1 hora hasta 2 horas" = "#99b0cf",
                                               "Más de 2 horas hasta 4 horas" = "#99b0cf",
-                                              "Más de 4 horas hasta 6 horas" = "#003B88",
-                                              "Más de 6 horas hasta 24 horas" = "#99b0cf",
+                                              "Más de 4 horas hasta 6 horas" = "#99b0cf",
+                                              "Más de 6 horas hasta 24 horas" = "#003B88",
                                               "Más de 24 horas hasta 48 horas" = "#99b0cf",
                                               "Más de 48 horas hasta 72 horas" = "#99b0cf",
                                               "Más de 72 horas" = "#99b0cf"))
