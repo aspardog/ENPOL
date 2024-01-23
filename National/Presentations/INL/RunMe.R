@@ -138,7 +138,7 @@ ggsave(plot   = logitPlot,
 data2plot <- simpleBarData.fn(group_var = tortura_lugar)
 
 barChart <- BarSimpleChartVizVertical(fill_colors = c("Ministerio Público" = "#003B88",
-                                              "Traslado" = "#99b0cf"))
+                                              "Traslado" = "#E2E2F7"))
 
 ggsave(plot   = barChart,
        file   = paste0("Visualizations/Figure2/Figure2_3.svg"), 
@@ -155,7 +155,7 @@ data2plot <- data2plot %>%
   mutate(order_var = rank(-value2plot, ties.method = "min"))
 
 barChart <- BarSimpleChartViz(fill_colors = c("Física" = "#003B88", 
-                                              "Psicológica" = "#99b0cf"))
+                                              "Psicológica" = "#E2E2F7"))
 
 ggsave(plot   = barChart,
        file   = paste0("Visualizations/Figure2/Figure2_4.svg"), 
@@ -209,19 +209,19 @@ data2plot <- data2plot %>%
   mutate(order_var = rank(-value2plot, ties.method = "min"))
 
 barChart <- BarSimpleChartViz(fill_colors = c("Agencia del Ministerio Público" = "#003B88",
-                                              "Juez de lo penal" = "#99b0cf",
+                                              "Juez de lo penal" = "#E2E2F7",
                                               "Instalación de la policía" = "#003B88",
-                                              "Centro de arraigo" = "#99b0cf",
-                                              "Centro penitenciario" = "#99b0cf",
-                                              "Oficina del gobierno" = "#99b0cf",
-                                              "Casa particular" = "#99b0cf",
-                                              "Establecimiento comercial" = "#99b0cf",
-                                              "Vehículo" = "#99b0cf",
-                                              "Terreno baldío" = "#99b0cf",
-                                              "Zona militar" = "#99b0cf",
-                                              "Centro de detención para migrantes" = "#99b0cf",
-                                              "Hospital" = "#99b0cf",                                         
-                                              "Otra" = "#99b0cf"))
+                                              "Centro de arraigo" = "#E2E2F7",
+                                              "Centro penitenciario" = "#E2E2F7",
+                                              "Oficina del gobierno" = "#E2E2F7",
+                                              "Casa particular" = "#E2E2F7",
+                                              "Establecimiento comercial" = "#E2E2F7",
+                                              "Vehículo" = "#E2E2F7",
+                                              "Terreno baldío" = "#E2E2F7",
+                                              "Zona militar" = "#E2E2F7",
+                                              "Centro de detención para migrantes" = "#E2E2F7",
+                                              "Hospital" = "#E2E2F7",                                         
+                                              "Otra" = "#E2E2F7"))
 
 ggsave(plot   = barChart,
        file   = paste0("Visualizations/Figure3/Figure3_3.svg"), 
@@ -249,14 +249,14 @@ data2plot <- data2plot %>%
   ))
 
 barChart <- BarSimpleChartViz(fill_colors = c("Hasta 30 minutos" = "#003B88",
-                                              "Más de 30 minutos hasta 1 hora" = "#99b0cf",
-                                              "Más de 1 hora hasta 2 horas" = "#99b0cf",
-                                              "Más de 2 horas hasta 4 horas" = "#99b0cf",
-                                              "Más de 4 horas hasta 6 horas" = "#99b0cf",
+                                              "Más de 30 minutos hasta 1 hora" = "#E2E2F7",
+                                              "Más de 1 hora hasta 2 horas" = "#E2E2F7",
+                                              "Más de 2 horas hasta 4 horas" = "#E2E2F7",
+                                              "Más de 4 horas hasta 6 horas" = "#E2E2F7",
                                               "Más de 6 horas hasta 24 horas" = "#003B88",
-                                              "Más de 24 horas hasta 48 horas" = "#99b0cf",
-                                              "Más de 48 horas hasta 72 horas" = "#99b0cf",
-                                              "Más de 72 horas" = "#99b0cf"))
+                                              "Más de 24 horas hasta 48 horas" = "#E2E2F7",
+                                              "Más de 48 horas hasta 72 horas" = "#E2E2F7",
+                                              "Más de 72 horas" = "#E2E2F7"))
 
 ggsave(plot   = barChart,
        file   = paste0("Visualizations/Figure3/Figure3_4.svg"), 
