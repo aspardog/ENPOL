@@ -240,3 +240,44 @@ barsChart.fn <- function(
   return(plot)
   
 }
+
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##
+## 4.  Bar Simple Chart                                                                                ----
+##
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+BarSimpleChartViz <- function(data = data2plot, 
+                              x_var = category, 
+                              y_var = value2plot, 
+                              label_var = figure, 
+                              fill_var = category, 
+                              fill_colors = fill_colors) {
+  plt <- ggplot(data, 
+                aes(x     = {{x_var}},
+                    y     = {{y_var}},
+                    label = {{label_var}},
+                    fill  = {{fill_var}})) +
+    geom_bar(stat = "identity",
+             show.legend = FALSE, width = 0.9) +
+    scale_fill_manual(values = {{fill_colors}}) +
+    geom_text(aes(y    = {{y_var}} + 10),
+              color    = "#4a4a49",
+              family   = "Lato Full",
+              fontface = "bold") +
+    labs(y = "% of respondents") +
+    scale_y_continuous(limits = c(0, 105),
+                       breaks = seq(0, 100, 20),
+                       labels = paste0(seq(0, 100, 20), "%"),
+                       position = "right") +
+    scale_x_discrete(limits = rev) +
+    coord_flip() +
+    WJP_theme() +
+    theme(panel.grid.major.y = element_blank(),
+          panel.grid.major.x = element_line(color = "#D0D1D3"),
+          axis.title.y       = element_blank(),
+          axis.title.x       = element_blank(),
+          axis.text.y        = element_text(hjust = 0))
+  
+  return(plt)
+}
