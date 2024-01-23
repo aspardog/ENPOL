@@ -346,7 +346,9 @@ lineChartData.fn <-function(data = Main_database,
           period == "twelve_years_after" ~ "Doce años",
         ),
       value2plot = value2plot*100,
-      labels = paste0(round(value2plot,0), "%"),
+      labels = if_else(
+        period %in% c("Implementación", "Dos años", "Cuatro años", "Seis años", "Ocho años", "Diez años", "Doce años"),
+        paste0(round(value2plot,0), "%"), NA_character_),
       period_labels =
         case_when(
           period == "Implementación" ~ "Implementación",

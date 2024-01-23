@@ -34,6 +34,8 @@ load(paste0(path2SP,"/National/Data_cleaning/Output/Main_database.RData"))
 
 colors4plot <- c("dependent_cmpl" = "#003B88", 
                  "dependent_var" = "#fa4d57")
+colors4bars <- c("sí" = "#003B88", 
+                 "no" = "#fa4d57")
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
 ## 1. Uso Excesivo de la fuerza                                                                             ----
@@ -44,7 +46,7 @@ colors4plot <- c("dependent_cmpl" = "#003B88",
 
 data2plot <- lineChartData.fn(dependent_var = "proporcionalidad_uso_fuerza")
 
-lineChart <- lineChartViz(data = data2plot);lineChart
+lineChart <- lineChartViz(data = data2plot)
 
 ggsave(plot   = lineChart,
        file   = paste0("Visualizations/Figure1/Figure1_1.svg"), 
@@ -61,7 +63,7 @@ data2plot <- logit_dataBase.fn(dependent_var = "proporcionalidad_uso_fuerza")
 logitPlot <- logit_demo_panel(mainData = data2plot)
 
 ggsave(plot   = logitPlot,
-       file   = paste0("Visualizations/Figure1/Figure1_4.svg"), 
+       file   = paste0("Visualizations/Figure1/Figure1_2.svg"), 
        width  = 175, 
        height = 85,
        units  = "mm",
@@ -70,9 +72,28 @@ ggsave(plot   = logitPlot,
 
 ## Figrua 1.3
 
-data2plot <- groupBarData.fn(group_var = Corporacion_grupos, prop_var = proporcionalidad_uso_fuerza )
+data2plot <- groupBarData.fn(group_var = Corporacion_grupos, prop_var = proporcionalidad_uso_fuerza) 
 
+categories <- c("Operativo Conjunto","Ejército o Marina","Policía Federal", "Policía Federal Ministerial","Policía Estatal",
+                "Policía Municipal","Guardia Nacional")
 
+barsPlot <- barsChart.fn(data.df = data2plot, 
+                         labels_var = "labels", 
+                         value2plot = "value2plot", 
+                         grouping_var = "group_var", 
+                         categories_grouping_var = categories, 
+                         label_figures = "figure", 
+                         order = T, order_value = "legend_order", 
+                         nbars = 8, 
+                         colors4plot = colors4bars)
+
+ggsave(plot   = barsPlot,
+       file   = paste0("Visualizations/Figure1/Figure1_3.svg"), 
+       width  = 175, 
+       height = 125,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
 ## 2. Integridad Personal                                                                            ----
@@ -142,12 +163,12 @@ ggsave(plot   = lineChart,
 
 data2plot <- logit_dataBase.fn(dependent_var = "det_ninguna")
 
-logitPlot <- logit_demo_panel(mainData = data2plot)
+logitPlot <- logit_demo_panel(mainData = data2plot, line_size = 2)
 
 ggsave(plot   = logitPlot,
        file   = paste0("Visualizations/Figure3/Figure3_2.svg"), 
        width  = 175, 
-       height = 75,
+       height = 85,
        units  = "mm",
        dpi    = 72,
        device = "svg")
