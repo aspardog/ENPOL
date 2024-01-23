@@ -173,6 +173,7 @@ logit_dataBase.fn <- function(data = Main_database,
 ) {
   
   master_data.df <- Main_database %>%
+    filter(Anio_arresto >= 2015) %>%
     filter(NSJP == 1) %>%
     filter(Delito_unico == 1) %>%
     mutate(
@@ -381,6 +382,7 @@ groupBarData.fn <- function(data = Main_database,
                             group_var = group_var, 
                             prop_var = prop_var) { 
   data2table <- data %>%
+    filter(Anio_arresto >= 2008) %>% 
     group_by({{group_var}}) %>%
     filter(!is.na({{group_var}}) | {{group_var}} != "NS/NR" | {{group_var}} != "Otra") %>% 
     summarize(
@@ -413,6 +415,7 @@ groupBarData.fn <- function(data = Main_database,
 simpleBarData.fn <- function(data = Main_database, 
                              group_var = group_var) {
   data2table <- data %>%
+    filter(Anio_arresto >= 2008) %>% 
     group_by({{group_var}}) %>%
     summarize(frequency = n()) %>%
     filter(!is.na({{group_var}}) | {{group_var}} != "NS/NR" | {{group_var}} != "Otra") %>% 
