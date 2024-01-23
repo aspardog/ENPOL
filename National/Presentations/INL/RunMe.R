@@ -134,10 +134,31 @@ ggsave(plot   = logitPlot,
 
 data2plot <- simpleBarData.fn(group_var = tortura_lugar)
 
+barChart <- BarSimpleChartViz(fill_colors = c("Ministerio Público" = "#003B88",
+                                              "Traslado" = "#99b0cf"))
+
+ggsave(plot   = barChart,
+       file   = paste0("Visualizations/Figure2/Figure2_3.svg"), 
+       width  = 175, 
+       height = 85,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
+
 ## Figrua 2.4
 
 data2plot <- simpleBarData.fn(group_var = tortura_tipo)
 
+barChart <- BarSimpleChartViz(fill_colors = c("Física" = "#003B88", 
+                                              "Psicológica" = "#99b0cf"))
+
+ggsave(plot   = barChart,
+       file   = paste0("Visualizations/Figure2/Figure2_4.svg"), 
+       width  = 175, 
+       height = 85,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -177,6 +198,47 @@ ggsave(plot   = logitPlot,
 
 data2plot <- simpleBarData.fn(group_var = Primer_lugar_traslado)
 
+barChart <- BarSimpleChartViz(fill_colors = c("Agencia del Ministerio Público" = "#003B88",
+                                              "Juez de lo penal" = "#99b0cf",
+                                              "Instalación de la policía" = "#003B88",
+                                              "Centro de arraigo" = "#99b0cf",
+                                              "Centro penitenciario" = "#99b0cf",
+                                              "Oficina del gobierno" = "#99b0cf",
+                                              "Casa particular" = "#99b0cf",
+                                              "Establecimiento comercial" = "#99b0cf",
+                                              "Vehículo" = "#99b0cf",
+                                              "Terreno baldío" = "#99b0cf",
+                                              "Zona militar" = "#99b0cf",
+                                              "Centro de detención para migrantes" = "#99b0cf",
+                                              "Hospital" = "#99b0cf",                                         
+                                              "Otra" = "#99b0cf"))
+
+ggsave(plot   = barChart,
+       file   = paste0("Visualizations/Figure3/Figure3_3.svg"), 
+       width  = 175, 
+       height = 85,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
+
 ## Figrua 3.4
 
 data2plot <- simpleBarData.fn(group_var = Tiempo_traslado)
+
+barChart <- BarSimpleChartViz(fill_colors = c("Hasta 30 minutos" = "#003B88",
+                                              "Más de 30 minutos hasta 1 hora" = "#99b0cf",
+                                              "Más de 1 hora hasta 2 horas" = "#99b0cf",
+                                              "Más de 2 horas hasta 4 horas" = "#99b0cf",
+                                              "Más de 4 horas hasta 6 horas" = "#003B88",
+                                              "Más de 6 horas hasta 24 horas" = "#99b0cf",
+                                              "Más de 24 horas hasta 48 horas" = "#99b0cf",
+                                              "Más de 48 horas hasta 72 horas" = "#99b0cf",
+                                              "Más de 72 horas" = "#99b0cf"))
+
+ggsave(plot   = barChart,
+       file   = paste0("Visualizations/Figure3/Figure3_4.svg"), 
+       width  = 175, 
+       height = 85,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
