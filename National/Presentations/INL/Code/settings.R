@@ -378,10 +378,11 @@ lineChartData.fn <-function(data = Main_database,
 
 
 groupBarData.fn <- function(data = Main_database, 
-                         group_var = group_var, 
-                         prop_var = prop_var) { 
+                            group_var = group_var, 
+                            prop_var = prop_var) { 
   data2table <- data %>%
     group_by({{group_var}}) %>%
+    filter(!is.na({{group_var}}) | {{group_var}} != "NS/NR" | {{group_var}} != "Otra") %>% 
     summarize(
       sí = mean({{prop_var}} == 1, na.rm = TRUE),
       no = mean({{prop_var}} == 0, na.rm = TRUE)
@@ -397,7 +398,7 @@ groupBarData.fn <- function(data = Main_database,
     mutate(value2plot = values * 100,
            figure = paste0(round(value2plot, 0), "%"),
            labels = category) %>%
-    filter(!is.na(category) & category != "NS/NR")
+    filter(!is.na(category) & category != "NS/NR" & category != "Otra")
   
   return(data2table)
 }
@@ -410,16 +411,18 @@ groupBarData.fn <- function(data = Main_database,
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 simpleBarData.fn <- function(data = Main_database, 
-                          group_var = group_var) {
+                             group_var = group_var) {
   data2table <- data %>%
     group_by({{group_var}}) %>%
-    summarize(frequency = n(),
-              values = (n() / nrow(data))) %>%
-    mutate(value2plot = values * 100,
+    summarize(frequency = n()) %>%
+    filter(!is.na({{group_var}}) | {{group_var}} != "NS/NR" | {{group_var}} != "Otra") %>% 
+    mutate(values = frequency/sum(frequency),
+           value2plot = values * 100,
            figure = paste0(round(value2plot, 0), "%"),
            labels = {{group_var}}) %>%
-    rename(category = {{group_var}}) %>%
-    filter(!is.na(category) & category != "NS/NR")
+    rename(category = {{group_var}})
   
   return(data2table)
 }
+
+
