@@ -74,8 +74,9 @@ ggsave(plot   = logitPlot,
 
 data2plot <- groupBarData.fn(group_var = Corporacion_grupos, prop_var = proporcionalidad_uso_fuerza) 
 
+
 categories <- c("Operativo Conjunto","Ejército o Marina","Policía Federal", "Policía Federal Ministerial","Policía Estatal",
-                "Policía Municipal","Guardia Nacional")
+                "Policía Municipal")
 
 barsPlot <- barsChart.fn(data.df = data2plot, 
                          labels_var = "labels", 
@@ -84,7 +85,7 @@ barsPlot <- barsChart.fn(data.df = data2plot,
                          categories_grouping_var = categories, 
                          label_figures = "figure", 
                          order = T, order_value = "legend_order", 
-                         nbars = 8, 
+                         nbars = 7, 
                          colors4plot = colors4bars)
 
 ggsave(plot   = barsPlot,
