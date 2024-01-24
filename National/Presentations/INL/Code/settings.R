@@ -382,7 +382,7 @@ groupBarData.fn <- function(data = Main_database,
                             group_var = group_var, 
                             prop_var = prop_var) { 
   data2table <- data %>%
-    filter(Anio_arresto >= 2008) %>% 
+    filter(Anio_arresto >= 2017) %>% 
     filter(NSJP == 1) %>%
     group_by({{group_var}}) %>%
     filter(!is.na({{group_var}}) | {{group_var}} != "NS/NR" | {{group_var}} != "Otra") %>% 
