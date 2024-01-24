@@ -383,8 +383,10 @@ groupBarData.fn <- function(data = Main_database,
                             prop_var = prop_var) { 
   data2table <- data %>%
     filter(Anio_arresto >= 2008) %>% 
+    filter(NSJP == 1) %>%
     group_by({{group_var}}) %>%
     filter(!is.na({{group_var}}) | {{group_var}} != "NS/NR" | {{group_var}} != "Otra") %>% 
+    filter({{group_var}} != "Guardia Nacional") %>% 
     summarize(
       sí = mean({{prop_var}} == 1, na.rm = TRUE),
       no = mean({{prop_var}} == 0, na.rm = TRUE)
@@ -416,6 +418,7 @@ simpleBarData.fn <- function(data = Main_database,
                              group_var = group_var) {
   data2table <- data %>%
     filter(Anio_arresto >= 2008) %>% 
+    filter(NSJP == 1) %>%
     group_by({{group_var}}) %>%
     summarize(frequency = n()) %>%
     filter(!is.na({{group_var}}) | {{group_var}} != "NS/NR" | {{group_var}} != "Otra") %>% 
