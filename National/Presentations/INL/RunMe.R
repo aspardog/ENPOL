@@ -50,7 +50,7 @@ lineChart <- lineChartViz(data = data2plot)
 
 ggsave(plot   = lineChart,
        file   = paste0("Visualizations/Figure1/Figure1_1.svg"), 
-       width  = 175, 
+       width  = 190, 
        height = 85,
        units  = "mm",
        dpi    = 72,
@@ -112,7 +112,7 @@ lineChart <- lineChartViz(data = data2plot)
 
 ggsave(plot   = lineChart,
        file   = paste0("Visualizations/Figure2/Figure2_1.svg"), 
-       width  = 175, 
+       width  = 190, 
        height = 85,
        units  = "mm",
        dpi    = 72,
@@ -203,36 +203,7 @@ ggsave(plot   = logitPlot,
        dpi    = 72,
        device = "svg")
 
-## Figura 3.3
-
-data2plot <- simpleBarData.fn(group_var = Primer_lugar_traslado)
-data2plot <- data2plot %>%
-  mutate(order_var = rank(-value2plot, ties.method = "min"))
-
-barChart <- BarSimpleChartViz(fill_colors = c("Agencia del Ministerio Público" = "#003B88",
-                                              "Juez de lo penal" = "#E2E2F7",
-                                              "Instalación de la policía" = "#003B88",
-                                              "Centro de arraigo" = "#E2E2F7",
-                                              "Centro penitenciario" = "#E2E2F7",
-                                              "Oficina del gobierno" = "#E2E2F7",
-                                              "Casa particular" = "#E2E2F7",
-                                              "Establecimiento comercial" = "#E2E2F7",
-                                              "Vehículo" = "#E2E2F7",
-                                              "Terreno baldío" = "#E2E2F7",
-                                              "Zona militar" = "#E2E2F7",
-                                              "Centro de detención para migrantes" = "#E2E2F7",
-                                              "Hospital" = "#E2E2F7",                                         
-                                              "Otra" = "#E2E2F7"))
-
-ggsave(plot   = barChart,
-       file   = paste0("Visualizations/Figure3/Figure3_3.svg"), 
-       width  = 175, 
-       height = 85,
-       units  = "mm",
-       dpi    = 72,
-       device = "svg")
-
-## Figrua 3.4
+## Figrua 3.3
 
 data2plot <- simpleBarData.fn(group_var = Tiempo_traslado)
 data2plot <- data2plot %>%
@@ -260,8 +231,100 @@ barChart <- BarSimpleChartViz(fill_colors = c("Hasta 30 minutos" = "#003B88",
                                               "Más de 72 horas" = "#E2E2F7"))
 
 ggsave(plot   = barChart,
+       file   = paste0("Visualizations/Figure3/Figure3_3.svg"), 
+       width  = 175, 
+       height = 85,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
+
+## Figura 3.4
+
+
+data2table <- pivot_vars.fn(data = Main_database, variables = "Tiempo_traslado")
+
+data2plot1 <- lineChartData.fn(data = data2table, dependent_var = "Tiempo_traslado_Hasta 30 minutos") %>%
+  filter(category %in% c("dependent_var"))
+
+data2plot2 <- lineChartData.fn(data = data2table, dependent_var = "Tiempo_traslado_Más de 6 horas hasta 24 horas") %>%
+  filter(category %in% c("dependent_var")) %>%
+  mutate(
+    category = 
+      case_when(
+        category == "dependent_var" ~ "dependent_cmpl"
+        )
+  )
+
+data2plot <- bind_rows(data2plot1, data2plot2)
+
+colors4plot <- c("dependent_var" = "#003B88", 
+                 "dependent_cmpl" = "#fa4d57")
+
+lineChart <- lineChartViz(data = data2plot)
+
+ggsave(plot   = lineChart,
        file   = paste0("Visualizations/Figure3/Figure3_4.svg"), 
        width  = 175, 
+       height = 85,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
+
+## Figura 3.5
+
+data2plot <- simpleBarData.fn(group_var = Primer_lugar_traslado)
+data2plot <- data2plot %>%
+  mutate(order_var = rank(-value2plot, ties.method = "min"))
+
+barChart <- BarSimpleChartViz(fill_colors = c("Agencia del Ministerio Público" = "#003B88",
+                                              "Juez de lo penal" = "#E2E2F7",
+                                              "Instalación de la policía" = "#003B88",
+                                              "Centro de arraigo" = "#E2E2F7",
+                                              "Centro penitenciario" = "#E2E2F7",
+                                              "Oficina del gobierno" = "#E2E2F7",
+                                              "Casa particular" = "#E2E2F7",
+                                              "Establecimiento comercial" = "#E2E2F7",
+                                              "Vehículo" = "#E2E2F7",
+                                              "Terreno baldío" = "#E2E2F7",
+                                              "Zona militar" = "#E2E2F7",
+                                              "Centro de detención para migrantes" = "#E2E2F7",
+                                              "Hospital" = "#E2E2F7",                                         
+                                              "Otra" = "#E2E2F7"))
+
+ggsave(plot   = barChart,
+       file   = paste0("Visualizations/Figure3/Figure3_5.svg"), 
+       width  = 175, 
+       height = 85,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
+
+## Figura 3.5
+
+data2table <- pivot_vars.fn(data = Main_database, variables = "Primer_lugar_traslado")
+
+data2plot1 <- lineChartData.fn(data = data2table, dependent_var = "Primer_lugar_traslado_Agencia del Ministerio Público") %>%
+  filter(category %in% c("dependent_var"))
+
+data2plot2 <- lineChartData.fn(data = data2table, dependent_var = "Primer_lugar_traslado_Instalación de la policía") %>%
+  filter(category %in% c("dependent_var")) %>%
+  mutate(
+    category = 
+      case_when(
+        category == "dependent_var" ~ "dependent_cmpl"
+      )
+  )
+
+data2plot <- bind_rows(data2plot1, data2plot2)
+
+colors4plot <- c("dependent_var" = "#003B88", 
+                 "dependent_cmpl" = "#a90099")
+#"#a90099"
+lineChart <- lineChartViz(data = data2plot)
+
+ggsave(plot   = lineChart,
+       file   = paste0("Visualizations/Figure3/Figure3_5.svg"), 
+       width  = 190, 
        height = 85,
        units  = "mm",
        dpi    = 72,

@@ -432,3 +432,56 @@ simpleBarData.fn <- function(data = Main_database,
 }
 
 
+
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##
+## 11.  Simple bars Data Base                                      ----
+##
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+pivot_vars.fn <- function(data, variables) {
+  
+  # Check if the specified variables exist in the dataset
+  for (variable in variables) {
+    if (!(variable %in% names(data))) {
+      stop("The specified variable '", variable, "' does not exist in the dataset.")
+    }
+  }
+  
+  # Rename the specified variables
+  data_pivot.df <- data %>%
+    rename_with(~.x, all_of(variables))
+  
+  # Create counters and new variable names for each specified variable
+  pivoted_data <- lapply(variables, function(variable) {
+    data.df <- data_pivot.df %>%
+      mutate(
+        counter = 1,
+        var_counter = if_else(!is.na(.data[[variable]]), 0, NA_real_)
+      ) %>%
+      mutate(new_var = paste0(variable, "_", .data[[variable]])) %>%
+      pivot_wider(
+        id_cols = c(ID_PER, var_counter),
+        names_from = new_var, 
+        values_from = counter, 
+        values_fill = 0
+      ) %>%
+      select(!contains("NA")) %>%
+      mutate(across(
+        !c(ID_PER, var_counter),
+        ~if_else(is.na(var_counter), NA_real_, .x)
+      )) %>%
+      select(-var_counter)  # Simplify removal of var_counter
+    
+    return(data.df)
+  })
+  
+  # Join the original and pivoted data for each specified variable
+  final_data.df <- data
+  for (i in seq_along(variables)) {
+    final_data.df <- left_join(x = final_data.df, y = pivoted_data[[i]], by = "ID_PER")
+  }
+  
+  return(final_data.df)
+}
