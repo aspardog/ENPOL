@@ -166,6 +166,42 @@ ggsave(plot   = barChart,
        dpi    = 72,
        device = "svg")
 
+## Figura 2.4 - Final
+
+data2plot <- groupBarData.fn(group_var = tortura_tra, prop_var = RND_3 ) 
+data2plot <- data2plot %>% mutate(group_var = case_when(
+  group_var == "sí"                    ~ "Después del RND",
+  group_var == "no"      ~ "Antes del RND",
+  T ~ NA))
+data2plot <- data2plot %>% mutate(legend_order = case_when(
+  legend_order == 1                    ~ 3,
+  legend_order == 2      ~ 2,
+  legend_order == 3      ~ 1,
+  T ~ NA))
+colors4bars <- c("Después del RND" = "#003B88", 
+                 "Antes del RND" = "#fa4d57")
+
+categories <- c("Física", "Psicológica", "Ambas")
+
+barsPlot <- barsChart.fn(data.df = data2plot, 
+                         labels_var = "labels", 
+                         value2plot = "value2plot", 
+                         grouping_var = "group_var", 
+                         categories_grouping_var = categories, 
+                         label_figures = "figure", 
+                         order = F, order_value = "legend_order", 
+                         nbars = 3, 
+                         colors4plot = colors4bars)
+
+ggsave(plot   = barsPlot,
+       file   = paste0("Visualizations/Figure2/Figure2_4.svg"), 
+       width  = 175, 
+       height = 125,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
+
+
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
 ## 2. Libertad                                                                           ----
