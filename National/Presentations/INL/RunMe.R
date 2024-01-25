@@ -72,7 +72,10 @@ ggsave(plot   = logitPlot,
 
 ## Figrua 1.3
 
-data2plot <- groupBarData.fn(group_var = Corporacion_grupos, prop_var = proporcionalidad_uso_fuerza) 
+"%!in%" <- compose("!", "%in%")
+
+data2plot <- groupBarData.fn(group_var = Corporacion_grupos, prop_var = proporcionalidad_uso_fuerza) %>%
+  filter(category %!in% c("Otra", "Guardia Nacional"))
 
 
 categories <- c("Operativo Conjunto","Ejército o Marina","Policía Federal", "Policía Federal Ministerial","Policía Estatal",
@@ -139,7 +142,7 @@ ggsave(plot   = logitPlot,
 data2plot <- simpleBarData.fn(group_var = tortura_lugar)
 
 barChart <- BarSimpleChartVizVertical(fill_colors = c("Ministerio Público" = "#003B88",
-                                              "Traslado" = "#E2E2F7"))
+                                                      "Traslado" = "#E2E2F7"))
 
 ggsave(plot   = barChart,
        file   = paste0("Visualizations/Figure2/Figure2_3.svg"), 
@@ -168,43 +171,43 @@ ggsave(plot   = barChart,
 
 ## Figura 2.4 - Final
 
-data2plot <- groupBarData.fn(group_var = tortura_tra, prop_var = RND_3 ) 
-data2plot <- data2plot %>% mutate(group_var = case_when(
-  group_var == "sí"                    ~ "Después del RND",
-  group_var == "no"      ~ "Antes del RND",
-  T ~ NA))
-data2plot <- data2plot %>% mutate(legend_order = case_when(
-  legend_order == 1                    ~ 3,
-  legend_order == 2      ~ 2,
-  legend_order == 3      ~ 1,
-  T ~ NA))
-colors4bars <- c("Después del RND" = "#003B88", 
-                 "Antes del RND" = "#fa4d57")
-
-categories <- c("Física", "Psicológica", "Ambas")
-
-barsPlot <- barsChart.fn(data.df = data2plot, 
-                         labels_var = "labels", 
-                         value2plot = "value2plot", 
-                         grouping_var = "group_var", 
-                         categories_grouping_var = categories, 
-                         label_figures = "figure", 
-                         order = F, order_value = "legend_order", 
-                         nbars = 3, 
-                         colors4plot = colors4bars)
-
-ggsave(plot   = barsPlot,
-       file   = paste0("Visualizations/Figure2/Figure2_4.svg"), 
-       width  = 175, 
-       height = 125,
-       units  = "mm",
-       dpi    = 72,
-       device = "svg")
+# data2plot <- groupBarData.fn(group_var = tortura_tra, prop_var = RND_3 ) 
+# data2plot <- data2plot %>% mutate(group_var = case_when(
+#   group_var == "sí"      ~ "Aespués del RND",
+#   group_var == "no"      ~ "Antes del RND",
+#   T ~ NA))
+# data2plot <- data2plot %>% mutate(legend_order = case_when(
+#   legend_order == 1      ~ 3,
+#   legend_order == 2      ~ 2,
+#   legend_order == 3      ~ 1,
+#   T ~ NA))
+# colors4bars <- c("Antes del RND" = "#fa4d57", "Aespués del RND" = "#003B88")
+# 
+# categories <- c("Física", "Psicológica", "Ambas")
+# 
+# barsPlot <- barsChart.fn(data.df = data2plot, 
+#                          labels_var = "labels", 
+#                          value2plot = "value2plot", 
+#                          grouping_var = "group_var", 
+#                          categories_grouping_var = categories, 
+#                          label_figures = "figure", 
+#                          order = T, 
+#                          order_value = "legend_order", 
+#                          nbars = 3, 
+#                          colors4plot = colors4bars)
+# 
+# ggsave(plot   = barsPlot,
+#        file   = paste0("Visualizations/Figure2/Figure2_4.svg"), 
+#        width  = 175, 
+#        height = 125,
+#        units  = "mm",
+#        dpi    = 72,
+#        device = "svg")
 
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
-## 2. Libertad                                                                           ----
+## 3. Libertad                                                                           ----
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -261,7 +264,7 @@ barChart <- BarSimpleChartViz(fill_colors = c("Hasta 30 minutos" = "#003B88",
                                               "Más de 1 hora hasta 2 horas" = "#E2E2F7",
                                               "Más de 2 horas hasta 4 horas" = "#E2E2F7",
                                               "Más de 4 horas hasta 6 horas" = "#E2E2F7",
-                                              "Más de 6 horas hasta 24 horas" = "#003B88",
+                                              "Más de 6 horas hasta 24 horas" = "#fa4d57",
                                               "Más de 24 horas hasta 48 horas" = "#E2E2F7",
                                               "Más de 48 horas hasta 72 horas" = "#E2E2F7",
                                               "Más de 72 horas" = "#E2E2F7"))
@@ -300,7 +303,7 @@ lineChart <- lineChartViz(data = data2plot)
 
 ggsave(plot   = lineChart,
        file   = paste0("Visualizations/Figure3/Figure3_4.svg"), 
-       width  = 175, 
+       width  = 190, 
        height = 85,
        units  = "mm",
        dpi    = 72,
@@ -314,7 +317,7 @@ data2plot <- data2plot %>%
 
 barChart <- BarSimpleChartViz(fill_colors = c("Agencia del Ministerio Público" = "#003B88",
                                               "Juez de lo penal" = "#E2E2F7",
-                                              "Instalación de la policía" = "#003B88",
+                                              "Instalación de la policía" = "#a90099",
                                               "Centro de arraigo" = "#E2E2F7",
                                               "Centro penitenciario" = "#E2E2F7",
                                               "Oficina del gobierno" = "#E2E2F7",
@@ -355,11 +358,10 @@ data2plot <- bind_rows(data2plot1, data2plot2)
 
 colors4plot <- c("dependent_var" = "#003B88", 
                  "dependent_cmpl" = "#a90099")
-#"#a90099"
 lineChart <- lineChartViz(data = data2plot)
 
 ggsave(plot   = lineChart,
-       file   = paste0("Visualizations/Figure3/Figure3_5.svg"), 
+       file   = paste0("Visualizations/Figure3/Figure3_6.svg"), 
        width  = 190, 
        height = 85,
        units  = "mm",
