@@ -330,6 +330,9 @@ prueba_rob(seccion = "Violación a la integridad personal",
 }
 
 
+## Figura 2.3
+
+#Pending
 
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -418,3 +421,17 @@ prueba_rob(seccion = "Violación a la libertad",
            indep_var = NA)
 }
 
+## Figura 3.6
+
+
+prueba_rob(seccion = "Violación a la libertad",
+           hypo_name = paste0("Figura3_4"),
+           database = data2,
+           dep_var = "Primer_lugar_traslado_Agencia del Ministerio Público",
+           indep_var = "years_since_NSJP")
+
+prueba_rob(seccion = "Violación a la libertad",
+           hypo_name = paste0("Figura3_4"),
+           database = data2,
+           dep_var = "Primer_lugar_traslado_Instalación de la policía",
+           indep_var = "years_since_NSJP")
