@@ -40,7 +40,68 @@ load(paste0(path2SP,"/National/Data_cleaning/Output/Main_database.RData"))
 
 ## 1.1. Derecho a conocer sus derechos
 
+derecho_conocer_derechos <- c("P3_14_5", "P4_1_04", "P5_2_4")
+
+result <- clean_columns.fn(Main_database, derecho_conocer_derechos)
+
+labels <- c("Al momento de su detención, ¿el policía o autoridad le informó 
+            sobre sus derechos a guardar silencio y a no declarar sin la presencia de su abogado?",
+            "Al momento de llegar a la Agencia del M.P., ¿el agente del Mp le explicó 
+            sus derechos como a guardar silencio, no echarse la culpa, tener abogado, ofrecer pruebas, etc?",
+            "En su primer encuentro con el juez, 
+            ¿le informó sobre su derecho a guardar silencio y a no declarar sin la presencia de su abogado?") 
+
+data2plot <- set_data.fn(result, derecho_conocer_derechos, labels)
+
+barChart <- BarSimpleChartViz(data = data2plot, 
+                              x_var = labels, 
+                              y_var = PorcentajeUnos, 
+                              label_var = figure, 
+                              fill_var = Columna, 
+                              order_var = order_var,
+                              fill_colors = c("#E2E2F7", "#E2E2F7", "#003B88"),
+                              title = "Derecho a conocer sus derechos")
+barChart
+
+
 ## 1.2. Derecho a tener y comprender la información sobre su proceso
+
+derecho_conocer_derechos <- c("P3_14_4",
+                              "P3_14_6",
+                              "P4_1_03",
+                              "P4_6_2",
+                              "P4_6A_2",
+                              "P5_20_4",
+                              "P5_22_01",
+                              "P5_22_02")
+
+result <- clean_columns.fn(Main_database, derecho_conocer_derechos)
+
+labels <- c("Al momento de su detención, ¿el policía o autoridad le dijo por qué lo detuvieron?",
+            "Al momento de su detención, ¿el policía o autoridad le dijo a dónde lo llevaría?",
+            "Al momento de llegar a la Agencia del Ministerio Público, ¿le dijeron de qué le acusaban?",
+            "Al momento de rendir o firmar su declaración ante el Ministerio Público… 
+            ¿le leyeron o le dieron a leer su declaración?",
+            "Una vez que leyó o le dieron a leer su declaración… ¿entendió su declaración?",
+            "Durante las audiencias, ¿usted… podía escuchar lo que se decía?",
+            "¿Alguno de sus abogados defensores… le explicó los hechos por los que lo acusaban?",
+            "¿Alguno de sus abogados defensores… le explicó cómo sería su proceso?") 
+
+data2plot <- set_data.fn(result, derecho_conocer_derechos, labels)
+
+barChart <- BarSimpleChartViz(data = data2plot, 
+                              x_var = labels, 
+                              y_var = PorcentajeUnos, 
+                              label_var = figure, 
+                              fill_var = Columna, 
+                              order_var = order_var,
+                              fill_colors = c("#E2E2F7","#E2E2F7","#E2E2F7","#E2E2F7", "#E2E2F7","#003B88","#E2E2F7", "#E2E2F7"),
+                              title = "Derecho a tener y comprender la información sobre su proceso")
+barChart
+
+
+
+
 
 ## 1.3. Derecho a los ajustes razonables a partir de necesidades específicas
 
@@ -143,7 +204,7 @@ barChart
 
 ## 3.1. 1.	Derecho a una defensa oportuna
 
-> derecho_defensa_oportuna <- c("P4_1_05",
+derecho_defensa_oportuna <- c("P4_1_05",
                                 "P4_1_06", 
                                 "P4_3A_1",
                                 "P4_6_3", 
@@ -176,5 +237,42 @@ barChart <- BarSimpleChartViz(data = data2plot,
                               order_var = order_var,
                               fill_colors = c("#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7","#E2E2F7", "#003B88"),
                               title = "Derecho a una defensa oportuna")
+
+barChart
+
+## 3.2.	Derecho a una defensa efectiva/técnica
+
+derecho_defensa_efectiva <- c("P4_1_07",
+                              "P5_22_03", 
+                              "P5_22_04",
+                              "P5_22_05", 
+                              "P5_22_06", 
+                              "P5_22_09", 
+                              "P5_22_10",
+                              "P5_22_11")
+
+result <- clean_columns.fn(Main_database, derecho_defensa_efectiva)
+
+labels <- c("Al momento de llegar a la Agencia del Ministerio Público,
+            ¿su abogado ofreció pruebas de su inocencia?",
+            "¿Algunos de sus abogados defensores… le preguntó si 
+            en el momento en que se cometió el delito, usted estaba en otro lugar?",
+            "¿Algunos de sus abogados defensores… llamó a comparecer a testigos que apoyaran su caso?",
+            "¿Alguno de sus abogados defensores… presentó elementos que permitieron demostrar su inocencia?",
+            "¿Alguno de sus abogados defensores preguntó … si fabricaron evidencia en su contra?",
+            "¿Alguno de sus abogados defensores … presentó una apelación?",
+            "¿Alguno de sus abogados defensores … presentó un juicio de amparo?",
+            "¿Alguno de sus abogados defensores … contradijo las pruebas que la parte acusadora presentó contra usted?") 
+
+data2plot <- set_data.fn(result, derecho_defensa_efectiva, labels)
+
+barChart <- BarSimpleChartViz(data = data2plot, 
+                              x_var = labels, 
+                              y_var = PorcentajeUnos, 
+                              label_var = figure, 
+                              fill_var = Columna, 
+                              order_var = order_var,
+                              fill_colors = c("#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7","#E2E2F7","#E2E2F7", "#003B88"),
+                              title = "Derecho a una defensa efectiva/técnica")
 
 barChart
