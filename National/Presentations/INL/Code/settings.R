@@ -381,12 +381,15 @@ lineChartData.fn <-function(data = Main_database,
 groupBarData.fn <- function(data = Main_database, 
                             group_var = group_var, 
                             prop_var = prop_var) { 
+  
+  "%!in%" <- compose("!", "%in%")
+  
   data2table <- data %>%
-    filter(Anio_arresto >= 2017) %>% 
+    filter(Anio_arresto >= 2008) %>% 
     filter(NSJP == 1) %>%
     group_by({{group_var}}) %>%
-    filter(!is.na({{group_var}}) | {{group_var}} != "NS/NR" | {{group_var}} != "Otra") %>% 
-    filter({{group_var}} != "Guardia Nacional") %>% 
+    filter(!is.na({{group_var}})) %>% 
+    filter({{group_var}} %!in% "NS/NR" ) %>% 
     summarize(
       sí = mean({{prop_var}} == 1, na.rm = TRUE),
       no = mean({{prop_var}} == 0, na.rm = TRUE)
@@ -402,7 +405,7 @@ groupBarData.fn <- function(data = Main_database,
     mutate(value2plot = values * 100,
            figure = paste0(round(value2plot, 0), "%"),
            labels = category) %>%
-    filter(!is.na(category) & category != "NS/NR" & category != "Otra")
+    filter(!is.na(category) & category != "NS/NR")
   
   return(data2table)
 }
