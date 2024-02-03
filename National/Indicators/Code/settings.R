@@ -43,7 +43,7 @@ p_load(char = c(
   "haven", "foreign", "openxlsx", "readxl", "writexl", "xlsx",
   
   # Utilities
-  "margins", "english", "quarto", "kableExtra", "sysfonts", "magrittr",
+  "margins", "english", "quarto", "kableExtra", "sysfonts", "magrittr", "caret",
   
   # Good 'ol Tidyverse
   "tidyverse"
@@ -142,211 +142,102 @@ WJP_theme <- function() {
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
-## 5.  Color Palette                                                                                        ----
+## 5.  Normalización                                                                                       ----
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-mainCOLOR      <- c("#2a2a9A")
-countryPalette <- c("#2a2a94", "#a90099", "#3273ff", "#fa4d57", "#9d61f2", "#43a9a7", "#efa700", "#2c6d4f")
-binPalette     <- c("#003b8a", "#fa4d57")
-barsPalette    <- c("#2a2a9A", "#E2E2F7")
-glinesPalette  <- c("#2a2a94", "#a90099", "#3273ff")
-rosePalette    <- c("#20204a", "#12006b", "#2e2e95", "#4e43dd", "#756ef9", "#9c94ff", "#b1a6ff",
-                    "#cfb3ff", "#e2a4ff", "#f2aadc", "#ffd7f5")
-
-
-## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-##
-## 7.  logit database                                                               ----
-##
-## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-logit_dataBase.fn <- function(data = Main_database,
-                              selectables = c("Sexo", 
-                                              "Educacion_obligatoria", 
-                                              "Colo_piel_claro", 
-                                              "LGBTQ", 
-                                              "Etnia", 
-                                              "Edad_menor30", 
-                                              "Ingreso_inseguro"),
-                              dependent_var
-) {
+normalizacion <- function(codebook = Codebook.df, 
+                          data2normalize = Main_database) {
   
-  master_data.df <- Main_database %>%
-    filter(NSJP == 1) %>%
-    filter(Delito_unico == 1) %>%
+  vars2normalize <- codebook %>%
+    select(Variable) %>% 
+    pull()
+  
+  
+  data_subset.df <- Main_database %>%
+    select(all_of(vars2normalize)) %>%
     mutate(
-      Educacion_obligatoria = 
-        case_when(
-          Educacion_obligatoria == 1 ~ "Título de bachiller o más",
-          Educacion_obligatoria == 0 ~ "No cuenta con título de bachiller"
-        ),
-      Colo_piel_claro       =
-        case_when(
-          Colo_piel_claro      == 1 ~ "Color de piel clara",
-          Colo_piel_claro      == 0 ~ "Color de piel oscura",
-        ),
-      LGBTQ                 = 
-        case_when(
-          LGBTQ                 == 1 ~ "Pertenece a la comunidad LGBTQ",
-          LGBTQ                 == 0 ~ "No pertenece a la comunidad LGBTQ"
-        ),
-      Etnia                 =
-        case_when(
-          Etnia                 == 1 ~ "Afroamericano o indígena",
-          Etnia                 == 0 ~ "No se identifica con ninguna etnia"
-        ),
-      Ingreso_inseguro      =
-        case_when(
-          Ingreso_inseguro      == 1 ~ "Financieramente inseguro",
-          Ingreso_inseguro      == 0 ~ "Financieramente seguro"
-        ),
-      Edad_menor30          =
-        case_when(
-          Edad_menor30          == 1 ~ "Menor a 30 años",
-          Edad_menor30          == 0 ~ "Mayor a 30 años"
+      across(
+        everything(),
+        ~if_else(
+          .x %in% c(6,8,9), NA, .x 
         )
+      )
     )
   
-  selectables <- selectables
+  vars2orient2scale <- codebook %>%
+    filter(Direccion %in% "Negativa") %>%
+    filter(Escala %in% "Escala 2") %>%
+    select(Variable) %>%
+    pull()
   
-  logit_data <- master_data.df %>%
-    select(all_of(selectables),
-           all_of(dependent_var)) %>%
+  vars2orient4scale <- codebook %>%
+    filter(Direccion %in% "Negativa") %>%
+    filter(Escala %in% "Escala 4") %>%
+    select(Variable) %>%
+    pull()
+  
+  dataOriented <- data_subset.df %>%
     mutate(
-      Educacion_obligatoria =
-        if_else(
-          Educacion_obligatoria %in% "No cuenta con título de bachiller",
-          "ZNo cuenta con título de bachiller", Educacion_obligatoria
-        ),
-      Sexo                  =
-        if_else(
-          Sexo %in% "Femenino",
-          "ZFemenino", Sexo
-        ),
-      Colo_piel_claro       =
-        if_else(
-          Colo_piel_claro %in% "Color de piel oscura",
-          "ZColor de piel oscura", Colo_piel_claro
-        ),
-      LGBTQ                 =
-        if_else(
-          LGBTQ %in% "Pertenece a la comunidad LGBTQ",
-          "ZPertenece a la comunidad LGBTQ", LGBTQ
-        ),
-      Etnia                 =
-        if_else(
-          Etnia %in% "Afroamericano o indígena",
-          "ZAfroamericano o indígena", Etnia
-        ),
-      Ingreso_inseguro      =
-        if_else(
-          Ingreso_inseguro %in% "Financieramente inseguro",
-          "ZFinancieramente inseguro", Ingreso_inseguro
-        ),
-      Edad_menor30          =
-        if_else(
-          Edad_menor30 %in% "Menor a 30 años",
-          "ZMenor a 30 años", Edad_menor30
-        ),
-    ) %>%
-    arrange(Sexo, Educacion_obligatoria, Colo_piel_claro, LGBTQ, Etnia, Edad_menor30, Ingreso_inseguro)
+      across(
+        everything(),
+        ~as.numeric(.x)
+      ),
+      across(
+        all_of(vars2orient2scale),
+        ~case_when(
+          .x == 1 ~ 2,
+          .x == 2 ~ 1,
+          T ~ NA_real_
+        )),
+      across( 
+        all_of(vars2orient4scale),
+        ~case_when(
+          .x == 1 ~ 4,
+          .x == 2 ~ 3,
+          .x == 3 ~ 2,
+          .x == 1 ~ 4,
+          T ~ NA_real_
+        )
+      )
+    )
   
-  formula <- selectables %>%
-    t() %>%
-    as.data.frame() %>%
-    unite(., formula, sep = "+") %>%
-    as.character()
-  
-  depVar <- dependent_var
-  
-  formula  <- as.formula(paste(depVar, "~", formula))
-  logit    <- glm(formula,
-                  data   = logit_data, 
-                  family = "binomial")
-  
-  summaryLogit <- bind_rows(
-    as.data.frame(coef(logit))
-  )
-  
-  margEff      <- as.data.frame(
-    margins_summary(logit, data = logit$data)
-  )
-  
-  margEff$factor <-recode(margEff$factor,
-                          "SexoZFemenino" = "Mujer",
-                          "LGBTQZPertenece a la comunidad LGBTQ"                     = "Perteneciente a \ncomunidad LGBTQ",
-                          "Ingreso_inseguroZFinancieramente inseguro"                = "Financieramente inseguro/a",
-                          "EtniaZAfroamericano o indígena"                           = "Afroamericano/a o indígena",
-                          "Educacion_obligatoriaZNo cuenta con título de bachiller"  = "Sin diploma bachiller",
-                          "Edad_menor30ZMenor a 30 años"                             = "Menor a 30 años",
-                          "Colo_piel_claroZColor de piel oscura"                     = "Color de piel oscura"
-  )
-  
-  data2table <- margEff %>%
-    mutate(order_variable =
+  max_values <- codebook %>% 
+    filter(Variable %in% all_of(vars2normalize)) %>%
+    mutate(Escala = 
              case_when(
-               factor == "Mujer"                              ~ 1,
-               factor == "Perteneciente a \ncomunidad LGBTQ"  ~ 2,
-               factor == "Menor a 30 años"                    ~ 3,
-               factor == "Sin diploma bachiller"              ~ 4,
-               factor == "Financieramente inseguro/a"         ~ 5,
-               factor == "Afroamericano/a o indígena"         ~ 6,
-               factor == "Color de piel oscura"               ~ 7
-             ),
-           dependent_var  =
-             dependent_var
-    )
-  
-  return(data2table)
-  
-}
-
-
-## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-##
-## 8.  Line Chart Data Base                                        ----
-##
-## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-lineChartData.fn <-function(data = Main_database,
-                            dependent_var = dependent_var){
-  
-  dependent_var <- dependent_var
-  
-  event_study_tipo <- event_study(data.df = data, 
-                                  var_analysis = dependent_var,
-                                  var_groups = c("National"))
-  
-  data2table <- event_study_tipo[[1]]
-  
-  data2plot <- data2table %>%
-    filter(order_value > -1) %>%
-    rename(dependent_var = all_of(dependent_var)) %>%
-    mutate(
-      dependent_cmpl = 1 - dependent_var
+               Escala == "Escala 2" ~ 2,
+               Escala == "Escala 3" ~ 3,
+               Escala == "Escala 4" ~ 4,
+             )
     ) %>%
-    drop_na() %>%
-    pivot_longer(cols = c(dependent_var, dependent_cmpl), names_to = "category", values_to = "value2plot") %>%
-    mutate(
-      period = 
-        case_when(
-          period == "implementation_year" ~ "Año de implementación",
-          period == "one_year_after" ~ "Un año",
-          period == "two_years_after" ~ "Dos años",
-          period == "three_years_after" ~ "Tres años",
-          period == "four_years_after" ~ "Cuatro años",
-          period == "five_years_after" ~ "Cinco años",
-          period == "six_years_after" ~ "Seis años",
-          period == "seven_years_after" ~ "Siete años",
-          period == "eight_years_after" ~ "Ocho años",
-          period == "nine_years_after" ~ "Nueve años",
-          period == "ten_years_after" ~ "Diez años",
-          period == "eleven_years_after" ~ "Once años",
-          period == "twelve_years_after" ~ "Doce años",
-        ),
-      value2plot = value2plot*100,
-      labels = paste0(round(value2plot,0), "%")
-    )
+    pull(Escala)
+  
+  max_values <- lapply(vars2normalize, function(vars2normalize){
+    
+    codebook %>% 
+      filter(Variable %in% vars2normalize) %>%
+      mutate(max_value = 
+               case_when(
+                 Escala == "Escala 2" ~ 2,
+                 Escala == "Escala 3" ~ 3,
+                 Escala == "Escala 4" ~ 4,
+               )) %>%
+      pull(max_value)
+  })
+  
+  dataOriented[nrow(dataOriented) + 1,] <- c(max_values)
+  dataOriented[nrow(dataOriented) + 1,] <- c(rep(list(1), ncol(dataOriented)))
+  
+  
+  process    <- preProcess(dataOriented, method = c("range"))
+  normalized <- predict(process, dataOriented)
+  
+  final_data.df <- normalized[1:(nrow(normalized) - 2), ] %>%
+    rename_all(~ paste0(., "_norm"))
+  
+  master_data.df <- bind_cols(data2normalize, final_data.df)
+  
+  return(master_data.df)
   
 }
