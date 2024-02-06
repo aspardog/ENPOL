@@ -4990,8 +4990,7 @@ Main_database <- Main_database %>%  rowwise() %>% mutate(Delito_unico = ifelse(s
          Delito_unico_2_drogas = case_when(Delito_gr_2_drogas == 1 
                                            & Delito_unico == 1 ~ 1,
                                            T ~ 0),
-         Delito_unico_3_del_org = case_when(Delito_gr_3_del_org == 1 
-                                            & Delito_unico == 1 ~ 1,
+         Delito_unico_3_del_org = case_when(Delito_gr_3_del_org == 1 ~ 1,
                                             T ~ 0),
          Delito_unico_4_lesiones = case_when(Delito_gr_4_lesiones == 1 
                                              & Delito_unico == 1 ~ 1,
