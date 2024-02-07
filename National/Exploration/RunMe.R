@@ -123,23 +123,22 @@ barChart <- BarSimpleChartViz(data = data2plot,
                               y_var = PorcentajeUnos, 
                               label_var = figure, 
                               fill_var = Columna, 
+                              Observaciones = Observaciones,
                               order_var = order_var,
                               fill_colors = c("#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
                                               "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
                                               "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
                                               "#003B88"),
-                              title = "capacidad_legal")
+                              title = "Información / Capacidad legal")
 barChart
 
 ggsave(plot   = barChart,
        file   = paste0(path2SP, "/National/Exploration/Input/Debido_proceso/Legalidad","/desc_","capacidad_legal.svg"), 
-       width  = 250, 
-       height = 200,
+       width  = 300, 
+       height = 390,
        units  = "mm",
        dpi    = 72,
        device = "svg")
-
-
 
 ### 1.1.2. Derecho a la no discriminación -----------------------------------
 
