@@ -180,6 +180,15 @@ clean_columns.fn <- function(data, columnas, numero_interes) {
           columna_numerica == 8 | columna_numerica == 9 ~ NA_real_,
           TRUE ~ columna_numerica
         ))
+      } else if (all(columna_numerica %in% c(1, 2, 3, 4, 8, 9, NA), na.rm = TRUE)) {
+        return(case_when(
+          columna_numerica == 1 ~ 1,
+          columna_numerica == 2 ~ 1,
+          columna_numerica == 3 ~ 0,
+          columna_numerica == 4 ~ 0,
+          columna_numerica == 8 | columna_numerica == 9 ~ NA_real_,
+          TRUE ~ columna_numerica
+        ))
       } else {
         return(case_when(
           columna_numerica == numero_interes ~ 1,
@@ -189,6 +198,7 @@ clean_columns.fn <- function(data, columnas, numero_interes) {
       }
     }))
 }
+
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
