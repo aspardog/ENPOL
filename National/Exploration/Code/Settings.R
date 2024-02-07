@@ -418,18 +418,27 @@ set_data.fn <- function(data, columnas, labels) {
     sum(columna == 1, na.rm = TRUE) / sum(!is.na(columna))
   })
   
+  # Calculate the count of non-NA observations per column
+  counts <- sapply(data[, columnas], function(columna) {
+    sum(!is.na(columna))
+  })
+  
   data2plot <- data.frame(
     Columna = names(porcentajes),
     PorcentajeUnos = round((porcentajes * 100), 1),
+    Observaciones = counts, # Include counts here
     label = labels
   )
   
   data2plot <- data2plot %>%
-    mutate(order_var = rank(-PorcentajeUnos, ties.method = "min"), 
-           labels = str_wrap(labels, width = 30),
-           figure = paste0(PorcentajeUnos, "%"))
+    mutate(
+      order_var = rank(-PorcentajeUnos, ties.method = "min"), 
+      labels = str_wrap(label, width = 30), # Make sure the column name matches what's in the dataframe
+      figure = paste0(PorcentajeUnos, "%")
+    )
+  
+  return(data2plot)
 }
-
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -442,19 +451,19 @@ BarSimpleChartViz <- function(data = data2plot,
                               y_var = value2plot, 
                               label_var = figure, 
                               fill_var = category, 
+                              Observaciones = Observaciones,
                               fill_colors = fill_colors,
                               order_var = order_var,
                               title = title) {
   plt <- ggplot(data, 
                 aes(x     = reorder({{x_var}},{{order_var}}),
                     y     = {{y_var}},
-                    label = {{label_var}},
+                    label = paste0({{label_var}}, "\n", "N =", {{Observaciones}}),
                     fill  = {{fill_var}})) +
     geom_bar(stat = "identity",
-             show.legend = FALSE, width = 0.9) +
-    geom_vline(xintercept = 50)+
+             show.legend = FALSE, width = 0.9)+
     scale_fill_manual(values = {{fill_colors}}) +
-    geom_text(aes(y    = {{y_var}} + 10),
+    geom_text(aes(y    = {{y_var}} + 5),
               color    = "#4a4a49",
               family   = "Lato Full",
               fontface = "bold") +
@@ -471,7 +480,8 @@ BarSimpleChartViz <- function(data = data2plot,
           panel.grid.major.x = element_line(color = "#D0D1D3"),
           axis.title.y       = element_blank(),
           axis.title.x       = element_blank(),
-          axis.text.y        = element_text(hjust = 1, size = 6.5))
+          axis.text.y        = element_text(hjust = 1, size = 10),
+          plot.title = element_text(face = "bold", size = 12))
   
   return(plt)
 }
