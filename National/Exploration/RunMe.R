@@ -552,6 +552,63 @@ ggsave(plot   = barChart,
 ### 1.3.2. Libertad personal  ----------------------------------------------------
 
 
+derecho_libertad <- c("P5_9",
+                   "P5_26B")
+
+labels <- c("Usted llevó su juicio … privado de la libertad",
+            "Tratando de evaluar que tan justa fue su sentencia, ¿usted diría que fue…?") 
+
+Main_database_2008 <- clean_columns.fn(Main_database_2008, derecho_libertad)
+Main_database_2015 <- clean_columns.fn(Main_database_2015, derecho_libertad)
+
+data2plot <- set_data.fn(Main_database_2008, derecho_libertad, labels)
+
+barChart <- BarSimpleChartViz(data = data2plot, 
+                              x_var = labels, 
+                              y_var = PorcentajeUnos, 
+                              label_var = figure, 
+                              fill_var = Columna, 
+                              Observaciones = Observaciones,
+                              order_var = order_var,
+                              fill_colors = c("#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#003B88"),
+                              title = "Derecho a la libertad  a partir de 2008")
+barChart
+
+ggsave(plot   = barChart,
+       file   = paste0(path2SP, "/National/Exploration/Input/Debido_proceso/Legalidad","/desc_","derecho_libertad_2008.svg"), 
+       width  = 300, 
+       height = 390,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
+
+
+data2plot <- set_data.fn(Main_database_2015, derecho_libertad, labels)
+
+barChart <- BarSimpleChartViz(data = data2plot, 
+                              x_var = labels, 
+                              y_var = PorcentajeUnos, 
+                              label_var = figure, 
+                              fill_var = Columna, 
+                              Observaciones = Observaciones,
+                              order_var = order_var,
+                              fill_colors = c("#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#003B88"),
+                              title = "Derecho a la libertad a partir de 2015")
+barChart
+
+ggsave(plot   = barChart,
+       file   = paste0(path2SP, "/National/Exploration/Input/Debido_proceso/Legalidad","/desc_","derecho_libertad_2015.svg"), 
+       width  = 300, 
+       height = 390,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
 
 ### 1.3.3. Derecho a un recurso efectivo  ----------------------------------------------------
 
@@ -571,6 +628,10 @@ ggsave(plot   = barChart,
 ### 2.1.2. Competencia  ----------------------------------------------------
 
 ### 2.1.3. Estrategia de investigación   ----------------------------------------------------
+
+
+
+
 
 ### 2.1.4. Estrategia de persecuión   ----------------------------------------------------
 
