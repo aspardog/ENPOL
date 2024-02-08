@@ -465,8 +465,32 @@ labels <- c("¿Cómo se registraba lo que se decía durante las audiencias?,
              "Tratando de evaluar que tan justa fue su sentencia, 
             ¿usted diría que fue… muy justa/algo justa/poco justa/nada justa") 
 
-Main_database_2008 <- clean_columns.fn(Main_database_2008, imparcialidad)
-Main_database_2015 <- clean_columns.fn(Main_database_2015, imparcialidad)
+
+Main_database_2008 <- clean_columns.fn(Main_database_2008, imparcialidad) %>%
+  mutate(
+    P5_14 = 
+      case_when(
+        as.numeric(P5_14) == 1 ~ 1,
+        as.numeric(P5_14) == 2 ~ 0,
+        T ~ NA_real_
+      )
+  )
+Main_database_2015 <- clean_columns.fn(Main_database_2015, imparcialidad) %>%
+  mutate(
+    P5_14 = 
+      case_when(
+        as.numeric(P5_14) == 1 ~ 1,
+        as.numeric(P5_14) == 2 ~ 0,
+        T ~ NA_real_
+      )
+  )
+
+imparcialidad <- c(imparcialidad,
+                   "P5_14")
+labels <- c(labels,
+           "¿El Juez que lo(a) sentenció fue diferente del primer
+           Juez que inició el juicio cuando usted llegó al Centro Penitenciario?")
+
 
 data2plot <- set_data.fn(Main_database_2008, imparcialidad, labels)
 
