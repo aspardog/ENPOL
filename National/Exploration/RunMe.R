@@ -93,37 +93,29 @@ labels <- c("Al momento de su detención, ¿el policía o autoridad le dijo por 
              " ¿Alguno de sus abogados defensores… le explicó los hechos por los que se le acusaba?",
               "¿Alguno de sus abogados defensores… le explicó cómo sería su proceso?") 
 
-Main_database_2008 <- clean_columns.fn(Main_database_2008, capacidad_legal)
-Main_database_2015 <- clean_columns.fn(Main_database_2015, capacidad_legal)
+Main_database_2008 <- clean_columns.fn(Main_database_2008, capacidad_legal) %>%
+  mutate(
+    P5_2_1 = 
+      case_when(
+        P5_2_1 == 1 ~ 1,
+        P5_2_1 == 2 ~ 0,
+        T ~ NA_real_
+      )
+    )
+Main_database_2015 <- clean_columns.fn(Main_database_2015, capacidad_legal) %>%
+  mutate(
+    P5_2_1 = 
+      case_when(
+        P5_2_1 == 1 ~ 1,
+        P5_2_1 == 2 ~ 0,
+        T ~ NA_real_
+      )
+    )
 
-
-for (i in capacidad_legal) {
-  tabla_excel_fn(var_prop = i, var1 = NA, var2 = NA , var3 = NA, 
-                 varfilter = NA, filtervalue = NA, 
-                 carpeta = "Legalidad", seccion = "capacidad_legal", nombre = paste0("",i),
-                 Dato = paste0("Proporción de personas que reportaron sí en ",i))
-}
-
-for (i in capacidad_legal) {
-  tabla_excel_fn(var_prop = i, var1 = "Estado_arresto", var2 = NA , var3 = NA, 
-                 varfilter = NA, filtervalue = NA, 
-                 carpeta = "Legalidad", seccion = "capacidad_legal_por_estado", nombre = paste0("",i),
-                 Dato = paste0("Proporción de personas que reportaron sí en ",i))
-}
-
-for (i in capacidad_legal) {
-  tabla_excel_fn(var_prop = i, var1 = "Delito_unico_categ", var2 = NA , var3 = NA, 
-                 varfilter = NA, filtervalue = NA, 
-                 carpeta = "Legalidad", seccion = "capacidad_legal_por_delito", nombre = paste0("",i),
-                 Dato = paste0("Proporción de personas que reportaron sí en ",i))
-}
-
-for (i in capacidad_legal) {
-  tabla_excel_fn(var_prop = i, var1 = "SEXO.x", var2 = NA , var3 = NA, 
-                 varfilter = NA, filtervalue = NA, 
-                 carpeta = "Legalidad", seccion = "capacidad_legal", nombre = paste0("delito_",i),
-                 Dato = paste0("Proporción de personas que reportaron sí en ",i))
-}
+capacidad_legal <- c(capacidad_legal,
+                     "P5_2_1")
+labels          <- c(labels,
+                     "En su primer encuentro con el juez, ¿le dijo de qué lo acusaban?")
 
 data2plot <- set_data.fn(Main_database_2008, capacidad_legal, labels)
 
@@ -194,8 +186,57 @@ labels <- c("Al momento de su detención, ¿el policía o autoridad le informó 
               "¿fue engañado(a) para inculpar a alguien más?",
               "¿usted fue golpeado(a) o maltratado(a) para inculpar a alguien más?") 
 
-Main_database_2008 <- clean_columns.fn(Main_database_2008, derecho_no_discriminación)
-Main_database_2015 <- clean_columns.fn(Main_database_2015, derecho_no_discriminación)
+Main_database_2008 <- clean_columns.fn(Main_database_2008, derecho_no_discriminación) %>%
+  mutate(
+    P4_7_4 = 
+      case_when(
+        as.numeric(P4_7) == 4 ~ 1,
+        (as.numeric(P4_7) > 4 & as.numeric(P4_7) < 11) | as.numeric(P4_7) < 4 ~ 0,
+        T ~ NA_real_
+      ),
+    P4_7_5 = 
+      case_when(
+        as.numeric(P4_7) == 5 ~ 1,
+        (as.numeric(P4_7) > 5 & as.numeric(P4_7) < 11) | as.numeric(P4_7) < 5 ~ 0,
+        T ~ NA_real_
+      ),
+    P5_2_4 = 
+      case_when(
+        P5_2_4 == 1 ~ 1,
+        P5_2_4 == 2 ~ 0,
+        T ~ NA_real_
+      )
+  )
+Main_database_2015 <- clean_columns.fn(Main_database_2015, derecho_no_discriminación) %>%
+  mutate(
+    P4_7_4 = 
+      case_when(
+        as.numeric(P4_7) == 4 ~ 1,
+        (as.numeric(P4_7) > 4 & as.numeric(P4_7) < 11) | as.numeric(P4_7) < 4 ~ 0,
+        T ~ NA_real_
+      ),
+    P4_7_5 = 
+      case_when(
+        as.numeric(P4_7) == 5 ~ 1,
+        (as.numeric(P4_7) > 5 & as.numeric(P4_7) < 11) | as.numeric(P4_7) < 5 ~ 0,
+        T ~ NA_real_
+      ),
+    P5_2_4 = 
+      case_when(
+        P5_2_4 == 1 ~ 1,
+        P5_2_4 == 2 ~ 0,
+        T ~ NA_real_
+      )
+  )
+
+derecho_no_discriminación <- c(capacidad_legal,
+                               "P4_7_4",
+                               "P4_7_5",
+                               "P5_2_4")
+labels          <- c(labels,
+                     "Principal razón por la que se declaró culpable... Porque me presionaron o amenazaron para hacerlo",
+                     "Principal razón por la que se declaró culpable... Porque me agredieron físicamente",
+                     "En su primer encuentro con el juez, ¿le informó sobre su derecho a guardar silencio y a no declarar sin la presencia de su abogado?")
 
 data2plot <- set_data.fn(Main_database_2008, derecho_no_discriminación, labels)
 
@@ -249,20 +290,20 @@ ggsave(plot   = barChart,
 ### 1.1.3. Defensa adecuada -----------------------------------
 
 defensa_adecuada <- c("P4_1_05",
-                               "P4_1_06",
-                               "P4_1_07",
-                               "P4_3A_1",
-                               "P4_6_3",
-                               "P4_14_1",
-                               "P5_1",
-                               "P5_2_5",
-                               "P5_22_03",
-                               "P5_22_04",
-                               "P5_22_05",
-                               "P5_22_06",
-                               "P5_22_09",
-                               "P5_22_10",
-                               "P5_22_11")
+                      "P4_1_06",
+                      "P4_1_07",
+                      "P4_3A_1",
+                      "P4_6_3",
+                      "P4_14_1",
+                      "P5_1",
+                      "P5_2_5",
+                      "P5_22_03",
+                      "P5_22_04",
+                      "P5_22_05",
+                      "P5_22_06",
+                      "P5_22_09",
+                      "P5_22_10",
+                      "P5_22_11")
 
 labels <- c("¿tuvo la asesoría de un abogado?",
                "¿habló a solas con su abogado?",
@@ -404,12 +445,12 @@ ggsave(plot   = barChart,
 
 
 imparcialidad <- c("P5_19_1",
-                          "P5_19_2",
-                          "P5_19_3",
-                          "P5_20_4",
-                          "P5_26",
-                          "P5_26A",
-                          "P5_26B")
+                   "P5_19_2",
+                   "P5_19_3",
+                   "P5_20_4",
+                   "P5_26",
+                   "P5_26A",
+                   "P5_26B")
 
 labels <- c("¿Cómo se registraba lo que se decía durante las audiencias?, 
             Una persona escribía en una máquina de escribir o computadora",
