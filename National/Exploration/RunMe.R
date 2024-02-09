@@ -165,6 +165,15 @@ ggsave(plot   = barChart,
        dpi    = 72,
        device = "svg")
 
+
+
+for (i in capacidad_legal) {
+  tabla_excel_fn(dataset = Main_database_2008, var_prop = i, var1 = "abogado_publico", var2 = NA , var3 = NA, 
+                 varfilter = NA, filtervalue = NA, 
+                 carpeta = "Legalidad", seccion = "capacidad_legal", nombre = paste0("",i),
+                 Dato = paste0("Proporción de personas que reportaron sí en ",i))
+}
+
 ### 1.1.2. Derecho a la no discriminación -----------------------------------
 
 derecho_no_discriminación <- c("P3_14_5",
@@ -287,6 +296,14 @@ ggsave(plot   = barChart,
        dpi    = 72,
        device = "svg")
 
+for (i in derecho_no_discriminación) {
+  tabla_excel_fn(dataset = Main_database_2008, var_prop = i, var1 = "abogado_publico", var2 = NA , var3 = NA, 
+                 varfilter = NA, filtervalue = NA, 
+                 carpeta = "Legalidad", seccion = "derecho_no_discriminación", nombre = paste0("",i),
+                 Dato = paste0("Proporción de personas que reportaron sí en ",i))
+}
+
+
 ### 1.1.3. Defensa adecuada -----------------------------------
 
 defensa_adecuada <- c("P4_1_05",
@@ -376,6 +393,14 @@ ggsave(plot   = barChart,
        device = "svg")
 
 
+for (i in defensa_adecuada) {
+  tabla_excel_fn(dataset = Main_database_2008, var_prop = i, var1 = "abogado_publico", var2 = NA , var3 = NA, 
+                 varfilter = NA, filtervalue = NA, 
+                 carpeta = "Legalidad", seccion = "defensa_adecuada", nombre = paste0("",i),
+                 Dato = paste0("Proporción de personas que reportaron sí en ",i))
+}
+
+
 ### 1.1.4. Presunción de inocencia ------------------------------------------
 
 
@@ -438,7 +463,12 @@ ggsave(plot   = barChart,
        dpi    = 72,
        device = "svg")
 
-
+for (i in presuncion_inocencia) {
+  tabla_excel_fn(dataset = Main_database_2008, var_prop = i, var1 = "abogado_publico", var2 = NA , var3 = NA, 
+                 varfilter = NA, filtervalue = NA, 
+                 carpeta = "Legalidad", seccion = "presuncion_inocencia", nombre = paste0("",i),
+                 Dato = paste0("Proporción de personas que reportaron sí en ",i))
+}
 ### 1.1.5. Justicia pronta ------------------------------------------
 
 ### 1.1.6. Imparcialidad ------------------------------------------
@@ -541,6 +571,12 @@ ggsave(plot   = barChart,
        dpi    = 72,
        device = "svg")
 
+for (i in imparcialidad) {
+  tabla_excel_fn(dataset = Main_database_2008, var_prop = i, var1 = "abogado_publico", var2 = NA , var3 = NA, 
+                 varfilter = NA, filtervalue = NA, 
+                 carpeta = "Legalidad", seccion = "imparcialidad", nombre = paste0("",i),
+                 Dato = paste0("Proporción de personas que reportaron sí en ",i))
+}
 
 # 1.2. Uso arbitrario de la autoridad ------------------------------------------
 
