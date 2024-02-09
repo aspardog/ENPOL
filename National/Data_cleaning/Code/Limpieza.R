@@ -4948,7 +4948,13 @@ Main_database %<>%
                                T ~ 0),
          P3_21_1_9 = case_when(P3_21_1 == "9" ~ 1,
                                is.na(P3_21_1) == TRUE ~ NA,
-                               T ~ 0)) %>%
+                               T ~ 0),
+         
+         #Abogado defensor público (de oficio) o privado
+         
+       abogado_publico = case_when(P5_21_1 == 1 | P5_41_1 == 1 ~ 0,
+                                   P5_21_2 == 1 | P5_41_1 == 1 ~ 1,
+                                   T ~ NA_real_)) %>%
   
   mutate(
     # Eventos de inspeccion
