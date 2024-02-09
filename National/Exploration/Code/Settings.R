@@ -204,7 +204,7 @@ clean_columns.fn <- function(data, columnas, numero_interes) {
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-tabla_excel_fn <- function(dataset = Main_database,
+tabla_excel_fn <- function(dataset,
                            var_prop,
                            var1,
                            var2,
