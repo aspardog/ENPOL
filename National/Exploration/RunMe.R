@@ -32,7 +32,12 @@ load(paste0(path2SP,"/National/Data_cleaning/Output/Main_database.RData"))
 
 Main_database_2008 <- Main_database %>% 
   filter(Anio_arresto >= 2008,
-         NSJP == 1)
+         NSJP == 1) %>% 
+  mutate(abogado_publico = case_when(
+    abogado_publico == 1 ~ "público",
+    abogado_publico == 0 ~ "privado",
+    TRUE ~ NA_character_
+  ))
 
 Main_database_2015 <- Main_database %>% 
   filter(Anio_arresto >= 2015,
@@ -470,6 +475,18 @@ for (i in presuncion_inocencia) {
                  Dato = paste0("Proporción de personas que reportaron sí en ",i))
 }
 ### 1.1.5. Justicia pronta ------------------------------------------
+
+justicia_pronta <- c("P5_20_4",
+                     "P4_19")
+
+for (i in justicia_pronta) {
+  tabla_excel_fn(dataset = Main_database_2008, var_prop = i, var1 = NA, var2 = NA , var3 = NA, 
+                 varfilter = NA, filtervalue = NA, 
+                 carpeta = "Legalidad", seccion = "justicia_pronta", nombre = paste0("",i),
+                 Dato = paste0("Proporción de personas que reportaron sí en ",i))
+}
+
+
 
 ### 1.1.6. Imparcialidad ------------------------------------------
 
