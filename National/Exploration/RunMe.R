@@ -214,6 +214,12 @@ Main_database_2008 <- clean_columns.fn(Main_database_2008, derecho_no_discrimina
         (as.numeric(P4_7) > 5 & as.numeric(P4_7) < 11) | as.numeric(P4_7) < 5 ~ 0,
         T ~ NA_real_
       ),
+    P4_7_4_5 = 
+      case_when(
+        as.numeric(P4_7) == 4 | as.numeric(P4_7) == 5 ~ 1,
+        ((as.numeric(P4_7) > 4 & as.numeric(P4_7) < 11) | as.numeric(P4_7)) |((as.numeric(P4_7) > 5 & as.numeric(P4_7) < 11) | as.numeric(P4_7)) < 5 ~ 0,
+        T ~ NA_real_
+      ),
     P5_2_4 = 
       case_when(
         P5_2_4 == 1 ~ 1,
@@ -235,6 +241,12 @@ Main_database_2015 <- clean_columns.fn(Main_database_2015, derecho_no_discrimina
         (as.numeric(P4_7) > 5 & as.numeric(P4_7) < 11) | as.numeric(P4_7) < 5 ~ 0,
         T ~ NA_real_
       ),
+    P4_7_4_5 = 
+      case_when(
+        as.numeric(P4_7) == 4 | as.numeric(P4_7) == 5 ~ 1,
+        ((as.numeric(P4_7) > 4 & as.numeric(P4_7) < 11) | as.numeric(P4_7)) |((as.numeric(P4_7) > 5 & as.numeric(P4_7) < 11) | as.numeric(P4_7)) < 5 ~ 0,
+        T ~ NA_real_
+      ),
     P5_2_4 = 
       case_when(
         P5_2_4 == 1 ~ 1,
@@ -243,13 +255,15 @@ Main_database_2015 <- clean_columns.fn(Main_database_2015, derecho_no_discrimina
       )
   )
 
-derecho_no_discriminación <- c(capacidad_legal,
+derecho_no_discriminación <- c(derecho_no_discriminación,
                                "P4_7_4",
                                "P4_7_5",
+                               "P4_7_4_5",
                                "P5_2_4")
 labels          <- c(labels,
                      "Principal razón por la que se declaró culpable... Porque me presionaron o amenazaron para hacerlo",
                      "Principal razón por la que se declaró culpable... Porque me agredieron físicamente",
+                     "Principal razón por la que se declaró culpable... ambas",
                      "En su primer encuentro con el juez, ¿le informó sobre su derecho a guardar silencio y a no declarar sin la presencia de su abogado?")
 
 data2plot <- set_data.fn(Main_database_2008, derecho_no_discriminación, labels)
