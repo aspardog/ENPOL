@@ -32,13 +32,7 @@ load(paste0(path2SP,"/National/Data_cleaning/Output/Main_database.RData"))
 
 Main_database_2008 <- Main_database %>% 
   filter(Anio_arresto >= 2008,
-         NSJP == 1) %>% 
-  mutate(abogado_publico = case_when(
-    abogado_publico == 1 ~ "público",
-    abogado_publico == 0 ~ "privado",
-    TRUE ~ NA_character_
-  ))
-
+         NSJP == 1)
 Main_database_2015 <- Main_database %>% 
   filter(Anio_arresto >= 2015,
          NSJP == 1)
