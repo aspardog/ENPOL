@@ -669,7 +669,27 @@ ggsave(plot   = barChart,
        dpi    = 72,
        device = "svg")
 
+for (i in corrupcion) {
+  tabla_excel_fn(dataset = Main_database_2008, var_prop = i, var1 = "Anio_arresto", var2 = NA , var3 = NA, 
+                 varfilter = NA, filtervalue = NA, 
+                 carpeta = "Legalidad", seccion = "corrupción_años", nombre = paste0("",i),
+                 Dato = paste0("Proporción de personas que reportaron sí en liberación a cambio de dienro ",i))
+}
 
+
+for (i in corrupcion) {
+  tabla_excel_fn(dataset = Main_database_2008, var_prop = i, var1 = "Estado_arresto", var2 = NA , var3 = NA, 
+                 varfilter = NA, filtervalue = NA, 
+                 carpeta = "Legalidad", seccion = "corrupción_estado", nombre = paste0("",i),
+                 Dato = paste0("Proporción de personas que reportaron sí en liberación a cambio de dienro ",i))
+}
+
+for (i in corrupcion) {
+  tabla_excel_fn(dataset = Main_database_2008, var_prop = i, var1 = "Delito_unico_categ", var2 = NA , var3 = NA, 
+                 varfilter = NA, filtervalue = NA, 
+                 carpeta = "Legalidad", seccion = "corrupción_delito", nombre = paste0("",i),
+                 Dato = paste0("Proporción de personas que reportaron sí en liberación a cambio de dienro ",i))
+}
 
 # 1.3. Respeto a los derechos humanos ------------------------------------------
 
