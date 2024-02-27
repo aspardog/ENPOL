@@ -45,9 +45,9 @@ Main_database %<>% mutate(
                    P5_25 == 2 ~ 1,
                    T ~ NA_integer_),
   PJ_6 = case_when((P3_20 == "06" | P3_20 == "07" | P3_20 == "08" | P3_20 == "09") &
-                     (P3_17_08 == 1 | (is.na(P3_17_08) == T | P3_19 != "01" & P3_19 != "02" & P3_19 !="03")) ~ 0,
+                     (P3_17_08 == 1 | (is.na(P3_17_08) == T | P3_19 != "01" & P3_19 != "02" & P3_19 !="03" & P3_19 !="13")) ~ 0,
                    (P3_20 == "06" | P3_20 == "07" | P3_20 == "08" | P3_20 == "09") & 
-                     (is.na(P3_17_08) == T | P3_17_08 != 1) & (P3_19 == "01" | P3_19 == "02" | P3_19 =="03") ~ 1,
+                     (is.na(P3_17_08) == T | P3_17_08 != 1) & (P3_19 == "01" | P3_19 == "02" | P3_19 =="03" | P3_19 !="13") ~ 1,
                    P3_20 == "01" | P3_20 == "02" | P3_20 == "03" | P3_20 == "04" | P3_20 == "05" ~ 1,
                    T ~ NA_integer_),
   PJ_7 = case_when(P5_16_2 == 3 | P5_16_2 == 4 ~ 0,
@@ -127,3 +127,14 @@ select(Main_database,Indice_GDH,GDH_1,GDH_2,GDH_3,) %>% data.frame() %>% stargaz
 Main_database %<>% mutate(Indice_Punchline = Indice_PJ*Indice_GDH)
 
 select(Main_database,Indice_Punchline,Indice_PJ,Indice_GDH) %>% data.frame() %>% stargazer(summary = T, type = 'text')
+
+
+
+# Alternativa
+
+Main_database %<>% mutate(Indice_GDH_alt = 100*(GDH_1+GDH_2+GDH_3)/3,
+                          Indice_PJ_alt = 100*(PJ_1+PJ_2+PJ_3+PJ_4+PJ_5+PJ_6+PJ_7)/7,
+                          Indice_Punchline_alt = 100*(PJ_1+PJ_2+PJ_3+PJ_4+PJ_5+PJ_6+PJ_7+GDH_1+GDH_2+GDH_3)/10)
+
+
+select(Main_database,Indice_Punchline_alt,Indice_PJ_alt,Indice_GDH_alt) %>% data.frame() %>% stargazer(summary = T, type = 'text')
