@@ -251,7 +251,7 @@ data <- Main_database %>% filter(NSJP == 1, Anio_arresto>=2015)   %>%
          Policia_Municipal = case_when(Corporacion_grupos == "Policía Municipal" ~ 1,
                                        is.na(Corporacion_grupos) == T ~ NA,
                                        T ~ 0)) %>%
-  pivot_longer(cols = c("Tiempo_traslado","Primer_lugar_traslado"),
+  pivot_longer(cols = c("Tiempo_traslado", "Primer_lugar_traslado", "tortura_tra"),
                names_to = "dummy_names",
                values_to = "dummy_levels") %>%
   mutate(dummy_value = 1) %>%
@@ -332,8 +332,26 @@ prueba_rob(seccion = "Violación a la integridad personal",
 
 ## Figura 2.3
 
-#Pending
+data3 <- data %>%
+  filter(Delito_unico == 1, years) 
 
+prueba_rob(seccion = "Violación a la integridad personal",
+           hypo_name = paste0("Figura2_3"),
+           database = data3,
+           dep_var = "tortura_tra_Psicológica",
+           indep_var = "RND_3")
+
+prueba_rob(seccion = "Violación a la integridad personal",
+           hypo_name = paste0("Figura2_3"),
+           database = data3,
+           dep_var = "tortura_tra_Física",
+           indep_var = "RND_3")
+
+prueba_rob(seccion = "Violación a la integridad personal",
+           hypo_name = paste0("Figura2_3"),
+           database = data3,
+           dep_var = "tortura_tra_Ambas",
+           indep_var = "RND_3")
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -372,7 +390,7 @@ Tiempo_traslado <- c("Tiempo_traslado_Hasta 30 minutos", "Tiempo_traslado_Más d
                       "Tiempo_traslado_Más de 72 horas")
 
 for (i in Tiempo_traslado ) {
-prueba_rob(seccion = "Violación a la ilbertad",
+prueba_rob(seccion = "Violación a la libertad",
              hypo_name = paste0("Figura3_3",i),
              database = data,
              dep_var = i,
@@ -425,13 +443,13 @@ prueba_rob(seccion = "Violación a la libertad",
 
 
 prueba_rob(seccion = "Violación a la libertad",
-           hypo_name = paste0("Figura3_4"),
+           hypo_name = paste0("Figura3_6_1"),
            database = data2,
            dep_var = "Primer_lugar_traslado_Agencia del Ministerio Público",
            indep_var = "years_since_NSJP")
 
 prueba_rob(seccion = "Violación a la libertad",
-           hypo_name = paste0("Figura3_4"),
+           hypo_name = paste0("Figura3_6_2"),
            database = data2,
            dep_var = "Primer_lugar_traslado_Instalación de la policía",
            indep_var = "years_since_NSJP")
