@@ -486,6 +486,17 @@ BarSimpleChartViz <- function(data = data2plot,
   return(plt)
 }
 
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##
+## 8.  Bar graph Ones Percentage                                                          ----
+##
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-
+valores <- function(data, variables) {
+  map(variables, ~{
+    cat("Valores únicos de", .x, ":\n")
+    print(unique(data[[.x]]))
+    cat("\n")
+  })
+}
 
