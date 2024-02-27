@@ -613,12 +613,62 @@ corrupcion <- c("P3_22_1",
                    "P4_16_1",
                    "P5_46_1")
 
-labels <- c("Liberación a cambio de dinero, etc. en la policía",
+corrupcion <-  c("P3_21_1",
+                 "P3_21_2",
+                 "P3_22_1",
+                 "P3_22_2",
+                 "P3_22_3",
+                 "P3_22_4",
+                 "P3_23",
+                 "P4_15_1",
+                 "P4_15_2",
+                 "P4_15_3",
+                 "P4_16_1",
+                 "P4_16_2",
+                 "P4_16_3",
+                 "P4_16_4",
+                 "P4_17",
+                 "P5_45_1",
+                 "P5_45_2",
+                 "P5_45_3",
+                 "P5_46_1",
+                 "P5_46_2",
+                 "P5_46_3",
+                 "P5_46_4",
+                 "P5_46_5",
+                 "P5_46_6",
+                 "P5_47")
+
+valores(Main_database_2008, corrupcion)
+
+
+labels <- c("La policía o autoridad que lo(a) detuvo a cambio de dejarlo(a) ir, ¿LE PIDIÓ DE FORMA DIRECTA dinero",
+            "La policía o autoridad que lo(a) detuvo a cambio de dejarlo(a) ir, ¿le INSINUÓ O GENERÓ las condiciones para que le diera dinero" ,
+            "Liberación a cambio de dinero, etc. en la policía o autoridad que lo detuvo",
+            " No lo(a) agredirían a cambio de dinero en la policí o autoridad que lo detuvoa",
+            " No le harían daño a su familia o amigos a cambio de dinero en la policía o autoridad que lo detuvo",
+            " Modificarían la versión de los hechos o la evidencia en su contra a cambio de dinero  o en la policía o autoridad que lo detuvo",
+            "¿Usted o su familia dieron a la policía o autoridad que lo detuvo el dinero que les pedían?",
+            "Durante su estancia en la Agencia del MP, INTENTARON APROPIARSE o LE PIDIERON DE FORMA DIRECTA dinero?",
+            "Durante su estancia en la Agencia del MP, las autoridades del MP, ¿una persona que no es autoridad LE PIDIÓ a usted o a algún familiar dinero autoridades de MP?",
+            "Durante su estancia en la Agencia del MP, ¿las autoridades del MP, LE INSINUARON O GENERARON las condiciones para que usted o algún familiar proporcionara dinero?",
             "Liberación a cambio de dinero, etc. en el MP",
-            "Liberación a cambio de dinero, etc. en el juzgado") 
+            "No lo(a) golpearían a cambio de dinero en la agencia del MP ",
+            "Modificarían su versión de los hechos a cambio de dinero en la agncia del MP",
+            "No le harían daño a su familia o amigos a cambio de dinero en la agencia del MP",
+            "¿Usted o su familia dieron a la autoridad el dinero, bien, regalo o hicieron el favor que les pedían ?", 
+            "Durante su estancia en el juzgado…  ¿las autoridades INTENTARON APROPIARSE o LE PIDIERON DE FORMA DIRECTA dinero?",
+            "Durante su estancia en el juzgado… ¿una tercera persona, abogado o coyote LE PIDIÓ dinero?",
+            "Durante su estancia en el juzgado… ¿las autoridades del juzgado le INSINUARON o GENERARON las condiciones para que les proporcionara dinero?" ,
+            "Liberación a cambio de dinero, etc. en la estancia en el juzgado",
+            "Disminuirían la gravedad de los delitos a cambio de dinero en la estancia en el juzgado ",
+            "Modificarían su versión de los hechos a cambio de dinero en la estancia en el juzgado",
+            "Acelerarían o harían más lento el proceso a cambio de dinero en la estancia en el juzgado",
+            "Permitirían o negarían la presentación de pruebas a cambio de dinero en la estancia en el juzgado",
+            "Disminuirían la sentencia a cambio de dinero en la estancia en el juzagdo",
+            "¿Usted o su familia dieron a la autoridad el dinero, bien, regalo o hicieron el favor que les pedían?" ) 
 
 Main_database_2008 <- clean_columns.fn(Main_database_2008, corrupcion)
-Main_database_2015 <- clean_columns.fn(Main_database_2015, corrupcion)
 
 data2plot <- set_data.fn(Main_database_2008, corrupcion, labels)
 
@@ -629,21 +679,23 @@ barChart <- BarSimpleChartViz(data = data2plot,
                               fill_var = Columna, 
                               Observaciones = Observaciones,
                               order_var = order_var,
-                              fill_colors = c("#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                              fill_colors = c("#E2E2F7","#E2E2F7", "#003B88", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7", "#003B88", "#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#003B88","#E2E2F7","#E2E2F7",
                                               "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
-                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
-                                              "#003B88"),
+                                              "#E2E2F7","#003B88"),
                               title = "Uso indebido de autoridad a través de corrupción a partir de 2008")
 barChart
 
 ggsave(plot   = barChart,
-       file   = paste0(path2SP, "/National/Exploration/Input/Debido_proceso/Legalidad","/desc_","corrupcion_2008.svg"), 
+       file   = paste0(path2SP, "/National/Exploration/Input/Debido_proceso/Legalidad","/desc_","corrupcion_completa_2008.svg"), 
        width  = 300, 
-       height = 390,
+       height = 650,
        units  = "mm",
        dpi    = 72,
        device = "svg")
 
+Main_database_2015 <- clean_columns.fn(Main_database_2015, corrupcion)
 
 data2plot <- set_data.fn(Main_database_2015, corrupcion, labels)
 
