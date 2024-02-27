@@ -827,6 +827,47 @@ ggsave(plot   = barChart,
 
 ### 2.1.3. Estrategia de investigación   ----------------------------------------------------
 
+investigacion_inspeccion <-  c("P3_12_1",
+                    "P3_12_2",
+                    "P3_12_3",
+                    "P3_12_4",
+                    "P3_12_5")
+
+valores(Main_database_2008, investigacion_inspeccion)
+
+
+labels <- c("Al momento de realizar la inspección, ¿la autoridad… lo desvistió?",
+            "Al momento de realizar la inspección, ¿la autoridad…le dijo qué objeto buscaba?",
+            "Al momento de realizar la inspección, encontró el objeto que buscaba o algún otro objeto ilegal?",
+            "Al momento de realizar la inspección, le sembró algún objeto?",
+            "Al momento de realizar la inspección, videograbó la inspección") 
+
+Main_database_2008 <- clean_columns.fn(Main_database_2008, investigacion_inspeccion)
+
+data2plot <- set_data.fn(Main_database_2008, investigacion_inspeccion, labels)
+
+barChart <- BarSimpleChartViz(data = data2plot, 
+                              x_var = labels, 
+                              y_var = PorcentajeUnos, 
+                              label_var = figure, 
+                              fill_var = Columna, 
+                              Observaciones = Observaciones,
+                              order_var = order_var,
+                              fill_colors = c("#E2E2F7","#E2E2F7", "#003B88", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7", "#003B88", "#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#003B88","#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#003B88"),
+                              title = "Estrategia investigación (Inspecciones efectivas y arbitrarias) a partir de 2008")
+barChart
+
+ggsave(plot   = barChart,
+       file   = paste0(path2SP, "/National/Exploration/Input/Debido_proceso/Legalidad","/desc_","corrupcion_completa_2008.svg"), 
+       width  = 300, 
+       height = 650,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
 
 
 
