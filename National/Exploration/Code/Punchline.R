@@ -54,6 +54,18 @@ Main_database %<>% mutate(
   PJ_7 = case_when(P5_16_2 == 3 | P5_16_2 == 4 ~ 0,
                    P5_16_2 == 1 | P5_16_2 == 2 ~ 1,
                    T ~ NA_real_),
+  UAA_1 = case_when(proporcionalidad_uso_fuerza == 1 ~ 1,
+                    proporcionalidad_uso_fuerza == 0 ~ 0,
+                    T ~ NA_real_),
+  UAA_2 = case_when(P3_21_1 == 1 | P3_21_2 == 1 ~ 0,
+                    (P3_21_1 == 2 & P3_21_2 == 2) | (is.na(P3_21_1) == T & P3_21_2 == 2) | (P3_21_1 == 2 & is.na(P3_21_2) == T) ~ 1,
+                    T ~ NA_real_),
+  UAA_3 = case_when(P4_15_1 == 1 | P4_15_3 == 1 ~ 0,
+                    (P4_15_1 == 2 & P4_15_3 == 2) | (is.na(P4_15_1) == T & P4_15_3 == 2) | (P4_15_1 == 2 & is.na(P4_15_3) == T) ~ 1,
+                    T ~ NA_real_),
+  UAA_4 = case_when(P5_45_1 == 1 | P5_45_3 == 1 ~ 0,
+                    (P5_45_1 == 2 & P5_45_3 == 2) | (is.na(P5_45_1) == T & P5_45_3 == 2) | (P5_45_1 == 2 & is.na(P5_45_3) == T) ~ 1,
+                    T ~ NA_real_),
   GDH_1 = case_when(tortura_generalizada == 1 ~ 0,
                     tortura_generalizada == 0 ~ 1,
                    T ~ NA_real_),
@@ -85,6 +97,18 @@ Main_database %<>% mutate(
     PJ_7 = case_when(
       sentenciado == 1 ~ PJ_7,
       T ~ NA_real_),
+    UAA_1 = case_when(
+      sentenciado == 1 ~ UAA_1,
+      T ~ NA_real_),
+    UAA_2 = case_when(
+      sentenciado == 1 ~ UAA_2,
+      T ~ NA_real_),
+    UAA_3 = case_when(
+      sentenciado == 1 ~ UAA_3,
+      T ~ NA_real_),
+    UAA_4 = case_when(
+      sentenciado == 1 ~ UAA_4,
+      T ~ NA_real_),
     GDH_1 = case_when(
         sentenciado == 1 ~ GDH_1,
         T ~ NA_real_),
@@ -93,7 +117,7 @@ Main_database %<>% mutate(
           T ~ NA_real_),
     GDH_3 = case_when(
       sentenciado == 1 ~ GDH_3,
-      T ~ NA_real_),
+      T ~ NA_real_)
     )
   
 
@@ -114,37 +138,45 @@ table(Main_database$P4_7,useNA = 'always')
 # Uso Arbitrario de la Autoridad
 
 
+Main_database %<>% mutate(Indice_UAA = UAA_1*UAA_2*UAA_3*UAA_4)
+
+select(Main_database,Indice_UAA,UAA_1,UAA_2,UAA_3,UAA_4) %>% data.frame() %>% stargazer(summary = T, type = 'text')
+
 
 # Garantías de Derechos Humanos
 
 Main_database %<>% mutate(Indice_GDH = GDH_1*GDH_2*GDH_3)
 
-select(Main_database,Indice_GDH,GDH_1,GDH_2,GDH_3,) %>% data.frame() %>% stargazer(summary = T, type = 'text')
+select(Main_database,Indice_GDH,GDH_1,GDH_2,GDH_3) %>% data.frame() %>% stargazer(summary = T, type = 'text')
 
 
 
 # General
 
-Main_database %<>% mutate(Indice_Punchline = Indice_PJ*Indice_GDH)
+Main_database %<>% mutate(Indice_Punchline = Indice_PJ*Indice_UAA*Indice_GDH)
 
-select(Main_database,Indice_Punchline,Indice_PJ,Indice_GDH) %>% data.frame() %>% stargazer(summary = T, type = 'text')
+select(Main_database,Indice_Punchline,Indice_PJ,Indice_UAA,Indice_GDH) %>% data.frame() %>% stargazer(summary = T, type = 'text')
 
 
 
 # Alternativa
 
 Main_database %<>% mutate(Indice_GDH_alt = 100*(GDH_1+GDH_2+GDH_3)/3,
+                          Indice_UAA_alt = 100*(UAA_1+UAA_2+UAA_3+UAA_4)/4,
                           Indice_PJ_alt = 100*(PJ_1+PJ_2+PJ_3+PJ_4+PJ_5+PJ_6+PJ_7)/7,
-                          Indice_Punchline_alt = 100*(PJ_1+PJ_2+PJ_3+PJ_4+PJ_5+PJ_6+PJ_7+GDH_1+GDH_2+GDH_3)/10)
+                          Indice_Punchline_alt = 100*(PJ_1+PJ_2+PJ_3+PJ_4+PJ_5+PJ_6+PJ_7+UAA_1+UAA_2+UAA_3+UAA_4+GDH_1+GDH_2+GDH_3)/14)
 
 
-select(Main_database,Indice_Punchline_alt,Indice_PJ_alt,Indice_GDH_alt) %>% data.frame() %>% stargazer(summary = T, type = 'text')
+select(Main_database,Indice_Punchline_alt,Indice_PJ_alt,Indice_UAA_alt,Indice_GDH_alt) %>% data.frame() %>% stargazer(summary = T, type = 'text')
 
 
 # NA analysis
 
 NA_counts_PJ <- Main_database %>% filter(sentenciado == 1) %>% select(PJ_1,PJ_2,PJ_3,PJ_4,PJ_5,PJ_6,PJ_7)
 table(rowSums(is.na(NA_counts_PJ)))
+
+NA_counts_UAA <- Main_database %>% filter(sentenciado == 1) %>% select(UAA_1,UAA_2,UAA_3,UAA_4)
+table(rowSums(is.na(NA_counts_UAA)))
 
 NA_counts_GDH <- Main_database %>% filter(sentenciado == 1) %>% select(GDH_1,GDH_2,GDH_3)
 table(rowSums(is.na(NA_counts_GDH)))
@@ -154,22 +186,26 @@ table(rowSums(is.na(NA_counts_GDH)))
 
 
 Main_database %<>% mutate(Indice_GDH_r = prod(GDH_1,GDH_2,GDH_3,na.rm = T),
+                          Indice_UAA_r = prod(UAA_1,UAA_2,UAA_3,UAA_4,na.rm = T),
                           Indice_PJ_r = prod(PJ_1,PJ_2,PJ_3,PJ_4,PJ_5,PJ_6,PJ_7,na.rm = T),
-                          Indice_Punchline_r = prod(PJ_1,PJ_2,PJ_3,PJ_4,PJ_5,PJ_6,PJ_7,GDH_1,GDH_2,GDH_3,na.rm = T))
+                          Indice_Punchline_r = prod(PJ_1,PJ_2,PJ_3,PJ_4,PJ_5,PJ_6,PJ_7,UAA_1,UAA_2,UAA_3,UAA_4,GDH_1,GDH_2,GDH_3,na.rm = T))
 
-# Note: The mean() function yields a wierd error, so i use another option
+# Note: The mean() function yields a weird error, so i use another option
 Main_database %<>% mutate(GDH_NAs = rowSums(is.na(across(GDH_1:GDH_3))),
+                          UAA_NAs = rowSums(is.na(across(UAA_1:UAA_4))),
                           PJ_NAs = rowSums(is.na(across(PJ_1:PJ_7))),
                           Indice_Punchline_NAs = rowSums(is.na(across(PJ_1:GDH_3))))
 
 Main_database %<>% mutate(Indice_GDH_alt_r = 100*sum(GDH_1,GDH_2,GDH_3,na.rm = T)/(3-GDH_NAs),
+                          Indice_UAA_alt_r = 100*sum(UAA_1,UAA_2,UAA_3,UAA_4,na.rm = T)/(4-UAA_NAs),
                           Indice_PJ_alt_r = 100*sum(PJ_1,PJ_2,PJ_3,PJ_4,PJ_5,PJ_6,PJ_7,na.rm = T)/(7-PJ_NAs),
-                          Indice_Punchline_alt_r = 100*sum(PJ_1,PJ_2,PJ_3,PJ_4,PJ_5,PJ_6,PJ_7,GDH_1,GDH_2,GDH_3,na.rm = T)/(10-Indice_Punchline_NAs))
+                          Indice_Punchline_alt_r = 100*sum(PJ_1,PJ_2,PJ_3,PJ_4,PJ_5,PJ_6,PJ_7,UAA_1,UAA_2,UAA_3,GDH_1,GDH_2,GDH_3,na.rm = T)/(14-Indice_Punchline_NAs))
 
 prueba<- Main_database[133,1249:1270]
 
-filter(Main_database,sentenciado == 1) %>% select(Indice_Punchline_r,Indice_PJ_r,Indice_GDH_r) %>% data.frame() %>% stargazer(summary = T, type = 'text')
+filter(Main_database,sentenciado == 1) %>% select(Indice_Punchline_r,Indice_PJ_r,Indice_UAA_r,Indice_GDH_r) %>% data.frame() %>% stargazer(summary = T, type = 'text')
 
+filter(Main_database,sentenciado == 1) %>% select(Indice_Punchline_alt_r,Indice_PJ_alt_r,Indice_UAA_alt_r,Indice_GDH_alt_r) %>% data.frame() %>% stargazer(summary = T, type = 'text')
 
 
 # Sólo nuevo sistema
@@ -179,5 +215,7 @@ Data_NS <- Main_database %>% filter(NSJP==1)
 
 filter(Main_database,sentenciado == 1) %>% select(Indice_Punchline,Indice_Punchline_alt,Indice_Punchline_r,Indice_Punchline_alt_r,
                                                   Indice_PJ,Indice_PJ_alt,Indice_PJ_r,Indice_PJ_alt_r,
+                                                  Indice_UAA,Indice_UAA_alt,Indice_UAA_r,Indice_UAA_alt_r,
                                                   Indice_GDH,Indice_GDH_alt,Indice_GDH_r,Indice_GDH_alt_r,
-                                                  PJ_1,PJ_2,PJ_3,PJ_4,PJ_5,PJ_6,PJ_7,GDH_1,GDH_2,GDH_3) %>% data.frame() %>% stargazer(summary = T, type = 'text')
+                                                  PJ_1,PJ_2,PJ_3,PJ_4,PJ_5,PJ_6,PJ_7,UAA_1,UAA_2,UAA_3,UAA_4,GDH_1,GDH_2,GDH_3) %>% data.frame() %>% stargazer(summary = T, type = 'text')
+
