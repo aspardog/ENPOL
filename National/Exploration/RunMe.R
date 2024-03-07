@@ -721,13 +721,6 @@ ggsave(plot   = barChart,
        dpi    = 72,
        device = "svg")
 
-for (i in corrupcion) {
-  tabla_excel_fn(dataset = Main_database_2008, var_prop = i, var1 = "Anio_arresto", var2 = NA , var3 = NA, 
-                 varfilter = NA, filtervalue = NA, 
-                 carpeta = "Legalidad", seccion = "corrupción_años", nombre = paste0("",i),
-                 Dato = paste0("Proporción de personas que reportaron sí en liberación a cambio de dienro ",i))
-}
-
 
 for (i in corrupcion) {
   tabla_excel_fn(dataset = Main_database_2008, var_prop = i, var1 = "Estado_arresto", var2 = NA , var3 = NA, 
@@ -742,6 +735,340 @@ for (i in corrupcion) {
                  carpeta = "Legalidad", seccion = "corrupción_delito", nombre = paste0("",i),
                  Dato = paste0("Proporción de personas que reportaron sí en liberación a cambio de dienro ",i))
 }
+
+#Por año por autoridad correspondiente
+
+for (i in corrupcion) {
+  tabla_excel_fn(dataset = Main_database_2008, var_prop = i, var1 = "Anio_arresto", var2 = NA , var3 = NA, 
+                 varfilter = NA, filtervalue = NA, 
+                 carpeta = "Legalidad", seccion = "corrupción_años", nombre = paste0("",i),
+                 Dato = paste0("Proporción de personas que reportaron sí en liberación a cambio de dienro ",i))
+}
+
+
+### 1.2.2.1. Graficas finales --------------------------------------------------
+
+Main_database_2008 <- Main_database_2008 %>% 
+  mutate( detencion_corrupcion = case_when(P3_21_1 == "1" | P3_21_2 == "1" ~ 1,
+                                           P3_21_1 == "2" & P3_21_2 == "2" ~ 0,
+                                           T ~ NA_real_),
+  mp_corrupcion= case_when(P4_15_1 == "1" | P4_15_3 == "1" ~ 1,
+                           P4_15_1 == "2" & P4_15_3 == "2" ~ 0,
+                           T ~ NA_real_),
+  juzgado_corrupcion= case_when(P5_45_1 == "1" | P5_45_3 == "1" ~ 1,
+                                P5_45_1 == "2" & P5_45_3 == "2" ~ 0,
+                                T ~ NA_real_),
+  corrupcion_general = case_when(detencion_corrupcion == 1 | mp_corrupcion == 1  | juzgado_corrupcion == 1 ~ 1,
+                                 detencion_corrupcion == 0 & mp_corrupcion == 0  & juzgado_corrupcion == 0 ~ 0,
+                                 T~ NA_real_))
+####  Maduración del sistema --------------------------------------------------
+
+## Línea del tiempo
+
+colors4plot <- c("dependent_var" = "#fa4d57",
+                 "dependent_cmpl" = "#003B88")
+
+data2plot <- lineChartData.fn(dependent_var = "corrupcion_general")
+
+lineChart <- lineChartViz(data = data2plot)
+
+lineChart
+
+####  Logit sociodemográfico --------------------------------------------------
+
+data2plot <- logit_dataBase.fn(dependent_var = "corrupcion_general")
+
+logitPlot <- logit_demo_panel(mainData = data2plot)
+
+ggsave(plot   = logitPlot,
+       file   = paste0(path2SP, "/National/Exploration/Input/Debido_proceso/Legalidad","/desc_","corrupcion-general_sociodemográficos.svg"), 
+       width  = 175, 
+       height = 85,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
+
+####  Barras nivel corrupción por etapa --------------------------------------------------
+
+corrupcion_autoridad <-  c("detencion_corrupcion",
+                     "mp_corrupcion",
+                     "juzgado_corrupcion")
+labels <-  c("La policía o autoridad que lo detuvo a cambio de dejarlo ir, 
+             no golpearlo o no hacer daño a su familia, etc le pidió directamente o 
+             insunuó condiciones para que le diera dinero",
+             "La autoridad del MP a cambio de dejarlo ir, 
+             no golpearlo o no hacer daño a su familia, etc le pidió o 
+             insunuó condiciones para que le diera dinero",
+             "Autoridades del juzgado a cambio de dejarlo ir, 
+             no golpearlo o no hacer daño a su familia, etc le pidió o 
+             insunuó condiciones para que le diera dinero")
+
+Main_database_2008 <- clean_columns.fn(Main_database_2008, corrupcion_autoridad)
+
+data2plot <- set_data.fn(Main_database_2008, corrupcion_autoridad, labels)
+
+data2plot <- data2plot %>% mutate(order_var = case_when(Columna == "detencion_corrupcion" ~ 1,
+                                                        Columna == "P3_22_1" ~ 2,
+                                                        Columna == "P3_22_2" ~ 5,
+                                                        Columna == "P3_22_3" ~ 4,
+                                                        Columna == "P3_22_2" ~ 3,
+                                                        T ~ NA_real_))
+
+barChart <- BarSimpleChartViz(data = data2plot, 
+                              x_var = labels, 
+                              y_var = PorcentajeUnos, 
+                              label_var = figure, 
+                              fill_var = Columna, 
+                              Observaciones = Observaciones,
+                              order_var = order_var,
+                              fill_colors = c("#003B88","#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7"),
+                              title = "Casos de corrupción por autoridad correspondiente")
+barChart
+
+ggsave(plot   = barChart,
+       file   = paste0(path2SP, "/National/Exploration/Input/Debido_proceso/Legalidad","/desc_","corrupcion_general_maduracion.svg"), 
+       width  = 300, 
+       height = 390,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
+
+####  Barras nivel corrupción por etapa --------------------------------------------------
+
+
+debido_juzgado <- c("P5_46_1",
+                   "P5_46_2",
+                   "P5_46_3",
+                   "P5_46_4",
+                   "P5_46_5",
+                   "P5_46_6")
+
+Main_database_2008 <- clean_columns.fn(Main_database_2008, debido_juzgado)
+
+
+Main_database_2008 <- Main_database_2008 %>% 
+  mutate(integridad_autoridad = case_when(P3_22_2 == 1 | P3_22_3 == 1 ~ 1,
+                                        P3_22_2 == 0 & P3_22_3 == 0 ~ 0,
+                                        T ~ NA_real_),
+         integridad_mp= case_when(P4_16_2 == 1 | P4_16_4 == 1 ~ 1,
+                                P4_16_2 == 0 & P4_16_4 == 0 ~ 0,
+                                T ~ NA_real_ ),
+         deibido_juzago = case_when(P5_46_2 == 1 | P5_46_3 == 1 | P5_46_4 == 1 | P5_46_5 == 1 | P5_46_6 == 1 ~ 1,
+                                    P5_46_2 == 0 & P5_46_3 == 0 & P5_46_4 == 0 & P5_46_5 == 0 & P5_46_6 == 0 ~ 0,
+                                    T ~ NA_real_))
+
+corrupcion_cambio <-  c("P3_22_1",
+                     "P4_16_1",
+                     "P5_46_1",
+                     "integridad_autoridad",
+                     "integridad_mp",
+                     "P3_22_4",
+                     "P4_16_3",
+                     "deibido_juzago")
+
+labels <-  c("Autoridad en la detención",
+             "Autoridad en el Ministerio Público",
+             "Autoridad en el juzgado",
+             "Autoridad en la detención",
+             "Autoridad en el Ministerio Público",
+             "Autoridad en la detención",
+             "Autoridad en el Ministerio Público",
+             "Autoridad en el juzgado")
+
+category <- c("Libertad",
+              "Libertad",
+              "Libertad",
+              "Integridad",
+              "Integridad",
+              "Debido Proceso",
+              "Debido Proceso",
+              "Debido Proceso" )
+
+data2plot <- set_data_multiple.fn(Main_database_2008, corrupcion_cambio, labels, category)
+
+data2plot <- data2plot %>% mutate(order_var = case_when(Columna == "detencion_corrupcion" ~ 1,
+                                                        Columna == "P3_22_1" ~ 2,
+                                                        Columna == "P3_22_2" ~ 5,
+                                                        Columna == "P3_22_3" ~ 4,
+                                                        Columna == "P3_22_2" ~ 3,
+                                                        T ~ NA_real_))
+
+barChart <- BarSimpleChartViz_grid(data = data2plot, 
+                              x_var = labels, 
+                              y_var = PorcentajeUnos, 
+                              label_var = figure, 
+                              fill_var = category,
+                              Observaciones = Observaciones,
+                              order_var = order_var,
+                              fill_colors = c("#E2E2F7","#F4ECF7", "#D4E6F1","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7"),
+                              title = "Elemento de cambio en los actos de corrupción por autoridad")
+barChart
+
+ggsave(plot   = barChart,
+       file   = paste0(path2SP, "/National/Exploration/Input/Debido_proceso/Legalidad","/desc_","corrupcion_nivel_etapa.svg"), 
+       width  = 300, 
+       height = 390,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
+
+
+
+### 1.2.2.1. Corrupción por subtipo autoridad --------------------------------------------------
+
+
+
+
+corrupcion_det <-  c("detencion_corrupcion",
+                     "P3_22_1",
+                     "P3_22_2",
+                     "P3_22_3",
+                     "P3_22_4")
+labels <-  c("La policía o autoridad que lo detuvo a cambio de dejarlo ir, 
+             no golpearlo o no hacer daño a su familia, etc le pidió o 
+             insunuó condiciones para que le diera dinero",
+             "Si usted daba dinero, lo dejarían ir",
+             "Si usted daba dinero, no lo agrederían",
+             "Si usted daba dinero, No le harían daño a su familia o amigos",
+             "Si usted daba dinero, Modificarían la versión de los hechos o la evidencia en su contra")
+
+Main_database_2008 <- clean_columns.fn(Main_database_2008, corrupcion_det)
+
+data2plot <- set_data.fn(Main_database_2008, corrupcion_det, labels)
+
+data2plot <- data2plot %>% mutate(order_var = case_when(Columna == "detencion_corrupcion" ~ 1,
+                                                        Columna == "P3_22_1" ~ 2,
+                                                        Columna == "P3_22_2" ~ 5,
+                                                        Columna == "P3_22_3" ~ 4,
+                                                        Columna == "P3_22_2" ~ 3,
+                                                        T ~ NA_real_))
+
+barChart <- BarSimpleChartViz(data = data2plot, 
+                              x_var = labels, 
+                              y_var = PorcentajeUnos, 
+                              label_var = figure, 
+                              fill_var = Columna, 
+                              Observaciones = Observaciones,
+                              order_var = order_var,
+                              fill_colors = c("#003B88","#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7"),
+                              title = "Corrupción en la autoridad que detuvo")
+barChart
+
+ggsave(plot   = barChart,
+       file   = paste0(path2SP, "/National/Exploration/Input/Debido_proceso/Legalidad","/desc_","corrupcion_autoridad_detuvo.svg"), 
+       width  = 300, 
+       height = 390,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
+
+
+### 1.2.2.2. Corrupción por subtipo MP --------------------------------------------------
+
+corrupcion_mp <-  c("mp_corrupcion",
+                     "P4_16_1",
+                     "P4_16_2",
+                     "P4_16_3",
+                     "P4_16_4")
+labels <-  c("La autoridad del MP a cambio de dejarlo ir, 
+             no golpearlo o no hacer daño a su familia, etc le pidió o 
+             insunuó condiciones para que le diera dinero",
+             "Si usted daba dinero, lo dejarían ir",
+             "Si usted daba dinero, No lo golpearían",
+             "Si usted daba dinero, Modificarían la versión de los hechos",
+             "Si usted daba dinero, No le harían daño a su familia o amigos")
+
+Main_database_2008 <- clean_columns.fn(Main_database_2008, corrupcion_mp)
+
+data2plot <- set_data.fn(Main_database_2008, corrupcion_mp, labels)
+
+data2plot <- data2plot %>% mutate(order_var = case_when(Columna == "mp_corrupcion" ~ 1,
+                                                        Columna == "P4_16_1" ~ 2,
+                                                        Columna == "P4_16_2" ~ 4,
+                                                        Columna == "P4_16_3" ~ 3,
+                                                        Columna == "P4_16_4" ~ 5,
+                                                        T ~ NA_real_))
+
+barChart <- BarSimpleChartViz(data = data2plot, 
+                              x_var = labels, 
+                              y_var = PorcentajeUnos, 
+                              label_var = figure, 
+                              fill_var = Columna, 
+                              Observaciones = Observaciones,
+                              order_var = order_var,
+                              fill_colors = c("#003B88","#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7"),
+                              title = "Corrupción en la estancia en el MP")
+barChart
+
+ggsave(plot   = barChart,
+       file   = paste0(path2SP, "/National/Exploration/Input/Debido_proceso/Legalidad","/desc_","corrupcion_cambio_autoridad.svg"), 
+       width  = 300, 
+       height = 390,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
+
+### 1.2.2.2. Corrupción por subtipo Juzgado --------------------------------------------------
+
+corrupcion_juzgado <-  c("juzgado_corrupcion",
+                         "P5_46_1",
+                         "P5_46_2",
+                         "P5_46_3",
+                         "P5_46_4",
+                         "P5_46_5",
+                         "P5_46_6")
+labels <-  c("Autoridades del juzgado a cambio de dejarlo ir, 
+             no golpearlo o no hacer daño a su familia, etc le pidió o 
+             insunuó condiciones para que le diera dinero",
+             "Si usted daba dinero, lo dejarían en libertad",
+             "Si usted daba dinero, Disminuirían la gravedad de los delitos",
+             "Si usted daba dinero, Modificarían la versión de los hechos",
+             "Si usted daba dinero, Acelerarían o harían más lento el proceso",
+             "Si usted daba dinero, Permitirían o negarían la presentación de pruebas",
+             "Si usted daba dinero, Disminuirían la sentencia")
+
+Main_database_2008 <- clean_columns.fn(Main_database_2008, corrupcion_juzgado)
+
+data2plot <- set_data.fn(Main_database_2008, corrupcion_juzgado, labels)
+
+data2plot <- data2plot %>% mutate(order_var = case_when(Columna == "juzgado_corrupcion" ~ 1,
+                                                        Columna == "P5_46_1" ~ 2,
+                                                        Columna == "P5_46_2" ~ 3,
+                                                        Columna == "P5_46_3" ~ 5,
+                                                        Columna == "P5_46_4" ~ 6,
+                                                        Columna == "P5_46_5" ~ 7,
+                                                        Columna == "P5_46_6" ~ 4,
+                                                        T ~ NA_real_))
+
+barChart <- BarSimpleChartViz(data = data2plot, 
+                              x_var = labels, 
+                              y_var = PorcentajeUnos, 
+                              label_var = figure, 
+                              fill_var = Columna, 
+                              Observaciones = Observaciones,
+                              order_var = order_var,
+                              fill_colors = c("#003B88","#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7"),
+                              title = "Corrupción en la estancia en el Juzagdo")
+barChart
+
+ggsave(plot   = barChart,
+       file   = paste0(path2SP, "/National/Exploration/Input/Debido_proceso/Legalidad","/desc_","corrupcion_estancia_juzgado.svg"), 
+       width  = 300, 
+       height = 390,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
+
 
 # 1.3. Respeto a los derechos humanos ------------------------------------------
 
@@ -808,7 +1135,227 @@ ggsave(plot   = barChart,
        dpi    = 72,
        device = "svg")
 
+
+
+
+
 ### 1.3.3. Derecho a un recurso efectivo  ----------------------------------------------------
+
+### 1.3.4. Tortura  ----------------------------------------------------
+
+### 1.3.4. Traslado_física  ----------------------------------------------------
+
+traslado_fisica <-  c("P3_18_01",
+                      "P3_18_02",
+                      "P3_18_03",
+                      "P3_18_04",
+                      "P3_18_05",
+                      "P3_18_06",
+                      "P3_18_07",
+                      "P3_18_08",
+                      "P3_18_09",
+                      "P3_18_10",
+                      "P3_18_11",
+                      "P3_18_12",
+                      "P3_18_13",
+                      "P3_18_14")
+labels <-  c("¿Ataron su cuerpo; ataron alguna parte de su cuerpo a un objeto?",
+             "¿Le impidieron respirar asfixiándolo(a), ahorcándolo(a) ?",
+             "¿Le impidieron respirar o metieron su cabeza en agua o vaciándole agua en la cara (tehuacán)?",
+             "¿Le patearon o golpearon con las manos?",
+             "¿Le golpearon con objetos ?",
+             "¿Le quemaron ?",
+             "¿Le dieron descargas eléctricas?",
+             "¿Aplastaron su cuerpo o alguna parte de él con algún objeto o con el cuerpo de otra persona?",
+             "¿Le hirieron con algún cuchillo, navaja u otro objeto afilado?",
+             "¿Le encajaron agujas en dedos u otra parte del cuerpo?",
+             "¿Le hirieron por el disparo de un arma de fuego (lesiones por arma de fuego)?",
+             "¿Le agredieron mediante acoso sexual, manoseo, exhibicionismo o intento de violación?",
+             "¿Le lastimaron sus órganos sexuales?",
+             "¿Fue obligado(a) mediante violencia física o amenaza a tener una actividad sexual no deseada?")
+
+Main_database_2008 <- clean_columns.fn(Main_database_2008, traslado_fisica)
+
+data2plot <- set_data.fn(Main_database_2008, traslado_fisica, labels)
+
+barChart <- BarSimpleChartViz(data = data2plot, 
+                              x_var = labels, 
+                              y_var = PorcentajeUnos, 
+                              label_var = figure, 
+                              fill_var = Columna, 
+                              Observaciones = Observaciones,
+                              order_var = order_var,
+                              fill_colors = c("#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7"),
+                              title = "La policía o autoridad que lo detuvo realizó o permitió que:")
+barChart
+
+ggsave(plot   = barChart,
+       file   = paste0(path2SP, "/National/Exploration/Input/Debido_proceso/Legalidad","/desc_","tortura_traslado_fisica.svg"), 
+       width  = 300, 
+       height = 390,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
+
+### 1.3.4. Traslado_psicológica  ----------------------------------------------------
+
+traslado_psicologica <-  c("P3_17_01",
+                      "P3_17_02",
+                      "P3_17_03",
+                      "P3_17_04",
+                      "P3_17_05",
+                      "P3_17_06",
+                      "P3_17_07",
+                      "P3_17_08",
+                      "P3_17_09",
+                      "P3_17_10",
+                      "P3_17_11")
+labels <-  c("¿Le amenazaron con levantarle cargos falsos?",
+             "¿Le amenazaron con matarlo(a)?",
+             "¿Le amenazaron con hacerle daño a usted?",
+             "¿Le amenazaron con hacerle daño a su familia?",
+             "¿Le hicieron otro tipo de amenazas?",
+             "¿Le presionaron para denunciar a alguien?",
+             "¿Le incomunicaron o aislaron?",
+             "¿Le pasearon en un automóvil dando vueltas por las calles?",
+             "¿Le hicieron daño a su familia?",
+             "¿Le desvistieron?",
+             "¿Le vendaron los ojos o cubrieran la cabeza para que no viera?")
+
+Main_database_2008 <- clean_columns.fn(Main_database_2008, traslado_psicologica)
+
+data2plot <- set_data.fn(Main_database_2008, traslado_psicologica, labels)
+
+barChart <- BarSimpleChartViz(data = data2plot, 
+                              x_var = labels, 
+                              y_var = PorcentajeUnos, 
+                              label_var = figure, 
+                              fill_var = Columna, 
+                              Observaciones = Observaciones,
+                              order_var = order_var,
+                              fill_colors = c("#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7"),
+                              title = "La policía o autoridad que lo detuvo realizó o permitió que:")
+barChart
+
+ggsave(plot   = barChart,
+       file   = paste0(path2SP, "/National/Exploration/Input/Debido_proceso/Legalidad","/desc_","tortura_traslado_psicologica.svg"), 
+       width  = 300, 
+       height = 390,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
+
+
+### 1.3.4. estancia_mp-psicologica  ----------------------------------------------------
+
+mp_psicologica <-  c("P4_8_1",
+                           "P4_8_2",
+                           "P4_8_3",
+                           "P4_8_4",
+                           "P4_8_5",
+                           "P4_8_6",
+                           "P4_8_7",
+                           "P4_8_8",
+                           "P4_8_9",
+                           "P4_8_10",
+                           "P4_8_11")
+labels <-  c("¿Le insultaron?",
+             "¿Le amenazaron con levantarle cargos falsos?",
+             "¿Leamenazaronconmatarlo(a)?",
+             "¿Le amenazaron con hacerle daño a usted? ",
+             "¿Le amenazaron con hacerle daño a su familia?",
+             "¿Le presionaron para denunciar a alguien?",
+             "¿Le incomunicaron o aislaron?",
+             "¿Le sacaron a la calle a dar vueltas en un automóvil?",
+             "¿Le hicieron daño a su familia?",
+             "¿Le desvistieron?",
+             "¿Le vendaron los ojos o cubrieran la cabeza para que no viera?")
+
+Main_database_2008 <- clean_columns.fn(Main_database_2008, mp_psicologica)
+
+data2plot <- set_data.fn(Main_database_2008, mp_psicologica, labels)
+
+barChart <- BarSimpleChartViz(data = data2plot, 
+                              x_var = labels, 
+                              y_var = PorcentajeUnos, 
+                              label_var = figure, 
+                              fill_var = Columna, 
+                              Observaciones = Observaciones,
+                              order_var = order_var,
+                              fill_colors = c("#003B88","#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7"),
+                              title = "La policía ministerial o autoridad que lo detuvo realizó o permitió que:")
+barChart
+
+ggsave(plot   = barChart,
+       file   = paste0(path2SP, "/National/Exploration/Input/Debido_proceso/Legalidad","/desc_","tortura_mp_psicologica.svg"), 
+       width  = 300, 
+       height = 390,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
+
+### 1.3.4. estancia_mp-fisica  ----------------------------------------------------
+
+mp_fisica <-  c("P4_9_01",
+                     "P4_9_02",
+                     "P4_9_03",
+                     "P4_9_04",
+                     "P4_9_05",
+                     "P4_9_06",
+                     "P4_9_07",
+                     "P4_9_08",
+                     "P4_9_09",
+                     "P4_9_10",
+                     "P4_9_11",
+                "P4_9_12",
+                "P4_9_13",
+                "P4_9_14")
+labels <-  c("¿Ataron su cuerpo; ataron alguna parte de su cuerpo a un objeto?",
+             "¿Le impidieron respirar asfixiándolo, ahorcándolo?",
+             "¿Le impidieron respirar o metiendo su cabeza en agua o vaciándole agua en la cara (tehuacán)?",
+             "¿Le patearon o golpearon con las manos (abiertas o cerradas)?",
+             "¿Le golpearon con objetos?",
+             "¿Le quemaron (con objetos calientes, fuego u otra sustancia)?",
+             "¿Le dieron descargas eléctricas (toques eléctricos, chicharra)?.",
+             "¿Aplastaron su cuerpo o alguna parte de él con algún objeto o con el cuerpo de otra persona?",
+             "¿Le hirieron con algún cuchillo, navaja u otro objeto afilado?",
+             "¿Le encajaron agujas en dedos u otra parte del cuerpo?",
+             "¿Le hirieron por el disparo de un arma de fuego?",
+             "¿Le agredieron mediante acoso sexual, manoseo, exhibicionismo o intento de violación?",
+             "¿Le lastimaron sus órganos sexuales?",
+             "¿Fue obligado mediante violencia física o amenaza a tener una actividad sexual no deseada?")
+
+Main_database_2008 <- clean_columns.fn(Main_database_2008, mp_fisica)
+
+data2plot <- set_data.fn(Main_database_2008, mp_fisica, labels)
+
+barChart <- BarSimpleChartViz(data = data2plot, 
+                              x_var = labels, 
+                              y_var = PorcentajeUnos, 
+                              label_var = figure, 
+                              fill_var = Columna, 
+                              Observaciones = Observaciones,
+                              order_var = order_var,
+                              fill_colors = c("#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7"),
+                              title = "La policía ministerial o autoridad que lo detuvo realizó o permitió que:")
+barChart
+
+ggsave(plot   = barChart,
+       file   = paste0(path2SP, "/National/Exploration/Input/Debido_proceso/Legalidad","/desc_","tortura_mp_fisica.svg"), 
+       width  = 300, 
+       height = 390,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
+
 
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
