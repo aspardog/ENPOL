@@ -98,6 +98,12 @@ exp_data_mean <- function(data, target_col, group_col,group_col_1 = NA,seccion, 
 }
 
 
+frecuencia_entradas <- function(data, columna1, columna2) {
+  data %>%
+    count({{ columna1 }}, {{ columna2 }}) %>%
+    spread(key = {{ columna2 }}, value = n, fill = 0)
+}
+
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
 ## 4. Corrupción                                                                           ----
@@ -113,16 +119,16 @@ corrupcion <- c("P3_22_1",
                 "P5_46_1")
 
 Main_database_2008 <- clean_columns.fn(Main_database_2008, corrupcion) %>% 
-  rename(policia  =  P3_22_1,
+  rename(aut_detencion  =  P3_22_1,
          mp = P4_16_1,
          juez = P5_46_1) 
 
 ## policía dinero a cambio de liberación
 exp_data_wide(
   data = Main_database_2008,
-  group_var = policia,
+  group_var = aut_detencion,
   seccion = "corrupcion",
-  nombre = "policia_años"
+  nombre = "aut_detencion_años"
 )
 
 ## mp dinero a cambio de liberación
@@ -141,3 +147,11 @@ exp_data_wide(
   nombre = "juez_años"
 )
 
+
+## Corporación de detención homologado a ENCIC 
+
+# a) Ejercito o Marina
+# b) Policías
+# c) Guardia nacional
+
+policia_dinero <- frecuencia_entradas(Main_database_2008, Corporacion_grupos, aut_detencion)
