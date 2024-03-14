@@ -325,7 +325,7 @@ logit_demo_panel <- function(mainData = data2plot,
     geom_point(aes(x = reorder(factor, -order_variable), y = AME), 
                size = 2, position = position_dodge(width = .7), color = "white") +
     labs(y = "Menos probable                               Más probable") +
-    scale_y_continuous(limits = c(-0.10, 0.10),
+    scale_y_continuous(limits = c(-0.10, 0.15),
                        breaks = seq(-0.10, 0.10, by = 0.05),
                        expand = expansion(mult = 0.025), position = "right",
                        labels = c("-10", "-5", "0", "+5", "+10"))+
@@ -466,9 +466,9 @@ BarSimpleChartViz <- function(data = data2plot,
     geom_bar(stat = "identity",
              show.legend = FALSE, width = 0.9) +
     scale_fill_gradient(low = "#756ef9", high = "#b1a6ff") +
-    geom_vline(xintercept = c("50", "100"), linetype = 3, color = "#a90099") +
-    annotate('rect', xmin=0, xmax= shade_xminvalue, ymin=0, ymax=40, alpha=.1, fill="#a90099")+
-    annotate('rect', xmin=shade_xmaxvalue, xmax= shade_xmaxvalue+.5, ymin=0, ymax=40, alpha=.1, fill="#a90099")+
+    geom_vline(xintercept = c("50", "90"), linetype = 3, color = c("#fa4d57", "#43a9a7")) +
+    annotate('rect', xmin=0, xmax= shade_xminvalue, ymin=0, ymax=60, alpha=.1, fill="#fa4d57")+
+    annotate('rect', xmin=shade_xmaxvalue, xmax= shade_xmaxvalue+1, ymin=0, ymax=60, alpha=.1, fill="#43a9a7")+
     geom_text(aes(y    = {{y_var}} + 10),
               color    = "#4a4a49",
               family   = "Lato Full",
