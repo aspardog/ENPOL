@@ -279,4 +279,18 @@ Main_database$na_PJ <- rowSums(is.na(Main_database[c("PJ_1",
                                                                  "PJ_6",
                                                                  "PJ_7")]))
 
+Main_database$na_general <- rowSums(is.na(Main_database[c("GDH_1", 
+                                                                  "GDH_2",
+                                                                  "PJ_1", 
+                                                          "UAA_1", 
+                                                          "UAA_2", 
+                                                          "UAA_3",
+                                                          "UAA_4",
+                                                     "PJ_2",
+                                                     "PJ_3",
+                                                     "PJ_4",
+                                                     "PJ_5",
+                                                     "PJ_6",
+                                                     "PJ_7")]))
+
 save(Main_database, file = paste0(path2SP,"/National/Presentations/INL_MARZO/Input/Main_database.RData"))
