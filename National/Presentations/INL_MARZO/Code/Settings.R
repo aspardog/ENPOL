@@ -164,7 +164,7 @@ rosePalette    <- c("#20204a", "#12006b", "#2e2e95", "#4e43dd", "#756ef9", "#9c9
 logit_dataBase.fn <- function(data = Main_database,
                               selectables = c("Sexo", 
                                               "Educacion_obligatoria", 
-                                              "Colo_piel_claro", 
+                                              # "Colo_piel_claro", 
                                               "LGBTQ", 
                                               "Etnia", 
                                               "Edad_menor30", 
@@ -173,7 +173,7 @@ logit_dataBase.fn <- function(data = Main_database,
 ) {
   
   master_data.df <- Main_database %>%
-    filter(Anio_arresto >= 2015) %>%
+    #filter(Anio_arresto >= 2015) %>%
     filter(NSJP == 1) %>%
     filter(Delito_unico == 1) %>%
     mutate(
@@ -182,11 +182,11 @@ logit_dataBase.fn <- function(data = Main_database,
           Educacion_obligatoria == 1 ~ "Título de bachiller o más",
           Educacion_obligatoria == 0 ~ "No cuenta con título de bachiller"
         ),
-      Colo_piel_claro       =
-        case_when(
-          Colo_piel_claro      == 1 ~ "Color de piel clara",
-          Colo_piel_claro      == 0 ~ "Color de piel oscura",
-        ),
+      # Colo_piel_claro       =
+      #   case_when(
+      #     Colo_piel_claro      == 1 ~ "Color de piel clara",
+      #     Colo_piel_claro      == 0 ~ "Color de piel oscura",
+      #   ),
       LGBTQ                 = 
         case_when(
           LGBTQ                 == 1 ~ "Pertenece a la comunidad LGBTQ",
@@ -225,11 +225,11 @@ logit_dataBase.fn <- function(data = Main_database,
           Sexo %in% "Femenino",
           "ZFemenino", Sexo
         ),
-      Colo_piel_claro       =
-        if_else(
-          Colo_piel_claro %in% "Color de piel oscura",
-          "ZColor de piel oscura", Colo_piel_claro
-        ),
+      # Colo_piel_claro       =
+      #   if_else(
+      #     Colo_piel_claro %in% "Color de piel oscura",
+      #     "ZColor de piel oscura", Colo_piel_claro
+      #   ),
       LGBTQ                 =
         if_else(
           LGBTQ %in% "Pertenece a la comunidad LGBTQ",
@@ -251,7 +251,7 @@ logit_dataBase.fn <- function(data = Main_database,
           "ZMenor a 30 años", Edad_menor30
         ),
     ) %>%
-    arrange(Sexo, Educacion_obligatoria, Colo_piel_claro, LGBTQ, Etnia, Edad_menor30, Ingreso_inseguro)
+    arrange(Sexo, Educacion_obligatoria, LGBTQ, Etnia, Edad_menor30, Ingreso_inseguro)
   
   formula <- selectables %>%
     t() %>%
@@ -280,8 +280,8 @@ logit_dataBase.fn <- function(data = Main_database,
                           "Ingreso_inseguroZFinancieramente inseguro"                = "Financieramente inseguro/a",
                           "EtniaZAfroamericano o indígena"                           = "Afroamericano/a o indígena",
                           "Educacion_obligatoriaZNo cuenta con título de bachiller"  = "Sin diploma bachiller",
-                          "Edad_menor30ZMenor a 30 años"                             = "Menor a 30 años",
-                          "Colo_piel_claroZColor de piel oscura"                     = "Color de piel oscura"
+                          "Edad_menor30ZMenor a 30 años"                             = "Menor a 30 años"
+                          # "Colo_piel_claroZColor de piel oscura"                     = "Color de piel oscura"
   )
   
   data2table <- margEff %>%
@@ -292,8 +292,8 @@ logit_dataBase.fn <- function(data = Main_database,
                factor == "Menor a 30 años"                    ~ 3,
                factor == "Sin diploma bachiller"              ~ 4,
                factor == "Financieramente inseguro/a"         ~ 5,
-               factor == "Afroamericano/a o indígena"         ~ 6,
-               factor == "Color de piel oscura"               ~ 7
+               factor == "Afroamericano/a o indígena"         ~ 6
+               # factor == "Color de piel oscura"               ~ 7
              ),
            dependent_var  =
              dependent_var
@@ -325,10 +325,10 @@ logit_demo_panel <- function(mainData = data2plot,
     geom_point(aes(x = reorder(factor, -order_variable), y = AME), 
                size = 2, position = position_dodge(width = .7), color = "white") +
     labs(y = "Menos probable                               Más probable") +
-    scale_y_continuous(limits = c(-0.25, 0.25),
-                       breaks = seq(-0.25, 0.25, by = 0.125),
+    scale_y_continuous(limits = c(-0.10, 0.10),
+                       breaks = seq(-0.10, 0.10, by = 0.05),
                        expand = expansion(mult = 0.025), position = "right",
-                       labels = c("-25", "-12.5", "0", "+12.5", "+25"))+
+                       labels = c("-10", "-5", "0", "+5", "+10"))+
     WJP_theme()+
     coord_flip() +
     theme(legend.position = "none",
@@ -432,10 +432,11 @@ count_frequency.fn <- function(column) {
   frequency_df <- data %>%
     group_by(Value) %>%
     summarise(Frequency = n()) %>% 
-    mutate(values = Frequency/sum(Frequency),
+    mutate(Value = Value*100,
+           values = Frequency/sum(Frequency),
            value2plot = values * 100,
            figure = paste0(round(value2plot, 0), "%"),
-           labels = Value) 
+           labels = paste0(Value, "%")) 
   frequency_df <- frequency_df %>% mutate(order_var = rank(Value))
   return(frequency_df)
 }
@@ -452,7 +453,11 @@ BarSimpleChartViz <- function(data = data2plot,
                               y_var = value2plot, 
                               label_var = figure, 
                               fill_var = Value,
-                              order_var = order_var) {
+                              order_var = order_var,
+                              labels = labels,
+                              shade_xminvalue,
+                              shade_xmaxvalue
+                              ) {
   plt <- ggplot(data, 
                 aes(x     = reorder({{x_var}},{{order_var}}),
                     y     = {{y_var}},
@@ -460,20 +465,24 @@ BarSimpleChartViz <- function(data = data2plot,
                     fill  = {{fill_var}})) +
     geom_bar(stat = "identity",
              show.legend = FALSE, width = 0.9) +
-    geom_vline(xintercept = 0.4, linetype = 3, color = "#a90099") +  # Line at x = 0.4
-    geom_vline(xintercept = 1, linetype = 3, color = "#a90099") +    # Line at x = 1
     scale_fill_gradient(low = "#756ef9", high = "#b1a6ff") +
+    geom_vline(xintercept = c("50", "100"), linetype = 3, color = "#a90099") +
+    annotate('rect', xmin=0, xmax= shade_xminvalue, ymin=0, ymax=40, alpha=.1, fill="#a90099")+
+    annotate('rect', xmin=shade_xmaxvalue, xmax= shade_xmaxvalue+.5, ymin=0, ymax=40, alpha=.1, fill="#a90099")+
     geom_text(aes(y    = {{y_var}} + 10),
               color    = "#4a4a49",
               family   = "Lato Full",
               fontface = "bold") +
     labs(y = "% of respondents") +
+    xlab("Porcentaje de criterios cumplidos")+
     scale_y_continuous(breaks = NULL) +
+    scale_x_discrete() +
     WJP_theme() +
     theme(panel.grid.major.y = element_blank(),
           panel.grid.major.x = element_line(color = "#D0D1D3"),
           axis.title.y       = element_blank(),
-          axis.title.x       = element_blank(),
+          axis.title.x       = element_text(color    = "#4a4a49",
+                                            family   = "Lato Full"),
           axis.text.y        = element_text(hjust = 0))
   
   return(plt)
