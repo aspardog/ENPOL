@@ -190,3 +190,68 @@ exp_data_mean(
   seccion = "defensa_adecuada",
   nombre = "defensa_a_juez_sent_media_delito"
 )
+
+## Defensa media por condición de defensa y estado
+
+# Defensa juez
+exp_data_mean(
+  data = Main_database_2008,
+  target_col = sentencia_años,
+  group_col = defensa_juez,
+  group_col_1 = Estado_arresto,
+  seccion = "defensa_adecuada",
+  nombre = "defensa_juez_sentencia_media_estado"
+)
+
+# Defensa MP
+exp_data_mean(
+  data = Main_database_2008,
+  target_col = sentencia_años,
+  group_col = defensa_mp,
+  group_col_1 = Estado_arresto,
+  seccion = "defensa_adecuada",
+  nombre = "defensa_mp_sentencia_media_estado"
+)
+
+# Defensa antes del juez
+exp_data_mean(
+  data = Main_database_2008,
+  target_col = sentencia_años,
+  group_col = defensa_antes_juez,
+  group_col_1 = Estado_arresto,
+  seccion = "defensa_adecuada",
+  nombre = "defensa_a_juez_sent_media_estado"
+)
+
+
+## Defensa media por condición de defensa y defensor público o privado
+
+# Defensa juez
+exp_data_mean(
+  data = Main_database_2008,
+  target_col = sentencia_años,
+  group_col = defensa_juez,
+  group_col_1 = abogado_publico,
+  seccion = "defensa_adecuada",
+  nombre = "defensa_juez_sentencia_media_delito"
+)
+
+# Defensa MP
+exp_data_mean(
+  data = Main_database_2008,
+  target_col = sentencia_años,
+  group_col = defensa_mp,
+  group_col_1 = Delito_unico_categ,
+  seccion = "defensa_adecuada",
+  nombre = "defensa_mp_sentencia_media_delito"
+)
+
+# Defensa antes del juez
+exp_data_mean(
+  data = Main_database_2008,
+  target_col = sentencia_años,
+  group_col = defensa_antes_juez,
+  group_col_1 = Delito_unico_categ,
+  seccion = "defensa_adecuada",
+  nombre = "defensa_a_juez_sent_media_delito"
+)

@@ -1,9 +1,6 @@
-event_study <- function(data.df = data_subset_tipo.df,
+event_study <- function(data.df = data_subset.df,
                         var_groups = "National",
-                        var_analysis = c("flagrancia", 
-                                         "orden_det", 
-                                         "inspeccion", 
-                                         "det_ninguna"),
+                        var_analysis,
                         section,
                         subsection,
                         name) {
@@ -13,7 +10,7 @@ event_study <- function(data.df = data_subset_tipo.df,
   
   variables2summarise <- c(var_analysis)
   
-  master_data.df <- data.df %>%
+  master_data.df <- data_subset.df %>%
     mutate(period = 
              case_when(
                years_since_NSJP < -1 & years_since_NSJP > -2 ~ "one_year_before",
@@ -38,13 +35,13 @@ event_study <- function(data.df = data_subset_tipo.df,
                years_since_NSJP > 9 & years_since_NSJP < 10 ~ "nine_years_after",
                years_since_NSJP > 10 & years_since_NSJP < 11 ~ "ten_years_after",
                years_since_NSJP > 11 & years_since_NSJP < 12 ~ "eleven_years_after",
-               years_since_NSJP > 12 & years_since_NSJP < 13 ~ "twelve_years_after",
-               years_since_NSJP > 13 & years_since_NSJP < 14 ~ "thirteen_years_after",
-               years_since_NSJP > 14 & years_since_NSJP < 15 ~ "fourteen_years_after"
+               years_since_NSJP > 12 & years_since_NSJP < 13 ~ "twelve_years_after"
              )) %>%
     filter(!is.na(period)) %>%
     arrange(years_since_NSJP) %>%
-    mutate(National = "National")
+    mutate(National = "National") %>%
+    group_by(Estado_arresto) %>%
+    summarise(max_time_implementation = max(years_since_NSJP, na.rm = T))
   
   data2analysis <- lapply(variables2analyze, function(vars){
     

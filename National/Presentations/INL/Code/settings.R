@@ -356,8 +356,8 @@ logit_demo_panel <- function(mainData = data2plot,
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-lineChartData.fn <-function(data = Main_database,
-                            dependent_var = dependent_var){
+lineChartData.fn <-function(data = data_subset.df,
+                            dependent_var = "P5_20_2"){
   
   dependent_var <- dependent_var
   
