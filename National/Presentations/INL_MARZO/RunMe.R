@@ -49,7 +49,7 @@ Indicators_database <- Indicators_database %>%
 
 data2plot <- count_frequency.fn(Indicators_database$indicator_general)
 
-barChart <- BarSimpleChartViz()
+barChart <- BarSimpleChartViz(shade_xminvalue = 5, shade_xmaxvalue = 10)
 barChart
 ggsave(plot   = barChart,
        file   = paste0( path2SP, "National/Presentations/INL_MARZO/Visualizations/Bar_indicator_general.svg"), 
@@ -63,7 +63,7 @@ ggsave(plot   = barChart,
 
 data2plot <- count_frequency.fn(Indicators_database$indicator_GDH)
 
-barChart <- BarSimpleChartViz()
+barChart <- BarSimpleChartViz(shade_xminvalue = 2, shade_xmaxvalue = 3)
 barChart
 ggsave(plot   = barChart,
        file   = paste0( path2SP, "National/Presentations/INL_MARZO/Visualizations/Bar_indicator_GDH.svg"), 
@@ -78,7 +78,7 @@ ggsave(plot   = barChart,
 data2plot <- count_frequency.fn(Indicators_database$indicator_UAA)
 data2plot <- data2plot %>% filter(!is.na(Value))
 
-barChart <- BarSimpleChartViz()
+barChart <- BarSimpleChartViz(shade_xminvalue = 4, shade_xmaxvalue = 7)
 barChart
 ggsave(plot   = barChart,
        file   = paste0( path2SP, "National/Presentations/INL_MARZO/Visualizations/Bar_indicator_UAA.svg"), 
@@ -91,7 +91,7 @@ ggsave(plot   = barChart,
 data2plot <- count_frequency.fn(Indicators_database$indicator_PJ)
 data2plot <- data2plot %>% filter(!is.na(Value))
 
-barChart <- BarSimpleChartViz()
+barChart <- BarSimpleChartViz(shade_xminvalue = 6, shade_xmaxvalue = 11)
 barChart
 ggsave(plot   = barChart,
        file   = paste0( path2SP, "National/Presentations/INL_MARZO/Visualizations/Bar_indicatorPJ.svg"), 
@@ -113,13 +113,13 @@ Main_database <- Main_database %>%
   filter(eliminar != 1)
 
 
-# General menos del 50% de los criterios ----------------------------------
+# General almenos del 50% de los criterios ----------------------------------
 
 
 data2plot <- logit_dataBase.fn(dependent_var = "indicator_general_minlimit")
 
 logitPlot <- logit_demo_panel(mainData = data2plot, line_size = 2)
-
+logitPlot
 ggsave(plot   = logitPlot,
        file   = paste0( path2SP, "National/Presentations/INL_MARZO/Visualizations/Logit_min_indicator_general.svg"), 
        width  = 175, 
