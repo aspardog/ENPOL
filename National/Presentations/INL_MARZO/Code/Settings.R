@@ -424,51 +424,51 @@ lineChartData.fn <-function(data = Main_database,
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-simpleBarData.fn <- function(data = Indicators_database, 
-                             group_var = group_var) {
-  data2table <- data %>%
-    group_by({{group_var}}) %>%
-    summarize(frequency = n())
-    mutate(values = frequency/sum(frequency),
+count_frequency.fn <- function(column) {
+  # Convert the column to a data frame
+  data <- data.frame(Value = column)
+  
+  # Count the frequency of each unique value
+  frequency_df <- data %>%
+    group_by(Value) %>%
+    summarise(Frequency = n()) %>% 
+    mutate(values = Frequency/sum(Frequency),
            value2plot = values * 100,
            figure = paste0(round(value2plot, 0), "%"),
-           labels = {{group_var}}) %>%
-    rename(category = {{group_var}})
-  
-  return(data2table)
+           labels = Value) 
+  frequency_df <- frequency_df %>% mutate(order_var = rank(Value))
+  return(frequency_df)
 }
 
-## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-##
-## 10.  Simple bars Chart                                      ----
-##
-## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
-BarSimpleChartVizVertical <- function(data = data2plot, 
-                                      x_var = category, 
-                                      y_var = value2plot, 
-                                      label_var = figure, 
-                                      fill_var = category, 
-                                      fill_colors = fill_colors) {
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##
+## 4.  Bar Simple Chart                                                                                ----
+##
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+BarSimpleChartViz <- function(data = data2plot, 
+                              x_var = Value, 
+                              y_var = value2plot, 
+                              label_var = figure, 
+                              fill_var = Value,
+                              order_var = order_var) {
   plt <- ggplot(data, 
-                aes(x     = {{x_var}},
+                aes(x     = reorder({{x_var}},{{order_var}}),
                     y     = {{y_var}},
                     label = {{label_var}},
                     fill  = {{fill_var}})) +
     geom_bar(stat = "identity",
              show.legend = FALSE, width = 0.9) +
-    scale_fill_manual(values = {{fill_colors}}) +
+    geom_vline(xintercept = 0.4, linetype = 3, color = "#a90099") +  # Line at x = 0.4
+    geom_vline(xintercept = 1, linetype = 3, color = "#a90099") +    # Line at x = 1
+    scale_fill_gradient(low = "#756ef9", high = "#b1a6ff") +
     geom_text(aes(y    = {{y_var}} + 10),
               color    = "#4a4a49",
               family   = "Lato Full",
               fontface = "bold") +
     labs(y = "% of respondents") +
-    scale_y_continuous(limits = c(0, 105),
-                       breaks = seq(0, 100, 20),
-                       labels = paste0(seq(0, 100, 20), "%"),
-                       position = "right") +
-    scale_x_discrete(limits = rev) +
+    scale_y_continuous(breaks = NULL) +
     WJP_theme() +
     theme(panel.grid.major.y = element_blank(),
           panel.grid.major.x = element_line(color = "#D0D1D3"),
@@ -478,9 +478,6 @@ BarSimpleChartVizVertical <- function(data = data2plot,
   
   return(plt)
 }
-
-
-
 
 
 
@@ -496,7 +493,7 @@ HistGraph.fn <- function(column_name, binsize, title) {
   graph <- Indicators_database %>%
     ggplot(aes_string(x = column_name)) +
     geom_histogram(binwidth = binsize, fill = "#b1a6ff", color = "#e9ecef", alpha = 0.9) +
-    geom_vline(xintercept = c(0.25, 0.5, 0.75), linetype = 3, color = "#a90099") +
+    geom_vline(xintercept = c(0,0.25, 0.5, 0.75,1), linetype = 3, color = "#a90099") +
     ggtitle(title) +
     WJP_theme() +
     theme(panel.grid.major.y = element_blank(),
