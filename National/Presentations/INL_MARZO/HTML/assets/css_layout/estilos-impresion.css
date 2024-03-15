@@ -928,17 +928,18 @@
 	#AccessJusticeJourney2{
 		display: block;
 	}
-	/* INTERNAL MIGRATION chart 20 page 37 */
-	#InternalMigration{
+	/* INTERNATIONAL MIGRATION chart 21 page 38 */
+	#InternationalMigration{
 		height: 34.47cm;
 	}
-	#InternalMigration .col-md-6 {
+	#InternationalMigration .col-md-6 {
 		-ms-flex: 0 0 50%;
 		flex: 0 0 50%;
 		max-width: 50%;
 	}
-	#InternalMigration .img-chart{
+	#InternationalMigration .img-chart{
 		width: 85%;
 	}
+
 }
 

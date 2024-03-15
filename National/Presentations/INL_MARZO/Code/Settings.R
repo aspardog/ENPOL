@@ -276,9 +276,9 @@ logit_dataBase.fn <- function(data = Main_database,
   
   margEff$factor <-recode(margEff$factor,
                           "SexoZFemenino" = "Mujer",
-                          "LGBTQZPertenece a la comunidad LGBTQ"                     = "Perteneciente a \ncomunidad LGBTQ",
-                          "Ingreso_inseguroZFinancieramente inseguro"                = "Financieramente inseguro/a",
-                          "EtniaZAfroamericano o indígena"                           = "Afroamericano/a o indígena",
+                          "LGBTQZPertenece a la comunidad LGBTQ"                     = "Perteneciente a \ncomunidad \nLGBTQ",
+                          "Ingreso_inseguroZFinancieramente inseguro"                = "Financieramente \ninseguro/a",
+                          "EtniaZAfroamericano o indígena"                           = "Afroamericano/a \nó indígena",
                           # "Educacion_obligatoriaZNo cuenta con título de bachiller"  = "Sin diploma bachiller",
                           "Edad_menor30ZMenor a 30 años"                             = "Menor a 30 años"
                           # "Colo_piel_claroZColor de piel oscura"                     = "Color de piel oscura"
@@ -288,11 +288,11 @@ logit_dataBase.fn <- function(data = Main_database,
     mutate(order_variable =
              case_when(
                factor == "Mujer"                              ~ 1,
-               factor == "Perteneciente a \ncomunidad LGBTQ"  ~ 2,
+               factor == "Perteneciente a \ncomunidad \nLGBTQ"  ~ 2,
                factor == "Menor a 30 años"                    ~ 3,
                # factor == "Sin diploma bachiller"              ~ 4,
-               factor == "Financieramente inseguro/a"         ~ 4,
-               factor == "Afroamericano/a o indígena"         ~ 5
+               factor == "Financieramente \ninseguro/a"         ~ 4,
+               factor == "Afroamericano/a \nó indígena"         ~ 5
                # factor == "Color de piel oscura"               ~ 7
              ),
            dependent_var  =
@@ -325,9 +325,9 @@ logit_demo_panel_min <- function(mainData = data2plot,
                size = point_size, position = position_dodge(width = .7), color = point_color) +
     geom_point(aes(x = reorder(factor, -order_variable), y = AME), 
                size = 2, position = position_dodge(width = .7), color = "white") +
-    labs(y = "Menos probable                               Más probable") +
-    scale_y_continuous(limits = c(-0.15, 0.15),
-                       breaks = seq(-0.10, 0.10, by = 0.05),
+    labs(y = "Menos probable        Más probable") +
+    scale_y_continuous(limits = c(-0.20, 0.20),
+                       breaks = seq(-0.15, 0.15, by = 0.075),
                        expand = expansion(mult = 0.025), position = "right",
                        labels = c("-10 p.p.", "-5 p.p.", "0", "+5 p.p.", "+10 p.p.")) +
     WJP_theme() +
