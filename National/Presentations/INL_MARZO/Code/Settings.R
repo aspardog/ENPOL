@@ -163,7 +163,7 @@ rosePalette    <- c("#20204a", "#12006b", "#2e2e95", "#4e43dd", "#756ef9", "#9c9
 
 logit_dataBase.fn <- function(data = Main_database,
                               selectables = c("Sexo", 
-                                              "Educacion_obligatoria", 
+                                              # "Educacion_obligatoria", 
                                               # "Colo_piel_claro", 
                                               "LGBTQ", 
                                               "Etnia", 
@@ -177,11 +177,11 @@ logit_dataBase.fn <- function(data = Main_database,
     filter(NSJP == 1) %>%
     filter(Delito_unico == 1) %>%
     mutate(
-      Educacion_obligatoria = 
-        case_when(
-          Educacion_obligatoria == 1 ~ "Título de bachiller o más",
-          Educacion_obligatoria == 0 ~ "No cuenta con título de bachiller"
-        ),
+      # Educacion_obligatoria = 
+      #   case_when(
+      #     Educacion_obligatoria == 1 ~ "Título de bachiller o más",
+      #     Educacion_obligatoria == 0 ~ "No cuenta con título de bachiller"
+      #   ),
       # Colo_piel_claro       =
       #   case_when(
       #     Colo_piel_claro      == 1 ~ "Color de piel clara",
@@ -215,11 +215,11 @@ logit_dataBase.fn <- function(data = Main_database,
     select(all_of(selectables),
            all_of(dependent_var)) %>%
     mutate(
-      Educacion_obligatoria =
-        if_else(
-          Educacion_obligatoria %in% "No cuenta con título de bachiller",
-          "ZNo cuenta con título de bachiller", Educacion_obligatoria
-        ),
+      # Educacion_obligatoria =
+      #   if_else(
+      #     Educacion_obligatoria %in% "No cuenta con título de bachiller",
+      #     "ZNo cuenta con título de bachiller", Educacion_obligatoria
+      #   ),
       Sexo                  =
         if_else(
           Sexo %in% "Femenino",
@@ -251,7 +251,7 @@ logit_dataBase.fn <- function(data = Main_database,
           "ZMenor a 30 años", Edad_menor30
         ),
     ) %>%
-    arrange(Sexo, Educacion_obligatoria, LGBTQ, Etnia, Edad_menor30, Ingreso_inseguro)
+    arrange(Sexo, LGBTQ, Etnia, Edad_menor30, Ingreso_inseguro)
   
   formula <- selectables %>%
     t() %>%
@@ -279,7 +279,7 @@ logit_dataBase.fn <- function(data = Main_database,
                           "LGBTQZPertenece a la comunidad LGBTQ"                     = "Perteneciente a \ncomunidad LGBTQ",
                           "Ingreso_inseguroZFinancieramente inseguro"                = "Financieramente inseguro/a",
                           "EtniaZAfroamericano o indígena"                           = "Afroamericano/a o indígena",
-                          "Educacion_obligatoriaZNo cuenta con título de bachiller"  = "Sin diploma bachiller",
+                          # "Educacion_obligatoriaZNo cuenta con título de bachiller"  = "Sin diploma bachiller",
                           "Edad_menor30ZMenor a 30 años"                             = "Menor a 30 años"
                           # "Colo_piel_claroZColor de piel oscura"                     = "Color de piel oscura"
   )
@@ -290,9 +290,9 @@ logit_dataBase.fn <- function(data = Main_database,
                factor == "Mujer"                              ~ 1,
                factor == "Perteneciente a \ncomunidad LGBTQ"  ~ 2,
                factor == "Menor a 30 años"                    ~ 3,
-               factor == "Sin diploma bachiller"              ~ 4,
-               factor == "Financieramente inseguro/a"         ~ 5,
-               factor == "Afroamericano/a o indígena"         ~ 6
+               # factor == "Sin diploma bachiller"              ~ 4,
+               factor == "Financieramente inseguro/a"         ~ 4,
+               factor == "Afroamericano/a o indígena"         ~ 5
                # factor == "Color de piel oscura"               ~ 7
              ),
            dependent_var  =
@@ -325,10 +325,10 @@ logit_demo_panel <- function(mainData = data2plot,
     geom_point(aes(x = reorder(factor, -order_variable), y = AME), 
                size = 2, position = position_dodge(width = .7), color = "white") +
     labs(y = "Menos probable                               Más probable") +
-    scale_y_continuous(limits = c(-0.10, 0.15),
+    scale_y_continuous(limits = c(-0.15, 0.15),
                        breaks = seq(-0.10, 0.10, by = 0.05),
                        expand = expansion(mult = 0.025), position = "right",
-                       labels = c("-10", "-5", "0", "+5", "+10"))+
+                       labels = c("-10 p.p.", "-5 p.p.", "0", "+5 p.p.", "+10 p.p."))+
     WJP_theme()+
     coord_flip() +
     theme(legend.position = "none",
