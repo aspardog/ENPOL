@@ -326,8 +326,8 @@ logit_demo_panel_min <- function(mainData = data2plot,
     geom_point(aes(x = reorder(factor, -order_variable), y = AME), 
                size = 2, position = position_dodge(width = .7), color = "white") +
     labs(y = "Menos probable        Más probable") +
-    scale_y_continuous(limits = c(-0.20, 0.20),
-                       breaks = seq(-0.15, 0.15, by = 0.075),
+    scale_y_continuous(limits = c(-0.15, 0.15),
+                       breaks = seq(-0.12, 0.12, by = 0.06),
                        expand = expansion(mult = 0.025), position = "right",
                        labels = c("-10 p.p.", "-5 p.p.", "0", "+5 p.p.", "+10 p.p.")) +
     WJP_theme() +
