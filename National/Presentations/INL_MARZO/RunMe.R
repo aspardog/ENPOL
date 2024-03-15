@@ -60,10 +60,13 @@ ggsave(plot   = barChart,
        device = "svg")
 
 
+# CORRER SÓLO ESTA GRÁFICA ------------------------------------------------
+
+
 
 data2plot <- count_frequency.fn(Indicators_database$indicator_GDH)
 
-barChart <- BarSimpleChartViz(shade_xminvalue = 2, shade_xmaxvalue = 3)
+barChart <- BarSimpleChartViz(shade_xminvalue = 1, shade_xmaxvalue = 3)
 barChart
 ggsave(plot   = barChart,
        file   = paste0( path2SP, "/National/Presentations/INL_MARZO/Visualizations/Bar_indicator_GDH.svg"), 
@@ -128,6 +131,7 @@ ggsave(plot   = logitPlot,
        dpi    = 72,
        device = "svg")
 
+# CORRER SÓLO ESTA GRÁFICA ------------------------------------------------
 
 
 # GDH menos del 50% de los criterios ----------------------------------
@@ -191,6 +195,7 @@ ggsave(plot   = logitPlot,
        units  = "mm",
        dpi    = 72,
        device = "svg")
+# CORRER SÓLO ESTA GRÁFICA ------------------------------------------------
 
 
 # GDH todos los criterios ----------------------------------
