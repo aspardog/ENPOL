@@ -505,7 +505,7 @@ BarSimpleChartViz <- function(data = data2plot,
     geom_bar(stat = "identity",
              show.legend = FALSE, width = 0.9) +
     scale_fill_gradient(low = "#756ef9", high = "#b1a6ff") +
-    geom_vline(xintercept = c("50", "90"), linetype = 3, color = c("#fa4d57", "#43a9a7")) +
+    geom_vline(xintercept = c("0", "100"), linetype = 3, color = c("#fa4d57", "#43a9a7")) +
     annotate('rect', xmin=0, xmax= shade_xminvalue, ymin=0, ymax=60, alpha=.1, fill="#fa4d57")+
     annotate('rect', xmin=shade_xmaxvalue, xmax= shade_xmaxvalue+1, ymin=0, ymax=60, alpha=.1, fill="#43a9a7")+
     geom_text(aes(y    = {{y_var}} + 10),
