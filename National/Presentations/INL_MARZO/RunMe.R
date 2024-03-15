@@ -53,7 +53,7 @@ barChart <- BarSimpleChartViz(shade_xminvalue = 5, shade_xmaxvalue = 9)
 barChart
 ggsave(plot   = barChart,
        file   = paste0( path2SP, "National/Presentations/INL_MARZO/Visualizations/Bar_indicator_general.svg"), 
-       width  = 175, 
+       width  = 190, 
        height = 85,
        units  = "mm",
        dpi    = 72,
@@ -67,7 +67,7 @@ barChart <- BarSimpleChartViz(shade_xminvalue = 2, shade_xmaxvalue = 3)
 barChart
 ggsave(plot   = barChart,
        file   = paste0( path2SP, "National/Presentations/INL_MARZO/Visualizations/Bar_indicator_GDH.svg"), 
-       width  = 175, 
+       width  = 190, 
        height = 85,
        units  = "mm",
        dpi    = 72,
@@ -82,7 +82,7 @@ barChart <- BarSimpleChartViz(shade_xminvalue = 4, shade_xmaxvalue = 7)
 barChart
 ggsave(plot   = barChart,
        file   = paste0( path2SP, "National/Presentations/INL_MARZO/Visualizations/Bar_indicator_UAA.svg"), 
-       width  = 175, 
+       width  = 190, 
        height = 85,
        units  = "mm",
        dpi    = 72,
@@ -95,7 +95,7 @@ barChart <- BarSimpleChartViz(shade_xminvalue = 6, shade_xmaxvalue = 10)
 barChart
 ggsave(plot   = barChart,
        file   = paste0( path2SP, "National/Presentations/INL_MARZO/Visualizations/Bar_indicatorPJ.svg"), 
-       width  = 175, 
+       width  = 190, 
        height = 85,
        units  = "mm",
        dpi    = 72,
@@ -122,8 +122,8 @@ logitPlot <- logit_demo_panel(mainData = data2plot, line_size = 2)
 logitPlot
 ggsave(plot   = logitPlot,
        file   = paste0( path2SP, "National/Presentations/INL_MARZO/Visualizations/Logit_min_indicator_general.svg"), 
-       width  = 140, 
-       height = 75,
+       width  = 87, 
+       height = 65,
        units  = "mm",
        dpi    = 60,
        device = "svg")
@@ -139,8 +139,8 @@ logitPlot <- logit_demo_panel(mainData = data2plot, line_size = 2)
 logitPlot
 ggsave(plot   = logitPlot,
        file   = paste0( path2SP, "National/Presentations/INL_MARZO/Visualizations/Logit_min_indicator_GDH.svg"), 
-       width  = 140, 
-       height = 75,
+       width  = 87, 
+       height = 65,
        units  = "mm",
        dpi    = 72,
        device = "svg")
@@ -154,8 +154,8 @@ logitPlot <- logit_demo_panel(mainData = data2plot, line_size = 2)
 logitPlot
 ggsave(plot   = logitPlot,
        file   = paste0( path2SP, "National/Presentations/INL_MARZO/Visualizations/Logit_min_indicator_PJ.svg"), 
-       width  = 140, 
-       height = 75,
+       width  = 87, 
+       height = 65,
        units  = "mm",
        dpi    = 72,
        device = "svg")
@@ -170,8 +170,8 @@ logitPlot <- logit_demo_panel(mainData = data2plot, line_size = 2)
 logitPlot
 ggsave(plot   = logitPlot,
        file   = paste0( path2SP, "National/Presentations/INL_MARZO/Visualizations/Logit_min_indicator_UAA.svg"), 
-       width  = 140, 
-       height = 75,
+       width  = 87, 
+       height = 65,
        units  = "mm",
        dpi    = 72,
        device = "svg")
@@ -186,8 +186,8 @@ logitPlot <- logit_demo_panel(mainData = data2plot, line_size = 2)
 
 ggsave(plot   = logitPlot,
        file   = paste0( path2SP, "National/Presentations/INL_MARZO/Visualizations/Logit_max_indicator_general.svg"), 
-       width  = 140, 
-       height = 90,
+       width  = 87, 
+       height = 65,
        units  = "mm",
        dpi    = 72,
        device = "svg")
@@ -202,8 +202,8 @@ logitPlot <- logit_demo_panel(mainData = data2plot, line_size = 2)
 logitPlot
 ggsave(plot   = logitPlot,
        file   = paste0( path2SP, "National/Presentations/INL_MARZO/Visualizations/Logit_max_indicator_GDH.svg"), 
-       width  = 115, 
-       height = 75,
+       width  = 87, 
+       height = 65,
        units  = "mm",
        dpi    = 72,
        device = "svg")
@@ -217,8 +217,8 @@ logitPlot <- logit_demo_panel(mainData = data2plot, line_size = 2)
 logitPlot
 ggsave(plot   = logitPlot,
        file   = paste0( path2SP, "National/Presentations/INL_MARZO/Visualizations/Logit_max_indicator_PJ.svg"), 
-       width  = 140, 
-       height = 75,
+       width  = 87, 
+       height = 65,
        units  = "mm",
        dpi    = 72,
        device = "svg")
@@ -233,8 +233,8 @@ logitPlot <- logit_demo_panel(mainData = data2plot, line_size = 2)
 logitPlot
 ggsave(plot   = logitPlot,
        file   = paste0( path2SP, "National/Presentations/INL_MARZO/Visualizations/Logit_max_indicator_UAA.svg"), 
-       width  = 140, 
-       height = 75,
+       width  = 87, 
+       height = 65,
        units  = "mm",
        dpi    = 72,
        device = "svg")
