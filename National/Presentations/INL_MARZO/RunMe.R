@@ -118,7 +118,7 @@ Main_database <- Main_database %>%
 
 data2plot <- logit_dataBase.fn(dependent_var = "indicator_general_minlimit")
 
-logitPlot <- logit_demo_panel(mainData = data2plot, line_size = 2)
+logitPlot <- logit_demo_panel_min(mainData = data2plot, line_size = 2)
 logitPlot
 ggsave(plot   = logitPlot,
        file   = paste0( path2SP, "National/Presentations/INL_MARZO/Visualizations/Logit_min_indicator_general.svg"), 
@@ -135,7 +135,7 @@ ggsave(plot   = logitPlot,
 
 data2plot <- logit_dataBase.fn(dependent_var = "indicator_GDH_minlimit")
 
-logitPlot <- logit_demo_panel(mainData = data2plot, line_size = 2)
+logitPlot <- logit_demo_panel_min(mainData = data2plot, line_size = 2)
 logitPlot
 ggsave(plot   = logitPlot,
        file   = paste0( path2SP, "National/Presentations/INL_MARZO/Visualizations/Logit_min_indicator_GDH.svg"), 
@@ -150,7 +150,7 @@ ggsave(plot   = logitPlot,
 
 data2plot <- logit_dataBase.fn(dependent_var = "indicator_PJ_minlimit")
 
-logitPlot <- logit_demo_panel(mainData = data2plot, line_size = 2)
+logitPlot <- logit_demo_panel_min(mainData = data2plot, line_size = 2)
 logitPlot
 ggsave(plot   = logitPlot,
        file   = paste0( path2SP, "National/Presentations/INL_MARZO/Visualizations/Logit_min_indicator_PJ.svg"), 
@@ -166,7 +166,7 @@ ggsave(plot   = logitPlot,
 
 data2plot <- logit_dataBase.fn(dependent_var = "indicator_UAA_minlimit")
 
-logitPlot <- logit_demo_panel(mainData = data2plot, line_size = 2)
+logitPlot <- logit_demo_panel_min(mainData = data2plot, line_size = 2)
 logitPlot
 ggsave(plot   = logitPlot,
        file   = paste0( path2SP, "National/Presentations/INL_MARZO/Visualizations/Logit_min_indicator_UAA.svg"), 
@@ -182,7 +182,7 @@ ggsave(plot   = logitPlot,
 
 data2plot <- logit_dataBase.fn(dependent_var = "indicator_general_maxlimit")
 
-logitPlot <- logit_demo_panel(mainData = data2plot, line_size = 2)
+logitPlot <- logit_demo_panel_max(mainData = data2plot, line_size = 2)
 
 ggsave(plot   = logitPlot,
        file   = paste0( path2SP, "National/Presentations/INL_MARZO/Visualizations/Logit_max_indicator_general.svg"), 
@@ -198,7 +198,7 @@ ggsave(plot   = logitPlot,
 
 data2plot <- logit_dataBase.fn(dependent_var = "indicator_GDH_maxlimit")
 
-logitPlot <- logit_demo_panel(mainData = data2plot, line_size = 2)
+logitPlot <- logit_demo_panel_max(mainData = data2plot, line_size = 2)
 logitPlot
 ggsave(plot   = logitPlot,
        file   = paste0( path2SP, "National/Presentations/INL_MARZO/Visualizations/Logit_max_indicator_GDH.svg"), 
@@ -213,7 +213,7 @@ ggsave(plot   = logitPlot,
 
 data2plot <- logit_dataBase.fn(dependent_var = "indicator_PJ_maxlimit")
 
-logitPlot <- logit_demo_panel(mainData = data2plot, line_size = 2)
+logitPlot <- logit_demo_panel_max(mainData = data2plot, line_size = 2)
 logitPlot
 ggsave(plot   = logitPlot,
        file   = paste0( path2SP, "National/Presentations/INL_MARZO/Visualizations/Logit_max_indicator_PJ.svg"), 
@@ -229,7 +229,7 @@ ggsave(plot   = logitPlot,
 
 data2plot <- logit_dataBase.fn(dependent_var = "indicator_UAA_maxlimit")
 
-logitPlot <- logit_demo_panel(mainData = data2plot, line_size = 2)
+logitPlot <- logit_demo_panel_max(mainData = data2plot, line_size = 2)
 logitPlot
 ggsave(plot   = logitPlot,
        file   = paste0( path2SP, "National/Presentations/INL_MARZO/Visualizations/Logit_max_indicator_UAA.svg"), 
