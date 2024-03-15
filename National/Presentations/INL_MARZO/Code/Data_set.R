@@ -243,7 +243,7 @@ Main_database <- Main_database %>% mutate(
   mutate(indicator_general_minlimit = case_when(indicator_general <= 0.5 ~ 1,
                                                 indicator_general > 0.5 ~ 0,
                                                 T ~ NA_real_),
-         indicator_GDH_minlimit = case_when(indicator_GDH <= 0.5 ~ 1,
+         indicator_GDH_minlimit = case_when(indicator_GDH < 0.5 ~ 1, # este no incluye el 50%
                                             indicator_GDH > 0.5 ~ 0,
                                                 T ~ NA_real_),
          indicator_UAA_minlimit = case_when(indicator_UAA <= 0.5 ~ 1,
