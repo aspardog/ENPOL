@@ -65,6 +65,11 @@ ggsave(plot   = barChart,
 
 
 data2plot <- count_frequency.fn(Indicators_database$indicator_GDH)
+data2plot <- data2plot %>% mutate(figure = case_when(figure == "25%" ~ "25%",
+                                                     figure == "55%" ~ "55%",
+                                                     figure == "19%" ~ "20%",
+                                                     T ~ NA_character_))
+
 
 barChart <- BarSimpleChartViz(shade_xminvalue = 1, shade_xmaxvalue = 3)
 barChart
