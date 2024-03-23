@@ -433,7 +433,7 @@ set_data.fn <- function(data, columnas, labels) {
   data2plot <- data2plot %>%
     mutate(
       order_var = rank(-PorcentajeUnos, ties.method = "min"), 
-      labels = str_wrap(label, width = 30), # Make sure the column name matches what's in the dataframe
+      labels = str_wrap(label, width = 55), # Make sure the column name matches what's in the dataframe
       figure = paste0(PorcentajeUnos, "%")
     )
   
@@ -588,7 +588,6 @@ valores <- function(data, variables) {
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
-<<<<<<< Updated upstream
 ## 9.  logit database                                                               ----
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -736,334 +735,6 @@ logit_dataBase.fn <- function(data = Main_database_2008,
 }
 
 
-## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-##
-## 10.  Line Chart Data Base                                        ----
-=======
-## 9.  Event study                                                         ----
-##
-## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-event_study <- function(data.df = data_subset_tipo.df,
-                        var_groups = "National",
-                        var_analysis = c("flagrancia", 
-                                         "orden_det", 
-                                         "inspeccion", 
-<<<<<<< Updated upstream
-                                         "det_ninguna"),
-                        section,
-                        subsection,
-                        name) {
-=======
-                                         "det_ninguna")) {
-  
-  
-  variables2analyze <- c(var_groups)
-  
-  variables2summarise <- c(var_analysis)
-  
-  master_data.df <- data.df %>%
-    mutate(period = 
-             case_when(
-               years_since_NSJP < -1 & years_since_NSJP > -2 ~ "one_year_before",
-               years_since_NSJP < -2 & years_since_NSJP > -3 ~ "two_years_before",
-               years_since_NSJP < -3 & years_since_NSJP > -4 ~ "three_years_before",
-               years_since_NSJP < -4 & years_since_NSJP > -5 ~ "four_years_before",
-               years_since_NSJP < -5 & years_since_NSJP > -6 ~ "five_years_before",
-               years_since_NSJP < -6 & years_since_NSJP > -7 ~ "six_years_before",
-               years_since_NSJP < -7 & years_since_NSJP > -8 ~ "seven_years_before",
-               years_since_NSJP < -8 & years_since_NSJP > -9 ~ "eight_years_before",
-               years_since_NSJP < -9 & years_since_NSJP > -10 ~ "nine_years_before",
-               years_since_NSJP < -10 & years_since_NSJP > -11 ~ "ten_years_before",
-               years_since_NSJP > -1 & years_since_NSJP < 1  ~ "implementation_year",
-               years_since_NSJP > 1 & years_since_NSJP < 2 ~ "one_year_after",
-               years_since_NSJP > 2 & years_since_NSJP < 3 ~ "two_years_after",
-               years_since_NSJP > 3 & years_since_NSJP < 4 ~ "three_years_after",
-               years_since_NSJP > 4 & years_since_NSJP < 5 ~ "four_years_after",
-               years_since_NSJP > 5 & years_since_NSJP < 6 ~ "five_years_after",
-               years_since_NSJP > 6 & years_since_NSJP < 7 ~ "six_years_after",
-               years_since_NSJP > 7 & years_since_NSJP < 8 ~ "seven_years_after",
-               years_since_NSJP > 8 & years_since_NSJP < 9 ~ "eight_years_after",
-               years_since_NSJP > 9 & years_since_NSJP < 10 ~ "nine_years_after",
-               years_since_NSJP > 10 & years_since_NSJP < 11 ~ "ten_years_after",
-               years_since_NSJP > 11 & years_since_NSJP < 12 ~ "eleven_years_after",
-<<<<<<< Updated upstream
-               years_since_NSJP > 12 & years_since_NSJP < 13 ~ "twelve_years_after",
-               years_since_NSJP > 13 & years_since_NSJP < 14 ~ "thirteen_years_after",
-               years_since_NSJP > 14 & years_since_NSJP < 15 ~ "fourteen_years_after"
-
-             )) %>%
-    filter(!is.na(period)) %>%
-    arrange(years_since_NSJP) %>%
-    mutate(National = "National")
-  
-<<<<<<< Updated upstream
-  data2analysis <- lapply(variables2analyze, function(vars){
-    
-    data_subset.df <- master_data.df %>%
-      mutate(var_name = as.character(vars)) %>%
-      rename(group = all_of({{vars}}))
-    
-    changes_time <- data_subset.df %>% 
-      group_by(period, group, var_name) %>%
-      summarise(
-        across(all_of(variables2summarise),
-               ~ mean(.x, na.rm = TRUE))) %>%
-      mutate(order_value = 
-               case_when(
-                 period == "ten_years_before"    ~ -10,
-                 period == "nine_years_before"   ~ -9,
-                 period == "eight_years_before"  ~ -8,
-                 period == "seven_years_before"  ~ -7,
-                 period == "six_years_before"    ~ -6,
-                 period == "five_years_before"   ~ -5,
-                 period == "four_years_before"   ~ -4,
-                 period == "three_years_before"  ~ -3,
-                 period == "two_years_before"    ~ -2,
-                 period == "one_year_before"     ~ -1,
-                 period == "implementation_year" ~ 0,
-                 period == "one_year_after"      ~ 1,
-                 period == "two_years_after"     ~ 2,
-                 period == "three_years_after"   ~ 3,
-                 period == "four_years_after"    ~ 4,
-                 period == "five_years_after"    ~ 5,
-                 period == "six_years_after"     ~ 6,
-                 period == "seven_years_after"   ~ 7,
-                 period == "eight_years_after"   ~ 8,
-                 period == "nine_years_after"    ~ 9,
-                 period == "ten_years_after"     ~ 10,
-                 period == "eleven_years_after"  ~ 11,
-                 period == "twelve_years_after"   ~ 12,
-                 
-               )
-      ) %>%
-      arrange(order_value)
-    
-  })
-  
-}
-
-
-
-lineChartData.fn <-function(data = Main_database_2008,
-=======
-  data2analysis <- list()
-
-  for (var in variables2summarise) {
-    data_subset_list <- lapply(variables2analyze, function(vars){
-      data_subset.df <- master_data.df %>%
-        mutate(var_name = as.character(vars)) %>%
-        rename(group = all_of({{vars}}))
-
-      changes_time <- data_subset.df %>%
-        group_by(period, group, var_name) %>%
-        summarise(across(all_of(var), ~ mean(.x, na.rm = TRUE))) %>%
-        mutate(order_value = case_when(
-          period == "ten_years_before"    ~ -10,
-          period == "nine_years_before"   ~ -9,
-          period == "eight_years_before"  ~ -8,
-          period == "seven_years_before"  ~ -7,
-          period == "six_years_before"    ~ -6,
-          period == "five_years_before"   ~ -5,
-          period == "four_years_before"   ~ -4,
-          period == "three_years_before"  ~ -3,
-          period == "two_years_before"    ~ -2,
-          period == "one_year_before"     ~ -1,
-          period == "implementation_year" ~ 0,
-          period == "one_year_after"      ~ 1,
-          period == "two_years_after"     ~ 2,
-          period == "three_years_after"   ~ 3,
-          period == "four_years_after"    ~ 4,
-          period == "five_years_after"    ~ 5,
-          period == "six_years_after"     ~ 6,
-          period == "seven_years_after"   ~ 7,
-          period == "eight_years_after"   ~ 8,
-          period == "nine_years_after"    ~ 9,
-          period == "ten_years_after"     ~ 10,
-          period == "eleven_years_after"  ~ 11,
-          period == "twelve_years_after"  ~ 12,
-          TRUE ~ NA_integer_
-        )) %>%
-        arrange(order_value)
-
-      return(changes_time)
-    })
-
-    data2analysis[[var]] <- data_subset_list
-  }
-  
-  return(data2analysis)
-}
-
-lineChartData.fn <-function(data = Main_database,
->>>>>>> Stashed changes
-                            dependent_var = dependent_var){
-  
-  dependent_var <- dependent_var
-  
-  event_study_tipo <- event_study(data.df = data, 
-                                  var_analysis = dependent_var,
-                                  var_groups = c("National"))
-  
-  data2table <- event_study_tipo[[1]]
-  
-  data2plot <- data2table %>%
-    filter(order_value > -1) %>%
-    rename(dependent_var = all_of(dependent_var)) %>%
-    mutate(
-      dependent_cmpl = 1 - dependent_var
-    ) %>%
-    drop_na() %>%
-    pivot_longer(cols = c(dependent_var, dependent_cmpl), names_to = "category", values_to = "value2plot") %>%
-    mutate(
-      period = 
-        case_when(
-          period == "implementation_year" ~ "Implementación",
-          period == "one_year_after" ~ "Un año",
-          period == "two_years_after" ~ "Dos años",
-          period == "three_years_after" ~ "Tres años",
-          period == "four_years_after" ~ "Cuatro años",
-          period == "five_years_after" ~ "Cinco años",
-          period == "six_years_after" ~ "Seis años",
-          period == "seven_years_after" ~ "Siete años",
-          period == "eight_years_after" ~ "Ocho años",
-          period == "nine_years_after" ~ "Nueve años",
-          period == "ten_years_after" ~ "Diez años",
-          period == "eleven_years_after" ~ "Once años",
-          period == "twelve_years_after" ~ "Doce años",
-        ),
-      value2plot = value2plot*100,
-      labels = if_else(
-        period %in% c("Implementación", "Dos años", "Cuatro años", "Seis años", "Ocho años", "Diez años", "Doce años"),
-        paste0(round(value2plot,0), "%"), NA_character_),
-      period_labels =
-        case_when(
-          period == "Implementación" ~ "Implementación",
-          period == "Un año" ~ " ",
-          period == "Dos años" ~ "Dos años",
-          period == "Tres años" ~ " ",
-          period == "Cuatro años" ~ "Cuatro años",
-          period == "Cinco años" ~ " ",
-          period == "Seis años" ~ "Seis años",
-          period == "Siete años" ~ " ",
-          period == "Ocho años" ~ "Ocho años",
-          period == "Nueve años" ~ " ",
-          period == "Diez años" ~ "Diez años",
-          period == "Once años" ~ " ",
-          period == "Doce años" ~ "Doce años",
-          
-        )
-    )
-  
-}
-
-<<<<<<< Updated upstream
-## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-##
-## 2.  Line Chart                                                                                  ----
-##
-## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-lineChartViz <- function(data = data2plot,
-=======
-lineChartViz <- function(data.df = data2plot,
-                         value2plot = value2plot,
->>>>>>> Stashed changes
-                         period = period,
-                         order_value = order_value,
-                         category = category,
-                         labels = labels,
-<<<<<<< Updated upstream
-                         colors = category) {
-  # Creating ggplot
-  plt <- ggplot(data2plot, 
-                aes(x     = reorder(period, order_value),
-                    y     = value2plot,
-                    color = category,
-                    label = labels,
-                    group = category)) +
-=======
-                         event = T,
-                         color4plot = colors4plot) {
-  
-  # Renaming variables in the data frame to match the function naming
-  data.df <- data.df %>%
-    rename(period      = all_of(period),
-           value2plot  = all_of(value2plot),
-           category    = all_of(category),
-           labels      = all_of(labels)
-           )
-  
-  if(event == T) {
-    plt <- ggplot(data.df, 
-                  aes(x     = reorder(period,order_value),
-                      y     = value2plot,
-                      color  = category,
-                      group = category,
-                      label = labels)) 
-  } else {
-    # Creating ggplot
-    plt <- ggplot(data.df, 
-                  aes(x     = period,
-                      y     = value2plot,
-                      color  = category,
-                      group = category,
-                      label = labels))
-  }
-  
-  plt <- plt +
->>>>>>> Stashed changes
-    geom_point(size = 2,
-               show.legend = F) +
-    geom_line(size  = 1,
-              show.legend = F) +
-    geom_text_repel(family      = "Lato Full",
-                    fontface    = "bold",
-                    size        = 3.514598,
-                    show.legend = F,
-                    
-                    # Additional options from ggrepel package:
-                    min.segment.length = 1000,
-                    seed               = 42,
-                    box.padding        = 0.5,
-                    direction          = "y",
-                    force              = 5,
-                    force_pull         = 1) +
-    scale_y_continuous(limits = c(0, 105),
-                       expand = c(0,0),
-                       breaks = seq(0,100,20),
-                       labels = paste0(seq(0,100,20), "%")) +
-    scale_x_discrete("period",
-                     labels = c("Implementación" = "Implementación",
-                                "Un año" = " ",
-                                "Dos años" = "Dos años",
-                                "Tres años" = " ",
-                                "Cuatro años" = "Cuatro años",
-                                "Cinco años" = " ",
-                                "Seis años" = "Seis años",
-                                "Siete años" = " ",
-                                "Ocho años" = "Ocho años",
-                                "Nueve años" = " ",
-                                "Diez años" = "Diez años",
-                                "Once años" = " ",
-                                "Doce años" = "Doce años")
-    ) +
-    scale_color_manual(values = colors4plot) +
-    WJP_theme() +
-    theme(panel.grid.major.x = element_blank(),
-          panel.grid.major.y = element_line(colour = "#d1cfd1"),
-          axis.title.x       = element_blank(),
-          axis.title.y       = element_blank(),
-          axis.line.x        = element_line(color    = "#d1cfd1"),
-          axis.ticks.x       = element_line(color    = "#d1cfd1",
-                                            linetype = "solid")
-    )
-<<<<<<< Updated upstream
-  
-}
-
-
-
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -1108,10 +779,6 @@ logit_demo_panel <- function(mainData = data2plot,
           panel.grid.minor.y = element_blank())
   
   return(plot)
-}
-
-=======
-  return(plt)
 }
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1421,4 +1088,114 @@ time_analysis.fn <- function(data.df = Main_database_2008,
   }
   return(result_list)
 }
->>>>>>> Stashed changes
+
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##
+## 3.  Bar Chart                                                                                ----
+##
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+barsChart.fn <- function(
+    data.df                    = data2plot,
+    labels_var                 = "labels",
+    value2plot                 = "value2plot",
+    grouping_var               = "group_var",
+    categories_grouping_var    = categories,
+    label_figures              = "figure",
+    order                      = T,
+    order_value                = "order_values",
+    nbars                      = 11,
+    colors4plot                = colors4plot
+) {
+  
+  data2plot <- data.df %>%
+    dplyr::rename(
+      value2plot       = all_of(value2plot),
+      grouping_var     = all_of(grouping_var),
+      labels           = all_of(labels_var),
+      label_figures    = all_of(label_figures),
+      order_var        = any_of(order_value),
+    )
+  
+  if(order == T) {
+    
+    plot <- ggplot(data2plot,
+                   aes(
+                     x     = reorder(labels, -order_var),
+                     y     = value2plot,
+                     fill  = grouping_var,
+                     label = str_wrap(label_figures, width = 30) 
+                   ))
+  } else {
+    
+    plot <- ggplot(data2plot,
+                   aes(
+                     x     = labels,
+                     y     = value2plot,
+                     fill  = grouping_var,
+                     label = str_wrap(label_figures, width = 30) 
+                   ))
+  }
+  
+  plot <- plot +
+    geom_bar(stat = "identity",
+             show.legend = T,
+             position = position_dodge(widt = 0.9))
+  if(nbars > 1){
+    
+    plot <- plot +
+      geom_vline(xintercept = seq(1.5, nbars - 0.5, by = 1), linetype = "dashed", color = "black")
+    
+  } else {
+    plot <- plot
+  }
+  plot <- plot +
+    geom_text(aes(y    = value2plot + 5), 
+              position = position_dodge(widt = 0.9),
+              color    = "#4a4a49",
+              family   = "Lato Full",
+              fontface = "bold", 
+              size = 3.514598)  +
+    geom_vline(xintercept = 2.5, linetype = "dashed", color = "black") +
+    scale_fill_manual(values = colors4plot, breaks = categories_grouping_var) +
+    scale_y_continuous(limits = c(0, 100),
+                       breaks = seq(0,100,20),
+                       labels = function(x) str_wrap(paste0(x, "%"), width = 10),
+                       position = "right") +
+    coord_flip() +
+    theme(
+      panel.background   = element_blank(),
+      plot.background    = element_blank(),
+      panel.grid.major   = element_line(size     = 0.25,
+                                        colour   = "#5e5c5a",
+                                        linetype = "dashed"),
+      panel.grid.minor   = element_blank(),
+      panel.grid.major.y = element_blank(),
+      panel.grid.major.x = element_line(color = "#D0D1D3")) +
+    theme(
+      axis.title.y       = element_blank(),
+      axis.title.x       = element_blank(),
+      axis.ticks         = element_blank(),
+      axis.text.y        = element_markdown(family   = "Lato Full",
+                                            face     = "plain",
+                                            size     = 3.514598*.pt,
+                                            color    = "#524F4C",
+                                            margin   = margin(0, 10, 0, 0),
+                                            hjust = 0), 
+      plot.title          = element_text(family   = "Lato Full",
+                                         face     = "bold",
+                                         size     = 4.920437*.pt,
+                                         color    = "black",
+                                         margin   = margin(0, 0, 10, 0),
+                                         hjust    = 0), 
+      plot.subtitle      = element_text(family   = "Lato Full",
+                                        face     = "italic",
+                                        size     = 4.217518*.pt,
+                                        color    = "black",
+                                        margin   = margin(2.5, 0, 20, 0),
+                                        hjust    = 0)
+    )
+  
+  return(plot)
+  
+}
