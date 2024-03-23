@@ -335,12 +335,12 @@ defensa_adecuada <- c("P4_1_05",
                       "P5_22_10",
                       "P5_22_11")
 
-labels <- c("¿tuvo la asesoría de un abogado?",
-               "¿habló a solas con su abogado?",
-               "¿su abogado ofreció pruebas de su inocencia?",
-               "En ese interrogatorio, ¿estuvo presente su abogado?",
-               "Al momento de rendir o firmar su declaración ante el Ministerio Público… ¿estuvo presente su abogado?",
-              " Al momento de ser presentado(a) por la autoridad ante la(s) víctima(s) 
+labels <- c("Al momento de llegar a la Agencia del MP, ¿tuvo la asesoría de un abogado?",
+            "Al momento de llegar a la Agencia del MP, ¿habló a solas con su abogado?",
+            "Al momento de llegar a la Agencia del MP, ¿su abogado ofreció pruebas de su inocencia?",
+            "Al momento de llegar a la Agencia del MP, En ese interrogatorio, ¿estuvo presente su abogado?",
+            "Al momento de rendir o firmar su declaración ante el MP… ¿estuvo presente su abogado?",
+            " Al momento de ser presentado(a) por la autoridad ante la(s) víctima(s) 
             o testigo(s) para que lo(a) identificaran, … ¿estaba presente su abogado defensor?",
                "Antes de llegar con un juez de lo penal (juez de Control) 
             por primera vez, ¿tuvo la asesoría de un abogado defensor?",
@@ -354,7 +354,7 @@ labels <- c("¿tuvo la asesoría de un abogado?",
                "¿Alguno de sus abogados defensores contradijo las pruebas que la parte acusadora presentó contra usted?") 
 
 Main_database_2008 <- clean_columns.fn(Main_database_2008, defensa_adecuada)
-Main_database_2015 <- clean_columns.fn(Main_database_2015, defensa_adecuada)
+
 
 data2plot <- set_data.fn(Main_database_2008, defensa_adecuada, labels)
 
@@ -380,7 +380,7 @@ ggsave(plot   = barChart,
        dpi    = 72,
        device = "svg")
 
-
+Main_database_2015 <- clean_columns.fn(Main_database_2015, defensa_adecuada)
 data2plot <- set_data.fn(Main_database_2015, defensa_adecuada, labels)
 
 barChart <- BarSimpleChartViz(data = data2plot, 
@@ -774,6 +774,19 @@ lineChart <- lineChartViz(data = data2plot)
 
 lineChart
 
+#Por año por momento
+
+momento <- c("detencion_corrupcion", "mp_corrupcion", "juzgado_corrupcion", "corrupcion_general")
+
+
+for (i in momento) {
+  tabla_excel_fn(dataset = Main_database_2008, var_prop = i, var1 = "Anio_arresto", var2 = NA , var3 = NA, 
+                 varfilter = NA, filtervalue = NA, 
+                 carpeta = "Legalidad", seccion = "corrupción_serie_tiempo", nombre = paste0("",i),
+                 Dato = paste0("Proporción de personas que reportaron sí en liberación a cambio de dienro ",i))
+}
+
+
 ####  Logit sociodemográfico --------------------------------------------------
 
 data2plot <- logit_dataBase.fn(dependent_var = "corrupcion_general")
@@ -1160,44 +1173,130 @@ traslado_fisica <-  c("P3_18_01",
                       "P3_18_13",
                       "P3_18_14")
 labels <-  c("¿Ataron su cuerpo; ataron alguna parte de su cuerpo a un objeto?",
-             "¿Le impidieron respirar asfixiándolo(a), ahorcándolo(a) ?",
-             "¿Le impidieron respirar o metieron su cabeza en agua o vaciándole agua en la cara (tehuacán)?",
-             "¿Le patearon o golpearon con las manos?",
-             "¿Le golpearon con objetos ?",
-             "¿Le quemaron ?",
-             "¿Le dieron descargas eléctricas?",
+             "¿Le impidieron respirar asfixiándolo, ahorcándolo?",
+             "¿Le impidieron respirar o metiendo su cabeza en agua o vaciándole agua en la cara (tehuacán)?",
+             "¿Le patearon o golpearon con las manos (abiertas o cerradas)?",
+             "¿Le golpearon con objetos?",
+             "¿Le quemaron (con objetos calientes, fuego u otra sustancia)?",
+             "¿Le dieron descargas eléctricas (toques eléctricos, chicharra)?",
              "¿Aplastaron su cuerpo o alguna parte de él con algún objeto o con el cuerpo de otra persona?",
              "¿Le hirieron con algún cuchillo, navaja u otro objeto afilado?",
              "¿Le encajaron agujas en dedos u otra parte del cuerpo?",
-             "¿Le hirieron por el disparo de un arma de fuego (lesiones por arma de fuego)?",
+             "¿Le hirieron por el disparo de un arma de fuego?",
              "¿Le agredieron mediante acoso sexual, manoseo, exhibicionismo o intento de violación?",
              "¿Le lastimaron sus órganos sexuales?",
-             "¿Fue obligado(a) mediante violencia física o amenaza a tener una actividad sexual no deseada?")
+             "¿Fue obligado mediante violencia física o amenaza a tener una actividad sexual no deseada?")
 
 Main_database_2008 <- clean_columns.fn(Main_database_2008, traslado_fisica)
 
 data2plot <- set_data.fn(Main_database_2008, traslado_fisica, labels)
 
-barChart <- BarSimpleChartViz(data = data2plot, 
-                              x_var = labels, 
-                              y_var = PorcentajeUnos, 
-                              label_var = figure, 
-                              fill_var = Columna, 
-                              Observaciones = Observaciones,
-                              order_var = order_var,
-                              fill_colors = c("#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
-                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
-                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7"),
-                              title = "La policía o autoridad que lo detuvo realizó o permitió que:")
-barChart
+data2plot <- data2plot %>% mutate( category = label,
+                                     group_var = "Traslado",
+                                     order_var = case_when(category == "¿Ataron su cuerpo; ataron alguna parte de su cuerpo a un objeto?" ~ 1,
+                                                            category =="¿Le impidieron respirar asfixiándolo, ahorcándolo?"~ 2,
+                                                            category =="¿Le impidieron respirar o metiendo su cabeza en agua o vaciándole agua en la cara (tehuacán)?" ~ 3,
+                                                            category =="¿Le patearon o golpearon con las manos (abiertas o cerradas)?"~ 4,
+                                                            category =="¿Le golpearon con objetos?"~ 5,
+                                                            category =="¿Le quemaron (con objetos calientes, fuego u otra sustancia)?"~ 6,
+                                                            category =="¿Le dieron descargas eléctricas (toques eléctricos, chicharra)?" ~ 7,
+                                                            category =="¿Aplastaron su cuerpo o alguna parte de él con algún objeto o con el cuerpo de otra persona?"~ 8,
+                                                            category == "¿Le hirieron con algún cuchillo, navaja u otro objeto afilado?"~ 9,
+                                                            category =="¿Le encajaron agujas en dedos u otra parte del cuerpo?"~ 10,
+                                                            category =="¿Le hirieron por el disparo de un arma de fuego?"~ 11,
+                                                            category =="¿Le agredieron mediante acoso sexual, manoseo, exhibicionismo o intento de violación?"~ 12,
+                                                            category =="¿Le lastimaron sus órganos sexuales?"~ 13,
+                                                            category == "¿Fue obligado mediante violencia física o amenaza a tener una actividad sexual no deseada?"~ 14,
+                                                          T ~ NA_real_))
 
-ggsave(plot   = barChart,
-       file   = paste0(path2SP, "/National/Exploration/Input/Debido_proceso/Legalidad","/desc_","tortura_traslado_fisica.svg"), 
+
+
+### 1.3.4. estancia_mp-fisica  ----------------------------------------------------
+
+mp_fisica <-  c("P4_9_01",
+                "P4_9_02",
+                "P4_9_03",
+                "P4_9_04",
+                "P4_9_05",
+                "P4_9_06",
+                "P4_9_07",
+                "P4_9_08",
+                "P4_9_09",
+                "P4_9_10",
+                "P4_9_11",
+                "P4_9_12",
+                "P4_9_13",
+                "P4_9_14")
+labels <-  c("¿Ataron su cuerpo; ataron alguna parte de su cuerpo a un objeto?",
+             "¿Le impidieron respirar asfixiándolo, ahorcándolo?",
+             "¿Le impidieron respirar o metiendo su cabeza en agua o vaciándole agua en la cara (tehuacán)?",
+             "¿Le patearon o golpearon con las manos (abiertas o cerradas)?",
+             "¿Le golpearon con objetos?",
+             "¿Le quemaron (con objetos calientes, fuego u otra sustancia)?",
+             "¿Le dieron descargas eléctricas (toques eléctricos, chicharra)?",
+             "¿Aplastaron su cuerpo o alguna parte de él con algún objeto o con el cuerpo de otra persona?",
+             "¿Le hirieron con algún cuchillo, navaja u otro objeto afilado?",
+             "¿Le encajaron agujas en dedos u otra parte del cuerpo?",
+             "¿Le hirieron por el disparo de un arma de fuego?",
+             "¿Le agredieron mediante acoso sexual, manoseo, exhibicionismo o intento de violación?",
+             "¿Le lastimaron sus órganos sexuales?",
+             "¿Fue obligado mediante violencia física o amenaza a tener una actividad sexual no deseada?")
+
+Main_database_2008 <- clean_columns.fn(Main_database_2008, mp_fisica)
+
+data2plot2 <- set_data.fn(Main_database_2008, mp_fisica, labels)
+
+data2plot2 <- data2plot2 %>% mutate( category = label,
+                                   group_var = "Ministerio Público",
+                                   order_var = case_when(category == "¿Ataron su cuerpo; ataron alguna parte de su cuerpo a un objeto?" ~ 1,
+                                                          category =="¿Le impidieron respirar asfixiándolo, ahorcándolo?"~ 2,
+                                                          category =="¿Le impidieron respirar o metiendo su cabeza en agua o vaciándole agua en la cara (tehuacán)?" ~ 3,
+                                                          category =="¿Le patearon o golpearon con las manos (abiertas o cerradas)?"~ 4,
+                                                          category =="¿Le golpearon con objetos?"~ 5,
+                                                          category =="¿Le quemaron (con objetos calientes, fuego u otra sustancia)?"~ 6,
+                                                          category =="¿Le dieron descargas eléctricas (toques eléctricos, chicharra)?" ~ 7,
+                                                          category =="¿Aplastaron su cuerpo o alguna parte de él con algún objeto o con el cuerpo de otra persona?"~ 8,
+                                                        category == "¿Le hirieron con algún cuchillo, navaja u otro objeto afilado?"~ 9,
+                                                        category =="¿Le encajaron agujas en dedos u otra parte del cuerpo?"~ 10,
+                                                        category =="¿Le hirieron por el disparo de un arma de fuego?"~ 11,
+                                                        category =="¿Le agredieron mediante acoso sexual, manoseo, exhibicionismo o intento de violación?"~ 12,
+                                                        category =="¿Le lastimaron sus órganos sexuales?"~ 13,
+                                                        category == "¿Fue obligado mediante violencia física o amenaza a tener una actividad sexual no deseada?"~ 14,
+                                             T ~ NA_real_))
+
+data2plot <- bind_rows(data2plot, data2plot2)
+
+data2plot <- data2plot %>% rename(value2plot = PorcentajeUnos) %>% 
+  mutate(label =  str_wrap(label, width = 10),
+         category = str_wrap(category, width = 10),
+         labels = str_wrap(labels, width = 10))
+
+colors4bars <- c("Traslado" = "#003B88", 
+                 "Ministerio Público" = "#fa4d57")
+
+categories <-  data2plot$category
+
+barsPlot <- barsChart.fn(data.df = data2plot, 
+                         labels_var = "labels", 
+                         value2plot = "value2plot", 
+                         grouping_var = "group_var", 
+                         categories_grouping_var = categories, 
+                         label_figures = "figure", 
+                         order = T, order_value = "legend_order", 
+                         nbars = 14, 
+                         colors4plot = colors4bars)
+
+
+ggsave(plot   = barsPlot,
+       file   = paste0(path2SP, "/National/Exploration/Input/Debido_proceso/Legalidad","/desc_","tortura_fisica.svg"), 
        width  = 300, 
        height = 390,
        units  = "mm",
        dpi    = 72,
        device = "svg")
+
+
+
 
 ### 1.3.4. Traslado_psicológica  ----------------------------------------------------
 
@@ -1205,7 +1304,6 @@ traslado_psicologica <-  c("P3_17_01",
                       "P3_17_02",
                       "P3_17_03",
                       "P3_17_04",
-                      "P3_17_05",
                       "P3_17_06",
                       "P3_17_07",
                       "P3_17_08",
@@ -1216,7 +1314,6 @@ labels <-  c("¿Le amenazaron con levantarle cargos falsos?",
              "¿Le amenazaron con matarlo(a)?",
              "¿Le amenazaron con hacerle daño a usted?",
              "¿Le amenazaron con hacerle daño a su familia?",
-             "¿Le hicieron otro tipo de amenazas?",
              "¿Le presionaron para denunciar a alguien?",
              "¿Le incomunicaron o aislaron?",
              "¿Le pasearon en un automóvil dando vueltas por las calles?",
@@ -1228,31 +1325,25 @@ Main_database_2008 <- clean_columns.fn(Main_database_2008, traslado_psicologica)
 
 data2plot <- set_data.fn(Main_database_2008, traslado_psicologica, labels)
 
-barChart <- BarSimpleChartViz(data = data2plot, 
-                              x_var = labels, 
-                              y_var = PorcentajeUnos, 
-                              label_var = figure, 
-                              fill_var = Columna, 
-                              Observaciones = Observaciones,
-                              order_var = order_var,
-                              fill_colors = c("#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
-                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
-                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7"),
-                              title = "La policía o autoridad que lo detuvo realizó o permitió que:")
-barChart
+data2plot <- data2plot %>% mutate( category = label,
+                                   group_var = "Traslado",
+                                   order_var = case_when(category == "¿Le amenazaron con levantarle cargos falsos?" ~ 1,
+                                                         category =="¿Le amenazaron con matarlo(a)?"~ 2,
+                                                         category =="¿Le amenazaron con hacerle daño a usted?" ~ 3,
+                                                         category =="¿Le amenazaron con hacerle daño a su familia?"~ 4,
+                                                         category =="¿Le presionaron para denunciar a alguien?"~ 5,
+                                                         category =="¿Le incomunicaron o aislaron?"~ 6,
+                                                         category =="¿Le pasearon en un automóvil dando vueltas por las calles?" ~ 7,
+                                                         category == "¿Le hicieron daño a su familia?"~ 8,
+                                                         category == "¿Le desvistieron?"~ 9,
+                                                         category =="¿Le vendaron los ojos o cubrieran la cabeza para que no viera?"~ 10,
+                                                         T ~ NA_real_))
 
-ggsave(plot   = barChart,
-       file   = paste0(path2SP, "/National/Exploration/Input/Debido_proceso/Legalidad","/desc_","tortura_traslado_psicologica.svg"), 
-       width  = 300, 
-       height = 390,
-       units  = "mm",
-       dpi    = 72,
-       device = "svg")
 
 
 ### 1.3.4. estancia_mp-psicologica  ----------------------------------------------------
 
-mp_psicologica <-  c("P4_8_1",
+mp_psicologica <-  c(
                            "P4_8_2",
                            "P4_8_3",
                            "P4_8_4",
@@ -1263,93 +1354,63 @@ mp_psicologica <-  c("P4_8_1",
                            "P4_8_9",
                            "P4_8_10",
                            "P4_8_11")
-labels <-  c("¿Le insultaron?",
-             "¿Le amenazaron con levantarle cargos falsos?",
-             "¿Leamenazaronconmatarlo(a)?",
-             "¿Le amenazaron con hacerle daño a usted? ",
+labels <-  c("¿Le amenazaron con levantarle cargos falsos?",
+             "¿Le amenazaron con matarlo(a)?",
+             "¿Le amenazaron con hacerle daño a usted?",
              "¿Le amenazaron con hacerle daño a su familia?",
              "¿Le presionaron para denunciar a alguien?",
              "¿Le incomunicaron o aislaron?",
-             "¿Le sacaron a la calle a dar vueltas en un automóvil?",
+             "¿Le pasearon en un automóvil dando vueltas por las calles?",
              "¿Le hicieron daño a su familia?",
              "¿Le desvistieron?",
              "¿Le vendaron los ojos o cubrieran la cabeza para que no viera?")
 
 Main_database_2008 <- clean_columns.fn(Main_database_2008, mp_psicologica)
 
-data2plot <- set_data.fn(Main_database_2008, mp_psicologica, labels)
+data2plot2 <- set_data.fn(Main_database_2008, mp_psicologica, labels)
 
-barChart <- BarSimpleChartViz(data = data2plot, 
-                              x_var = labels, 
-                              y_var = PorcentajeUnos, 
-                              label_var = figure, 
-                              fill_var = Columna, 
-                              Observaciones = Observaciones,
-                              order_var = order_var,
-                              fill_colors = c("#003B88","#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
-                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
-                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7"),
-                              title = "La policía ministerial o autoridad que lo detuvo realizó o permitió que:")
-barChart
+data2plot2 <- data2plot2 %>% mutate( category = label,
+                                   group_var = "Ministerio Público",
+                                   order_var = case_when(category == "¿Le amenazaron con levantarle cargos falsos?" ~ 1,
+                                                         category =="¿Le amenazaron con matarlo(a)?"~ 2,
+                                                         category =="¿Le amenazaron con hacerle daño a usted?" ~ 3,
+                                                         category =="¿Le amenazaron con hacerle daño a su familia?"~ 4,
+                                                         category =="¿Le presionaron para denunciar a alguien?"~ 5,
+                                                         category =="¿Le incomunicaron o aislaron?"~ 6,
+                                                         category =="¿Le pasearon en un automóvil dando vueltas por las calles?" ~ 7,
+                                                         category == "¿Le hicieron daño a su familia?"~ 8,
+                                                         category == "¿Le desvistieron?"~ 9,
+                                                         category =="¿Le vendaron los ojos o cubrieran la cabeza para que no viera?"~ 10,
+                                                         T ~ NA_real_))
 
-ggsave(plot   = barChart,
-       file   = paste0(path2SP, "/National/Exploration/Input/Debido_proceso/Legalidad","/desc_","tortura_mp_psicologica.svg"), 
-       width  = 300, 
-       height = 390,
-       units  = "mm",
-       dpi    = 72,
-       device = "svg")
+data2plot <- bind_rows(data2plot, data2plot2)
 
-### 1.3.4. estancia_mp-fisica  ----------------------------------------------------
+data2plot <- data2plot %>% rename(value2plot = PorcentajeUnos) %>% 
+  mutate(label =  str_wrap(label, width = 10),
+         category = str_wrap(category, width = 10),
+         labels = str_wrap(labels, width = 10))
 
-mp_fisica <-  c("P4_9_01",
-                     "P4_9_02",
-                     "P4_9_03",
-                     "P4_9_04",
-                     "P4_9_05",
-                     "P4_9_06",
-                     "P4_9_07",
-                     "P4_9_08",
-                     "P4_9_09",
-                     "P4_9_10",
-                     "P4_9_11",
-                "P4_9_12",
-                "P4_9_13",
-                "P4_9_14")
-labels <-  c("¿Ataron su cuerpo; ataron alguna parte de su cuerpo a un objeto?",
-             "¿Le impidieron respirar asfixiándolo, ahorcándolo?",
-             "¿Le impidieron respirar o metiendo su cabeza en agua o vaciándole agua en la cara (tehuacán)?",
-             "¿Le patearon o golpearon con las manos (abiertas o cerradas)?",
-             "¿Le golpearon con objetos?",
-             "¿Le quemaron (con objetos calientes, fuego u otra sustancia)?",
-             "¿Le dieron descargas eléctricas (toques eléctricos, chicharra)?.",
-             "¿Aplastaron su cuerpo o alguna parte de él con algún objeto o con el cuerpo de otra persona?",
-             "¿Le hirieron con algún cuchillo, navaja u otro objeto afilado?",
-             "¿Le encajaron agujas en dedos u otra parte del cuerpo?",
-             "¿Le hirieron por el disparo de un arma de fuego?",
-             "¿Le agredieron mediante acoso sexual, manoseo, exhibicionismo o intento de violación?",
-             "¿Le lastimaron sus órganos sexuales?",
-             "¿Fue obligado mediante violencia física o amenaza a tener una actividad sexual no deseada?")
+colors4bars <- c("Traslado" = "#003B88", 
+                 "Ministerio Público" = "#fa4d57")
 
-Main_database_2008 <- clean_columns.fn(Main_database_2008, mp_fisica)
+categories <-  data2plot$category
 
-data2plot <- set_data.fn(Main_database_2008, mp_fisica, labels)
+barsPlot <- barsChart.fn(data.df = data2plot, 
+                         labels_var = "labels", 
+                         value2plot = "value2plot", 
+                         grouping_var = "group_var", 
+                         categories_grouping_var = categories, 
+                         label_figures = "figure", 
+                         order = T, order_value = "legend_order", 
+                         nbars = 10, 
+                         colors4plot = colors4bars)
 
-barChart <- BarSimpleChartViz(data = data2plot, 
-                              x_var = labels, 
-                              y_var = PorcentajeUnos, 
-                              label_var = figure, 
-                              fill_var = Columna, 
-                              Observaciones = Observaciones,
-                              order_var = order_var,
-                              fill_colors = c("#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
-                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
-                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7"),
-                              title = "La policía ministerial o autoridad que lo detuvo realizó o permitió que:")
-barChart
 
-ggsave(plot   = barChart,
-       file   = paste0(path2SP, "/National/Exploration/Input/Debido_proceso/Legalidad","/desc_","tortura_mp_fisica.svg"), 
+
+
+
+ggsave(plot   = barsPlot,
+       file   = paste0(path2SP, "/National/Exploration/Input/Debido_proceso/Legalidad","/desc_","tortura_psicologica.svg"), 
        width  = 300, 
        height = 390,
        units  = "mm",
