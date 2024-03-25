@@ -735,6 +735,251 @@ logit_dataBase.fn <- function(data = Main_database_2008,
 }
 
 
+<<<<<<< Updated upstream
+=======
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##
+## 10.  Line Chart Data Base                                        ----
+##
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+event_study <- function(data.df = data_subset_tipo.df,
+                        var_groups = "National",
+                        var_analysis = c("flagrancia", 
+                                         "orden_det", 
+                                         "inspeccion", 
+                                         "det_ninguna"),
+                        section,
+                        subsection,
+                        name) {
+  
+  
+  variables2analyze <- c(var_groups)
+  
+  variables2summarise <- c(var_analysis)
+  
+  master_data.df <- data.df %>%
+    mutate(period = 
+             case_when(
+               years_since_NSJP < -1 & years_since_NSJP > -2 ~ "one_year_before",
+               years_since_NSJP < -2 & years_since_NSJP > -3 ~ "two_years_before",
+               years_since_NSJP < -3 & years_since_NSJP > -4 ~ "three_years_before",
+               years_since_NSJP < -4 & years_since_NSJP > -5 ~ "four_years_before",
+               years_since_NSJP < -5 & years_since_NSJP > -6 ~ "five_years_before",
+               years_since_NSJP < -6 & years_since_NSJP > -7 ~ "six_years_before",
+               years_since_NSJP < -7 & years_since_NSJP > -8 ~ "seven_years_before",
+               years_since_NSJP < -8 & years_since_NSJP > -9 ~ "eight_years_before",
+               years_since_NSJP < -9 & years_since_NSJP > -10 ~ "nine_years_before",
+               years_since_NSJP < -10 & years_since_NSJP > -11 ~ "ten_years_before",
+               years_since_NSJP > -1 & years_since_NSJP < 1  ~ "implementation_year",
+               years_since_NSJP > 1 & years_since_NSJP < 2 ~ "one_year_after",
+               years_since_NSJP > 2 & years_since_NSJP < 3 ~ "two_years_after",
+               years_since_NSJP > 3 & years_since_NSJP < 4 ~ "three_years_after",
+               years_since_NSJP > 4 & years_since_NSJP < 5 ~ "four_years_after",
+               years_since_NSJP > 5 & years_since_NSJP < 6 ~ "five_years_after",
+               years_since_NSJP > 6 & years_since_NSJP < 7 ~ "six_years_after",
+               years_since_NSJP > 7 & years_since_NSJP < 8 ~ "seven_years_after",
+               years_since_NSJP > 8 & years_since_NSJP < 9 ~ "eight_years_after",
+               years_since_NSJP > 9 & years_since_NSJP < 10 ~ "nine_years_after",
+               years_since_NSJP > 10 & years_since_NSJP < 11 ~ "ten_years_after",
+               years_since_NSJP > 11 & years_since_NSJP < 12 ~ "eleven_years_after",
+               years_since_NSJP > 12 & years_since_NSJP < 13 ~ "twelve_years_after",
+               years_since_NSJP > 13 & years_since_NSJP < 14 ~ "thirteen_years_after",
+               years_since_NSJP > 14 & years_since_NSJP < 15 ~ "fourteen_years_after"
+
+             )) %>%
+    filter(!is.na(period)) %>%
+    arrange(years_since_NSJP) %>%
+    mutate(National = "National")
+  
+  data2analysis <- lapply(variables2analyze, function(vars){
+    
+    data_subset.df <- master_data.df %>%
+      mutate(var_name = as.character(vars)) %>%
+      rename(group = all_of({{vars}}))
+    
+    changes_time <- data_subset.df %>% 
+      group_by(period, group, var_name) %>%
+      summarise(
+        across(all_of(variables2summarise),
+               ~ mean(.x, na.rm = TRUE))) %>%
+      mutate(order_value = 
+               case_when(
+                 period == "ten_years_before"    ~ -10,
+                 period == "nine_years_before"   ~ -9,
+                 period == "eight_years_before"  ~ -8,
+                 period == "seven_years_before"  ~ -7,
+                 period == "six_years_before"    ~ -6,
+                 period == "five_years_before"   ~ -5,
+                 period == "four_years_before"   ~ -4,
+                 period == "three_years_before"  ~ -3,
+                 period == "two_years_before"    ~ -2,
+                 period == "one_year_before"     ~ -1,
+                 period == "implementation_year" ~ 0,
+                 period == "one_year_after"      ~ 1,
+                 period == "two_years_after"     ~ 2,
+                 period == "three_years_after"   ~ 3,
+                 period == "four_years_after"    ~ 4,
+                 period == "five_years_after"    ~ 5,
+                 period == "six_years_after"     ~ 6,
+                 period == "seven_years_after"   ~ 7,
+                 period == "eight_years_after"   ~ 8,
+                 period == "nine_years_after"    ~ 9,
+                 period == "ten_years_after"     ~ 10,
+                 period == "eleven_years_after"  ~ 11,
+                 period == "twelve_years_after"   ~ 12,
+                 
+               )
+      ) %>%
+      arrange(order_value)
+    
+  })
+  
+}
+
+
+
+lineChartData.fn <-function(data = Main_database_2008,
+                            dependent_var = dependent_var){
+  data2analysis <- list()
+  
+  for (var in variables2summarise) {
+    data_subset_list <- lapply(variables2analyze, function(vars){
+      data_subset.df <- master_data.df %>%
+        mutate(var_name = as.character(vars)) %>%
+        rename(group = all_of({{vars}}))
+      
+      changes_time <- data_subset.df %>%
+        group_by(period, group, var_name) %>%
+        summarise(across(all_of(var), ~ mean(.x, na.rm = TRUE))) %>%
+        mutate(order_value = case_when(
+          period == "ten_years_before"    ~ -10,
+          period == "nine_years_before"   ~ -9,
+          period == "eight_years_before"  ~ -8,
+          period == "seven_years_before"  ~ -7,
+          period == "six_years_before"    ~ -6,
+          period == "five_years_before"   ~ -5,
+          period == "four_years_before"   ~ -4,
+          period == "three_years_before"  ~ -3,
+          period == "two_years_before"    ~ -2,
+          period == "one_year_before"     ~ -1,
+          period == "implementation_year" ~ 0,
+          period == "one_year_after"      ~ 1,
+          period == "two_years_after"     ~ 2,
+          period == "three_years_after"   ~ 3,
+          period == "four_years_after"    ~ 4,
+          period == "five_years_after"    ~ 5,
+          period == "six_years_after"     ~ 6,
+          period == "seven_years_after"   ~ 7,
+          period == "eight_years_after"   ~ 8,
+          period == "nine_years_after"    ~ 9,
+          period == "ten_years_after"     ~ 10,
+          period == "eleven_years_after"  ~ 11,
+          period == "twelve_years_after"  ~ 12,
+          TRUE ~ NA_integer_
+        )) %>%
+        arrange(order_value)
+      
+      return(changes_time)
+    })
+  
+}
+ 
+
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##
+## 2.  Line Chart                                                                                  ----
+##
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+lineChartViz <- function(data.df = data2plot,
+                         value2plot = value2plot,
+                         period = period,
+                         order_value = order_value,
+                         category = category,
+                         labels = labels,
+                         colors = category,
+                         event = T,
+                         color4plot = colors4plot) {
+  
+  # Renaming variables in the data frame to match the function naming
+  data.df <- data.df %>%
+    rename(period      = all_of(period),
+           value2plot  = all_of(value2plot),
+           category    = all_of(category),
+           labels      = all_of(labels),
+           order_value = any_of(order_value)
+    )
+  if(event == T) {
+    plt <- ggplot(data.df, 
+                  aes(x     = reorder(period,order_value),
+                      y     = value2plot,
+                      color  = category,
+                      group = category,
+                      label = labels)) 
+  } else {
+    # Creating ggplot
+    plt <- ggplot(data.df, 
+                  aes(x     = period,
+                      y     = value2plot,
+                      color  = category,
+                      group = category,
+                      label = labels))
+  }
+  
+  plt <- plt +
+    geom_point(size = 2,
+               show.legend = F) +
+    geom_line(size  = 1,
+              show.legend = F) +
+    geom_text_repel(family      = "Lato Full",
+                    fontface    = "bold",
+                    size        = 3.514598,
+                    show.legend = F,
+                    
+                    # Additional options from ggrepel package:
+                    min.segment.length = 1000,
+                    seed               = 42,
+                    box.padding        = 0.5,
+                    direction          = "y",
+                    force              = 5,
+                    force_pull         = 1) +
+    scale_y_continuous(limits = c(0, 105),
+                       expand = c(0,0),
+                       breaks = seq(0,100,20),
+                       labels = paste0(seq(0,100,20), "%")) +
+    scale_x_discrete("period",
+                     labels = c("Implementación" = "Implementación",
+                                "Un año" = " ",
+                                "Dos años" = "Dos años",
+                                "Tres años" = " ",
+                                "Cuatro años" = "Cuatro años",
+                                "Cinco años" = " ",
+                                "Seis años" = "Seis años",
+                                "Siete años" = " ",
+                                "Ocho años" = "Ocho años",
+                                "Nueve años" = " ",
+                                "Diez años" = "Diez años",
+                                "Once años" = " ",
+                                "Doce años" = "Doce años")
+    ) +
+    scale_color_manual(values = colors4plot) +
+    WJP_theme() +
+    theme(panel.grid.major.x = element_blank(),
+          panel.grid.major.y = element_line(colour = "#d1cfd1"),
+          axis.title.x       = element_blank(),
+          axis.title.y       = element_blank(),
+          axis.line.x        = element_line(color    = "#d1cfd1"),
+          axis.ticks.x       = element_line(color    = "#d1cfd1",
+                                            linetype = "solid")
+    )
+
+}
+
+
+
+>>>>>>> Stashed changes
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -781,6 +1026,11 @@ logit_demo_panel <- function(mainData = data2plot,
   return(plot)
 }
 
+<<<<<<< Updated upstream
+=======
+}
+
+>>>>>>> Stashed changes
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
 ## 10.  Event study new                                                         ----
@@ -980,10 +1230,10 @@ time_analysis.fn <- function(data.df = Main_database_2008,
   data_subset.df <- data.df %>%
     clean_columns.fn(., audiencias) %>%
     mutate(
-      P5_2_1 = 
+      P5_2 = 
         case_when(
-          P5_2_1 == 1 ~ 1,
-          P5_2_1 == 2 ~ 0,
+          P5_2_1 == 4 ~ 0,
+          P5_2_1 != 4 ~ 1,
           T ~ NA_real_
         ),
       P5_14 = 
@@ -1023,6 +1273,30 @@ time_analysis.fn <- function(data.df = Main_database_2008,
           as.numeric(P5_25) == 2 ~ 0,
           as.numeric(P5_25) == 3 ~ 0,
           T ~ NA_real_
+        ),
+      P4_7_4_5 = 
+        case_when(
+          as.numeric(P4_7) == 4 | as.numeric(P4_7) == 5 ~ 1,
+          ((as.numeric(P4_7) > 4 & as.numeric(P4_7) < 11) | as.numeric(P4_7)) |((as.numeric(P4_7) > 5 & as.numeric(P4_7) < 11) | as.numeric(P4_7)) < 5 ~ 0,
+          T ~ NA_real_
+        ),
+      P5_2_1 = 
+        case_when(
+          as.numeric(P5_2_1) == 1 ~ 1,
+          as.numeric(P5_2_1) != 2 ~ 0,
+          T ~ NA_real_
+        ),
+      P5_10_5 =
+        case_when(
+          as.numeric(P5_10) == 5 ~ 1,
+          as.numeric(P5_10) != 5 ~ 0,
+          T ~ NA_real_
+        ),
+      P5_10_6 =
+        case_when(
+          as.numeric(P5_10) == 6 ~ 1,
+          as.numeric(P5_10) != 6 ~ 0,
+          T ~ NA_real_
         )
     ) %>%
     group_by(Estado_arresto) %>%
@@ -1033,7 +1307,8 @@ time_analysis.fn <- function(data.df = Main_database_2008,
                if_else(
                  max_time_implementation > 9, "Implementación temprana", NA_character_)
              )
-           )
+           ) %>%
+    filter(Anio_arresto > 2010)
   
   variables2summarise <- variables2summarise
   result_list <- list()
@@ -1079,6 +1354,31 @@ time_analysis.fn <- function(data.df = Main_database_2008,
             var_name %in% variables2summarise[8] ~ labels_vars[8],
             var_name %in% variables2summarise[9] ~ labels_vars[9],
             var_name %in% variables2summarise[10] ~ labels_vars[10],
+            var_name %in% variables2summarise[11] ~ labels_vars[11],
+            var_name %in% variables2summarise[12] ~ labels_vars[12],
+            var_name %in% variables2summarise[13] ~ labels_vars[13],
+            var_name %in% variables2summarise[14] ~ labels_vars[14],
+            var_name %in% variables2summarise[15] ~ labels_vars[15],
+            var_name %in% variables2summarise[16] ~ labels_vars[16],
+            var_name %in% variables2summarise[17] ~ labels_vars[17],
+            var_name %in% variables2summarise[18] ~ labels_vars[18],
+            var_name %in% variables2summarise[19] ~ labels_vars[19],
+            var_name %in% variables2summarise[20] ~ labels_vars[20],
+            var_name %in% variables2summarise[21] ~ labels_vars[21],
+            var_name %in% variables2summarise[22] ~ labels_vars[22],
+            var_name %in% variables2summarise[23] ~ labels_vars[23],
+            var_name %in% variables2summarise[24] ~ labels_vars[24],
+            var_name %in% variables2summarise[25] ~ labels_vars[25],
+            var_name %in% variables2summarise[26] ~ labels_vars[26],
+            var_name %in% variables2summarise[27] ~ labels_vars[27],
+            var_name %in% variables2summarise[28] ~ labels_vars[28],
+            var_name %in% variables2summarise[29] ~ labels_vars[29],
+            var_name %in% variables2summarise[30] ~ labels_vars[30],
+            var_name %in% variables2summarise[31] ~ labels_vars[31],
+            var_name %in% variables2summarise[32] ~ labels_vars[32],
+            var_name %in% variables2summarise[33] ~ labels_vars[33],
+            var_name %in% variables2summarise[34] ~ labels_vars[34],
+            var_name %in% variables2summarise[35] ~ labels_vars[35]
           )
       ) %>%
       rename(period = Anio_arresto)
@@ -1088,6 +1388,7 @@ time_analysis.fn <- function(data.df = Main_database_2008,
   }
   return(result_list)
 }
+<<<<<<< Updated upstream
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -1199,3 +1500,5 @@ barsChart.fn <- function(
   return(plot)
   
 }
+=======
+>>>>>>> Stashed changes
