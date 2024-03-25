@@ -734,9 +734,6 @@ logit_dataBase.fn <- function(data = Main_database_2008,
   
 }
 
-
-<<<<<<< Updated upstream
-=======
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
 ## 10.  Line Chart Data Base                                        ----
@@ -838,57 +835,9 @@ event_study <- function(data.df = data_subset_tipo.df,
 }
 
 
-
-lineChartData.fn <-function(data = Main_database_2008,
-                            dependent_var = dependent_var){
-  data2analysis <- list()
-  
-  for (var in variables2summarise) {
-    data_subset_list <- lapply(variables2analyze, function(vars){
-      data_subset.df <- master_data.df %>%
-        mutate(var_name = as.character(vars)) %>%
-        rename(group = all_of({{vars}}))
-      
-      changes_time <- data_subset.df %>%
-        group_by(period, group, var_name) %>%
-        summarise(across(all_of(var), ~ mean(.x, na.rm = TRUE))) %>%
-        mutate(order_value = case_when(
-          period == "ten_years_before"    ~ -10,
-          period == "nine_years_before"   ~ -9,
-          period == "eight_years_before"  ~ -8,
-          period == "seven_years_before"  ~ -7,
-          period == "six_years_before"    ~ -6,
-          period == "five_years_before"   ~ -5,
-          period == "four_years_before"   ~ -4,
-          period == "three_years_before"  ~ -3,
-          period == "two_years_before"    ~ -2,
-          period == "one_year_before"     ~ -1,
-          period == "implementation_year" ~ 0,
-          period == "one_year_after"      ~ 1,
-          period == "two_years_after"     ~ 2,
-          period == "three_years_after"   ~ 3,
-          period == "four_years_after"    ~ 4,
-          period == "five_years_after"    ~ 5,
-          period == "six_years_after"     ~ 6,
-          period == "seven_years_after"   ~ 7,
-          period == "eight_years_after"   ~ 8,
-          period == "nine_years_after"    ~ 9,
-          period == "ten_years_after"     ~ 10,
-          period == "eleven_years_after"  ~ 11,
-          period == "twelve_years_after"  ~ 12,
-          TRUE ~ NA_integer_
-        )) %>%
-        arrange(order_value)
-      
-      return(changes_time)
-    })
-  
-}
- 
-
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
-## 2.  Line Chart                                                                                  ----
+## 11.  Line Chart                                                                                  ----
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -979,7 +928,6 @@ lineChartViz <- function(data.df = data2plot,
 
 
 
->>>>>>> Stashed changes
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -1026,11 +974,6 @@ logit_demo_panel <- function(mainData = data2plot,
   return(plot)
 }
 
-<<<<<<< Updated upstream
-=======
-}
-
->>>>>>> Stashed changes
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
 ## 10.  Event study new                                                         ----
@@ -1388,7 +1331,6 @@ time_analysis.fn <- function(data.df = Main_database_2008,
   }
   return(result_list)
 }
-<<<<<<< Updated upstream
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -1500,5 +1442,3 @@ barsChart.fn <- function(
   return(plot)
   
 }
-=======
->>>>>>> Stashed changes
