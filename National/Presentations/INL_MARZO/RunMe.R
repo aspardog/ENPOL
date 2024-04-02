@@ -1,7 +1,7 @@
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ## Project:           ENPOL 
 ##
-## Script:            Exploration descriptives
+## Script:            Indicator Construction
 ##
 ## Author(s):         Santiago Pardo G.        (spardo@worldjusticeproject.org)
 ##                    Cristina Alvares         (calvarez@worldjuticeproject.org)
@@ -249,3 +249,7 @@ ggsave(plot   = logitPlot,
        dpi    = 72,
        device = "svg")
  
+
+
+
+

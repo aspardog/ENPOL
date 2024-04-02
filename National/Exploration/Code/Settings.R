@@ -1240,8 +1240,25 @@ time_analysis.fn <- function(data.df = Main_database_2008,
           as.numeric(P5_10) == 6 ~ 1,
           as.numeric(P5_10) != 6 ~ 0,
           T ~ NA_real_
+        ),
+      P5_6_1 = 
+        case_when(
+          P5_6 == 1 ~ 1,
+          P5_6 == 2 ~ 0,
+          T ~ NA_real_
+        ),
+      P5_6_2 = 
+        case_when(
+          P5_6 == 2 ~ 1, 
+          P5_6 == 1 ~ 0,
+          T ~ NA_real_
         )
     ) %>%
+    group_by(Anio_arresto) %>%
+    mutate(
+      indicator_general = mean(as.numeric(indicator_general), na.rm = T)
+    ) %>%
+    ungroup() %>%
     group_by(Estado_arresto) %>%
     mutate(max_time_implementation = max(years_since_NSJP, na.rm = T),
            category = 

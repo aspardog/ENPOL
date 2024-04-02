@@ -37,8 +37,8 @@ audiencias <- c("P5_19_3",
                 "P5_17_2",
                 "P5_17_3",
                 "P5_17_1",
-                "P5_17_4"
-                
+                "P5_17_4",
+                "P4_6_4"
                 )
 all_vars <-   c("P5_2",
                 "P5_19_3",
@@ -70,7 +70,11 @@ all_vars <-   c("P5_2",
                 "P5_17_1",
                 "P5_17_4",
                 "P5_10_5",
-                "P5_10_6"
+                "P5_10_6",
+                "P5_6_1",
+                "P5_6_2",
+                "P4_6_4",
+                "indicator_general"
                 )
 
 labels_vars <- c("Audiencia - Tuvo contacto con el juez",
@@ -103,7 +107,11 @@ labels_vars <- c("Audiencia - Tuvo contacto con el juez",
                  "Derechos - Explicación detención - Entendió al abogado defensor",
                  "Derechos - Explicación detención - Entendió al abogado víctima",
                  "Derechos - Tiempo sentencia - seis meses",
-                 "Derechos - Tiempo sentencia - uno a dos años"
+                 "Derechos - Tiempo sentencia - uno a dos años",
+                 "Sentencia - Juicio",
+                 "Sentencia - Procedimiento abreviado",
+                 "Culpabilidad: Culpable ante el MP",
+                 "Indicador general"
 )
 
 # Time analysis
@@ -135,6 +143,96 @@ for (i in seq_along(all_vars_series.df)) {
          device = "svg")
 }
 
+### Presuncion
+
+presuncion <- all_vars_series.df[["P5_25_1"]] %>%
+  mutate(
+    value2plot = 100 - value2plot,
+    labels = if_else(period %in% c("2012", "2014", "2016", "2018", "2020"),
+                     paste0(round(value2plot, 0), "%"), NA_character_),
+    label_var = "Audiencia - La persona consideró que el juez NO lo consideró culpable antes de oir las pruebas"
+  ) %>%
+  rbind(y = all_vars_series.df[["P5_14"]])
+
+lineChart <- lineChartViz(data.df = presuncion,
+                          value2plot = "value2plot",
+                          period = "period", 
+                          order_value = NULL, 
+                          category = "var_name", 
+                          labels = "labels", 
+                          event = F) 
+
+# Save the plot
+ggsave(lineChart, 
+       filename = paste0(path2SP, "/National/Exploration/Input/Debido_proceso/Analisis temporal/", "presuncion_control", "_series_group.svg"),
+       width  = 200, 
+       height = 150,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
+
+### Proceso Justo 
+proceso_justo <- all_vars_series.df[["P5_26A"]] %>%
+  rbind(y = all_vars_series.df[["P5_6_2"]])
+
+lineChart <- lineChartViz(data.df = proceso_justo,
+                          value2plot = "value2plot",
+                          period = "period", 
+                          order_value = NULL, 
+                          category = "var_name", 
+                          labels = "labels", 
+                          event = F) 
+# Save the plot
+ggsave(lineChart, 
+       filename = paste0(path2SP, "/National/Exploration/Input/Debido_proceso/Analisis temporal/", "proceso_justo_procedimiento_abreviado", "_series_group.svg"),
+       width  = 200, 
+       height = 150,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
+
+# Culpabilidad
+
+culpabilidad <- all_vars_series.df[["P4_6_4"]] %>%
+  rbind(y = all_vars_series.df[["P5_26A"]])
+colors4plot <- c("#a90099",
+                 "#1a2689")
+lineChart <- lineChartViz(data.df = culpabilidad,
+                          value2plot = "value2plot",
+                          period = "period", 
+                          order_value = NULL, 
+                          category = "var_name", 
+                          labels = "labels", 
+                          event = F) 
+
+# Save the plot
+ggsave(lineChart, 
+       filename = paste0(path2SP, "/National/Exploration/Input/Debido_proceso/Analisis temporal/", "proceso_justo_culpabilidad", "_series_group.svg"),
+       width  = 200, 
+       height = 150,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
+
+# Indicator 
+proceso_justo_indicador <- all_vars_series.df[["P5_26A"]] %>%
+  rbind(y = all_vars_series.df[["indicator_general"]])
+colors4plot <- c("#a90099", "#1a2689")
+lineChart <- lineChartViz(data.df = proceso_justo_indicador,
+                          value2plot = "value2plot",
+                          period = "period", 
+                          order_value = NULL, 
+                          category = "var_name", 
+                          labels = "labels", 
+                          event = F) 
+# Save the plot
+ggsave(lineChart, 
+       filename = paste0(path2SP, "/National/Exploration/Input/Debido_proceso/Analisis temporal/", "proceso_justo_indicador", "_series_group.svg"),
+       width  = 200, 
+       height = 150,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
 # Series by group
 
 variables2summarise <- all_vars
@@ -167,3 +265,7 @@ for (i in seq_along(all_vars_group_series.df)) {
          dpi    = 72,
          device = "svg")
 }
+
+#####
+
+
