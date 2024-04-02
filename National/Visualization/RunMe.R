@@ -33,5 +33,13 @@ source("https://raw.githubusercontent.com/ctoruno/WJP-Data-Viz/main/loading.R")
 loadVIZ(set = "ENPOL")
 
 # Loading data
-master_data.df <- load(paste0(path2SP,"/National/Data_cleaning/Output/Main_database.RData")) 
+load(paste0(path2SP,"/National/Data_cleaning/Output/Main_database.RData"))
+
+master_data.df <- Main_database %>% 
+  filter(Anio_arresto >= as.numeric(2008)) %>% 
+  filter(NSJP == 1) 
+
+# Tenemos 3 filtros y para cada visualización se decide qué filtros usar
+# sentenciado = 1
+# 
 
