@@ -136,7 +136,7 @@ WJP_theme <- function() {
                                    size   = 3.514598*.pt,
                                    color  = "#524F4C"),
         axis.ticks  = element_blank(),
-        plot.margin  = unit(c(0, 0, 0, 0), "points")
+        plot.margin  = unit(c(1, 1, 1, 1), "points")
   ) 
 }
 
@@ -151,7 +151,7 @@ countryPalette <- c("#2a2a94", "#a90099", "#3273ff", "#fa4d57", "#9d61f2", "#43a
 binPalette     <- c("#003b8a", "#fa4d57")
 barsPalette    <- c("#2a2a9A", "#E2E2F7")
 glinesPalette  <- c("#2a2a94", "#a90099", "#3273ff")
-rosePalette    <- c("#20204a", "#12006b", "#2e2e95", "#4e43dd", "#756ef9", "#9c94ff", "#b1a6ff",
+rosePalette    <- c("#20204a", "#12006b", "#2a2a9A", "#2e2e95", "#4e43dd", "#756ef9", "#9c94ff", "#b1a6ff",
                     "#cfb3ff", "#e2a4ff", "#f2aadc", "#ffd7f5")
 
 
