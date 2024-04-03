@@ -114,3 +114,31 @@ WJP_theme <- function() {
         plot.margin  = unit(c(0, 0, 0, 0), "points")
   ) 
 }
+
+
+
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##
+## 5.  WJP theme                                                                                            ----
+##
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+# EXPLICAR FUNCIÓN 
+
+count_frequency.fn <- function(column) {
+  # Convert the column to a data frame
+  data <- data.frame(Value = column)
+  
+  # Count the frequency of each unique value
+  frequency_df <- data %>%
+                  group_by(Value)    %>%
+                  summarise(Frequency = n()) %>% 
+                  mutate(Value = Value*100,
+                  values = Frequency/sum(Frequency),
+                  value2plot = values * 100,
+           figure = paste0(round(value2plot, 0), "%"),
+           labels = paste0(Value, "%")) 
+  frequency_df <- frequency_df %>% mutate(order_var = rank(Value))
+  return(frequency_df)
+}
+
