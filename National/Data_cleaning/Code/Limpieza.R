@@ -5141,7 +5141,6 @@ Main_database <- Main_database %>% mutate(
     GDH_2 = case_when(
       sentenciado == 1 ~ GDH_2,
       T ~ NA_real_)) %>%
-  filter(sentenciado == 1) %>% 
   rowwise() %>% 
   mutate(indicator_GDH = mean(c_across(c(GDH_1, GDH_2)), na.rm = TRUE),
          indicator_UAA = mean(c_across(c(UAA_1, UAA_2, UAA_3, UAA_4)), na.rm = TRUE),
