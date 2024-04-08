@@ -4785,11 +4785,17 @@ Main_database %<>%
                                     is.na(Color_piel_1) == T ~ Color_piel_2, 
                                     is.na(Color_piel_1) & is.na(Color_piel_1) == T ~ NA,
                                     T ~ (Color_piel_1+Color_piel_2)/2)), 
-    Color_piel_categ = case_when(Color_piel_promedio <= 3  ~ "Blanco", 
-                                 Color_piel_promedio == 4  ~ "Moreno Claro", 
-                                 Color_piel_promedio == 5  ~ "Moreno", 
-                                 Color_piel_promedio == 6  ~ "Moreno Obscuro", 
-                                 Color_piel_promedio >= 7  ~ "Moreno Muy Obscuro", 
+    Color_piel_categ = case_when(Color_piel_promedio <= 3  ~ "Moreno Muy Obscuro", 
+                                 Color_piel_promedio == 4  ~ "Moreno Obscuro",
+                                 Color_piel_promedio == 5  ~ "Moreno Obscuro",
+                                 Color_piel_promedio == 6  ~ "Moreno", 
+                                 Color_piel_promedio == 7  ~ "Moreno Claro", 
+                                 Color_piel_promedio == 8  ~ "Moreno Claro", 
+                                 Color_piel_promedio >= 9  ~ "Blanco", 
+                                 T ~ NA),
+    #Color de piel dicotómica
+    Color_piel_claro = case_when(Color_piel_promedio >= 9  ~ 1,
+                                 Color_piel_promedio < 9 ~ 0,
                                  T ~ NA),
     
     # Educación obligatoria (Bachillerato y homologos 15 de educación)
@@ -4826,14 +4832,7 @@ Main_database %<>%
                                  Ingreso == "9 mil a 11 mil" ~ 0,
                                  Ingreso == "> 11 mil" ~ 0,
                                  T ~ NA
-                                 ),
-    #Color de piel dicotómica
-    Colo_piel_claro = case_when(Color_piel_categ == "Blanco" ~ 1,
-                                Color_piel_categ == "Moreno Claro" ~ 1,
-                                Color_piel_categ == "Moreno" ~ 0,
-                                Color_piel_categ == "Moreno Obscuro" ~ 0,
-                                Color_piel_categ == "Moreno Muy Obscuro" ~ 0,
-                                T ~ NA)
+                                 )
     
   ) %>% 
   
