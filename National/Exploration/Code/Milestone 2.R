@@ -129,6 +129,7 @@ Main_database1 <- Main_database %>%
     mutate(Delito_prioritario_ENVIPE = case_when(Delito_unico == 1 & (P5_11_04 == 1|P5_31_04 == 1) ~ 1,
                                                  Delito_unico == 1 & (P5_11_05 == 1|P5_31_05 == 1) ~ 1,
                                                  Delito_unico == 1 & (P5_11_06 == 1|P5_31_06 == 1) ~ 1,
+                                                 Delito_unico == 1 & (P5_11_09 == 1|P5_31_09 == 1) ~ 1,
                                                  Delito_unico == 1 & (P5_11_16 == 1|P5_31_16 == 1) ~ 1,
                                                  Delito_unico == 1 & (P5_11_22 == 1|P5_31_22 == 1) ~ 1,
                                                  T ~ 0),
