@@ -32,66 +32,7 @@ source("National/Data_cleaning/Code/settings.R")
 library(ggrepel)
 
 
-load(paste0(path2SP,"/National/Data_cleaning/Output/Main_database.RData")) 
-
-
-
-timeline <- function(data, group_var) {
-  # Create the new data frame
-  data2plot <- data %>%
-    group_by(Anio_arresto) %>%
-    summarise(value2plot = 100 * mean({{ group_var }}, na.rm = T)) %>%
-    mutate(labels = if_else(
-      Anio_arresto %in% c("2011", "2013", "2015", "2017", "2019", "2021"),
-      paste0(round(value2plot,0), "%"), NA_character_),
-      group_var = "National",
-      colors = "#003B88"
-    )
-  
-  
-  colors4plot <- c("#003B88")
-  
-  # Creating ggplot
-  
-  plt <- ggplot(data2plot, 
-                aes(x     = Anio_arresto,
-                    y     = value2plot,
-                    label = labels,
-                    group = group_var,
-                    color = group_var)) +
-    geom_point(size = 2,
-               show.legend = F) +
-    geom_line(size  = 1,
-              show.legend = F) +
-    geom_text_repel(
-                    size        = 3.514598,
-                    show.legend = F,
-                    
-                    # Additional options from ggrepel package:
-                    min.segment.length = 1000,
-                    seed               = 42,
-                    box.padding        = 0.5,
-                    direction          = "y",
-                    force              = 5,
-                    force_pull         = 1) +
-    scale_y_continuous(limits = c(0, 105),
-                       expand = c(0,0),
-                       breaks = seq(0,100,20),
-                       labels = paste0(seq(0,100,20), "%")) %>%
-    scale_color_manual(values = colors4plot) +
-    WJP_theme() +
-    theme(panel.grid.major.x = element_blank(),
-          panel.grid.major.y = element_line(colour = "#d1cfd1"),
-          axis.title.x       = element_blank(),
-          axis.title.y       = element_blank(),
-          axis.line.x        = element_line(color    = "#d1cfd1"),
-          axis.ticks.x       = element_line(color    = "#d1cfd1",
-                                            linetype = "solid")
-          
-    )
-  return(plt)
-}
-
+load(paste0(path2DB,"/National/Data_cleaning/Output/Main_database.RData")) 
 
 
 
@@ -105,180 +46,119 @@ timeline <- function(data, group_var) {
 
 Main_database1 <- Main_database %>%
   filter(Anio_arresto >= 2011, Delito_unico == 1) %>%
-  mutate(tiempo_sentencia = case_when(as.numeric(P5_4_A) == 0 ~ NA_real_,
-                                      as.numeric(P5_4_A) >= 97 ~ NA_real_,
-                                      T ~ as.numeric(P5_4_A)),
-         Calderon = case_when(Anio_arresto == 2006 & Mes_arresto > 11 ~ 1,
-                              Anio_arresto > 2006 & Anio_arresto < 2012 ~ 1,
-                              Anio_arresto == 2012 & Mes_arresto < 12 ~ 1,
-                              T ~ 0),
-         Peña = case_when(Anio_arresto == 2012 & Mes_arresto > 11 ~ 1,
-                          Anio_arresto > 2012 & Anio_arresto < 2018 ~ 1,
-                          Anio_arresto == 2018 & Mes_arresto < 12 ~ 1,
-                          T ~ 0),
-         AMLO = case_when(Anio_arresto == 2018 & Mes_arresto > 11 ~ 1,
-                          Anio_arresto > 2018 ~ 1,
-                          T ~ 0),
-         # alt1 considera delitos de PPO
-    Delito_prioritario = case_when(Calderon == 1 & Delito_unico == 1 & (P5_11_01 == 1|P5_31_01 == 1) ~ 1,
-                                        Calderon == 1 & Delito_unico == 1 & (P5_11_02 == 1|P5_31_02 == 1) ~ 1,
-                                        Calderon == 1 & Delito_unico == 1 & (P5_11_03 == 1|P5_31_03 == 1) ~ 1,
-                                        Calderon == 1 & Delito_unico == 1 & (P5_11_04 == 1|P5_31_04 == 1) ~ 1,
-                                        Calderon == 1 & Delito_unico == 1 & (P5_11_05 == 1|P5_31_05 == 1) ~ 1,
-                                        Calderon == 1 & Delito_unico == 1 & (P5_11_06 == 1|P5_31_06 == 1) ~ 1,
-                                        Calderon == 1 & Delito_unico == 1 & (P5_11_07 == 1|P5_31_07 == 1) ~ 1,
-                                        Calderon == 1 & Delito_unico == 1 & (P5_11_08 == 1|P5_31_08 == 1) ~ 1,
-                                        Calderon == 1 & Delito_unico == 1 & (P5_11_09 == 1|P5_31_09 == 1) ~ 1,
-                                        Calderon == 1 & Delito_unico == 1 & (P5_11_12 == 1|P5_31_12 == 1) ~ 1,
-                                        Calderon == 1 & Delito_unico == 1 & (P5_11_13 == 1|P5_31_13 == 1) ~ 1,
-                                        Calderon == 1 & Delito_unico == 1 & (P5_11_17 == 1|P5_31_17 == 1) ~ 1,
-                                        Calderon == 1 & Delito_unico == 1 & (P5_11_18 == 1|P5_31_18 == 1) ~ 1,
-                                        Calderon == 1 & Delito_unico == 1 & (P5_11_20 == 1|P5_31_20 == 1) ~ 1,
-                                        Peña == 1 & Delito_unico == 1 & (P5_11_01 == 1|P5_31_01 == 1) ~ 1,
-                                        Peña == 1 & Delito_unico == 1 & (P5_11_02 == 1|P5_31_02 == 1) ~ 1,
-                                        Peña == 1 & Delito_unico == 1 & (P5_11_03 == 1|P5_31_03 == 1) ~ 1,
-                                        Peña == 1 & Delito_unico == 1 & (P5_11_04 == 1|P5_31_04 == 1) ~ 1,
-                                        Peña == 1 & Delito_unico == 1 & (P5_11_05 == 1|P5_31_05 == 1) ~ 1,
-                                        Peña == 1 & Delito_unico == 1 & (P5_11_07 == 1|P5_31_07 == 1) ~ 1,
-                                        Peña == 1 & Delito_unico == 1 & (P5_11_12 == 1|P5_31_12 == 1) ~ 1,
-                                        Peña == 1 & Delito_unico == 1 & (P5_11_17 == 1|P5_31_17 == 1) ~ 1,
-                                        Peña == 1 & Delito_unico == 1 & (P5_11_20 == 1|P5_31_20 == 1) ~ 1,
-                                        Peña == 1 & Delito_unico == 1 & (P5_11_22 == 1|P5_31_22 == 1) ~ 1,
-                                        AMLO == 1 & Delito_unico == 1 & (P5_11_01 == 1|P5_31_01 == 1) ~ 1,
-                                        AMLO == 1 & Delito_unico == 1 & (P5_11_02 == 1|P5_31_02 == 1) ~ 1,
-                                        AMLO == 1 & Delito_unico == 1 & (P5_11_04 == 1|P5_31_04 == 1) ~ 1,
-                                        AMLO == 1 & Delito_unico == 1 & (P5_11_07 == 1|P5_31_07 == 1) ~ 1,
-                                        AMLO == 1 & Delito_unico == 1 & (P5_11_13 == 1|P5_31_13 == 1) ~ 1,
-                                        AMLO == 1 & Delito_unico == 1 & (P5_11_20 == 1|P5_31_20 == 1) ~ 1,
-                                        T ~ 0),
-    Delito_prioritario_Cald = case_when(Delito_unico == 1 & (P5_11_01 == 1|P5_31_01 == 1) ~ 1,
-                                    Delito_unico == 1 & (P5_11_02 == 1|P5_31_02 == 1) ~ 1,
-                                    Delito_unico == 1 & (P5_11_03 == 1|P5_31_03 == 1) ~ 1,
-                                    Delito_unico == 1 & (P5_11_04 == 1|P5_31_04 == 1) ~ 1,
-                                    Delito_unico == 1 & (P5_11_05 == 1|P5_31_05 == 1) ~ 1,
-                                    Delito_unico == 1 & (P5_11_06 == 1|P5_31_06 == 1) ~ 1,
-                                    Delito_unico == 1 & (P5_11_07 == 1|P5_31_07 == 1) ~ 1,
-                                    Delito_unico == 1 & (P5_11_08 == 1|P5_31_08 == 1) ~ 1,
-                                    Delito_unico == 1 & (P5_11_09 == 1|P5_31_09 == 1) ~ 1,
-                                    Delito_unico == 1 & (P5_11_12 == 1|P5_31_12 == 1) ~ 1,
-                                    Delito_unico == 1 & (P5_11_13 == 1|P5_31_13 == 1) ~ 1,
-                                    Delito_unico == 1 & (P5_11_17 == 1|P5_31_17 == 1) ~ 1,
-                                    Delito_unico == 1 & (P5_11_18 == 1|P5_31_18 == 1) ~ 1,
-                                    Delito_unico == 1 & (P5_11_20 == 1|P5_31_20 == 1) ~ 1,
-                                   T ~ 0),
-    Delito_prioritario_Peña = case_when( Delito_unico == 1 & (P5_11_01 == 1|P5_31_01 == 1) ~ 1,
-                                    Delito_unico == 1 & (P5_11_02 == 1|P5_31_02 == 1) ~ 1,
-                                    Delito_unico == 1 & (P5_11_03 == 1|P5_31_03 == 1) ~ 1,
-                                    Delito_unico == 1 & (P5_11_04 == 1|P5_31_04 == 1) ~ 1,
-                                    Delito_unico == 1 & (P5_11_05 == 1|P5_31_05 == 1) ~ 1,
-                                    Delito_unico == 1 & (P5_11_07 == 1|P5_31_07 == 1) ~ 1,
-                                    Delito_unico == 1 & (P5_11_12 == 1|P5_31_12 == 1) ~ 1,
-                                    Delito_unico == 1 & (P5_11_17 == 1|P5_31_17 == 1) ~ 1,
-                                    Delito_unico == 1 & (P5_11_20 == 1|P5_31_20 == 1) ~ 1,
-                                    Delito_unico == 1 & (P5_11_22 == 1|P5_31_22 == 1) ~ 1,
-                                   T ~ 0),
-    Delito_prioritario_AMLO = case_when( Delito_unico == 1 & (P5_11_01 == 1|P5_31_01 == 1) ~ 1,
-                                    Delito_unico == 1 & (P5_11_02 == 1|P5_31_02 == 1) ~ 1,
-                                    Delito_unico == 1 & (P5_11_04 == 1|P5_31_04 == 1) ~ 1,
-                                    Delito_unico == 1 & (P5_11_07 == 1|P5_31_07 == 1) ~ 1,
-                                    Delito_unico == 1 & (P5_11_13 == 1|P5_31_13 == 1) ~ 1,
-                                    Delito_unico == 1 & (P5_11_20 == 1|P5_31_20 == 1) ~ 1,
-                                   T ~ 0),
-    Delito_prioritario_ENVIPE = case_when(Delito_unico == 1 & (P5_11_06 == 1|P5_31_06 == 1) ~ 1,
-                                          Delito_unico == 1 & (P5_11_16 == 1|P5_31_16 == 1) ~ 1,
-                                          Delito_unico == 1 & (P5_11_22 == 1|P5_31_22 == 1) ~ 1,
-                                          T ~ 0)
-  
-) 
-
-Main_database2 <- Main_database %>%
-  filter(Anio_sentencia >= 2011, Delito_unico == 1) %>%
-  mutate(tiempo_sentencia = case_when(as.numeric(P5_4_A) == 0 ~ NA_real_,
-                                      as.numeric(P5_4_A) >= 97 ~ NA_real_,
-                                      T ~ as.numeric(P5_4_A)),
-         Calderon = case_when(Anio_arresto == 2006 & Mes_arresto > 11 ~ 1,
-                              Anio_arresto > 2006 & Anio_arresto < 2012 ~ 1,
-                              Anio_arresto == 2012 & Mes_arresto < 12 ~ 1,
-                              T ~ 0),
-         Peña = case_when(Anio_arresto == 2012 & Mes_arresto > 11 ~ 1,
-                          Anio_arresto > 2012 & Anio_arresto < 2018 ~ 1,
-                          Anio_arresto == 2018 & Mes_arresto < 12 ~ 1,
-                          T ~ 0),
-         AMLO = case_when(Anio_arresto == 2018 & Mes_arresto > 11 ~ 1,
-                          Anio_arresto > 2018 ~ 1,
-                          T ~ 0),
-         # alt1 considera delitos de PPO
-         Delito_prioritario = case_when(Calderon == 1 & Delito_unico == 1 & (P5_11_01 == 1|P5_31_01 == 1) ~ 1,
-                                        Calderon == 1 & Delito_unico == 1 & (P5_11_02 == 1|P5_31_02 == 1) ~ 1,
-                                        Calderon == 1 & Delito_unico == 1 & (P5_11_03 == 1|P5_31_03 == 1) ~ 1,
-                                        Calderon == 1 & Delito_unico == 1 & (P5_11_04 == 1|P5_31_04 == 1) ~ 1,
-                                        Calderon == 1 & Delito_unico == 1 & (P5_11_05 == 1|P5_31_05 == 1) ~ 1,
-                                        Calderon == 1 & Delito_unico == 1 & (P5_11_06 == 1|P5_31_06 == 1) ~ 1,
-                                        Calderon == 1 & Delito_unico == 1 & (P5_11_07 == 1|P5_31_07 == 1) ~ 1,
-                                        Calderon == 1 & Delito_unico == 1 & (P5_11_08 == 1|P5_31_08 == 1) ~ 1,
-                                        Calderon == 1 & Delito_unico == 1 & (P5_11_09 == 1|P5_31_09 == 1) ~ 1,
-                                        Calderon == 1 & Delito_unico == 1 & (P5_11_12 == 1|P5_31_12 == 1) ~ 1,
-                                        Calderon == 1 & Delito_unico == 1 & (P5_11_13 == 1|P5_31_13 == 1) ~ 1,
-                                        Calderon == 1 & Delito_unico == 1 & (P5_11_17 == 1|P5_31_17 == 1) ~ 1,
-                                        Calderon == 1 & Delito_unico == 1 & (P5_11_18 == 1|P5_31_18 == 1) ~ 1,
-                                        Calderon == 1 & Delito_unico == 1 & (P5_11_20 == 1|P5_31_20 == 1) ~ 1,
-                                        Peña == 1 & Delito_unico == 1 & (P5_11_01 == 1|P5_31_01 == 1) ~ 1,
-                                        Peña == 1 & Delito_unico == 1 & (P5_11_02 == 1|P5_31_02 == 1) ~ 1,
-                                        Peña == 1 & Delito_unico == 1 & (P5_11_03 == 1|P5_31_03 == 1) ~ 1,
-                                        Peña == 1 & Delito_unico == 1 & (P5_11_04 == 1|P5_31_04 == 1) ~ 1,
-                                        Peña == 1 & Delito_unico == 1 & (P5_11_05 == 1|P5_31_05 == 1) ~ 1,
-                                        Peña == 1 & Delito_unico == 1 & (P5_11_07 == 1|P5_31_07 == 1) ~ 1,
-                                        Peña == 1 & Delito_unico == 1 & (P5_11_12 == 1|P5_31_12 == 1) ~ 1,
-                                        Peña == 1 & Delito_unico == 1 & (P5_11_17 == 1|P5_31_17 == 1) ~ 1,
-                                        Peña == 1 & Delito_unico == 1 & (P5_11_20 == 1|P5_31_20 == 1) ~ 1,
-                                        Peña == 1 & Delito_unico == 1 & (P5_11_22 == 1|P5_31_22 == 1) ~ 1,
-                                        AMLO == 1 & Delito_unico == 1 & (P5_11_01 == 1|P5_31_01 == 1) ~ 1,
-                                        AMLO == 1 & Delito_unico == 1 & (P5_11_02 == 1|P5_31_02 == 1) ~ 1,
-                                        AMLO == 1 & Delito_unico == 1 & (P5_11_04 == 1|P5_31_04 == 1) ~ 1,
-                                        AMLO == 1 & Delito_unico == 1 & (P5_11_07 == 1|P5_31_07 == 1) ~ 1,
-                                        AMLO == 1 & Delito_unico == 1 & (P5_11_13 == 1|P5_31_13 == 1) ~ 1,
-                                        AMLO == 1 & Delito_unico == 1 & (P5_11_20 == 1|P5_31_20 == 1) ~ 1,
-                                        T ~ 0),
-         Delito_prioritario_Cald = case_when(Delito_unico == 1 & (P5_11_01 == 1|P5_31_01 == 1) ~ 1,
-                                             Delito_unico == 1 & (P5_11_02 == 1|P5_31_02 == 1) ~ 1,
-                                             Delito_unico == 1 & (P5_11_03 == 1|P5_31_03 == 1) ~ 1,
-                                             Delito_unico == 1 & (P5_11_04 == 1|P5_31_04 == 1) ~ 1,
-                                             Delito_unico == 1 & (P5_11_05 == 1|P5_31_05 == 1) ~ 1,
-                                             Delito_unico == 1 & (P5_11_06 == 1|P5_31_06 == 1) ~ 1,
-                                             Delito_unico == 1 & (P5_11_07 == 1|P5_31_07 == 1) ~ 1,
-                                             Delito_unico == 1 & (P5_11_08 == 1|P5_31_08 == 1) ~ 1,
-                                             Delito_unico == 1 & (P5_11_09 == 1|P5_31_09 == 1) ~ 1,
-                                             Delito_unico == 1 & (P5_11_12 == 1|P5_31_12 == 1) ~ 1,
-                                             Delito_unico == 1 & (P5_11_13 == 1|P5_31_13 == 1) ~ 1,
-                                             Delito_unico == 1 & (P5_11_17 == 1|P5_31_17 == 1) ~ 1,
-                                             Delito_unico == 1 & (P5_11_18 == 1|P5_31_18 == 1) ~ 1,
-                                             Delito_unico == 1 & (P5_11_20 == 1|P5_31_20 == 1) ~ 1,
-                                             T ~ 0),
-         Delito_prioritario_Peña = case_when( Delito_unico == 1 & (P5_11_01 == 1|P5_31_01 == 1) ~ 1,
-                                              Delito_unico == 1 & (P5_11_02 == 1|P5_31_02 == 1) ~ 1,
-                                              Delito_unico == 1 & (P5_11_03 == 1|P5_31_03 == 1) ~ 1,
-                                              Delito_unico == 1 & (P5_11_04 == 1|P5_31_04 == 1) ~ 1,
-                                              Delito_unico == 1 & (P5_11_05 == 1|P5_31_05 == 1) ~ 1,
-                                              Delito_unico == 1 & (P5_11_07 == 1|P5_31_07 == 1) ~ 1,
-                                              Delito_unico == 1 & (P5_11_12 == 1|P5_31_12 == 1) ~ 1,
-                                              Delito_unico == 1 & (P5_11_17 == 1|P5_31_17 == 1) ~ 1,
-                                              Delito_unico == 1 & (P5_11_20 == 1|P5_31_20 == 1) ~ 1,
-                                              Delito_unico == 1 & (P5_11_22 == 1|P5_31_22 == 1) ~ 1,
-                                              T ~ 0),
-         Delito_prioritario_AMLO = case_when( Delito_unico == 1 & (P5_11_01 == 1|P5_31_01 == 1) ~ 1,
-                                              Delito_unico == 1 & (P5_11_02 == 1|P5_31_02 == 1) ~ 1,
-                                              Delito_unico == 1 & (P5_11_04 == 1|P5_31_04 == 1) ~ 1,
-                                              Delito_unico == 1 & (P5_11_07 == 1|P5_31_07 == 1) ~ 1,
-                                              Delito_unico == 1 & (P5_11_13 == 1|P5_31_13 == 1) ~ 1,
-                                              Delito_unico == 1 & (P5_11_20 == 1|P5_31_20 == 1) ~ 1,
-                                              T ~ 0),
-         Delito_prioritario_ENVIPE = case_when(Delito_unico == 1 & (P5_11_06 == 1|P5_31_06 == 1) ~ 1,
-                                               Delito_unico == 1 & (P5_11_16 == 1|P5_31_16 == 1) ~ 1,
-                                               Delito_unico == 1 & (P5_11_22 == 1|P5_31_22 == 1) ~ 1,
-                                               T ~ 0)
-         
-  ) 
-
+#  
+#  mutate(tiempo_sentencia = case_when(as.numeric(P5_4_A) == 0 ~ NA_real_,
+#                                      as.numeric(P5_4_A) >= 97 ~ NA_real_,
+#                                      T ~ as.numeric(P5_4_A)),
+#         Calderon = case_when(Anio_arresto == 2006 & Mes_arresto > 11 ~ 1,
+#                              Anio_arresto > 2006 & Anio_arresto < 2012 ~ 1,
+#                              Anio_arresto == 2012 & Mes_arresto < 12 ~ 1,
+#                              T ~ 0),
+#         Peña = case_when(Anio_arresto == 2012 & Mes_arresto > 11 ~ 1,
+#                          Anio_arresto > 2012 & Anio_arresto < 2018 ~ 1,
+#                          Anio_arresto == 2018 & Mes_arresto < 12 ~ 1,
+#                          T ~ 0),
+#         AMLO = case_when(Anio_arresto == 2018 & Mes_arresto > 11 ~ 1,
+#                          Anio_arresto > 2018 ~ 1,
+#                          T ~ 0),
+#         # alt1 considera delitos de PPO
+#    Delito_prioritario = case_when(Calderon == 1 & Delito_unico == 1 & (P5_11_01 == 1|P5_31_01 == 1) ~ 1,
+#                                        Calderon == 1 & Delito_unico == 1 & (P5_11_02 == 1|P5_31_02 == 1) ~ 1,
+#                                        Calderon == 1 & Delito_unico == 1 & (P5_11_03 == 1|P5_31_03 == 1) ~ 1,
+#                                        Calderon == 1 & Delito_unico == 1 & (P5_11_04 == 1|P5_31_04 == 1) ~ 1,
+#                                        Calderon == 1 & Delito_unico == 1 & (P5_11_05 == 1|P5_31_05 == 1) ~ 1,
+#                                        Calderon == 1 & Delito_unico == 1 & (P5_11_06 == 1|P5_31_06 == 1) ~ 1,
+#                                        Calderon == 1 & Delito_unico == 1 & (P5_11_07 == 1|P5_31_07 == 1) ~ 1,
+#                                        Calderon == 1 & Delito_unico == 1 & (P5_11_08 == 1|P5_31_08 == 1) ~ 1,
+#                                        Calderon == 1 & Delito_unico == 1 & (P5_11_09 == 1|P5_31_09 == 1) ~ 1,
+#                                        Calderon == 1 & Delito_unico == 1 & (P5_11_12 == 1|P5_31_12 == 1) ~ 1,
+#                                        Calderon == 1 & Delito_unico == 1 & (P5_11_13 == 1|P5_31_13 == 1) ~ 1,
+#                                        Calderon == 1 & Delito_unico == 1 & (P5_11_17 == 1|P5_31_17 == 1) ~ 1,
+#                                        Calderon == 1 & Delito_unico == 1 & (P5_11_18 == 1|P5_31_18 == 1) ~ 1,
+#                                        Calderon == 1 & Delito_unico == 1 & (P5_11_20 == 1|P5_31_20 == 1) ~ 1,
+#                                        Peña == 1 & Delito_unico == 1 & (P5_11_01 == 1|P5_31_01 == 1) ~ 1,
+#                                        Peña == 1 & Delito_unico == 1 & (P5_11_02 == 1|P5_31_02 == 1) ~ 1,
+#                                        Peña == 1 & Delito_unico == 1 & (P5_11_03 == 1|P5_31_03 == 1) ~ 1,
+#                                        Peña == 1 & Delito_unico == 1 & (P5_11_04 == 1|P5_31_04 == 1) ~ 1,
+#                                        Peña == 1 & Delito_unico == 1 & (P5_11_05 == 1|P5_31_05 == 1) ~ 1,
+#                                        Peña == 1 & Delito_unico == 1 & (P5_11_07 == 1|P5_31_07 == 1) ~ 1,
+#                                        Peña == 1 & Delito_unico == 1 & (P5_11_12 == 1|P5_31_12 == 1) ~ 1,
+#                                        Peña == 1 & Delito_unico == 1 & (P5_11_17 == 1|P5_31_17 == 1) ~ 1,
+#                                        Peña == 1 & Delito_unico == 1 & (P5_11_20 == 1|P5_31_20 == 1) ~ 1,
+#                                        Peña == 1 & Delito_unico == 1 & (P5_11_22 == 1|P5_31_22 == 1) ~ 1,
+#                                        AMLO == 1 & Delito_unico == 1 & (P5_11_01 == 1|P5_31_01 == 1) ~ 1,
+#                                        AMLO == 1 & Delito_unico == 1 & (P5_11_02 == 1|P5_31_02 == 1) ~ 1,
+#                                        AMLO == 1 & Delito_unico == 1 & (P5_11_04 == 1|P5_31_04 == 1) ~ 1,
+#                                        AMLO == 1 & Delito_unico == 1 & (P5_11_07 == 1|P5_31_07 == 1) ~ 1,
+#                                        AMLO == 1 & Delito_unico == 1 & (P5_11_13 == 1|P5_31_13 == 1) ~ 1,
+#                                        AMLO == 1 & Delito_unico == 1 & (P5_11_20 == 1|P5_31_20 == 1) ~ 1,
+#                                        T ~ 0),
+#    Delito_prioritario_Cald = case_when(Delito_unico == 1 & (P5_11_01 == 1|P5_31_01 == 1) ~ 1,
+#                                    Delito_unico == 1 & (P5_11_02 == 1|P5_31_02 == 1) ~ 1,
+#                                    Delito_unico == 1 & (P5_11_03 == 1|P5_31_03 == 1) ~ 1,
+#                                    Delito_unico == 1 & (P5_11_04 == 1|P5_31_04 == 1) ~ 1,
+#                                    Delito_unico == 1 & (P5_11_05 == 1|P5_31_05 == 1) ~ 1,
+#                                    Delito_unico == 1 & (P5_11_06 == 1|P5_31_06 == 1) ~ 1,
+#                                    Delito_unico == 1 & (P5_11_07 == 1|P5_31_07 == 1) ~ 1,
+#                                    Delito_unico == 1 & (P5_11_08 == 1|P5_31_08 == 1) ~ 1,
+#                                    Delito_unico == 1 & (P5_11_09 == 1|P5_31_09 == 1) ~ 1,
+#                                    Delito_unico == 1 & (P5_11_12 == 1|P5_31_12 == 1) ~ 1,
+#                                    Delito_unico == 1 & (P5_11_13 == 1|P5_31_13 == 1) ~ 1,
+#                                    Delito_unico == 1 & (P5_11_17 == 1|P5_31_17 == 1) ~ 1,
+#                                    Delito_unico == 1 & (P5_11_18 == 1|P5_31_18 == 1) ~ 1,
+#                                    Delito_unico == 1 & (P5_11_20 == 1|P5_31_20 == 1) ~ 1,
+#                                   T ~ 0),
+#    Delito_prioritario_Peña = case_when( Delito_unico == 1 & (P5_11_01 == 1|P5_31_01 == 1) ~ 1,
+#                                    Delito_unico == 1 & (P5_11_02 == 1|P5_31_02 == 1) ~ 1,
+#                                    Delito_unico == 1 & (P5_11_03 == 1|P5_31_03 == 1) ~ 1,
+#                                    Delito_unico == 1 & (P5_11_04 == 1|P5_31_04 == 1) ~ 1,
+#                                    Delito_unico == 1 & (P5_11_05 == 1|P5_31_05 == 1) ~ 1,
+#                                    Delito_unico == 1 & (P5_11_07 == 1|P5_31_07 == 1) ~ 1,
+#                                    Delito_unico == 1 & (P5_11_12 == 1|P5_31_12 == 1) ~ 1,
+#                                    Delito_unico == 1 & (P5_11_17 == 1|P5_31_17 == 1) ~ 1,
+#                                    Delito_unico == 1 & (P5_11_20 == 1|P5_31_20 == 1) ~ 1,
+#                                    Delito_unico == 1 & (P5_11_22 == 1|P5_31_22 == 1) ~ 1,
+#                                   T ~ 0),
+#    Delito_prioritario_AMLO = case_when( Delito_unico == 1 & (P5_11_01 == 1|P5_31_01 == 1) ~ 1,
+#                                    Delito_unico == 1 & (P5_11_02 == 1|P5_31_02 == 1) ~ 1,
+#                                    Delito_unico == 1 & (P5_11_04 == 1|P5_31_04 == 1) ~ 1,
+#                                    Delito_unico == 1 & (P5_11_07 == 1|P5_31_07 == 1) ~ 1,
+#                                    Delito_unico == 1 & (P5_11_13 == 1|P5_31_13 == 1) ~ 1,
+#                                    Delito_unico == 1 & (P5_11_20 == 1|P5_31_20 == 1) ~ 1,
+#                                   T ~ 0)) %>%
+    mutate(Delito_prioritario_ENVIPE = case_when(Delito_unico == 1 & (P5_11_04 == 1|P5_31_04 == 1) ~ 1,
+                                                 Delito_unico == 1 & (P5_11_05 == 1|P5_31_05 == 1) ~ 1,
+                                                 Delito_unico == 1 & (P5_11_06 == 1|P5_31_06 == 1) ~ 1,
+                                                 Delito_unico == 1 & (P5_11_16 == 1|P5_31_16 == 1) ~ 1,
+                                                 Delito_unico == 1 & (P5_11_22 == 1|P5_31_22 == 1) ~ 1,
+                                                 T ~ 0),
+           Delito_unico_ungrouped_categ = case_when(Delito_unico == 1 & (P5_11_01 == 1|P5_31_01 == 1) ~ "Robo de casa habitación",
+                                                    Delito_unico == 1 & (P5_11_02 == 1|P5_31_02 == 1) ~ "Robo de vehículo",
+                                                    Delito_unico == 1 & (P5_11_03 == 1|P5_31_03 == 1) ~ "Robo a negocio",
+                                                    Delito_unico == 1 & (P5_11_04 == 1|P5_31_04 == 1) ~ "Robo en transporte público",
+                                                    Delito_unico == 1 & (P5_11_05 == 1|P5_31_05 == 1) ~ "Robo a transeunte en vía pública",
+                                                    Delito_unico == 1 & (P5_11_06 == 1|P5_31_06 == 1) ~ "Robo de autopartes",
+                                                    Delito_unico == 1 & (P5_11_07 == 1|P5_31_07 == 1) ~ "Robo en forma distinta a las anteriores",
+                                                    Delito_unico == 1 & (P5_11_08 == 1|P5_31_08 == 1) ~ "Posesión ilegal de drogas",
+                                                    Delito_unico == 1 & (P5_11_09 == 1|P5_31_09 == 1) ~ "Comercio ilegal de drogas",
+                                                    Delito_unico == 1 & (P5_11_10 == 1|P5_31_10 == 1) ~ "Lesiones",
+                                                    Delito_unico == 1 & (P5_11_11 == 1|P5_31_11 == 1) ~ "Homicidio culposo",
+                                                    Delito_unico == 1 & (P5_11_12 == 1|P5_31_12 == 1) ~ "Homicidio doloso",
+                                                    Delito_unico == 1 & (P5_11_13 == 1|P5_31_13 == 1) ~ "Portación ilegal de armas",
+                                                    Delito_unico == 1 & (P5_11_14 == 1|P5_31_14 == 1) ~ "Incumplimiento de obligaciones de asistencia familiar",
+                                                    Delito_unico == 1 & (P5_11_15 == 1|P5_31_15 == 1) ~ "Violencia familiar",
+                                                    Delito_unico == 1 & (P5_11_16 == 1|P5_31_16 == 1) ~ "Daño a la propiedad",
+                                                    Delito_unico == 1 & (P5_11_17 == 1|P5_31_17 == 1) ~ "Secuestro o secuestro expres",
+                                                    Delito_unico == 1 & (P5_11_18 == 1|P5_31_18 == 1) ~ "Violación sexual",
+                                                    Delito_unico == 1 & (P5_11_19 == 1|P5_31_19 == 1) ~ "Fraude",
+                                                    Delito_unico == 1 & (P5_11_20 == 1|P5_31_20 == 1) ~ "Delincuencia organizada",
+                                                    Delito_unico == 1 & (P5_11_21 == 1|P5_31_21 == 1) ~ "Otros delitos sexuales",
+                                                    Delito_unico == 1 & (P5_11_22 == 1|P5_31_22 == 1) ~ "Exotorsión",
+                                                    Delito_unico == 1 & (P5_11_23 == 1|P5_31_23 == 1) ~ "Privación de la libertad",
+                                                    Delito_unico == 1 & (P5_11_24 == 1|P5_31_24 == 1) ~ "Abuso de confianza",
+                                                    Delito_unico == 1 & (P5_11_25 == 1|P5_31_25 == 1) ~ "Amenazas",
+                                                    Delito_unico == 1 & (P5_11_26 == 1|P5_31_26 == 1) ~ "Otro",
+                                                    T ~ NA_character_)) 
 
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -287,10 +167,28 @@ Main_database2 <- Main_database %>%
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-ENVIPE <- read_dta(paste0(path2SP,"/National/Exploration/Input/Politica_criminal/ocurrencias.dta")) %>%
-  pivot_longer(cols = del_1:del_15, names_to = "Delito_envipe",values_to = "Ocurrencias") %>%
+ENVIPE <- read_dta(paste0(path2DB,"/National/Exploration/Input/Politica_criminal/ocurrencias.dta")) %>%
+  pivot_longer(cols = del_1:del_15, names_to = "Delito_envipe",values_to = "Ocurrencias")  %>%
   group_by(anio, Delito_envipe) %>%
-  summarise(Ocurrencias = sum(Ocurrencias, na.rm = T)) %>% 
+  summarise(Ocurrencias = sum(Ocurrencias, na.rm = T)) %>%
+  mutate(Delito_envipe = case_when(Delito_envipe == "del_1" ~ "Robo total de vehículo", 
+                                  Delito_envipe == "del_2" ~ "Robo de accesorios, refacciones o \n herramientas de vehículos", 
+                                  Delito_envipe == "del_3" ~ "Pinta de barda o grafiti en su casa, \n rayones intencionales en su vehículo u otro \n tipo de vandalismo", 
+                                  Delito_envipe == "del_4" ~ "Alguien entró a su casa o departamento \n sin permiso mediante el uso de la fuerza o \n por engaños y robó o intentó robar algo", 
+                                  Delito_envipe == "del_5" ~ "Robo o asalto en la calle o en el \n transporte público", 
+                                  Delito_envipe == "del_6" ~ "Robo en forma distinta a la anterior", 
+                                  Delito_envipe == "del_7" ~ "Alguien usó su chequera, número de \n tarjeta o cuenta bancaria sin su permiso para \n realizar cargos o para extraer dinero de sus cuentas \n (fraude bancario) o le dio dinero falso", 
+                                  Delito_envipe == "del_8" ~ "Entregó dinero por un producto o un \n servicio que no recibió conforme a lo acordado \n (fraude al consumidor)", 
+                                  Delito_envipe == "del_9" ~ "Amenazas, presiones o engaños para \n exigirle dinero o bienes; o para que hiciera algo \n o dejara de hacerlo (extorsión)", 
+                                  Delito_envipe == "del_10" ~ "Amenazas verbales de alguien plenamente \n identificado o por escrito hacia su persona \n diciendo que le va a causar un daño a usted, \n a su familia, a sus bienes o su trabajo", 
+                                  Delito_envipe == "del_11" ~ "Alguien sólo por actitud abusiva o por \n una discusión lo(a) golpeó, empujó o atacó generándole \n una lesión física (moretones, fracturas, cortadas, etc.)", 
+                                  Delito_envipe == "del_12" ~ "Lo secuestraron para exigir dinero o bienes", 
+                                  Delito_envipe == "del_13" ~ "Alguien en contra de su voluntad lo(a) \n agredió mediante hostigamiento o intimidación sexual, manoseo, \n exhibicionismo o intento de violación", 
+                                  Delito_envipe == "del_14" ~ "Fue obligado(a) mediante violencia física o \n amenaza por alguien conocido o desconocido a tener una \n actividad sexual no deseada (Violación sexual) ", 
+                                  Delito_envipe == "del_15" ~ "Otro"))
+
+
+ENVIPE_prioriotarios <- ENVIPE  %>% 
   arrange(anio, -Ocurrencias) %>%
   group_by(anio) %>%
   slice(1:3)
@@ -309,7 +207,7 @@ table(ENVIPE$anio,ENVIPE$Delito_envipe)
 #2022     1     1     0     0     1
 #2023     1     1     0     0     1
 
-#Delitos prioritarios ENPOL robo de autopartes, daño a la propiedad, extorsión (a veces robo a transeúnte)
+#Delitos prioritarios ENPOL robo de autopartes, danio a la propiedad, extorsión (a veces robo a transeúnte)
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -318,175 +216,208 @@ table(ENVIPE$anio,ENVIPE$Delito_envipe)
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
-## 1 ⁠Estrategias en las detenciones
-# Proporción de detenciones x DelitosPrioritarios_Gob Vs No prioritarios, 2011-2021
+## 1 Delitos ENPOL 2018-2021
 
-plt <- timeline(Main_database1,Delito_prioritario_Cald) +
-  geom_vline(xintercept = "2012") +
-  geom_vline(xintercept = "2018")
+data2plot <- Main_database1 %>%
+  filter(Anio_arresto >= 2018, !is.na(Delito_unico_ungrouped_categ)) %>%
+  group_by(Delito_unico_ungrouped_categ) %>%
+  summarise(n = n()) %>%
+  mutate(value2plot =  100 * n / sum(n),
+         labels = paste0(round(value2plot,0),"%"),
+         group_var = "Arrestos",
+         Delito = Delito_unico_ungrouped_categ) %>%
+  select(Delito,value2plot,labels,group_var) %>%
+  arrange(value2plot) %>%
+  mutate(Delito = factor(Delito, levels = Delito))
+
+colors4plot <- c("#003B88", 
+                 "#ef0b4b",
+                 "#f4cc21",
+                 "#91288c",
+                 "#f05b42",
+                 "#2ba7a4",
+                 "#2779bd",
+                 "#eb9727",
+                 "#2d3589",
+                 "#d12241",
+                 "#90d1eb",
+                 "#003B88", 
+                 "#ef0b4b",
+                 "#f4cc21",
+                 "#91288c",
+                 "#f05b42",
+                 "#2ba7a4",
+                 "#2779bd",
+                 "#eb9727",
+                 "#2d3589",
+                 "#d12241",
+                 "#90d1eb",
+                 "#003B88", 
+                 "#ef0b4b",
+                 "#f4cc21",
+                 "#003B88")
+
+
+plt <- ggplot(data2plot, 
+              aes(x     = Delito,
+                  y     = value2plot,
+                  label = labels,
+                  group = group_var,
+                  color = Delito)) +
+  geom_bar(stat = "identity", fill = colors4plot,
+             show.legend = F) +
+  geom_text_repel(
+    size        = 3.514598,
+    show.legend = F,
+    
+    # Additional options from ggrepel package:
+    min.segment.length = 1000,
+    seed               = 42,
+    box.padding        = 0.5,
+    direction          = "y",
+    force              = 5,
+    force_pull         = 1) +
+  scale_y_continuous(limits = c(0, 105),
+                     expand = c(0,0),
+                     breaks = seq(0,100,20),
+                     labels = paste0(seq(0,100,20), "%")) %>%
+  scale_color_manual(values = colors4plot) +
+  WJP_theme() +
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.major.y = element_line(colour = "#d1cfd1"),
+        axis.title.x       = element_blank(),
+        axis.title.y       = element_blank(),
+        axis.line.x        = element_line(color    = "#d1cfd1"),
+        axis.ticks.x       = element_line(color    = "#d1cfd1",
+                                          linetype = "solid")) +
+  coord_flip()
+
 
 
 ggsave(plot   = plt,
-       file   = paste0("National/Exploration/Output/Milestone2/Figure1_1_1.svg"), 
+       file   = paste0("National/Exploration/Output/Milestone2/Figure1_1.svg"), 
        width  = 175, 
-       height = 85,
+       height = 175,
        units  = "mm",
        dpi    = 72,
        device = "svg")
 
-plt <- timeline(Main_database1,Delito_prioritario_Peña) +
-  geom_vline(xintercept = "2012") +
-  geom_vline(xintercept = "2018")
+
+
+## 2 Delitos ENVIPE 2018-2021
+
+
+data2plot <- ENVIPE %>%
+  filter(anio >= 2018) %>%
+  group_by(Delito_envipe) %>%
+  summarise(n = sum(Ocurrencias)) %>%
+  mutate(value2plot =  100 * n / sum(n),
+         labels = paste0(round(value2plot,0),"%"),
+         group_var = "ENVIPE",
+         Delito = Delito_envipe) %>%
+  select(Delito,value2plot,labels,group_var) %>%
+  arrange(value2plot) %>%
+  mutate(Delito = factor(Delito, levels = Delito))
+
+colors4plot <- c("#003B88", 
+                 "#ef0b4b",
+                 "#f4cc21",
+                 "#91288c",
+                 "#f05b42",
+                 "#2ba7a4",
+                 "#2779bd",
+                 "#eb9727",
+                 "#2d3589",
+                 "#d12241",
+                 "#90d1eb",
+                 "#003B88", 
+                 "#ef0b4b",
+                 "#ef0b4b",
+                 "#f4cc21")
+
+
+plt <- ggplot(data2plot, 
+              aes(x     = Delito,
+                  y     = value2plot,
+                  label = labels,
+                  group = group_var,
+                  color = Delito)) +
+  geom_bar(stat = "identity", fill = colors4plot,
+           show.legend = F) +
+  geom_text_repel(
+    size        = 3.514598,
+    show.legend = F,
+    
+    # Additional options from ggrepel package:
+    min.segment.length = 1000,
+    seed               = 42,
+    box.padding        = 0.5,
+    direction          = "y",
+    force              = 5,
+    force_pull         = 1) +
+  scale_y_continuous(limits = c(0, 105),
+                     expand = c(0,0),
+                     breaks = seq(0,100,20),
+                     labels = paste0(seq(0,100,20), "%")) %>%
+  scale_color_manual(values = colors4plot) +
+  WJP_theme() +
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.major.y = element_line(colour = "#d1cfd1"),
+        axis.title.x       = element_blank(),
+        axis.title.y       = element_blank(),
+        axis.line.x        = element_line(color    = "#d1cfd1"),
+        axis.ticks.x       = element_line(color    = "#d1cfd1",
+                                          linetype = "solid")) +
+  coord_flip()
+
 
 
 ggsave(plot   = plt,
-       file   = paste0("National/Exploration/Output/Milestone2/Figure1_1_2.svg"), 
+       file   = paste0("National/Exploration/Output/Milestone2/Figure1_2.svg"), 
        width  = 175, 
-       height = 85,
+       height = 175,
        units  = "mm",
        dpi    = 72,
        device = "svg")
 
-plt <- timeline(Main_database1,Delito_prioritario_AMLO) +
-  geom_vline(xintercept = "2012") +
-  geom_vline(xintercept = "2018")
+
+##3.⁠Delitos ENVIPE en ENPOL, 2018-2021
 
 
-ggsave(plot   = plt,
-       file   = paste0("National/Exploration/Output/Milestone2/Figure1_1_3.svg"), 
-       width  = 175, 
-       height = 85,
-       units  = "mm",
-       dpi    = 72,
-       device = "svg")
-
-# Correlación con tiempo de sentencia:
-
-cor(Main_database1$Delito_prioritario,Main_database1$tiempo_sentencia, use="pairwise")
-
-#b. Proporción de detenciones x DelitosPrioritarios_ENVIPE Vs No prioritarios, 2011-2021
-
-
-plt <- timeline(Main_database1,Delito_prioritario_ENVIPE) +
-  geom_vline(xintercept = "2012") +
-  geom_vline(xintercept = "2018")
-
-
-ggsave(plot   = plt,
-       file   = paste0("National/Exploration/Output/Milestone2/Figure1_2_1.svg"), 
-       width  = 175, 
-       height = 85,
-       units  = "mm",
-       dpi    = 72,
-       device = "svg")
-
-
-# NOT IN USE
-
-## 2.⁠ ⁠Promedio de Controles aplicados en la Detención para DelitosPrioritarios_Gob:
-## aquí la idea es cruzar el tipo de corporación x el tipo de control aplicado. 
-## (Vero avanzó este análisis pero con los delitos en general, en lugar de sobre un tipo de delito, 
-## acá se ve: UsoFuerza_20231130.docx
-
-##data2plot <- Main_database %>%
-##  filter(Delito_prioritario_alt1 == 1) %>%
-##  group_by(Corporacion_grupos) %>%
-##  summarise(controles_cooperativos = 100 * mean(controles_cooperativos, na.rm = T),
-##            sometimiento = 100 * mean(sometimiento, na.rm = T),
-##            control_contacto = 100 * mean(control_contacto, na.rm = T),
-##            tacticas_defensivas = 100 * mean(tacticas_defensivas, na.rm = T),
-##            fuerza_letal = 100 * mean(fuerza_letal, na.rm = T)) %>%
-##  pivot_longer(cols = controles_cooperativos:fuerza_letal, names_to = "tipo_control", values_to = "value2plot") %>%
-##  mutate(labels = paste0(round(value2plot,0), "%"),
-##    group_var = tipo_control) %>%
-##  filter(Corporacion_grupos != "NS/NR")
-##  colors4plot <- c("controles_cooperativos" = "#1a2580", 
-##                   "sometimiento" = "#a90099",
-##                   "control_contacto" = "#ef6b4b",
-##                   "tacticas_defensivas" = "#ef9b4b",
-##                   "fuerza_letal" = "#ef0b4b")
-##
-##  plt <- ggplot(data2plot, 
-##                aes(x     = Corporacion_grupos,
-##                    y     = value2plot,
-##                    label = labels,
-##                    group = tipo_control,
-##                    color = group_var)) +
-##    geom_point(size = 2,
-##               show.legend = F) +
-##    geom_text_repel(size        = 3.514598,
-##                    show.legend = F,
-##                    
-##                    # Additional options from ggrepel package:
-##                    min.segment.length = 1000,
-##                    seed               = 42,
-##                    box.padding        = 0.5,
-##                    direction          = "y",
-##                    force              = 5,
-##                    force_pull         = 1) +
-##    scale_y_continuous(limits = c(0, 105),
-##                       expand = c(0,0),
-##                       breaks = seq(0,100,20),
-##                       labels = paste0(seq(0,100,20), "%")) %>%
-##    scale_color_manual(values = colors4plot) +
-##    WJP_theme() +
-##    theme(panel.grid.major.x = element_blank(),
-##          panel.grid.major.y = element_line(colour = "#d1cfd1"),
-##          axis.title.x       = element_blank(),
-##          axis.title.y       = element_blank(),
-##          axis.line.x        = element_line(color    = "#d1cfd1"),
-##          axis.ticks.x       = element_line(color    = "#d1cfd1",
-##                                            linetype = "solid")
-##    ) +
-##    coord_flip()
-##
-##  ggsave(plot   = plt,
-##        file   = paste0("National/Exploration/Output/Milestone2/Figure2_1.svg"), 
-##        width  = 175, 
-##        height = 85,
-##        units  = "mm",
-##        dpi    = 72,
-##        device = "svg")
-  
-
-
-##3.⁠ ⁠Estrategias en las sanciones
-#a. Número absoluto  detenciones y sentencias x secuestro, 2011-2021; 
-
-data2plot_1 <- Main_database1 %>%
-  filter(Delito_unico_9_secuestro == 1) %>%
-  group_by(Anio_arresto) %>%
-  summarise(value2plot = n()) %>%
-  mutate(labels = if_else(
-    Anio_arresto %in% c("2011", "2013", "2015", "2017", "2019", "2021"),
-    paste0(value2plot), NA_character_),
-    group_var = "Arrestos",
-    Anio = Anio_arresto
+data2plot <- Main_database1 %>%
+  filter(Anio_arresto >= 2018) %>%
+  filter(Delito_unico_ungrouped_categ == "Robo de vehículo" |
+  Delito_unico_ungrouped_categ == "Robo de autopartes" |
+  Delito_unico_ungrouped_categ == "Daño a la propiedad" |
+  Delito_unico_ungrouped_categ == "Robo de casa habitación" |
+  Delito_unico_ungrouped_categ == "Robo a transeunte en vía pública" |
+  Delito_unico_ungrouped_categ == "Robo en transporte público" |
+  Delito_unico_ungrouped_categ == "Robo en forma distinta a las anteriores" |
+  Delito_unico_ungrouped_categ == "Fraude" |
+  Delito_unico_ungrouped_categ == "Extorsión" |
+  Delito_unico_ungrouped_categ == "Amenazas" |
+  Delito_unico_ungrouped_categ == "Lesiones" |
+  Delito_unico_ungrouped_categ == "Secuestro o secuestro expres" |
+  Delito_unico_ungrouped_categ == "Otros delitos sexualesl" |
+  Delito_unico_ungrouped_categ == "Violación sexual"
   ) %>%
-  select(Anio,value2plot,labels,group_var)
-
-data2plot_2 <- Main_database2 %>%
-  filter(Anio_sentencia >= 2011 & !is.na(Anio_sentencia)) %>%
-  filter(Delito_unico_9_secuestro == 1) %>%
-  group_by(Anio_sentencia) %>%
-  summarise(value2plot = n()) %>%
-  mutate(labels = if_else(
-    Anio_sentencia %in% c("2011", "2013", "2015", "2017", "2019", "2021"),
-    paste0(value2plot), NA_character_),
-    group_var = "Sentencias",
-    Anio = Anio_sentencia
+  group_by(Anio_arresto,Delito_prioritario_ENVIPE) %>%
+  summarise(n = n()) %>%
+  mutate(value2plot =  100 * n / sum(n),
+         labels = paste0(round(value2plot,0), "%"),
+    group_var =  "Delito_prioritario_ENVIPE",
   ) %>%
-  select(Anio,value2plot,labels,group_var)
+  select(Anio_arresto,Delito_prioritario_ENVIPE,value2plot,labels,group_var) %>%
+filter(Delito_prioritario_ENVIPE == 1)
 
-data2plot <- rbind(data2plot_1,data2plot_2)
 
-
-colors4plot <- c("#003B88", "#ef0b4b")
 
 # Creating ggplot
 
+colors4plot <- c("#003B88")
+
 plt <- ggplot(data2plot, 
-              aes(x     = Anio,
+              aes(x     = Anio_arresto,
                   y     = value2plot,
                   label = labels,
                   group = group_var,
@@ -518,95 +449,12 @@ plt <- ggplot(data2plot,
         axis.title.y       = element_blank(),
         axis.line.x        = element_line(color    = "#d1cfd1"),
         axis.ticks.x       = element_line(color    = "#d1cfd1",
-                                          linetype = "solid")) +
-  geom_vline(xintercept = "2012") +
-  geom_vline(xintercept = "2018")
+                                          linetype = "solid"))
 
-
-ggsave(plot   = plt,
-       file   = paste0("National/Exploration/Output/Milestone2/Figure2_1.svg"), 
-       width  = 175, 
-       height = 85,
-       units  = "mm",
-       dpi    = 72,
-       device = "svg")
-
-
-#b. Número absoluto  detenciones y sentencias x x hom dol, 2011-2021; 
-
-
-data2plot_1 <- Main_database1 %>%
-  filter(Delito_unico_6_hom_dol == 1) %>%
-  group_by(Anio_arresto) %>%
-  summarise(value2plot = n()) %>%
-  mutate(labels = if_else(
-    Anio_arresto %in% c("2011", "2013", "2015", "2017", "2019", "2021"),
-    paste0(value2plot), NA_character_),
-    group_var = "Arrestos",
-    Anio = Anio_arresto
-  ) %>%
-  select(Anio,value2plot,labels,group_var)
-
-data2plot_2 <- Main_database2 %>%
-  filter(Anio_sentencia >= 2011 & !is.na(Anio_sentencia)) %>%
-  filter(Delito_unico_6_hom_dol == 1) %>%
-  group_by(Anio_sentencia) %>%
-  summarise(value2plot = n()) %>%
-  mutate(labels = if_else(
-    Anio_sentencia %in% c("2011", "2013", "2015", "2017", "2019", "2021"),
-    paste0(value2plot), NA_character_),
-    group_var = "Sentencias",
-    Anio = Anio_sentencia
-  ) %>%
-  select(Anio,value2plot,labels,group_var)
-
-data2plot <- rbind(data2plot_1,data2plot_2)
-
-
-colors4plot <- c("#003B88", "#ef0b4b")
-
-# Creating ggplot
-
-plt <- ggplot(data2plot, 
-              aes(x     = Anio,
-                  y     = value2plot,
-                  label = labels,
-                  group = group_var,
-                  color = group_var)) +
-  geom_point(size = 2,
-             show.legend = F) +
-  geom_line(size  = 1,
-            show.legend = F) +
-  geom_text_repel(
-    size        = 3.514598,
-    show.legend = F,
-    
-    # Additional options from ggrepel package:
-    min.segment.length = 1000,
-    seed               = 42,
-    box.padding        = 0.5,
-    direction          = "y",
-    force              = 5,
-    force_pull         = 1) +
-  scale_y_continuous(limits = c(0, 105),
-                     expand = c(0,0),
-                     breaks = seq(0,100,20),
-                     labels = paste0(seq(0,100,20), "%")) %>%
-  scale_color_manual(values = colors4plot) +
-  WJP_theme() +
-  theme(panel.grid.major.x = element_blank(),
-        panel.grid.major.y = element_line(colour = "#d1cfd1"),
-        axis.title.x       = element_blank(),
-        axis.title.y       = element_blank(),
-        axis.line.x        = element_line(color    = "#d1cfd1"),
-        axis.ticks.x       = element_line(color    = "#d1cfd1",
-                                          linetype = "solid")) +
-  geom_vline(xintercept = "2012") +
-  geom_vline(xintercept = "2018")
 
 
 ggsave(plot   = plt,
-       file   = paste0("National/Exploration/Output/Milestone2/Figure2_2.svg"), 
+       file   = paste0("National/Exploration/Output/Milestone2/Figure1_3.svg"), 
        width  = 175, 
        height = 85,
        units  = "mm",
