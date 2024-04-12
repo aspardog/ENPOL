@@ -54,6 +54,9 @@ rsconnect/
 # RStudio files
 National/Directorio.xlsx
 
+# Figure files
+.svg
+
 #Outputs
 National/Data_cleaning/Output
 National/Descriptives/Output
