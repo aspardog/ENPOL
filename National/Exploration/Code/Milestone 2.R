@@ -226,37 +226,17 @@ data2plot <- Main_database1 %>%
   mutate(value2plot =  100 * n / sum(n),
          labels = paste0(round(value2plot,0),"%"),
          group_var = "Arrestos",
-         Delito = Delito_unico_ungrouped_categ) %>%
+         Delito = Delito_unico_ungrouped_categ,
+         Delito = str_wrap(Delito, width = 30)) %>%
   select(Delito,value2plot,labels,group_var) %>%
   arrange(value2plot) %>%
   mutate(Delito = factor(Delito, levels = Delito))
 
-colors4plot <- c("#003B88", 
-                 "#ef0b4b",
-                 "#f4cc21",
-                 "#91288c",
-                 "#f05b42",
-                 "#2ba7a4",
-                 "#2779bd",
-                 "#eb9727",
-                 "#2d3589",
-                 "#d12241",
-                 "#90d1eb",
-                 "#003B88", 
-                 "#ef0b4b",
-                 "#f4cc21",
-                 "#91288c",
-                 "#f05b42",
-                 "#2ba7a4",
-                 "#2779bd",
-                 "#eb9727",
-                 "#2d3589",
-                 "#d12241",
-                 "#90d1eb",
-                 "#003B88", 
-                 "#ef0b4b",
-                 "#f4cc21",
-                 "#003B88")
+colors4plot <- c("#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                 "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                 "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                 "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                 "#E2E2F7","#E2E2F7")
 
 
 plt <- ggplot(data2plot, 
@@ -265,40 +245,33 @@ plt <- ggplot(data2plot,
                   label = labels,
                   group = group_var,
                   color = Delito)) +
-  geom_bar(stat = "identity", fill = colors4plot,
-             show.legend = F) +
-  geom_text_repel(
-    size        = 3.514598,
-    show.legend = F,
-    
-    # Additional options from ggrepel package:
-    min.segment.length = 1000,
-    seed               = 42,
-    box.padding        = 0.5,
-    direction          = "y",
-    force              = 5,
-    force_pull         = 1) +
-  scale_y_continuous(limits = c(0, 105),
-                     expand = c(0,0),
-                     breaks = seq(0,100,20),
-                     labels = paste0(seq(0,100,20), "%")) %>%
-  scale_color_manual(values = colors4plot) +
+  geom_bar(stat = "identity", fill = colors4plot, color = colors4plot,
+             show.legend = F, width = 0.9) +
+  scale_fill_manual(values = colors4plot) +
+  geom_text(aes(y    = value2plot +.5 ),
+            color    = "#4a4a49",
+            family   = "Lato Full",
+            fontface = "bold") +
+  labs(y = "% of respondents") +
+  #xlab("Porcentaje de criterios cumplidos")+
+  scale_y_discrete() +
+  scale_x_discrete( ) +
   WJP_theme() +
-  theme(panel.grid.major.x = element_blank(),
-        panel.grid.major.y = element_line(colour = "#d1cfd1"),
-        axis.title.x       = element_blank(),
+  theme(panel.grid.major.y = element_blank(),
+        panel.grid.major.x = element_line(color = "#D0D1D3"),
         axis.title.y       = element_blank(),
-        axis.line.x        = element_line(color    = "#d1cfd1"),
-        axis.ticks.x       = element_line(color    = "#d1cfd1",
-                                          linetype = "solid")) +
+        axis.title.x       = element_blank(),
+        axis.text.y        = element_text(hjust = 1, size = 10))+
   coord_flip()
+
+plt
 
 
 
 ggsave(plot   = plt,
-       file   = paste0("National/Exploration/Output/Milestone2/Figure1_1.svg"), 
-       width  = 175, 
-       height = 175,
+       file   = paste0("National/Exploration/Output/Milestone2/Figure1_1_revised.svg"), 
+       width  = 100, 
+       height = 200,
        units  = "mm",
        dpi    = 72,
        device = "svg")
@@ -315,27 +288,15 @@ data2plot <- ENVIPE %>%
   mutate(value2plot =  100 * n / sum(n),
          labels = paste0(round(value2plot,0),"%"),
          group_var = "ENVIPE",
-         Delito = Delito_envipe) %>%
+         Delito = Delito_envipe,
+         Delito = str_wrap(Delito, width = 50)) %>%
   select(Delito,value2plot,labels,group_var) %>%
   arrange(value2plot) %>%
   mutate(Delito = factor(Delito, levels = Delito))
 
-colors4plot <- c("#003B88", 
-                 "#ef0b4b",
-                 "#f4cc21",
-                 "#91288c",
-                 "#f05b42",
-                 "#2ba7a4",
-                 "#2779bd",
-                 "#eb9727",
-                 "#2d3589",
-                 "#d12241",
-                 "#90d1eb",
-                 "#003B88", 
-                 "#ef0b4b",
-                 "#ef0b4b",
-                 "#f4cc21")
-
+colors4plot <- c("#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                 "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                 "#E2E2F7","#E2E2F7", "#E2E2F7")
 
 plt <- ggplot(data2plot, 
               aes(x     = Delito,
@@ -343,40 +304,33 @@ plt <- ggplot(data2plot,
                   label = labels,
                   group = group_var,
                   color = Delito)) +
-  geom_bar(stat = "identity", fill = colors4plot,
-           show.legend = F) +
-  geom_text_repel(
-    size        = 3.514598,
-    show.legend = F,
-    
-    # Additional options from ggrepel package:
-    min.segment.length = 1000,
-    seed               = 42,
-    box.padding        = 0.5,
-    direction          = "y",
-    force              = 5,
-    force_pull         = 1) +
-  scale_y_continuous(limits = c(0, 105),
-                     expand = c(0,0),
-                     breaks = seq(0,100,20),
-                     labels = paste0(seq(0,100,20), "%")) %>%
-  scale_color_manual(values = colors4plot) +
+  geom_bar(stat = "identity", fill = colors4plot, color = colors4plot,
+           show.legend = F, width = 0.9) +
+  scale_fill_manual(values = colors4plot) +
+  geom_text(aes(y    = value2plot +.5 ),
+            color    = "#4a4a49",
+            family   = "Lato Full",
+            fontface = "bold") +
+  labs(y = "% of respondents") +
+  #xlab("Porcentaje de criterios cumplidos")+
+  scale_y_discrete() +
+  scale_x_discrete( ) +
   WJP_theme() +
-  theme(panel.grid.major.x = element_blank(),
-        panel.grid.major.y = element_line(colour = "#d1cfd1"),
-        axis.title.x       = element_blank(),
+  theme(panel.grid.major.y = element_blank(),
+        panel.grid.major.x = element_line(color = "#D0D1D3"),
         axis.title.y       = element_blank(),
-        axis.line.x        = element_line(color    = "#d1cfd1"),
-        axis.ticks.x       = element_line(color    = "#d1cfd1",
-                                          linetype = "solid")) +
+        axis.title.x       = element_blank(),
+        axis.text.y        = element_text(hjust = 1, size = 10))+
   coord_flip()
+
+plt
 
 
 
 ggsave(plot   = plt,
-       file   = paste0("National/Exploration/Output/Milestone2/Figure1_2.svg"), 
-       width  = 175, 
-       height = 175,
+       file   = paste0("National/Exploration/Output/Milestone2/Figure1_2_revised.svg"), 
+       width  = 100, 
+       height = 200,
        units  = "mm",
        dpi    = 72,
        device = "svg")
