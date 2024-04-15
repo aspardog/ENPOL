@@ -43,8 +43,8 @@ barChart <- BarSimpleChartViz( fill_colors = c("#E2E2F7","#E2E2F7")) + expand_li
 barChart
 ggsave(plot   = barChart,
        file   = paste0( path2SP, "/National/Presentations/INL_ABRIL/Visualizations/sexo.svg"), 
-       width  = 91.37955, 
-       height = 76.9697,
+       width  = 95, 
+       height = 100,
        units  = "mm",
        dpi    = 72,
        device = "svg")
@@ -73,8 +73,8 @@ barChart
 
 ggsave(plot   = barChart,
        file   = paste0( path2SP, "/National/Presentations/INL_ABRIL/Visualizations/grado_escolar.svg"), 
-       width  = 91.37955, 
-       height = 76.9697,
+       width  = 200, 
+       height = 100,
        units  = "mm",
        dpi    = 72,
        device = "svg")
@@ -90,8 +90,8 @@ barChart <- BarSimpleChartViz( fill_colors = c("#E2E2F7","#E2E2F7", "#E2E2F7","#
 barChart
 ggsave(plot   = barChart,
        file   = paste0( path2SP, "/National/Presentations/INL_ABRIL/Visualizations/pais_nacimiento.svg"), 
-       width  = 91.37955, 
-       height = 76.9697,
+       width  = 95, 
+       height = 100,
        units  = "mm",
        dpi    = 72,
        device = "svg")
@@ -109,8 +109,8 @@ barChart <- BarSimpleChartViz(fill_colors = c("#E2E2F7","#E2E2F7", "#E2E2F7","#E
 barChart
 ggsave(plot   = barChart,
        file   = paste0( path2SP, "/National/Presentations/INL_ABRIL/Visualizations/estado_arresto.svg"), 
-       width  = 91.37955, 
-       height = 76.9697,
+       width  = 100, 
+       height = 200,
        units  = "mm",
        dpi    = 72,
        device = "svg")
@@ -129,8 +129,8 @@ barChart <- BarSimpleChartViz(fill_colors = c("#E2E2F7","#E2E2F7", "#E2E2F7","#E
 barChart
 ggsave(plot   = barChart,
        file   = paste0( path2SP, "/National/Presentations/INL_ABRIL/Visualizations/edad.svg"), 
-       width  = 91.37955, 
-       height = 76.9697,
+       width  = 200, 
+       height = 100,
        units  = "mm",
        dpi    = 72,
        device = "svg")
@@ -162,13 +162,13 @@ ggsave(plot   = barChart,
 
 
 data2plot <- count_frequency.fn(Main_database_2008$P1_7)  %>% 
-  mutate( labels = case_when( Value == "1" ~ "con su pareja en unión libre",
-                              Value == "2" ~ "separado(a) de una unión libre",
-                              Value == "3" ~ "separado(a) de un matrimonio",
-                              Value == "4" ~ "está casado(a)",
-                              Value == "5" ~ "está soltero(a)",
-                              Value == "6" ~ "está divorciado(a)",
-                              Value == "7" ~ "está viudo(a)", 
+  mutate( labels = case_when( Value == "1" ~ "Con pareja en unión libre",
+                              Value == "2" ~ "Separado de unión libre",
+                              Value == "3" ~ "Separado de matrimonio",
+                              Value == "4" ~ "Casado",
+                              Value == "5" ~ "Soltero",
+                              Value == "6" ~ "Divorciado",
+                              Value == "7" ~ "Viudo", 
                               T~NA_character_),
           labels = str_wrap(labels, width = 10)) %>% 
   filter(complete.cases(.))
@@ -185,8 +185,8 @@ barChart
 
 ggsave(plot   = barChart,
        file   = paste0( path2SP, "/National/Presentations/INL_ABRIL/Visualizations/edo_civil.svg"), 
-       width  = 91.37955, 
-       height = 76.9697,
+       width  = 97.5, 
+       height = 100,
        units  = "mm",
        dpi    = 72,
        device = "svg")
@@ -210,8 +210,8 @@ barChart
 
 ggsave(plot   = barChart,
        file   = paste0( path2SP, "/National/Presentations/INL_ABRIL/Visualizations/lengua_indigena.svg"), 
-       width  = 91.37955, 
-       height = 76.9697,
+       width  = 95, 
+       height = 100,
        units  = "mm",
        dpi    = 72,
        device = "svg")
@@ -219,9 +219,9 @@ ggsave(plot   = barChart,
 
 
 data2plot <- count_frequency.fn(Main_database_2008$P1_15)  %>% 
-  mutate( labels = case_when( Value == "1" ~ "afromexicano(a) o afrodescendiente",
-                              Value == "2" ~ "indígena",
-                              Value == "3" ~ "ninguno",
+  mutate( labels = case_when( Value == "1" ~ "Afromexicano(a) o afrodescendiente",
+                              Value == "2" ~ "Indígena",
+                              Value == "3" ~ "Ninguno",
                               T ~ NA_character_)) %>% 
   filter(complete.cases(.))
 
@@ -236,8 +236,8 @@ barChart
 
 ggsave(plot   = barChart,
        file   = paste0( path2SP, "/National/Presentations/INL_ABRIL/Visualizations/pertenencia_indigena.svg"), 
-       width  = 91.37955, 
-       height = 76.9697,
+       width  = 200, 
+       height = 95,
        units  = "mm",
        dpi    = 76.9697,
        device = "svg")
@@ -246,10 +246,10 @@ ggsave(plot   = barChart,
 
 
 data2plot <- count_frequency.fn(Main_database_2008$P1_22)  %>% 
-  mutate( labels = case_when( Value == "1" ~ "hombre",
-                              Value == "2" ~ "mujer",
-                              Value == "3" ~ "mujer trans",
-                              Value == "4" ~ "hombre trans",
+  mutate( labels = case_when( Value == "1" ~ "Hombre",
+                              Value == "2" ~ "Mujer",
+                              Value == "3" ~ "Mujer trans",
+                              Value == "4" ~ "Hombre trans",
                               Value == "5" ~ "Otro",
                               T ~ NA_character_)) %>% 
   filter(complete.cases(.))
@@ -265,8 +265,8 @@ barChart
 
 ggsave(plot   = barChart,
        file   = paste0( path2SP, "/National/Presentations/INL_ABRIL/Visualizations/genero.svg"), 
-       width  = 91.37955, 
-       height = 76.9697,
+       width  = 95, 
+       height = 100,
        units  = "mm",
        dpi    = 72,
        device = "svg")
@@ -293,8 +293,8 @@ barChart
 
 ggsave(plot   = barChart,
        file   = paste0( path2SP, "/National/Presentations/INL_ABRIL/Visualizations/preferencia_sexual.svg"), 
-       width  = 91.37955, 
-       height = 76.9697,
+       width  = 95, 
+       height = 100,
        units  = "mm",
        dpi    = 72,
        device = "svg")
@@ -339,8 +339,8 @@ barChart
 
 ggsave(plot   = barChart,
        file   = paste0( path2SP, "/National/Presentations/INL_ABRIL/Visualizations/LGBTQ.svg"), 
-       width  = 91.37955, 
-       height = 76.9697,
+       width  = 95, 
+       height = 100,
        units  = "mm",
        dpi    = 72,
        device = "svg")
@@ -360,7 +360,8 @@ data2plot <- count_frequency.fn(Main_database_2008$Color_piel_promedio)  %>%
                             Value == "9" ~ "I",
                             Value == "10" ~ "J",
                             Value == "11" ~ "K",
-                            T~ NA_character_))
+                            T~ NA_character_),
+           labels = Value)
 
 barChart <- BarSimpleChartViz(fill_colors = c("#312c29","#3d230b", "#49372c","#674f42", "#796250","#95765a",
                                               "#b3987d","#dfc19b", "#e0b8b2","#f0d1cf", "#f9edec")) + expand_limits(y = c(0,60))
@@ -368,8 +369,8 @@ barChart
 
 ggsave(plot   = barChart,
        file   = paste0( path2SP, "/National/Presentations/INL_ABRIL/Visualizations/color_piel.svg"), 
-       width  = 110, 
-       height = 75,
+       width  = 200, 
+       height = 100,
        units  = "mm",
        dpi    = 72,
        device = "svg")
@@ -412,7 +413,7 @@ ggsave(plot   = barChart,
        dpi    = 72,
        device = "svg")
 
-# PErtenencia étnica ------------------------------------------------------------
+# Pertenencia étnica ------------------------------------------------------------
 
 
 data2plot <- count_frequency.fn(Main_database_2008$Etnia)  %>% 
@@ -497,7 +498,23 @@ ggsave(plot   = barChart,
 
 
 data2plot <- count_frequency.fn(Main_database_2008$Delito_unico_categ)  %>% 
-  mutate( Value = as.character(Value)) %>% 
+  mutate( Value = as.character(Value),
+          Value = case_when( Value == "amenazas" ~ "Amenazas", 
+                              Value == "armas" ~ "Armas", 
+                              Value == "drogas" ~ "Drogas", 
+                              Value == "extorsion" ~ "Extorsión", 
+                              Value == "fraude" ~ "Fraude", 
+                              Value == "hom_cul" ~ "Homicidio culposo", 
+                              Value == "hom_dol" ~ "Homicidio doloso", 
+                              Value == "lesiones" ~ "Lesiones", 
+                              Value == "ns_nr" ~ "No sabe", 
+                              Value == "org" ~ "Crimen organizado", 
+                              Value == "otro" ~ "Otro", 
+                              Value == "robos" ~ "Robo", 
+                              Value == "secuestro" ~ "Secuestro", 
+                              Value == "sexuales" ~ "Sexuales", 
+                              Value == "viol_fam" ~ "Violencia Familiar",
+                              T~ NA_character_)) %>% 
   filter(complete.cases(.))
 
 
@@ -511,8 +528,8 @@ barChart
 
 ggsave(plot   = barChart,
        file   = paste0( path2SP, "/National/Presentations/INL_ABRIL/Visualizations/delito.svg"), 
-       width  = 91.37955, 
-       height = 76.9697,
+       width  = 100, 
+       height = 200,
        units  = "mm",
        dpi    = 72,
        device = "svg")
@@ -534,8 +551,8 @@ barChart
 
 ggsave(plot   = barChart,
        file   = paste0( path2SP, "/National/Presentations/INL_ABRIL/Visualizations/culpabilidad.svg"), 
-       width  = 91.37955, 
-       height = 76.9697,
+       width  = 95, 
+       height = 100,
        units  = "mm",
        dpi    = 72,
        device = "svg")
@@ -561,8 +578,8 @@ barChart
 
 ggsave(plot   = barChart,
        file   = paste0( path2SP, "/National/Presentations/INL_ABRIL/Visualizations/sentenciado.svg"), 
-       width  = 91.37955, 
-       height = 76.9697,
+       width  = 95, 
+       height = 100,
        units  = "mm",
        dpi    = 72,
        device = "svg")
@@ -619,8 +636,8 @@ barChart
 
 ggsave(plot   = barChart,
        file   = paste0( path2SP, "/National/Presentations/INL_ABRIL/Visualizations/discapcidad.svg"), 
-       width  = 110, 
-       height = 75,
+       width  = 95, 
+       height = 100,
        units  = "mm",
        dpi    = 72,
        device = "svg")
@@ -644,8 +661,8 @@ barChart <- BarSimpleChartViz(fill_colors = c("#E2E2F7","#E2E2F7", "#E2E2F7","#E
 barChart
 ggsave(plot   = barChart,
        file   = paste0( path2SP, "/National/Presentations/INL_ABRIL/Visualizations/años_sentencia.svg"), 
-       width  = 91.37955, 
-       height = 76.9697,
+       width  = 200, 
+       height = 100,
        units  = "mm",
        dpi    = 72,
        device = "svg")
@@ -701,8 +718,8 @@ barChart
 
 ggsave(plot   = barChart,
        file   = paste0( path2SP, "/National/Presentations/INL_ABRIL/Visualizations/estado_nacimiento.svg"), 
-       width  = 91.37955, 
-       height = 76.9697,
+       width  = 100, 
+       height = 200,
        units  = "mm",
        dpi    = 72,
        device = "svg")
