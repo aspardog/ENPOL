@@ -1,7 +1,7 @@
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ## Project:           ENPOL 
 ##
-## Script:            Indicator Construction
+## Script:            SOCIO-DEMOGRAPHICS DESCRIPTIVES
 ##
 ## Author(s):         Santiago Pardo G.        (spardo@worldjusticeproject.org)
 ##                    Cristina Alvares         (calvarez@worldjuticeproject.org)
@@ -29,227 +29,681 @@
 # loaded from the following script:
 source("Code/Settings.R")
 
-load(paste0(path2SP,"/National/Presentations/INL_MARZO/Input/Indicators_database.RData"))
+load(paste0(path2SP,"/National/Data_cleaning/Output/Main_database.RData")) 
 
-# filter database ---------------------------------------------------------
-
-Indicators_database <- Indicators_database %>% 
-  mutate(eliminar = case_when( na_UAA >= 2 |
-         na_GDH >= 2 |
-         na_PJ >= 3 ~ 1,
-         T~ 0),
-         indicator_GDH = round(indicator_GDH, 1),
-         indicator_UAA = round(indicator_UAA, 1),
-         indicator_PJ = round(indicator_PJ, 1),
-         indicator_general = round(indicator_general, 1)) %>% 
-  filter(eliminar != 1)
+Main_database_2008 <- Main_database %>% 
+  filter(Anio_arresto >= 2008,
+         NSJP == 1)
 
 
-# Barras ------------------------------------------------------------------
+# Sexo --------------------------------------------------------------------
 
-data2plot <- count_frequency.fn(Indicators_database$indicator_general)
-
-barChart <- BarSimpleChartViz(shade_xminvalue = 5, shade_xmaxvalue = 9)
+data2plot <- count_frequency.fn(Main_database_2008$Sexo)
+barChart <- BarSimpleChartViz( fill_colors = c("#E2E2F7","#E2E2F7")) + expand_limits(y = c(0, 110))
 barChart
 ggsave(plot   = barChart,
-       file   = paste0( path2SP, "/National/Presentations/INL_MARZO/Visualizations/Bar_indicator_general.svg"), 
-       width  = 200, 
-       height = 80,
+       file   = paste0( path2SP, "/National/Presentations/INL_ABRIL/Visualizations/sexo.svg"), 
+       width  = 91.37955, 
+       height = 76.9697,
        units  = "mm",
        dpi    = 72,
        device = "svg")
 
+# Grado escolar -----------------------------------------------------------
 
-# CORRER SÓLO ESTA GRÁFICA ------------------------------------------------
+data2plot <- count_frequency.fn(Main_database_2008$Escolaridad) %>% 
+  mutate( order_var = case_when(Value == "Ninguno" ~ 1,
+                                Value == "Preescolar" ~ 2,
+                                Value == "Primaria" ~ 3,
+                                Value == "Secundaria" ~ 4,
+                                Value == "Preparatoria o bachillerato" ~ 5,
+                                Value == "Carrera técnica con secundaria" ~ 6,
+                                Value == "Carrera técnica con preparatoria" ~ 7,
+                                Value == "Normal básica con secundaria" ~ 8,
+                                Value == "Licenciatura o profesional" ~ 9,
+                                Value == "Maestría o doctorado" ~ 10,
+                                T ~ NA_real_))
 
 
+barChart <- BarSimpleChartViz( fill_colors = c("#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                               "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                               "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                               "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7") ) + expand_limits(y = c(0, 55))
+barChart
 
-data2plot <- count_frequency.fn(Indicators_database$indicator_GDH)
-data2plot <- data2plot %>% mutate(figure = case_when(figure == "25%" ~ "25%",
-                                                     figure == "55%" ~ "55%",
-                                                     figure == "19%" ~ "20%",
-                                                     T ~ NA_character_))
+ggsave(plot   = barChart,
+       file   = paste0( path2SP, "/National/Presentations/INL_ABRIL/Visualizations/grado_escolar.svg"), 
+       width  = 91.37955, 
+       height = 76.9697,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
+# País de NAcimiento ------------------------------------------------------------
+
+data2plot <- count_frequency.fn(Main_database_2008$P1_4) %>% 
+  mutate( labels = case_when( Value == "1" ~ "México",
+                              Value == "2" ~ "Estados Unidos",
+                              Value == "3" ~ "Otro"))
 
 
-barChart <- BarSimpleChartViz(shade_xminvalue = 1, shade_xmaxvalue = 3)
+barChart <- BarSimpleChartViz( fill_colors = c("#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7")) + expand_limits(y = c(0, 110))
 barChart
 ggsave(plot   = barChart,
-       file   = paste0( path2SP, "/National/Presentations/INL_MARZO/Visualizations/Bar_indicator_GDH.svg"), 
-       width  = 200, 
-       height = 80,
+       file   = paste0( path2SP, "/National/Presentations/INL_ABRIL/Visualizations/pais_nacimiento.svg"), 
+       width  = 91.37955, 
+       height = 76.9697,
        units  = "mm",
        dpi    = 72,
        device = "svg")
 
 
+# Estado de arresto ------------------------------------------------------------
 
-data2plot <- count_frequency.fn(Indicators_database$indicator_UAA)
-data2plot <- data2plot %>% filter(!is.na(Value))
-
-barChart <- BarSimpleChartViz(shade_xminvalue = 4, shade_xmaxvalue = 7)
+data2plot <- count_frequency.fn(Main_database_2008$Estado_arresto)
+barChart <- BarSimpleChartViz(fill_colors = c("#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7")) + coord_flip()
 barChart
 ggsave(plot   = barChart,
-       file   = paste0( path2SP, "/National/Presentations/INL_MARZO/Visualizations/Bar_indicator_UAA.svg"), 
-       width  = 200, 
-       height = 80,
+       file   = paste0( path2SP, "/National/Presentations/INL_ABRIL/Visualizations/estado_arresto.svg"), 
+       width  = 91.37955, 
+       height = 76.9697,
        units  = "mm",
        dpi    = 72,
        device = "svg")
+# Años de edad ------------------------------------------------------------
 
-data2plot <- count_frequency.fn(Indicators_database$indicator_PJ)
-data2plot <- data2plot %>% filter(!is.na(Value))
+Main_database_2008$AgeBin <- cut(as.numeric(Main_database_2008$P1_3), breaks = seq(from = 5, to = 100, by = 5), right = FALSE)
 
-barChart <- BarSimpleChartViz(shade_xminvalue = 6, shade_xmaxvalue = 10)
+
+data2plot <- count_frequency.fn(Main_database_2008$AgeBin)
+barChart <- BarSimpleChartViz(fill_colors = c("#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7")) + expand_limits(y = c(0, 30))
 barChart
 ggsave(plot   = barChart,
-       file   = paste0( path2SP, "/National/Presentations/INL_MARZO/Visualizations/Bar_indicatorPJ.svg"), 
-       width  = 200, 
-       height = 80,
+       file   = paste0( path2SP, "/National/Presentations/INL_ABRIL/Visualizations/edad.svg"), 
+       width  = 91.37955, 
+       height = 76.9697,
        units  = "mm",
        dpi    = 72,
        device = "svg")
 
-# Logit -----------------------------------------------------------------
-
-load(paste0(path2SP,"/National/Presentations/INL_MARZO/Input/Main_database.RData"))
-
-Main_database <- Main_database %>% 
-  mutate(eliminar = case_when( na_UAA >= 2 |
-                                 na_GDH >= 2 |
-                                 na_PJ >= 3 ~ 1,
-                               T~ 0)) %>% 
-  filter(eliminar != 1)
+# Tipo de centro penitenciario ------------------------------------------------------------
 
 
-# General almenos del 50% de los criterios ----------------------------------
+data2plot <- count_frequency.fn(Main_database_2008$P1_1)  %>% 
+  mutate( labels = case_when( Value == "1" ~ "Centro varonil",
+                              Value == "2" ~ "Centro femenil",
+                              Value == "3" ~ "Mixto"))
+
+barChart <- BarSimpleChartViz(fill_colors = c("#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7")) + expand_limits(y = c(0, 65))
+barChart
+ggsave(plot   = barChart,
+       file   = paste0( path2SP, "/National/Presentations/INL_ABRIL/Visualizations/centro_penitenciario.svg"), 
+       width  = 91.37955, 
+       height = 76.9697,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
+
+# Estado civil ------------------------------------------------------------
 
 
-data2plot <- logit_dataBase.fn(dependent_var = "indicator_general_minlimit")
+data2plot <- count_frequency.fn(Main_database_2008$P1_7)  %>% 
+  mutate( labels = case_when( Value == "1" ~ "con su pareja en unión libre",
+                              Value == "2" ~ "separado(a) de una unión libre",
+                              Value == "3" ~ "separado(a) de un matrimonio",
+                              Value == "4" ~ "está casado(a)",
+                              Value == "5" ~ "está soltero(a)",
+                              Value == "6" ~ "está divorciado(a)",
+                              Value == "7" ~ "está viudo(a)", 
+                              T~NA_character_),
+          labels = str_wrap(labels, width = 10)) %>% 
+  filter(complete.cases(.))
 
-logitPlot <- logit_demo_panel_min(mainData = data2plot, line_size = 2)
-logitPlot
-ggsave(plot   = logitPlot,
-       file   = paste0( path2SP, "/National/Presentations/INL_MARZO/Visualizations/Logit_min_indicator_general.svg"), 
+
+barChart <- BarSimpleChartViz(fill_colors = c("#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7")) + expand_limits(y = c(0, 65))
+barChart
+
+
+ggsave(plot   = barChart,
+       file   = paste0( path2SP, "/National/Presentations/INL_ABRIL/Visualizations/edo_civil.svg"), 
+       width  = 91.37955, 
+       height = 76.9697,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
+# Lengua indígena ------------------------------------------------------------
+
+
+data2plot <- count_frequency.fn(Main_database_2008$P1_12)  %>% 
+  mutate( labels = case_when( Value == "1" ~ "Sí",
+                              Value == "2" ~ "No",
+                              T ~ NA_character_)) %>% 
+  filter(complete.cases(.))
+
+
+barChart <- BarSimpleChartViz(fill_colors = c("#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7")) + expand_limits(y = c(0, 110))
+barChart
+
+ggsave(plot   = barChart,
+       file   = paste0( path2SP, "/National/Presentations/INL_ABRIL/Visualizations/lengua_indigena.svg"), 
+       width  = 91.37955, 
+       height = 76.9697,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
+# PErtenencia indígena ------------------------------------------------------------
+
+
+data2plot <- count_frequency.fn(Main_database_2008$P1_15)  %>% 
+  mutate( labels = case_when( Value == "1" ~ "afromexicano(a) o afrodescendiente",
+                              Value == "2" ~ "indígena",
+                              Value == "3" ~ "ninguno",
+                              T ~ NA_character_)) %>% 
+  filter(complete.cases(.))
+
+
+barChart <- BarSimpleChartViz(fill_colors = c("#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7")) + expand_limits(y = c(0, 110))
+barChart
+
+ggsave(plot   = barChart,
+       file   = paste0( path2SP, "/National/Presentations/INL_ABRIL/Visualizations/pertenencia_indigena.svg"), 
+       width  = 91.37955, 
+       height = 76.9697,
+       units  = "mm",
+       dpi    = 76.9697,
+       device = "svg")
+
+# Género ------------------------------------------------------------
+
+
+data2plot <- count_frequency.fn(Main_database_2008$P1_22)  %>% 
+  mutate( labels = case_when( Value == "1" ~ "hombre",
+                              Value == "2" ~ "mujer",
+                              Value == "3" ~ "mujer trans",
+                              Value == "4" ~ "hombre trans",
+                              Value == "5" ~ "Otro",
+                              T ~ NA_character_)) %>% 
+  filter(complete.cases(.))
+
+
+barChart <- BarSimpleChartViz(fill_colors = c("#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7")) + expand_limits(y = c(0, 110))
+barChart
+
+ggsave(plot   = barChart,
+       file   = paste0( path2SP, "/National/Presentations/INL_ABRIL/Visualizations/genero.svg"), 
+       width  = 91.37955, 
+       height = 76.9697,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
+
+# Preferencia sexual ------------------------------------------------------------
+
+
+data2plot <- count_frequency.fn(Main_database_2008$P1_23)  %>% 
+  mutate( labels = case_when( Value == "1" ~ "Bisexual",
+                              Value == "2" ~ "Homosexual",
+                              Value == "3" ~ "Heterosexual",
+                              Value == "4" ~ "Otro",
+                              T ~ NA_character_)) %>% 
+  filter(complete.cases(.))
+
+
+barChart <- BarSimpleChartViz(fill_colors = c("#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7")) + expand_limits(y = c(0, 110))
+barChart
+
+ggsave(plot   = barChart,
+       file   = paste0( path2SP, "/National/Presentations/INL_ABRIL/Visualizations/preferencia_sexual.svg"), 
+       width  = 91.37955, 
+       height = 76.9697,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
+
+# Pertenece a LGBTQ ------------------------------------------------------------
+
+
+data2plot <- count_frequency.fn(Main_database_2008$LGBTQ)  %>% 
+  mutate( labels = case_when( Value == 1 ~ "Sí",
+                              Value == 0 ~ "No",
+                              T ~ NA_character_),
+          Value = as.character(Value)) %>% 
+  filter(complete.cases(.))
+
+
+barChart <- BarSimpleChartViz(fill_colors = c("#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7")) + expand_limits(y = c(0, 110))
+barChart
+
+# Pertenece a LGBTQ ------------------------------------------------------------
+
+
+data2plot <- count_frequency.fn(Main_database_2008$LGBTQ)  %>% 
+  mutate( labels = case_when( Value == 1 ~ "Sí",
+                              Value == 0 ~ "No",
+                              T ~ NA_character_),
+          Value = as.character(Value)) %>% 
+  filter(complete.cases(.))
+
+
+barChart <- BarSimpleChartViz(fill_colors = c("#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7")) + expand_limits(y = c(0, 110))
+barChart
+
+ggsave(plot   = barChart,
+       file   = paste0( path2SP, "/National/Presentations/INL_ABRIL/Visualizations/LGBTQ.svg"), 
+       width  = 91.37955, 
+       height = 76.9697,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
+# Color de piel- promedio ------------------------------------------------------------
+
+
+data2plot <- count_frequency.fn(Main_database_2008$Color_piel_promedio)  %>% 
+  mutate( Value = as.character(Value),
+          Value = case_when(Value == "1" ~ "A",
+                            Value == "2" ~ "B",
+                            Value == "3" ~ "C",
+                            Value == "4" ~ "D",
+                            Value == "5" ~ "E",
+                            Value == "6" ~ "F",
+                            Value == "7" ~ "G",
+                            Value == "8" ~ "H",
+                            Value == "9" ~ "I",
+                            Value == "10" ~ "J",
+                            Value == "11" ~ "K",
+                            T~ NA_character_))
+
+barChart <- BarSimpleChartViz(fill_colors = c("#312c29","#3d230b", "#49372c","#674f42", "#796250","#95765a",
+                                              "#b3987d","#dfc19b", "#e0b8b2","#f0d1cf", "#f9edec")) + expand_limits(y = c(0,60))
+barChart
+
+ggsave(plot   = barChart,
+       file   = paste0( path2SP, "/National/Presentations/INL_ABRIL/Visualizations/color_piel.svg"), 
        width  = 110, 
        height = 75,
        units  = "mm",
        dpi    = 72,
        device = "svg")
 
-# CORRER SÓLO ESTA GRÁFICA ------------------------------------------------
+# # Color de piel- binaria ------------------------------------------------------------
+# 
+# 
+# data2plot <- count_frequency.fn(Main_database_2008$Colo_piel_claro)  %>% 
+#   mutate( labels = case_when( Value == 1 ~ "Sí",
+#                               Value == 0 ~ "No",
+#                               T ~ NA_character_),
+#           Value = as.character(Value)) %>% 
+#   filter(complete.cases(.), 
+#          Value != "99")
+# 
+# 
+# barChart <- BarSimpleChartViz(fill_colors = c("#E2E2F7","#E2E2F7")) + expand_limits(y = c(0, 110))
+# barChart
 
 
-# GDH menos del 50% de los criterios ----------------------------------
+
+# Mujer --------------------------------------------------------------------
+
+data2plot <- count_frequency.fn(Main_database_2008$Sexo) %>% 
+  mutate( labels = case_when(Value == "Femenino" ~ "Sí",
+                             Value == "Masculino" ~ "No",
+                             T ~ NA_character_),
+          order_var = case_when(Value == "Femenino" ~ 2,
+                                Value == "Masculino" ~ 1,
+                                T ~ NA_real_))
+
+barChart <- BarSimpleChartViz( fill_colors = c("#E2E2F7","#E2E2F7")) + expand_limits(y = c(0, 110))
+barChart
+
+ggsave(plot   = barChart,
+       file   = paste0( path2SP, "/National/Presentations/INL_ABRIL/Visualizations/mujer.svg"), 
+       width  = 91.37955, 
+       height = 76.9697,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
+
+# PErtenencia étnica ------------------------------------------------------------
 
 
-data2plot <- logit_dataBase.fn(dependent_var = "indicator_GDH_minlimit")
+data2plot <- count_frequency.fn(Main_database_2008$Etnia)  %>% 
+  mutate( Value = as.character(Value),
+          labels = case_when( Value == "1" ~ "Sí",
+                              Value == "0" ~ "No",
+                              T ~ NA_character_)) %>% 
+  filter(complete.cases(.))
 
-logitPlot <- logit_demo_panel_min(mainData = data2plot, line_size = 2)
-logitPlot
-ggsave(plot   = logitPlot,
-       file   = paste0( path2SP, "/National/Presentations/INL_MARZO/Visualizations/Logit_min_indicator_GDH.svg"), 
+
+barChart <- BarSimpleChartViz(fill_colors = c("#E2E2F7","#E2E2F7", "#E2E2F7")) + expand_limits(y = c(0, 110))
+barChart
+
+
+ggsave(plot   = barChart,
+       file   = paste0( path2SP, "/National/Presentations/INL_ABRIL/Visualizations/etnia.svg"), 
+       width  = 91.37955, 
+       height = 76.9697,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
+# PErtenencia menor a 30 años ------------------------------------------------------------
+
+
+data2plot <- count_frequency.fn(Main_database_2008$Edad_menor30)  %>% 
+  mutate( Value = as.character(Value),
+          labels = case_when( Value == "1" ~ "Sí",
+                              Value == "0" ~ "No",
+                              T ~ NA_character_)) %>% 
+  filter(complete.cases(.))
+
+
+barChart <- BarSimpleChartViz(fill_colors = c("#E2E2F7","#E2E2F7", "#E2E2F7")) + expand_limits(y = c(0, 110))
+barChart
+
+
+ggsave(plot   = barChart,
+       file   = paste0( path2SP, "/National/Presentations/INL_ABRIL/Visualizations/menor_treinta.svg"), 
+       width  = 91.37955, 
+       height = 76.9697,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
+
+# con grado universitario ------------------------------------------------------------
+
+
+Main_database_2008 <-  Main_database_2008 %>% 
+  mutate( con_educacion_universitaria = case_when( Escolaridad == "Ninguno" ~ 0,
+                                                   Escolaridad == "Preescolar" ~ 0,
+                                                   Escolaridad == "Primaria" ~ 0,
+                                                   Escolaridad == "Secundaria" ~ 0,
+                                                   Escolaridad == "Normal básica con secundaria" ~ 0,
+                                                   Escolaridad == "Carrera técnica con preparatoria" ~ 0,
+                                                   Escolaridad == "Carrera técnica con secundaria" ~ 0,
+                                                   Escolaridad == "Licenciatura o profesional" ~ 1,
+                                                   Escolaridad == "Maestría o doctorado" ~ 1,
+                                                   T ~ NA_real_))
+
+data2plot <- count_frequency.fn(Main_database_2008$con_educacion_universitaria)  %>% 
+  mutate( Value = as.character(Value),
+          labels = case_when( Value == "1" ~ "Sí",
+                              Value == "0" ~ "No",
+                              T ~ NA_character_)) %>% 
+  filter(complete.cases(.))
+
+
+barChart <- BarSimpleChartViz(fill_colors = c("#E2E2F7","#E2E2F7", "#E2E2F7")) + expand_limits(y = c(0, 110))
+barChart
+
+
+ggsave(plot   = barChart,
+       file   = paste0( path2SP, "/National/Presentations/INL_ABRIL/Visualizations/grado_universitario.svg"), 
+       width  = 91.37955, 
+       height = 76.9697,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
+
+
+# Por categoría del delito ------------------------------------------------------------
+
+
+data2plot <- count_frequency.fn(Main_database_2008$Delito_unico_categ)  %>% 
+  mutate( Value = as.character(Value)) %>% 
+  filter(complete.cases(.))
+
+
+barChart <- BarSimpleChartVizFlip(fill_colors = c("#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                                  "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                                  "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                                  "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                                  "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                                  "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7")) + expand_limits(y = c(0, 50))
+barChart
+
+ggsave(plot   = barChart,
+       file   = paste0( path2SP, "/National/Presentations/INL_ABRIL/Visualizations/delito.svg"), 
+       width  = 91.37955, 
+       height = 76.9697,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
+
+# Por culpabilidad ------------------------------------------------------------
+
+
+data2plot <- count_frequency.fn(Main_database_2008$culpabilidad)  %>% 
+  mutate( labels = case_when( Value == 1 ~ "Se reconoce culpable",
+                              Value == 0 ~ "Se reconoce inocente",
+                              T ~ NA_character_),
+          Value = as.character(Value)) %>% 
+  filter(complete.cases(.))
+
+
+barChart <- BarSimpleChartViz(fill_colors = c("#E2E2F7","#E2E2F7", "#E2E2F7")) + expand_limits(y = c(0, 70))
+barChart
+
+
+ggsave(plot   = barChart,
+       file   = paste0( path2SP, "/National/Presentations/INL_ABRIL/Visualizations/culpabilidad.svg"), 
+       width  = 91.37955, 
+       height = 76.9697,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
+# Por sentenciado o procesado ------------------------------------------------------------
+
+
+data2plot <- count_frequency.fn(Main_database_2008$sentenciado)  %>% 
+  mutate( labels = case_when( Value == 1 ~ "Sentenciado",
+                              Value == 0 ~ "Procesado",
+                              T ~ NA_character_),
+          Value = as.character(Value)) %>% 
+  filter(complete.cases(.))
+
+
+barChart <- BarSimpleChartViz(fill_colors = c("#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7")) + expand_limits(y = c(0, 70))
+barChart
+
+
+ggsave(plot   = barChart,
+       file   = paste0( path2SP, "/National/Presentations/INL_ABRIL/Visualizations/sentenciado.svg"), 
+       width  = 91.37955, 
+       height = 76.9697,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
+
+
+# Por tuvo COVID ------------------------------------------------------------
+
+
+data2plot <- count_frequency.fn(Main_database_2008$P1_24_8)  %>% 
+  mutate( labels = case_when( Value == 1 ~ "Sí tuvo COVID",
+                              Value == 2 ~ "No tuvo COVID",
+                              T ~ NA_character_),
+          Value = as.character(Value)) %>% 
+  filter(complete.cases(.))
+
+
+barChart <- BarSimpleChartViz(fill_colors = c("#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7")) + expand_limits(y = c(0, 110))
+barChart
+
+# Por reporta discapacidad ------------------------------------------------------------
+
+Main_database_2008 <-  Main_database_2008 %>% 
+  mutate(discapacidad = case_when(P1_31_1 == "1" ~ 1,
+                                  P1_31_2 == "1" ~ 1,
+                                  P1_31_3 == "1" ~ 1,
+                                  P1_31_4 == "1" ~ 1,
+                                  P1_31_1 == "2" ~ 0,
+                                  P1_31_2 == "2" ~ 0,
+                                  P1_31_3 == "2" ~ 0,
+                                  P1_31_4 == "2" ~ 0,
+                                  T ~ NA_real_))
+
+
+data2plot <- count_frequency.fn(Main_database_2008$discapacidad)  %>% 
+  mutate( labels = case_when( Value == 1 ~ "Sí",
+                              Value == 0 ~ "No",
+                              T ~ NA_character_),
+          Value = as.character(Value)) %>% 
+  filter(complete.cases(.))
+
+
+barChart <- BarSimpleChartViz(fill_colors = c("#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7")) + expand_limits(y = c(0, 110))
+barChart
+
+ggsave(plot   = barChart,
+       file   = paste0( path2SP, "/National/Presentations/INL_ABRIL/Visualizations/discapcidad.svg"), 
        width  = 110, 
        height = 75,
        units  = "mm",
        dpi    = 72,
        device = "svg")
 
-# PJ menos del 50% de los criterios ----------------------------------
+# Por años de sentencia ------------------------------------------------------------
 
 
-data2plot <- logit_dataBase.fn(dependent_var = "indicator_PJ_minlimit")
+Main_database_2008$SentenciaBin <- cut(
+  as.numeric(Main_database_2008$P5_4_A),
+  breaks = c(seq(from = 0, to = 50, by = 5), Inf),
+  right = FALSE
+)
 
-logitPlot <- logit_demo_panel_min(mainData = data2plot, line_size = 2)
-logitPlot
-ggsave(plot   = logitPlot,
-       file   = paste0( path2SP, "/National/Presentations/INL_MARZO/Visualizations/Logit_min_indicator_PJ.svg"), 
-       width  = 110, 
-       height = 75,
+data2plot <- count_frequency.fn(Main_database_2008$SentenciaBin)
+barChart <- BarSimpleChartViz(fill_colors = c("#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7")) + expand_limits(y = c(0, 65))
+barChart
+ggsave(plot   = barChart,
+       file   = paste0( path2SP, "/National/Presentations/INL_ABRIL/Visualizations/años_sentencia.svg"), 
+       width  = 91.37955, 
+       height = 76.9697,
        units  = "mm",
        dpi    = 72,
        device = "svg")
 
+# Por estado de nacimiento ------------------------------------------------------------
 
-# UAA menos del 50% de los criterios ----------------------------------
+
+Main_database_2008 <- Main_database_2008 %>% 
+  mutate( estado_nacimiento  = case_when( P1_5 == "01" ~ "AGUASCALIENTES",
+                                          P1_5 == "02" ~ "BAJA CALIFORNIA",
+                                          P1_5 == "03" ~ "BAJA CALIFORNIA SUR",
+                                          P1_5 == "04" ~ "CAMPECHE",
+                                          P1_5 == "05" ~ "COAHUILA",
+                                          P1_5 == "06" ~ "COLIMA",
+                                          P1_5 == "07" ~ "CHIAPAS",
+                                          P1_5 == "08" ~ "CHIHUAHUA",
+                                          P1_5 == "09" ~ "CIUDAD DE MEXICO",
+                                          P1_5 == "10" ~ "DURANGO",
+                                          P1_5 == "11" ~ "GUANAJUATO",
+                                          P1_5 == "12" ~ "GUERRERO",
+                                          P1_5 == "13" ~ "HIDALGO",
+                                          P1_5 == "14" ~ "JALISCO",
+                                          P1_5 == "15" ~ "MEXICO",
+                                          P1_5 == "16" ~ "MICHOACAN",
+                                          P1_5 == "17" ~ "MORELOS",
+                                          P1_5 == "18" ~ "NAYARIT",
+                                          P1_5 == "19" ~ "NUEVO LEON",
+                                          P1_5 == "20" ~ "OAXACA",
+                                          P1_5 == "21" ~ "PUEBLA",
+                                          P1_5 == "22" ~ "QUERETARO",
+                                          P1_5 == "23" ~ "QUINTANA ROO",
+                                          P1_5 == "24" ~ "SAN LUIS POTOSI",
+                                          P1_5 == "25" ~ "SINALOA",
+                                          P1_5 == "26" ~ "SONORA",
+                                          P1_5 == "27" ~ "TABASCO",
+                                          P1_5 == "28" ~ "TAMAULIPAS",
+                                          P1_5 == "29" ~ "TLAXCALA",
+                                          P1_5 == "30" ~ "VERACRUZ",
+                                          P1_5 == "31" ~ "YUCATAN",
+                                          P1_5 == "32" ~ "ZACATECAS",
+                                          T~ NA_character_
+  ))
+
+data2plot <- count_frequency.fn(Main_database_2008$estado_nacimiento)
+barChart <- BarSimpleChartVizFlip(fill_colors = c("#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                                  "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                                  "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                                  "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                                  "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                                  "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7")) + expand_limits(y = c(10, 45))
+barChart
 
 
-data2plot <- logit_dataBase.fn(dependent_var = "indicator_UAA_minlimit")
-
-logitPlot <- logit_demo_panel_min(mainData = data2plot, line_size = 2)
-logitPlot
-ggsave(plot   = logitPlot,
-       file   = paste0( path2SP, "/National/Presentations/INL_MARZO/Visualizations/Logit_min_indicator_UAA.svg"), 
-       width  = 110, 
-       height = 75,
+ggsave(plot   = barChart,
+       file   = paste0( path2SP, "/National/Presentations/INL_ABRIL/Visualizations/estado_nacimiento.svg"), 
+       width  = 91.37955, 
+       height = 76.9697,
        units  = "mm",
        dpi    = 72,
        device = "svg")
-
-
-# General todos los criterios ----------------------------------
-
-
-data2plot <- logit_dataBase.fn(dependent_var = "indicator_general_maxlimit")
-
-logitPlot <- logit_demo_panel_max(mainData = data2plot, line_size = 2)
-
-ggsave(plot   = logitPlot,
-       file   = paste0( path2SP, "/National/Presentations/INL_MARZO/Visualizations/Logit_max_indicator_general.svg"), 
-       width  = 110, 
-       height = 75,
-       units  = "mm",
-       dpi    = 72,
-       device = "svg")
-# CORRER SÓLO ESTA GRÁFICA ------------------------------------------------
-
-
-# GDH todos los criterios ----------------------------------
-
-
-data2plot <- logit_dataBase.fn(dependent_var = "indicator_GDH_maxlimit")
-
-logitPlot <- logit_demo_panel_max(mainData = data2plot, line_size = 2)
-logitPlot
-ggsave(plot   = logitPlot,
-       file   = paste0( path2SP, "/National/Presentations/INL_MARZO/Visualizations/Logit_max_indicator_GDH.svg"), 
-       width  = 110, 
-       height = 75,
-       units  = "mm",
-       dpi    = 72,
-       device = "svg")
-
-# PJ todos los criterios ----------------------------------
-
-
-data2plot <- logit_dataBase.fn(dependent_var = "indicator_PJ_maxlimit")
-
-logitPlot <- logit_demo_panel_max(mainData = data2plot, line_size = 2)
-logitPlot
-ggsave(plot   = logitPlot,
-       file   = paste0( path2SP, "/National/Presentations/INL_MARZO/Visualizations/Logit_max_indicator_PJ.svg"), 
-       width  = 110, 
-       height = 75,
-       units  = "mm",
-       dpi    = 72,
-       device = "svg")
-
-
-# UAA todos los criterios  ----------------------------------
-
-
-data2plot <- logit_dataBase.fn(dependent_var = "indicator_UAA_maxlimit")
-
-logitPlot <- logit_demo_panel_max(mainData = data2plot, line_size = 2)
-logitPlot
-ggsave(plot   = logitPlot,
-       file   = paste0( path2SP, "/National/Presentations/INL_MARZO/Visualizations/Logit_max_indicator_UAA.svg"), 
-       width  = 110, 
-       height = 75,
-       units  = "mm",
-       dpi    = 72,
-       device = "svg")
- 
-
-
-
 
