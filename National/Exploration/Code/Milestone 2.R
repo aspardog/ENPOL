@@ -248,7 +248,7 @@ plt <- ggplot(data2plot,
   geom_bar(stat = "identity", fill = colors4plot, color = colors4plot,
              show.legend = F, width = 0.9) +
   scale_fill_manual(values = colors4plot) +
-  geom_text(aes(y    = value2plot +.5 ),
+  geom_text(aes(y    = value2plot +.9 ),
             color    = "#4a4a49",
             family   = "Lato Full",
             fontface = "bold") +
@@ -256,6 +256,7 @@ plt <- ggplot(data2plot,
   #xlab("Porcentaje de criterios cumplidos")+
   scale_y_discrete() +
   scale_x_discrete( ) +
+  expand_limits(y = c(0, 25))+
   WJP_theme() +
   theme(panel.grid.major.y = element_blank(),
         panel.grid.major.x = element_line(color = "#D0D1D3"),
@@ -271,7 +272,7 @@ plt
 ggsave(plot   = plt,
        file   = paste0("National/Exploration/Output/Milestone2/Figure1_1_revised.svg"), 
        width  = 100, 
-       height = 200,
+       height = 225,
        units  = "mm",
        dpi    = 72,
        device = "svg")
@@ -307,7 +308,7 @@ plt <- ggplot(data2plot,
   geom_bar(stat = "identity", fill = colors4plot, color = colors4plot,
            show.legend = F, width = 0.9) +
   scale_fill_manual(values = colors4plot) +
-  geom_text(aes(y    = value2plot +.5 ),
+  geom_text(aes(y    = value2plot + 4  ),
             color    = "#4a4a49",
             family   = "Lato Full",
             fontface = "bold") +
@@ -315,6 +316,7 @@ plt <- ggplot(data2plot,
   #xlab("Porcentaje de criterios cumplidos")+
   scale_y_discrete() +
   scale_x_discrete( ) +
+  expand_limits(y = c(0, 25))+
   WJP_theme() +
   theme(panel.grid.major.y = element_blank(),
         panel.grid.major.x = element_line(color = "#D0D1D3"),
@@ -330,7 +332,7 @@ plt
 ggsave(plot   = plt,
        file   = paste0("National/Exploration/Output/Milestone2/Figure1_2_revised.svg"), 
        width  = 100, 
-       height = 200,
+       height = 225,
        units  = "mm",
        dpi    = 72,
        device = "svg")
@@ -398,6 +400,7 @@ plt <- ggplot(data2plot,
                      labels = paste0(seq(0,100,20), "%")) %>%
   scale_color_manual(values = colors4plot) +
   WJP_theme() +
+  expand_limits(y = c(0, 100))+
   theme(panel.grid.major.x = element_blank(),
         panel.grid.major.y = element_line(colour = "#d1cfd1"),
         axis.title.x       = element_blank(),
