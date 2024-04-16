@@ -220,7 +220,8 @@ BarSimpleChartViz <- function(data = data2plot,
           panel.grid.major.x = element_line(color = "#D0D1D3"),
           axis.title.y       = element_blank(),
           axis.title.x       = element_blank(),
-          axis.text.y        = element_blank())
+          axis.text.y        = element_blank(),
+          axis.text.x       =element_text(size=7))
   
   return(plt)
 }
