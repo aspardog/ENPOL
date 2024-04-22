@@ -1429,7 +1429,44 @@ ggsave(plot   = barsPlot,
 
 # 2.1. Estrategia Política de Investigación ------------------------------------------
 
-### 2.1.1. Delitos prioritarios con sentencia  ----------------------------------------------------
+### 2.1.1. Delitos prioritarios ----------------------------------------------------
+
+
+
+Main_database_2008 <- Main_database_2008 %>% 
+                      mutate(fuero = case_when( P5_13_1 == "1" ~ "federal",
+                                                P5_13_2 == "1" ~ "común" ,
+                                                P5_33_1 == "1" ~ "federal",
+                                                P5_33_2 == "1" ~ "común" ,
+                                                P5_13_1 == "1"  &   P5_13_2 == "1" ~ "ambos" , 
+                                                P5_33_2 == "1" & P5_33_2 == "1" ~ "ambos",
+                                                T ~ NA_character_))
+
+
+data2plot <- set_data.fn(Main_database_2008, "fuero", NA)
+
+barChart <- BarSimpleChartViz(data = data2plot, 
+                              x_var = labels, 
+                              y_var = PorcentajeUnos, 
+                              label_var = figure, 
+                              fill_var = Columna, 
+                              Observaciones = Observaciones,
+                              order_var = order_var,
+                              fill_colors = c("#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#003B88"),
+                              title = "Derecho a la libertad  a partir de 2008")
+barChart
+
+ggsave(plot   = barChart,
+       file   = paste0(path2SP, "/National/Exploration/Input/Debido_proceso/Legalidad","/desc_","derecho_libertad_2008.svg"), 
+       width  = 300, 
+       height = 390,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
+
 
 ### 2.1.2. Competencia  ----------------------------------------------------
 

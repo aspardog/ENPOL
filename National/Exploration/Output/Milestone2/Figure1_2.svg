@@ -58,21 +58,21 @@
 <rect x='306.36' y='68.14' width='146.01' height='28.53' style='stroke-width: 1.07; stroke: #EF0B4B; stroke-linecap: butt; stroke-linejoin: miter; fill: #EF0B4B;' />
 <rect x='306.36' y='36.45' width='151.26' height='28.53' style='stroke-width: 1.07; stroke: #EF0B4B; stroke-linecap: butt; stroke-linejoin: miter; fill: #EF0B4B;' />
 <rect x='306.36' y='4.75' width='180.67' height='28.53' style='stroke-width: 1.07; stroke: #F4CC21; stroke-linecap: butt; stroke-linejoin: miter; fill: #F4CC21;' />
-<text x='311.74' y='461.99' text-anchor='middle' style='font-size: 10.00px; font-family: "Arial";' textLength='14.43px' lengthAdjust='spacingAndGlyphs'>0%</text>
-<text x='311.74' y='441.82' text-anchor='middle' style='font-size: 10.00px; font-family: "Arial";' textLength='14.43px' lengthAdjust='spacingAndGlyphs'>0%</text>
-<text x='311.74' y='389.99' text-anchor='middle' style='font-size: 10.00px; font-family: "Arial";' textLength='14.43px' lengthAdjust='spacingAndGlyphs'>0%</text>
-<text x='333.73' y='358.25' text-anchor='middle' style='font-size: 10.00px; font-family: "Arial";' textLength='14.43px' lengthAdjust='spacingAndGlyphs'>2%</text>
-<text x='339.41' y='332.01' text-anchor='middle' style='font-size: 10.00px; font-family: "Arial";' textLength='14.43px' lengthAdjust='spacingAndGlyphs'>3%</text>
-<text x='343.83' y='315.01' text-anchor='middle' style='font-size: 10.00px; font-family: "Arial";' textLength='14.43px' lengthAdjust='spacingAndGlyphs'>3%</text>
-<text x='350.32' y='264.54' text-anchor='middle' style='font-size: 10.00px; font-family: "Arial";' textLength='14.43px' lengthAdjust='spacingAndGlyphs'>4%</text>
-<text x='365.47' y='256.07' text-anchor='middle' style='font-size: 10.00px; font-family: "Arial";' textLength='14.43px' lengthAdjust='spacingAndGlyphs'>5%</text>
-<text x='384.20' y='206.13' text-anchor='middle' style='font-size: 10.00px; font-family: "Arial";' textLength='14.43px' lengthAdjust='spacingAndGlyphs'>7%</text>
-<text x='387.27' y='187.46' text-anchor='middle' style='font-size: 10.00px; font-family: "Arial";' textLength='14.43px' lengthAdjust='spacingAndGlyphs'>7%</text>
-<text x='447.69' y='136.91' text-anchor='middle' style='font-size: 10.00px; font-family: "Arial";' textLength='19.98px' lengthAdjust='spacingAndGlyphs'>13%</text>
-<text x='450.15' y='111.46' text-anchor='middle' style='font-size: 10.00px; font-family: "Arial";' textLength='19.98px' lengthAdjust='spacingAndGlyphs'>13%</text>
-<text x='452.37' y='92.11' text-anchor='middle' style='font-size: 10.00px; font-family: "Arial";' textLength='19.98px' lengthAdjust='spacingAndGlyphs'>13%</text>
-<text x='457.61' y='66.66' text-anchor='middle' style='font-size: 10.00px; font-family: "Arial";' textLength='19.98px' lengthAdjust='spacingAndGlyphs'>13%</text>
-<text x='478.87' y='34.52' text-anchor='middle' style='font-size: 10.00px; font-family: "Arial";' textLength='19.98px' lengthAdjust='spacingAndGlyphs'>16%</text>
+<text x='311.74' y='461.99' text-anchor='middle' style='font-size: 10.00px;fill: #003B88; font-family: "Arial";' textLength='14.43px' lengthAdjust='spacingAndGlyphs'>0%</text>
+<text x='311.74' y='441.82' text-anchor='middle' style='font-size: 10.00px;fill: #EF0B4B; font-family: "Arial";' textLength='14.43px' lengthAdjust='spacingAndGlyphs'>0%</text>
+<text x='311.74' y='389.99' text-anchor='middle' style='font-size: 10.00px;fill: #F4CC21; font-family: "Arial";' textLength='14.43px' lengthAdjust='spacingAndGlyphs'>0%</text>
+<text x='333.73' y='358.25' text-anchor='middle' style='font-size: 10.00px;fill: #91288C; font-family: "Arial";' textLength='14.43px' lengthAdjust='spacingAndGlyphs'>2%</text>
+<text x='339.41' y='332.01' text-anchor='middle' style='font-size: 10.00px;fill: #F05B42; font-family: "Arial";' textLength='14.43px' lengthAdjust='spacingAndGlyphs'>3%</text>
+<text x='343.83' y='315.01' text-anchor='middle' style='font-size: 10.00px;fill: #2BA7A4; font-family: "Arial";' textLength='14.43px' lengthAdjust='spacingAndGlyphs'>3%</text>
+<text x='350.32' y='264.54' text-anchor='middle' style='font-size: 10.00px;fill: #2779BD; font-family: "Arial";' textLength='14.43px' lengthAdjust='spacingAndGlyphs'>4%</text>
+<text x='365.47' y='256.07' text-anchor='middle' style='font-size: 10.00px;fill: #EB9727; font-family: "Arial";' textLength='14.43px' lengthAdjust='spacingAndGlyphs'>5%</text>
+<text x='384.20' y='206.13' text-anchor='middle' style='font-size: 10.00px;fill: #2D3589; font-family: "Arial";' textLength='14.43px' lengthAdjust='spacingAndGlyphs'>7%</text>
+<text x='387.27' y='187.46' text-anchor='middle' style='font-size: 10.00px;fill: #D12241; font-family: "Arial";' textLength='14.43px' lengthAdjust='spacingAndGlyphs'>7%</text>
+<text x='447.69' y='136.91' text-anchor='middle' style='font-size: 10.00px;fill: #90D1EB; font-family: "Arial";' textLength='19.98px' lengthAdjust='spacingAndGlyphs'>13%</text>
+<text x='450.15' y='111.46' text-anchor='middle' style='font-size: 10.00px;fill: #003B88; font-family: "Arial";' textLength='19.98px' lengthAdjust='spacingAndGlyphs'>13%</text>
+<text x='452.37' y='92.11' text-anchor='middle' style='font-size: 10.00px;fill: #EF0B4B; font-family: "Arial";' textLength='19.98px' lengthAdjust='spacingAndGlyphs'>13%</text>
+<text x='457.61' y='66.66' text-anchor='middle' style='font-size: 10.00px;fill: #EF0B4B; font-family: "Arial";' textLength='19.98px' lengthAdjust='spacingAndGlyphs'>13%</text>
+<text x='478.87' y='34.52' text-anchor='middle' style='font-size: 10.00px;fill: #F4CC21; font-family: "Arial";' textLength='19.98px' lengthAdjust='spacingAndGlyphs'>16%</text>
 </g>
 <g clip-path='url(#cpMC4wMHw0OTYuMDZ8MC4wMHw0OTYuMDY=)'>
 <text x='292.39' y='466.32' text-anchor='end' style='font-size: 10.00px;fill: #524F4C; font-family: "Helvetica";' textLength='191.98px' lengthAdjust='spacingAndGlyphs'>Lo secuestraron para exigir dinero o bienes</text>

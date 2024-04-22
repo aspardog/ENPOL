@@ -56,8 +56,8 @@ rm(ENPOL2021_SOC,ENPOL2021_2_3,ENPOL2021_4,ENPOL2021_5,ENPOL2021_6,ENPOL2021_7,E
 
 sociodem        <- c("CVE_ENT.x", "NOM_ENT.x", "CEN_INT.x", "NOM_INT.x", "COD_RES.x", "SEXO.x", "FUERO.x")
 dates_day       <- c("P3_5_D", "P3_8_D")
-dates_month     <- c("P3_5_M", "P3_8_M")
-dates_year      <- c("P3_5_A", "P3_8_A")
+dates_month     <- c("P3_5_M", "P3_8_M","P5_5_M")
+dates_year      <- c("P3_5_A", "P3_8_A","P5_5_A")
 arrest_vars     <- c("P3_2","P3_10")
 delitos_PPO1    <- c("P5_11_08", "P5_11_09", "P5_11_12", "P5_11_17", "P5_11_18", "P5_11_20",
                      "P5_31_08", "P5_31_09", "P5_31_12", "P5_31_17", "P5_31_18", "P5_31_20")
@@ -4005,6 +4005,7 @@ Main_database %<>%
     
     fecha_delito = make_date(P3_8_A,P3_8_M,P3_8_D),
     fecha_arresto = make_date(P3_5_A,P3_5_M,P3_5_D),
+    fecha_sentencia = make_date(P5_5_A,P5_5_M),
     fecha_RND_fed = make_date(2019,5,27),
     fecha_RND_com = make_date(2020,4,1),
     fecha_PPO_1 = make_date(2008,6,18),
@@ -4785,11 +4786,17 @@ Main_database %<>%
                                     is.na(Color_piel_1) == T ~ Color_piel_2, 
                                     is.na(Color_piel_1) & is.na(Color_piel_1) == T ~ NA,
                                     T ~ (Color_piel_1+Color_piel_2)/2)), 
-    Color_piel_categ = case_when(Color_piel_promedio <= 3  ~ "Blanco", 
-                                 Color_piel_promedio == 4  ~ "Moreno Claro", 
-                                 Color_piel_promedio == 5  ~ "Moreno", 
-                                 Color_piel_promedio == 6  ~ "Moreno Obscuro", 
-                                 Color_piel_promedio >= 7  ~ "Moreno Muy Obscuro", 
+    Color_piel_categ = case_when(Color_piel_promedio <= 3  ~ "Moreno Muy Obscuro", 
+                                 Color_piel_promedio == 4  ~ "Moreno Obscuro",
+                                 Color_piel_promedio == 5  ~ "Moreno Obscuro",
+                                 Color_piel_promedio == 6  ~ "Moreno", 
+                                 Color_piel_promedio == 7  ~ "Moreno Claro", 
+                                 Color_piel_promedio == 8  ~ "Moreno Claro", 
+                                 Color_piel_promedio >= 9  ~ "Blanco", 
+                                 T ~ NA),
+    #Color de piel dicotómica
+    Color_piel_claro = case_when(Color_piel_promedio >= 9  ~ 1,
+                                 Color_piel_promedio < 9 ~ 0,
                                  T ~ NA),
     
     # Educación obligatoria (Bachillerato y homologos 15 de educación)
@@ -4826,20 +4833,15 @@ Main_database %<>%
                                  Ingreso == "9 mil a 11 mil" ~ 0,
                                  Ingreso == "> 11 mil" ~ 0,
                                  T ~ NA
-                                 ),
-    #Color de piel dicotómica
-    Colo_piel_claro = case_when(Color_piel_categ == "Blanco" ~ 1,
-                                Color_piel_categ == "Moreno Claro" ~ 1,
-                                Color_piel_categ == "Moreno" ~ 0,
-                                Color_piel_categ == "Moreno Obscuro" ~ 0,
-                                Color_piel_categ == "Moreno Muy Obscuro" ~ 0,
-                                T ~ NA)
+                                 )
     
   ) %>% 
   
   rename(Estado_arresto = P3_6,
          Anio_arresto = P3_5_A,
-         Mes_arresto = P3_5_M) %>%
+         Mes_arresto = P3_5_M,
+         Anio_sentencia = P5_5_A,
+         Mes_sentencia = P5_5_M,) %>%
   # Tipo de tortura psicológica
   mutate(across(c("P3_17_01","P3_17_02", "P3_17_03", "P3_17_04", "P3_17_05", "P3_17_06","P3_17_07", "P3_17_08",
                   "P3_17_09", "P3_17_10","P3_17_11", "P5_26A"), ~ recode(.x,
