@@ -4216,8 +4216,10 @@ Main_database %<>%
     # Torture MP or Detention
     
     tortura_lugar = case_when(
-      tortura_mp_p == 1 | tortura_mp_f == 1 ~  "Ministerio Público",
-      tortura_tra_p == 1 | tortura_tra_f == 1 ~  "Traslado",
+      tortura_mp_p == 1 | tortura_mp_f == 1 & (tortura_tra_p == 0 & tortura_tra_f == 0) ~  "Ministerio Público",
+      tortura_tra_p == 1 | tortura_tra_f == 1 & (tortura_mp_p == 0 & tortura_mp_f == 0) ~  "Traslado",
+      (tortura_tra_p == 1 | tortura_tra_f == 1) & (tortura_mp_p == 1 | tortura_mp_f == 1) ~  "Traslado y Ministerio Público",
+      (tortura_tra_p == 0 & tortura_tra_f == 0) & (tortura_mp_p == 0 & tortura_mp_f == 0) ~  "Ninguno",
       T ~ NA),
     
     # Torture physical or psychological torture
