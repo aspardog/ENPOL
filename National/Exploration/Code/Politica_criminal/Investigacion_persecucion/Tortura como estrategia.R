@@ -119,10 +119,10 @@ plt <- ggplot(data2plot,
   geom_bar(position = "stack", stat = "identity", fill = colors4plot, color = colors4plot,
            show.legend = F, width = 0.9) +
   scale_fill_manual(values = colors4plot) +
-  geom_text(aes(y    = value2plot -4  ),
-            color    = "#4a4a49",
+  geom_text(aes(y    = value2plot - 0.2*value2plot ),
+            color    = "#FFFFFF",
             position = "stack") +
-  labs(y = "% torturado") +
+  labs(y = "% por condición y lugar de tortura") +
   scale_y_discrete() +
   scale_x_discrete( ) +
   expand_limits(y = c(0, 100)) +
