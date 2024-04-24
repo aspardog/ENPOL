@@ -39,7 +39,7 @@ source("Code/S05.R")
 
 # Loading plotting functions from GitHub
 source("https://raw.githubusercontent.com/ctoruno/WJP-Data-Viz/main/loading.R")
-loadVIZ(set = "ENPOL")
+loadVIZ(set = "LAC")
 
 # Loading data
 load(paste0(path2SP,"/National/Data_cleaning/Output/Main_database.RData"))
