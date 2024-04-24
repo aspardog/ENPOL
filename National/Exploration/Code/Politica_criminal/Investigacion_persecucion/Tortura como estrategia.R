@@ -101,14 +101,14 @@ data2plot <- Main_database1  %>%
   select(value2plot,labels,group_var,group_var2) 
 
 
-colors4plot <- c("#1a2689",
-                 "#a90099",
-                 "#ef4b4b",
-                 "#fa4d57",
-                 "#1a2689",
-                 "#a90099",
-                 "#ef4b4b",
-                 "#fa4d57")
+colors4plot <- c("Ministerio Público"="#1a2589",
+                 "Ninguno"="#a90099",
+                 "Traslado"="#3273ff",
+                 "Traslado y Ministerio Público"="#ef4b4b",
+                 "Ministerio Público"="#1a2589",
+                 "Ninguno"="#a90099",
+                 "Traslado"="#3273ff",
+                 "Traslado y Ministerio Público"="#ef4b4b")
 
 plt <- ggplot(data2plot, 
               aes(x     = group_var,
@@ -117,8 +117,10 @@ plt <- ggplot(data2plot,
                   group = group_var,
                   color = group_var)) +
   geom_bar(position = "stack", stat = "identity", fill = colors4plot, color = colors4plot,
-           show.legend = F, width = 0.9) +
-  scale_fill_manual(values = colors4plot) +
+           show.legend = T, width = 0.9) +
+  scale_fill_manual(values = colors4plot,
+                    name = "Coondición/Momento de Tortura",
+                    labels =colors4plot) +
   geom_text(aes(y    = value2plot - 0.2*value2plot ),
             color    = "#FFFFFF",
             position = "stack") +
@@ -165,10 +167,10 @@ data2plot <- Main_database1  %>%
 
 
 
-colors4plot <- c("#1a2689",
+colors4plot <- c("#1a2589",
                  "#a90099",
-                 "#ef4b4b",
-                 "#fa4d57")
+                 "#3273ff",
+                 "#ef4b4b")
 
 plt <- ggplot(data2plot, 
               aes(x     = group_var,
@@ -203,57 +205,3 @@ ggsave(plot   = plt,
        units  = "mm",
        dpi    = 72,
        device = "svg")
-
-
-# Tortura VS PPO
-
-data2plot <- Main_database1  %>%
-  group_by(tortura_lugar) %>%
-  summarise(PPO = mean(PPO, na.rm=T)) %>%
-  mutate(value2plot =  100 * PPO,
-         labels = paste0(round(value2plot,0), "%"),
-         group_var = tortura_lugar) %>%
-  select(value2plot,labels,group_var) %>%
-  filter(!is.na(group_var))
-
-
-colors4plot <- c("#1a2689",
-                 "#a90099",
-                 "#ef4b4b",
-                 "#fa4d57")
-
-plt <- ggplot(data2plot, 
-              aes(x     = group_var,
-                  y     = value2plot,
-                  label = labels,
-                  group = group_var,
-                  color = group_var)) +
-  geom_bar(stat = "identity", fill = colors4plot, color = colors4plot,
-           show.legend = F, width = 0.9) +
-  scale_fill_manual(values = colors4plot) +
-  geom_text(aes(y    = value2plot + 7  ),
-            color    = "#4a4a49") +
-  labs(y = "% que están en PPO") +
-  scale_y_discrete() +
-  scale_x_discrete( ) +
-  expand_limits(y = c(0, 100)) +
-  WJP_theme() +
-  theme(panel.grid.major.y = element_blank(),
-        panel.grid.major.x = element_line(color = "#D0D1D3"),
-        axis.title.y       = element_blank(),
-        axis.text.y        = element_text(hjust = 1, size = 10)) +
-  coord_flip()
-
-
-
-
-ggsave(plot   = plt,
-       file   = paste0("National/Exploration/Output/Tortura/Figure3.svg"), 
-       width  = 175, 
-       height = 85,
-       units  = "mm",
-       dpi    = 72,
-       device = "svg")
-
-
-
