@@ -4814,6 +4814,19 @@ Main_database %<>%
                                       Escolaridad == "Licenciatura o profesional" ~ 1,
                                       Escolaridad == "Maestría o doctorado" ~ 1,
                                       T ~ NA),
+    # Educación por lo menos licenciatura
+    Educacion_licenciatura_omas = case_when(Escolaridad == "Ninguno" ~ 0, 
+                                      Escolaridad == "Preescolar" ~ 0,
+                                      Escolaridad == "Primaria" ~ 0,
+                                      Escolaridad == "Secundaria" ~ 0,
+                                      Escolaridad == "Preparatoria o bachillerato" ~ 0,
+                                      Escolaridad == "Normal básica con secundaria" ~ 0,
+                                      Escolaridad == "Carrera técnica con secundaria" ~ 0,
+                                      Escolaridad == "Carrera técnica con preparatoria" ~ 0,
+                                      Escolaridad == "Licenciatura o profesional" ~ 1,
+                                      Escolaridad == "Maestría o doctorado" ~ 1,
+                                      T ~ NA),
+    
     # Pertenencia a un grupo etnico
     Etnia = case_when(P1_15 == "1" ~ 1,
                       P1_15 == "2" ~ 1,
