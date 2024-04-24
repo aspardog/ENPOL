@@ -99,7 +99,7 @@ ggsave(plot = chart,
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-data_subset.df <- Main_database %>%
+data_subset.df <- master_data.df %>%
   mutate(
     uso_excesivo =
       case_when(
@@ -113,4 +113,46 @@ data_subset.df <- Main_database %>%
   ) %>%
   drop_na() %>%
   filter(Corporacion_grupos != "Guardia Nacional") %>%
-  filter(Corporacion_grupos != "NS/NR")
+  filter(Corporacion_grupos != "NS/NR") %>%
+  filter(Corporacion_grupos != "Otra") %>%
+  rename(group_var = Corporacion_grupos)
+
+data2plot <- data_subset.df %>%
+  arrange(value2plot) %>%
+  mutate(
+    order_var = row_number(),
+    value2plot = value2plot*100,
+    figure = paste0(round(value2plot, 0), "%"),
+    labels = 
+      case_when(
+        group_var == "Ejército o Marina"  ~ "Ejército o Marina",
+        group_var == "Operativo Conjunto" ~ "Operativo Conjunto",
+        group_var == "Policía Estatal" ~ "Policía Estatal",
+        group_var == "Policía Estatal Ministerial o Judicial" ~ "Policía Estatal Ministerial <br>o Judicial",
+        group_var == "Policía Federal" ~ "Policía Federal",
+        group_var == "Policía Federal Ministerial" ~ "Policía Federal Ministerial",
+        group_var == "Policía Municipal" ~ "Policía Municipal",
+        
+      )
+  )
+
+colors4plot <- mainCOLOR
+plot <- barsChart.fn(data.df                    = data2plot,
+                     groupVar                   = F,   
+                     categories_grouping_var    = categories,
+                     colors4plot                = colors4plot, 
+                     order                      = T,
+                     orientation                = "vertical",
+                     title                      = NULL,
+                     subtitle                   = NULL,
+                     note                       = NULL)
+
+ggsave(plot = plot, 
+       filename = paste0(path2SP,
+                         "/National/Visualization",
+                         "/Output/Debido proceso/Uso excesivo/figure3.svg"),
+       width = 189.7883,
+       height = 105,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")

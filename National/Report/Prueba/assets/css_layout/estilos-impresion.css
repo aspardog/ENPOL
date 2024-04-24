@@ -928,5 +928,57 @@
 		display: block;
 	}
 	
+		/* INTERNATIONAL MIGRATION chart 21 page 38 */
+	#InternationalMigration{
+		height: 34.47cm;
+	}
+	#InternationalMigration .col-md-6 {
+		-ms-flex: 0 0 50%;
+		flex: 0 0 50%;
+		max-width: 50%;
+	}
+	#InternationalMigration .img-chart{
+		width: 85%;
+	}
+	
+		/* INTERNATIONAL MIGRATION chart 21 page 38 */
+	#InternationalMigration2{
+		height: 34.47cm;
+	}
+	#InternationalMigration2 .col-md-6 {
+		-ms-flex: 0 0 50%;
+		flex: 0 0 50%;
+		max-width: 50%;
+	}
+	#InternationalMigration2 .img-chart{
+		width: 85%;
+	}
+			/* INTERNATIONAL MIGRATION chart 21 page 38 */
+	#InternationalMigration3{
+		height: 34.47cm;
+	}
+	#InternationalMigration3 .col-md-6 {
+		-ms-flex: 0 0 50%;
+		flex: 0 0 50%;
+		max-width: 50%;
+	}
+	#InternationalMigration3 .img-chart{
+		width: 85%;
+	}
+	/* INTERNATIONAL MIGRATION chart 21 page 38 */
+	#InternationalMigration4{
+		height: 34.47cm;
+	}
+	#InternationalMigration4 .col-md-6 {
+		-ms-flex: 0 0 50%;
+		flex: 0 0 50%;
+		max-width: 50%;
+	}
+	#InternationalMigration4 .img-chart{
+		width: 85%;
+	}
+	
+
+	
 }
 
