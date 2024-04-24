@@ -292,7 +292,7 @@ Main_database_2008 <- Main_database_2008 %>%
                                                           P4_3C_09 == "1" ~ "Marina",
                                                           P4_3C_10 == "1" ~ "Personal ministerial",
                                                           P4_3C_11 == "1" ~ "Otro",
-                                                          T ~))
+                                                          T ~NA_character_))
 
 
 Main_database_2008 <- Main_database_2008 %>%
