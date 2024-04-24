@@ -1,6 +1,6 @@
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
-## Script:            ENPOL - Uso excesivo de la autoridad
+## Script:            ENPOL - Tortura
 ##
 ## Author(s):         Santiago Pardo   (spardo@worldjusticeproject.org)
 ##                    Cristina Alvarez (calvarez@worldjusticeproject.org)
@@ -20,28 +20,21 @@
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
-## 1. Uso Excesivo de la fuerza: Serie temporal                                                            ----
+## 1. Tortura: Serie temporal                                                            ----
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 data_subset.df <- master_data.df %>%
-  filter(Anio_arresto > 2010) %>%
-  mutate(
-    uso_excesivo =
-      case_when(
-        proporcionalidad_uso_fuerza == 0 ~ 1,
-        proporcionalidad_uso_fuerza == 1 ~ 0
-      )
-  ) %>%
+  filter(Anio_arresto > 2010)  %>%
   group_by(Anio_arresto) %>%
   summarise(
-    value2plot = mean(uso_excesivo, na.rm = T)
+    value2plot = mean(tortura_generalizada, na.rm = T)
   ) %>%
   mutate(value2plot = value2plot*100,
          label = paste0(format(round(value2plot, 0),
                                nsmall = 0),
                         "%"),
-         category = "uso_excesivo",
+         category = "tortura",
          year = as.numeric(Anio_arresto))
 
 # Pulling minimum and maximum available year
@@ -57,7 +50,7 @@ x.axis.labels <- paste0("'", str_sub(x.axis.values, start = -2))
 
 # Defining colors4plot
 colors4plot <- mainCOLOR
-names(colors4plot) <- "uso_excesivo"
+names(colors4plot) <- "tortura"
 
 # Saving data points
 data2plot <- data_subset.df %>% ungroup()
@@ -79,38 +72,9 @@ chart <- LAC_lineChart(data           = data2plot,
 ggsave(plot = chart, 
        filename = paste0(path2SP,
                          "/National/Visualization",
-                         "/Output/Debido proceso/Uso excesivo/figure1.svg"),
+                         "/Output/Debido proceso/Tortura/figure1.svg"),
        width = 189.7883,
        height = 68.88612,
        units  = "mm",
        dpi    = 72,
        device = "svg")
-
-## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-##
-## 2. Uso Excesivo de la fuerza: Logit                                                          ----
-##
-## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-
-## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-##
-## 3. Uso Excesivo de la fuerza: Corporación                                                      ----
-##
-## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-data_subset.df <- Main_database %>%
-  mutate(
-    uso_excesivo =
-      case_when(
-        proporcionalidad_uso_fuerza == 0 ~ 1,
-        proporcionalidad_uso_fuerza == 1 ~ 0
-      )
-  ) %>%
-  group_by(Corporacion_grupos) %>%
-  summarise(
-    value2plot = mean(uso_excesivo, na.rm = T)
-  ) %>%
-  drop_na() %>%
-  filter(Corporacion_grupos != "Guardia Nacional") %>%
-  filter(Corporacion_grupos != "NS/NR")
