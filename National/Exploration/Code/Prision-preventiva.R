@@ -101,7 +101,7 @@ BarSimpleChartViz <- function(data = data2plot,
           axis.title.y       = element_blank(),
           axis.title.x       = element_blank(),
           axis.text.y        = element_blank(),
-          axis.text.x       =element_text(size=7))
+          axis.text.x       =element_text(size=10))
   
   return(plt)
 }
@@ -137,7 +137,7 @@ BarCategoricalBars.fn <- function(data = Main_database_2008,
                    x     = Value, 
                    y     = Percentage,
                    fill  = {{column2}},
-                   label = figure
+                   label =  paste0(figure, "\n", "N =", Frequency),
                  )) +
     geom_bar(stat = "identity",
              show.legend = FALSE, width = 0.9, position = "dodge") +
@@ -173,6 +173,13 @@ BarCategoricalBars.fn <- function(data = Main_database_2008,
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
+## 3.  Graph to columns categorical several horizontal                                                  ----
+##
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##
 ## 2. GRÁFICOS                                                      ----
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -184,6 +191,7 @@ Main_database_2008 <-  Main_database_2008 %>%
                       mutate(proceso_no_en_libertad_character = case_when( proceso_no_en_libertad == 1 ~ "Proceso privado de la libertad", 
                                                                  proceso_no_en_libertad == 0 ~ "Proceso en libertad",
                                                                  T ~ NA_character_))
+
 
 
 data2plot <- count_frequency.fn(Main_database_2008$proceso_no_en_libertad_character)
@@ -199,7 +207,24 @@ barChart
 
 Main_database_2008 <-  Main_database_2008 %>% 
   mutate(tipo_prision_preventiva = case_when(proceso_no_en_libertad == 1  & PPO == 1 ~ "Prisión Preventiva Oficiosa", 
-                                             proceso_no_en_libertad == 1  & PPO == 0 ~ "Prisión Preventiva No Oficiosa",
+                                             proceso_no_en_libertad == 1  & PPO == 0 ~ "Prisión Preventiva Justificada",
+                                             proceso_no_en_libertad == 0  & PPO == 0 ~ "Proceso en libertad",
+                                             T ~ NA_character_))
+
+data2plot <- count_frequency.fn(Main_database_2008$tipo_prision_preventiva)
+
+
+barChart <- BarSimpleChartViz(fill_colors = c("#003B88","#003B88", "#3273ff")) + expand_limits(y = c(0, 100))
+barChart
+
+# PP vs. PPO vs. Libertad sentenciadas y procesadas --------------------------------------------------------------
+
+
+Main_database_2008 <-  Main_database_2008 %>% 
+  mutate(tipo_prision_preventiva = case_when(procesado == 1  & PPO == 1 ~ "Prisión Preventiva Oficiosa", 
+                                             proceso_no_en_libertad == 1  & PPO == 1 ~ "Prisión Preventiva Oficiosa", 
+                                             procesado ==  1 & PPO == 0 ~ "Prisión Preventiva Justificada",
+                                             proceso_no_en_libertad == 1  & PPO == 0 ~ "Prisión Preventiva Justificada",
                                              proceso_no_en_libertad == 0  & PPO == 0 ~ "Proceso en libertad",
                                              T ~ NA_character_))
 
@@ -351,3 +376,177 @@ Main_database_2008 <- Main_database_2008 %>%
 
 plot <- BarCategoricalBars.fn(column1 = LGBTQ, column2 = tipo_prision_preventiva )
 plot
+
+
+
+# Tiempo en prisión preventiva --------------------------------------------
+
+#procesados meses en prisión preventiva
+Main_database_2008 <- Main_database_2008 %>% 
+                      mutate(P5_34_A = replace(P5_34_A, P5_34_A %in% c( "98", "99"), NA),
+                             P5_34_M = replace(P5_34_M, P5_34_M %in% c( "98", "99"), NA),
+                             P5_34_A = replace(P5_34_A, P5_34_A %in% c( "96"), 0),
+                             P5_34_M = replace(P5_34_M, P5_34_M %in% c( "96"), 0),
+                             P5_10 = replace(P5_10, P5_10 %in% c("8", "9"), NA)) %>% 
+                      mutate(procesados_meses_pp = ((as.numeric(P5_34_A)*12) + as.numeric(P5_34_M))) %>% 
+                      mutate(mas2anios_prisionpreventiva = case_when(as.numeric(P5_10) == 7 ~ 1,
+                                                                     procesados_meses_pp  > 24   ~ 1,
+                                                                     as.numeric(P5_10) == 1 | as.numeric(P5_10) == 2 | 
+                                                                       as.numeric(P5_10) == 3 | as.numeric(P5_10) == 4 |
+                                                                       as.numeric(P5_10) == 5 |as.numeric(P5_10) == 6 ~ 0,
+                                                                     procesados_meses_pp  <= 24 ~ 0,
+                                                                     T ~ NA_real_)) 
+                                                   
+
+
+
+Main_database_2008 <- Main_database_2008 %>% 
+  mutate(mas2anios_prisionpreventiva = case_when(mas2anios_prisionpreventiva == 1 ~ "Más de 2 años", 
+                                                 mas2anios_prisionpreventiva == 0 ~ "Menos, o hasta, 2 años",
+                           T ~ NA_character_))
+
+data2plot <- count_frequency.fn(Main_database_2008$mas2anios_prisionpreventiva)
+
+barChart <- BarSimpleChartViz(fill_colors = c("#3273ff","#003B88")) + expand_limits(y = c(0, 120))
+barChart
+
+
+#procesados meses en prisión preventiva 1 año
+Main_database_2008 <- Main_database_2008 %>% 
+  mutate(P5_34_A = replace(P5_34_A, P5_34_A %in% c( "98", "99"), NA),
+         P5_34_M = replace(P5_34_M, P5_34_M %in% c( "98", "99"), NA),
+         P5_34_A = replace(P5_34_A, P5_34_A %in% c( "96"), 0),
+         P5_34_M = replace(P5_34_M, P5_34_M %in% c( "96"), 0),
+         P5_10 = replace(P5_10, P5_10 %in% c("8", "9"), NA)) %>% 
+  mutate(procesados_meses_pp = ((as.numeric(P5_34_A)*12) + as.numeric(P5_34_M))) %>% 
+  mutate(unoanio_prisionpreventiva = case_when(as.numeric(P5_10) == 6 |  as.numeric(P5_10) == 7  ~ 1,
+                                                 procesados_meses_pp  >= 12   ~ 1,
+                                                 as.numeric(P5_10) == 1 | as.numeric(P5_10) == 2 | 
+                                                   as.numeric(P5_10) == 3 | as.numeric(P5_10) == 4 |
+                                                   as.numeric(P5_10) == 5  ~ 0,
+                                                 procesados_meses_pp  < 12 ~ 0,
+                                                 T ~ NA_real_)) 
+
+Main_database_2008 <- Main_database_2008 %>% 
+  mutate(unoanio_prisionpreventiva = case_when(unoanio_prisionpreventiva == 1 ~ "1 año o más", 
+                                               unoanio_prisionpreventiva == 0 ~ "Menos de 1 año ",
+                                                 T ~ NA_character_))
+
+data2plot <- count_frequency.fn(Main_database_2008$unoanio_prisionpreventiva)
+
+barChart <- BarSimpleChartViz(fill_colors = c("#3273ff","#003B88")) + expand_limits(y = c(0, 120))
+barChart
+
+# Dificultad probarotoria --------------------------------------------
+Main_database_2008 <-  Main_database_2008 %>% 
+  mutate(tipo_prision_preventiva = case_when(procesado == 1  & PPO == 1 ~ "Prisión Preventiva Oficiosa", 
+                                             proceso_no_en_libertad == 1  & PPO == 1 ~ "Prisión Preventiva Oficiosa", 
+                                             procesado ==  1 & PPO == 0 ~ "Prisión Preventiva Justificada",
+                                             proceso_no_en_libertad == 1  & PPO == 0 ~ "Prisión Preventiva Justificada",
+                                             proceso_no_en_libertad == 0  & PPO == 0 ~ "Proceso en libertad",
+                                             T ~ NA_character_))
+
+# Confesión ---------------------------------------------------------------
+
+
+Main_database_2008 <- Main_database_2008 %>% 
+                      mutate(prueba_confesion = case_when(P5_15_01 == 1 ~ 1,
+                                                          as.numeric(P5_35_01) == 1 ~ 1,
+                                                          P5_15_01 == 0 ~ 0,
+                                                          as.numeric(P5_35_01) == 0 ~ 0,
+                                                          T ~ NA_real_))
+
+Main_database_2008 <- Main_database_2008 %>% 
+  mutate(prueba_confesion = case_when(prueba_confesion == 1 ~ "Confesión como prueba", 
+                           prueba_confesion == 0 ~ "No confesión como prueba",
+                           T ~ NA_character_))
+
+colors4plot <- c("Prisión Preventiva Justificada" = "#003B88", 
+                 "Prisión Preventiva Oficiosa" = "#fa4d57")
+
+plot <- BarCategoricalBars.fn(column1 = prueba_confesion, column2 = tipo_prision_preventiva )
+plot
+
+
+# Declaraciones -----------------------------------------------------------
+
+Main_database_2008 <- Main_database_2008 %>% 
+  mutate(prueba_declaraciones = case_when(P5_15_02 == 1  | P5_15_03 == 1 |
+                                        P5_15_04 == 1| P5_15_05 == 1 | 
+                                        P5_15_06 == 1~ 1,
+                                      as.numeric(P5_35_02) == 1 | as.numeric(P5_35_03) == 1 |
+                                        as.numeric(P5_35_04) == 1 |as.numeric(P5_35_05) == 1 |
+                                        as.numeric(P5_35_06) == 1 ~ 1,
+                                      P5_15_02 == 0  | P5_15_03 == 0 |
+                                        P5_15_04 == 0| P5_15_05 == 0 | 
+                                        P5_15_06 == 0~ 0,
+                                      as.numeric(P5_35_02) == 0 | as.numeric(P5_35_03) == 0 |
+                                        as.numeric(P5_35_04) == 0 |as.numeric(P5_35_05) == 0 |
+                                        as.numeric(P5_35_06) == 0 ~ 0,
+                                      as.numeric(P5_35_02) == 3 | as.numeric(P5_35_03) == 3 |
+                                        as.numeric(P5_35_04) == 3 |as.numeric(P5_35_05) == 3 |
+                                        as.numeric(P5_35_06) == 3 ~ 0,
+                                      T ~ NA_real_))
+
+Main_database_2008 <- Main_database_2008 %>% 
+  mutate(prueba_declaraciones = case_when(prueba_declaraciones == 1 ~ "Declaraciones como prueba", 
+                                          prueba_declaraciones == 0 ~ "No declaraciones como prueba",
+                                      T ~ NA_character_))
+
+colors4plot <- c("Prisión Preventiva Justificada" = "#003B88", 
+                 "Prisión Preventiva Oficiosa" = "#fa4d57")
+
+plot <- BarCategoricalBars.fn(column1 = prueba_declaraciones, column2 = tipo_prision_preventiva )
+plot
+
+
+# Física -----------------------------------------------------------
+
+Main_database_2008 <- Main_database_2008 %>% 
+  mutate(prueba_fisicas = case_when(P5_15_07 == 1  | P5_15_08 == 1 |
+                                            P5_15_09 == 1| P5_15_10 == 1 | 
+                                            P5_15_11 == 1~ 1,
+                                          as.numeric(P5_35_07) == 1 | as.numeric(P5_35_08) == 1 |
+                                            as.numeric(P5_35_09) == 1 |as.numeric(P5_35_10) == 1 |
+                                            as.numeric(P5_35_11) == 1 ~ 1,
+                                          P5_15_07 == 0  | P5_15_08 == 0 |
+                                            P5_15_09 == 0| P5_15_10 == 0 | 
+                                            P5_15_11 == 0~ 0,
+                                          as.numeric(P5_35_07) == 0 | as.numeric(P5_35_08) == 0 |
+                                            as.numeric(P5_35_09) == 0 |as.numeric(P5_35_10) == 0 |
+                                            as.numeric(P5_35_11) == 0 ~ 0,
+                                          as.numeric(P5_35_09) == 3  ~ 0,
+                                          T ~ NA_real_))
+
+Main_database_2008 <- Main_database_2008 %>% 
+  mutate(prueba_fisicas = case_when(prueba_fisicas == 1 ~ "Eviencia física como prueba", 
+                                    prueba_fisicas == 0 ~ "No evidencia física como prueba",
+                                          T ~ NA_character_))
+
+colors4plot <- c("Prisión Preventiva Justificada" = "#003B88", 
+                 "Prisión Preventiva Oficiosa" = "#fa4d57")
+
+plot <- BarCategoricalBars.fn(column1 = prueba_fisicas, column2 = tipo_prision_preventiva )
+plot
+
+
+# Culpabilidad ------------------------------------------------------------
+
+Main_database_2008 <- Main_database_2008 %>% 
+  mutate(culpabilidad = case_when(culpabilidad == 1 ~ "Se considera culpable", 
+                                  culpabilidad == 0 ~ "Se considera inocente",
+                                    T ~ NA_character_))
+
+colors4plot <- c("Prisión Preventiva Justificada" = "#003B88", 
+                 "Prisión Preventiva Oficiosa" = "#fa4d57")
+
+plot <- BarCategoricalBars.fn(column1 = culpabilidad, column2 = tipo_prision_preventiva )
+plot
+
+
+# Línea del tiempo ------------------------------------------------------------
+
+
+data <- as.data.frame(table(Main_database_2008$PPO, Main_database_2008$Anio_arresto))
+
+data <- as.data.frame(table(Main_database_2008$proceso_no_en_libertad, Main_database_2008$Anio_arresto))
