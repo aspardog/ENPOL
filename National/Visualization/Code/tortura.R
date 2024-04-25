@@ -81,6 +81,77 @@ ggsave(plot = chart,
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
+## 3. Tortura Psicologica y Fisica                                                       ----
+##
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+data_subset.df <- master_data.df %>%
+  select(tortura_tra_p, tortura_tra_f, tortura_mp_f, tortura_mp_p) %>%
+  mutate(
+    across(everything(),
+           ~case_when(
+             .x == 1 ~ 1,
+             .x == 0 | .x == 2 ~ 0,
+             T ~ NA_real_
+           ))
+  ) %>%
+  pivot_longer(cols = everything(), 
+               names_to = "category", 
+               values_to = "value2plot") %>%
+  mutate(
+    group_var = 
+      if_else(
+        grepl("tra_", category), 
+        "Traslado", "MP")
+  ) %>%
+  group_by(category, group_var) %>%
+  summarise(value2plot = mean(value2plot, na.rm = T)*100) 
+
+
+data2plot <- data_subset.df %>%
+  mutate(
+    labels =
+      case_when(
+        category == "tortura_tra_f" | category == "tortura_mp_f" ~"Tortura física",
+        category == "tortura_tra_p" | category == "tortura_mp_p" ~"Tortura psicológica",
+        T ~ NA_character_),
+    figure = paste0(round(value2plot,0), "%"),
+    order_var = case_when(
+      labels == "Tortura física" ~ 2,
+      labels =="Tortura psicológica" ~ 1,
+      T ~ NA_real_),
+    order_value_bars = 
+      case_when(
+        group_var == "Traslado" ~ 1,
+        group_var == "MP" ~ 2
+      )
+  )
+
+colors4plot <- twoCOLORS
+
+names(colors4plot) <- c("Traslado",
+                        "MP")
+
+plot <- barsChart.fn(
+  data.df                    = data2plot,
+  categories_grouping_var    = data2plot$group_var,
+  colors4plot                = colors4plot, 
+  nbars = 2
+)
+
+ggsave(plot = plot, 
+       filename = paste0(path2SP,
+                         "/National/Visualization",
+                         "/Output/Debido proceso/Tortura/figure3.svg"),
+       width = 189.7883,
+       height = 125,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
+
+
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##
 ## 4. Tortura Psicologica: Mecanismos                                                          ----
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

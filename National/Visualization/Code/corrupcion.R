@@ -161,4 +161,73 @@ data_subset.df <- master_data.df %>%
   summarise(
     value2plot = mean(value2plot, na.rm = T),
   )
-  
+
+data2plot <- data_subset.df %>%
+  mutate(
+    value2plot = value2plot*100,
+    figure   = paste0(round(value2plot,0),"%"),
+    category =
+      case_when(
+        grepl("mp", group_var) ~ "Ministerio Público",
+        grepl("detencion", group_var) ~ "Corporación aprehensora",
+        grepl("juzgado", group_var) ~ "Juzgado",
+        T ~ NA_character_
+      ),
+    order_var = 
+      case_when(
+        category == "Ministerio Público" ~ 2,
+        category == "Corporación aprehensora" ~ 1,
+        category == "Juzgado" ~ 3
+      ),
+    labels =
+      case_when(
+        grepl("debido", group_var) ~ "Debido proceso",
+        grepl("integridad", group_var) ~ "Integridad física",
+        grepl("libertad", group_var) ~ "Libertad",
+        T ~ NA_character_
+      ))
+data2plot$category = factor(data2plot$category, 
+                            levels=c("Corporación aprehensora",
+                                     "Ministerio Público",
+                                     "Juzgado"))
+colors4plot <- c("#2a2a9A", "#a90099", "#43a9a7")
+
+names(colors4plot) <- c("Corporación aprehensora",
+                        "Ministerio Público",
+                        "Juzgado")
+plot <- ggplot(data2plot,
+               aes(x    = labels,
+                  y     = value2plot,
+                  label = figure,
+                  fill  = category)) +
+  geom_bar(stat = "identity",
+           show.legend = FALSE, width = 0.9)+
+  geom_text(aes(y    = value2plot + 5),
+            color    = "#4a4a49",
+            family   = "Lato Full",
+            fontface = "bold") +
+  scale_y_continuous(limits = c(0, 105),
+                     breaks = seq(0, 100, 20),
+                     labels = paste0(seq(0, 100, 20), "%"),
+                     position = "right") +
+  scale_fill_manual(values = colors4plot) +
+  coord_flip() +
+  facet_grid(rows = vars(category), scales = "free_y", switch = "y", space = "free_y") +
+  WJP_theme() +
+  theme(panel.grid.major.y = element_blank(),
+        panel.grid.major.x = element_line(color = "#D0D1D3"),
+        axis.title.y       = element_blank(),
+        axis.title.x       = element_blank(),
+        axis.text.y        = element_text(hjust = 1, size = 10),
+        plot.title = element_text(face = "bold", size = 12),
+        strip.placement = "outside")
+
+ggsave(plot = plot, 
+       filename = paste0(path2SP,
+                         "/National/Visualization",
+                         "/Output/Debido proceso/Corrupcion/figure3.svg"),
+       width = 189.7883,
+       height = 210,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
