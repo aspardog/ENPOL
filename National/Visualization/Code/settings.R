@@ -178,7 +178,7 @@ logit_dataBase.fn <- function(data = data_subset.df,
         )
     )
   
-  selectables <- c(selectables, "Delito_unico_categ", "Estado_arresto")
+  selectables <- c(selectables)
   
   logit_data <- master_data.df %>%
     select(all_of(selectables),
@@ -228,7 +228,10 @@ logit_dataBase.fn <- function(data = data_subset.df,
   
   depVar <- dependent_var
   
-  formula  <- as.formula(paste(depVar, "~", formula))
+  formula  <- as.formula(paste(depVar, "~", 
+                               formula, 
+                               "+factor(Delito_unico_categ)+factor(Estado_arresto)")
+                         )
   logit    <- glm(formula,
                   data   = logit_data, 
                   family = "binomial")
