@@ -92,155 +92,30 @@ ggsave(plot = chart,
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-
-logit_dataBase.fn <- function(data = Main_database,
-                              selectables = c("Sexo", 
-                                              "Educacion_superior", 
-                                              "Color_piel_claro", 
-                                              "LGBTQ", 
-                                              "Etnia", 
-                                              "Edad_menor30"),
-                              dependent_var
-) {
-  
-  master_data.df <- Main_database %>%
-    filter(Anio_arresto >= 2015) %>%
-    filter(NSJP == 1) %>%
-    filter(Delito_unico == 1) %>%
-    mutate(
-      Educacion_superior = 
-        case_when(
-          Educacion_superior == 1 ~ "Cuenta con título de educación universitaria",
-          Educacion_superior == 0 ~ "No cuenta con título de educación universitario",
-        ),
-      Color_piel_claro       =
-        case_when(
-          Color_piel_claro      == 1 ~ "Color de piel claro",
-          Color_piel_claro      == 0 ~ "Color de piel oscuro",
-        ),
-      LGBTQ                 = 
-        case_when(
-          LGBTQ                 == 1 ~ "Pertenece a la comunidad LGBTQ",
-          LGBTQ                 == 0 ~ "No pertenece a la comunidad LGBTQ"
-        ),
-      Etnia                 =
-        case_when(
-          Etnia                 == 1 ~ "Afroamericano o indígena",
-          Etnia                 == 0 ~ "No se identifica con ninguna etnia"
-        ),
-      Edad_menor30          =
-        case_when(
-          Edad_menor30          == 1 ~ "Menor a 30 años",
-          Edad_menor30          == 0 ~ "Mayor o igual a 30 años"
-        )
-    )
-  
-  selectables <- selectables
-  
-  logit_data <- master_data.df %>%
-    select(all_of(selectables),
-           all_of(dependent_var)) %>%
-    mutate(
-      Educacion_superior =
-        if_else(
-          Educacion_superior %in% "Cuenta con título de educación universitaria",
-          "ZCuenta con título de educación universitaria", Educacion_superior
-        ),
-      Sexo                  =
-        if_else(
-          Sexo %in% "Femenino",
-          "ZFemenino", Sexo
-        ),
-      Color_piel_claro       =
-        if_else(
-          Color_piel_claro %in% "Color de piel claro",
-          "ZColor de piel claro", Color_piel_claro
-        ),
-      LGBTQ                 =
-        if_else(
-          LGBTQ %in% "Pertenece a la comunidad LGBTQ",
-          "ZPertenece a la comunidad LGBTQ", LGBTQ
-        ),
-      Etnia                 =
-        if_else(
-          Etnia %in% "Afroamericano o indígena",
-          "ZAfroamericano o indígena", Etnia
-        ),
-      Edad_menor30          =
-        if_else(
-          Edad_menor30 %in% "Menor a 30 años",
-          "ZMenor a 30 años", Edad_menor30
-        ),
-    ) %>%
-    arrange(Sexo, Educacion_superior, Color_piel_claro, LGBTQ, Etnia, Edad_menor30)
-  
-  formula <- selectables %>%
-    t() %>%
-    as.data.frame() %>%
-    unite(., formula, sep = "+") %>%
-    as.character()
-  
-  depVar <- dependent_var
-  
-  formula  <- as.formula(paste(depVar, "~", formula))
-  logit    <- glm(formula,
-                  data   = logit_data, 
-                  family = "binomial")
-  
-  summaryLogit <- bind_rows(
-    as.data.frame(coef(logit))
-  )
-  
-  margEff      <- as.data.frame(
-    margins_summary(logit, data = logit$data)
-  )
-  
-  margEff$factor <-recode(margEff$factor,
-                          "SexoZFemenino" = "Mujer",
-                          "LGBTQZPertenece a la comunidad LGBTQ"                     = "Perteneciente a \ncomunidad LGBTQ",
-                          "EtniaZAfroamericano o indígena"                           = "Afroamericano/a o indígena",
-                          "Educacion_superiorZCuenta con título de educación universitaria"  = "Con educación univeristaria \n o más",
-                          "Edad_menor30ZMenor a 30 años"                             = "Menor a 30 años",
-                          "Color_piel_claroZColor de piel claro"                     = "Color de piel claro"
-  )
-  
-  data2table <- margEff %>%
-    mutate(order_variable =
-             case_when(
-               factor == "Mujer"                              ~ 1,
-               factor == "Perteneciente a \ncomunidad LGBTQ"  ~ 2,
-               factor == "Menor a 30 años"                    ~ 3,
-               factor == "Con educación univeristaria \n o más"              ~ 4,
-               factor == "Afroamericano/a o indígena"         ~ 5,
-               factor == "Color de piel claro"               ~ 6
-             ),
-           dependent_var  =
-             dependent_var
-    )
-  
-  return(data2table)
-  
-}
-
 # Applying plotting function
-data2plot <- logit_dataBase.fn(dependent_var = "proporcionalidad_uso_fuerza")
+data_subset.df <- master_data.df %>%
+  mutate(
+    uso_excesivo =
+      case_when(
+        proporcionalidad_uso_fuerza == 0 ~ 1,
+        proporcionalidad_uso_fuerza == 1 ~ 0
+      )
+  )
+
+data2plot <- logit_dataBase.fn(data = data_subset.df,
+                               dependent_var = "uso_excesivo")
 
 logitPlot <- logit_demo_panel(mainData = data2plot)
-
-# See plot
-logitPlot
 
 ggsave(plot   = logitPlot,
        file   = paste0(path2SP,
                        "/National/Visualization",
-                       "/Output/Debido proceso/Uso excesivo/figure4.svg"), 
+                       "/Output/Debido proceso/Uso excesivo/figure2.svg"), 
        width  = 175, 
        height = 85,
        units  = "mm",
        dpi    = 72,
        device = "svg")
-
-
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
