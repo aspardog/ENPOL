@@ -4815,7 +4815,7 @@ Main_database %<>%
                                       Escolaridad == "Maestría o doctorado" ~ 1,
                                       T ~ NA),
     # Educación por lo menos licenciatura
-    Educacion_licenciatura_omas = case_when(Escolaridad == "Ninguno" ~ 0, 
+    Educacion_superior = case_when(Escolaridad == "Ninguno" ~ 0, 
                                       Escolaridad == "Preescolar" ~ 0,
                                       Escolaridad == "Primaria" ~ 0,
                                       Escolaridad == "Secundaria" ~ 0,
@@ -4837,8 +4837,8 @@ Main_database %<>%
     
     Edad_arresto = as.numeric(P1_3) - (as.numeric(P3_5_A) - 2021),
     
-    Edad_menor30 = case_when(Edad_arresto <= 30 ~ 1, 
-                             Edad_arresto > 30 ~ 0,
+    Edad_menor30 = case_when(Edad_arresto < 30 ~ 1, 
+                             Edad_arresto >= 30 ~ 0,
                              T ~ NA),
     Ingreso_inseguro = case_when(Ingreso == "0" ~ 1, 
                                  Ingreso == "< 3 mil" ~ 1,
