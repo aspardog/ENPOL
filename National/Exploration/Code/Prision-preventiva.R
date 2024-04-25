@@ -185,7 +185,7 @@ BarCategoricalBars.fn <- function(data = Main_database_2008,
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
-# Proceso no en libertad ---------------------------------------------------
+# Proceso no en libertad (sentenciadas)---------------------------------------------------
 
 Main_database_2008 <-  Main_database_2008 %>% 
                       mutate(proceso_no_en_libertad_character = case_when( proceso_no_en_libertad == 1 ~ "Proceso privado de la libertad", 
@@ -200,6 +200,28 @@ data2plot <- count_frequency.fn(Main_database_2008$proceso_no_en_libertad_charac
 barChart <- BarSimpleChartViz(fill_colors = c("#3273ff","#003B88")) + expand_limits(y = c(0, 120))
 barChart
 
+# Proceso no en libertad (sentenciadas y procesadas)---------------------------------------------------
+
+Main_database_2008 <-  Main_database_2008 %>% 
+  mutate(tipo_prision_preventiva = case_when(procesado == 1  & PPO == 1 ~ "Prisión Preventiva Oficiosa", 
+                                             proceso_no_en_libertad == 1  & PPO == 1 ~ "Prisión Preventiva Oficiosa", 
+                                             procesado ==  1 & PPO == 0 ~ "Prisión Preventiva Justificada",
+                                             proceso_no_en_libertad == 1  & PPO == 0 ~ "Prisión Preventiva Justificada",
+                                             proceso_no_en_libertad == 0  ~ "Proceso en libertad",
+                                             T ~ NA_character_))%>% 
+  mutate(proceso_privado_libertad_todos = case_when( tipo_prision_preventiva == "Prisión Preventiva Oficiosa" ~ "Proceso privado de la liberted", 
+                                                     tipo_prision_preventiva == "Prisión Preventiva Justificada" ~ "Proceso privado de la liberted", 
+                                                     tipo_prision_preventiva == "Proceso en libertad" ~ "Proceso en libertad",
+                                                       T ~ NA_character_))
+
+
+
+
+data2plot <- count_frequency.fn(Main_database_2008$proceso_privado_libertad_todos)
+
+
+barChart <- BarSimpleChartViz(fill_colors = c("#3273ff","#003B88")) + expand_limits(y = c(0, 120))
+barChart
 
 
 # PP vs. PPO vs. Libertad --------------------------------------------------------------
