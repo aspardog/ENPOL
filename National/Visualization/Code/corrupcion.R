@@ -20,7 +20,7 @@
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
-## 1. Uso Excesivo de la fuerza: Serie temporal                                                            ----
+## 1. Corrupción: Serie temporal                                                            ----
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -93,3 +93,72 @@ ggsave(plot = chart,
        units  = "mm",
        dpi    = 72,
        device = "svg")
+
+
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##
+## 3. Corrupcion: Elementos de cambio                                                            ----
+##
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+data_subset.df <- master_data.df %>%
+  mutate(
+    libertad_detencion       =
+      case_when(
+        P3_22_1 == 1 ~ 1,
+        P3_22_1 == 0 ~ 0,
+        T ~ NA_real_
+      ),
+    integridad_detencion     = 
+      case_when(
+        P3_22_2 == 1 | P3_22_3 == 1 ~ 1,
+        P3_22_2 == 0 & P3_22_3 == 0 ~ 0,
+        T ~ NA_real_),
+    debido_proceso_detencion =
+      case_when(
+        P3_22_4 == 1 ~ 1,
+        P3_22_4 == 0 ~ 0,
+        T ~ NA_real_
+      ),
+    libertad_mp             =
+      case_when(
+        P4_16_1 == 1 ~ 1,
+        P4_16_1 == 0 ~ 0,
+        T ~ NA_real_
+      ),
+    integridad_mp           =
+      case_when(
+        P4_16_2 == 1 | P4_16_4 == 1 ~ 1, # El orden de las categorias cambia respecto a P3_22
+        P4_16_2 == 0 & P4_16_4 == 0 ~ 0,
+        T ~ NA_real_ 
+        ),
+    debido_proceso_mp       =
+      case_when(
+        P4_16_3 == 1 ~ 1, # El orden de las categorias cambia respecto a P3_22
+        P4_16_3 == 0 ~ 0,
+        T ~ NA_real_
+      ),
+    libertad_juzgado        =
+      case_when(
+        P5_46_1 == 1 ~ 1,
+        P5_46_1 == 2 ~ 0,
+        T ~ NA_real_
+      ),
+    debido_juzgado          = 
+      case_when(
+        P5_46_2 == 1 | P5_46_3 == 1 | P5_46_4 == 1 | P5_46_5 == 1 | P5_46_6 == 1 ~ 1,
+        P5_46_2 == 2 & P5_46_3 == 2 & P5_46_4 == 2 & P5_46_5 == 2 & P5_46_6 == 2 ~ 0,
+        T ~ NA_real_
+        )
+  ) %>%
+  select(libertad_detencion, integridad_detencion, debido_proceso_detencion, 
+         libertad_mp, integridad_mp, debido_proceso_mp, libertad_juzgado,
+         debido_juzgado) %>%
+  pivot_longer(cols = everything(), 
+               names_to = "group_var", 
+               values_to = "value2plot") %>%
+  group_by(group_var) %>%
+  summarise(
+    value2plot = mean(value2plot, na.rm = T),
+  )
+  
