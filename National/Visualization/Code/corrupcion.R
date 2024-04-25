@@ -94,6 +94,43 @@ ggsave(plot = chart,
        dpi    = 72,
        device = "svg")
 
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##
+## 2. Corrupcion: Logit                                                          ----
+##
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+# Applying plotting function
+data_subset.df <- master_data.df %>%
+  mutate(
+    detencion_corrupcion = case_when(P3_21_1 == "1" | P3_21_2 == "1" ~ 1,
+                                     P3_21_1 == "2" & P3_21_2 == "2" ~ 0,
+                                     T ~ NA_real_),
+    mp_corrupcion= case_when(P4_15_1 == "1" | P4_15_3 == "1" ~ 1,
+                             P4_15_1 == "2" & P4_15_3 == "2" ~ 0,
+                             T ~ NA_real_),
+    juzgado_corrupcion= case_when(P5_45_1 == "1" | P5_45_3 == "1" ~ 1,
+                                  P5_45_1 == "2" & P5_45_3 == "2" ~ 0,
+                                  T ~ NA_real_),
+    corrupcion_general = case_when(detencion_corrupcion == 1 | mp_corrupcion == 1  | juzgado_corrupcion == 1 ~ 1,
+                                   detencion_corrupcion == 0 & mp_corrupcion == 0  & juzgado_corrupcion == 0 ~ 0,
+                                   T~ NA_real_)
+  )
+
+data2plot <- logit_dataBase.fn(data = data_subset.df,
+                               dependent_var = "corrupcion_general")
+
+logitPlot <- logit_demo_panel(mainData = data2plot)
+
+ggsave(plot   = logitPlot,
+       file   = paste0(path2SP,
+                       "/National/Visualization",
+                       "/Output/Debido proceso/Corrupcion/figure2.svg"), 
+       width  = 175, 
+       height = 85,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##

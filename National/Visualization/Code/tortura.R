@@ -81,6 +81,30 @@ ggsave(plot = chart,
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
+## 2. Tortura: Logit                                                          ----
+##
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+# Applying plotting function
+data_subset.df <- master_data.df
+
+data2plot <- logit_dataBase.fn(data = data_subset.df,
+                               dependent_var = "tortura_generalizada")
+
+logitPlot <- logit_demo_panel(mainData = data2plot)
+
+ggsave(plot   = logitPlot,
+       file   = paste0(path2SP,
+                       "/National/Visualization",
+                       "/Output/Debido proceso/Tortura/figure2.svg"), 
+       width  = 175, 
+       height = 85,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
+
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##
 ## 3. Tortura Psicologica y Fisica                                                       ----
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
