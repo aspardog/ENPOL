@@ -124,7 +124,7 @@ WJP_theme <- function() {
 
 mainCOLOR      <- c("#2a2a9A")
 twoCOLORS      <- c("#2a2a9A", "#a90099")
-threeColors    <- c("#2a2a9A", "#a90099", "#ef4b4b")
+threeColors    <- c("#2a2a9A", "#a90099", "#43a9a7")
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
 ## 5.  Funciones adicionales                                                                                          ----
