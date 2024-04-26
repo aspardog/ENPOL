@@ -57,7 +57,7 @@ data2plot <- data_subset.df %>%
       T ~ NA_real_)
       )
 
-colors4plot <- mainCOLOR
+colors4plot <- rep(mainCOLOR,2)
 plot <- barsChart.fn(data.df                    = data2plot,
                      groupVar                   = F,   
                      categories_grouping_var    = labels,
