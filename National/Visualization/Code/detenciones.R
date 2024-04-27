@@ -79,6 +79,30 @@ ggsave(plot = chart,
        dpi    = 72,
        device = "svg")
 
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##
+## 2. Detenciones: Logit                                                          ----
+##
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+# Applying plotting function
+data_subset.df <- master_data.df
+
+data2plot <- logit_dataBase.fn(data = data_subset.df,
+                               dependent_var = "det_ninguna")
+
+logitPlot <- logit_demo_panel(mainData = data2plot)
+
+ggsave(plot   = logitPlot,
+       file   = paste0(path2SP,
+                       "/National/Visualization",
+                       "/Output/Debido proceso/Detenciones/figure2.svg"), 
+       width  = 175, 
+       height = 85,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
+
 
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

@@ -144,7 +144,7 @@ data_subset.df <- master_data.df %>%
 data2plot <- data_subset.df %>%
   arrange(value2plot) %>%
   mutate(
-    order_var = row_number(),
+    order_var = -row_number(),
     value2plot = value2plot*100,
     figure = paste0(round(value2plot, 0), "%"),
     labels = 
@@ -159,17 +159,13 @@ data2plot <- data_subset.df %>%
         
       )
   )
-
-colors4plot <- mainCOLOR
+colors4plot <- rep(mainCOLOR,7)
 plot <- barsChart.fn(data.df                    = data2plot,
                      groupVar                   = F,   
                      categories_grouping_var    = categories,
                      colors4plot                = colors4plot, 
                      order                      = T,
-                     orientation                = "vertical",
-                     title                      = NULL,
-                     subtitle                   = NULL,
-                     note                       = NULL)
+                     orientation                = "vertical")
 
 ggsave(plot = plot, 
        filename = paste0(path2SP,

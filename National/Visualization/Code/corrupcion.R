@@ -65,7 +65,7 @@ x.axis.labels <- paste0("'", str_sub(x.axis.values, start = -2))
 
 # Defining colors4plot
 colors4plot <- threeColors
-names(colors4plot) <- c("detencion_corrupcion", "juzgado_corrupcion", "mp_corrupcion")
+names(colors4plot) <- c("detencion_corrupcion", "mp_corrupcion", "juzgado_corrupcion")
 
 # Saving data points
 data2plot <- data_subset.df %>% ungroup()
