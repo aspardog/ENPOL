@@ -5069,7 +5069,14 @@ Main_database <- Main_database %>%  rowwise() %>% mutate(Delito_unico = ifelse(s
       Delito_unico_14_otro == 1 ~ "otro",
       Delito_unico_15_ns_nr == 1 ~ "ns_nr",
       TRUE ~ NA_character_
-    )) 
+    )) %>% 
+  # Categoriza (tanto para procesados como para sentenciados) el tipo de prisión preventiva o si su proceso lo llevó en libertad (sentenciados)
+  mutate(tipo_prision_preventiva = case_when(procesado == 1  & PPO == 1 ~ "Prisión Preventiva Oficiosa", 
+                                             proceso_no_en_libertad == 1  & PPO == 1 ~ "Prisión Preventiva Oficiosa", 
+                                             procesado ==  1 & PPO == 0 ~ "Prisión Preventiva Justificada",
+                                             proceso_no_en_libertad == 1  & PPO == 0 ~ "Prisión Preventiva Justificada",
+                                             proceso_no_en_libertad == 0  ~ "Proceso en libertad",
+                                             T ~ NA_character_))
 
 # Agregar variables de indicador -----------------------------------------
 
