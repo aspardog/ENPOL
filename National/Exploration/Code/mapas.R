@@ -1,4 +1,9 @@
-mapa <- st_read(paste0(path2SP,"/National/Exploration/Input/shp/México_Estados.shp"))
+mapa <- st_read(paste0(path2SP,"/National/Exploration/Input/shp/México_Estados.shp")) %>%
+  mutate(
+    case_when(
+      ESTADO == "México" ~ "Estado de México"
+    )
+  )
 
 Estados <- Main_database_2008 %>%
   group_by(Estado_arresto) %>%
@@ -11,6 +16,7 @@ Estados <- Main_database_2008 %>%
         ESTADO == "Coahuila de Zaragoza" ~ "Coahuila",
         ESTADO == "Michoacán de Ocampo"  ~ "Michoacán",
         ESTADO == "Veracruz de Ignacio de la Llave" ~ "Veracruz",
+        ESTADO == "México" ~ "Estado de México",
         T ~ ESTADO
       ))
 

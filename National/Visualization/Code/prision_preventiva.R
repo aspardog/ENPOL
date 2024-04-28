@@ -70,7 +70,7 @@ ggsave(plot = plot,
                          "/National/Visualization",
                          "/Output/Debido proceso/Prision preventiva/figure1.svg"),
        width = 189.7883,
-       height = 105,
+       height = 85,
        units  = "mm",
        dpi    = 72,
        device = "svg")
@@ -143,7 +143,7 @@ ggsave(plot = plot,
                          "/National/Visualization",
                          "/Output/Debido proceso/Prision preventiva/figure2.svg"),
        width = 189.7883,
-       height = 105,
+       height = 85,
        units  = "mm",
        dpi    = 72,
        device = "svg")
@@ -156,7 +156,7 @@ ggsave(plot = plot,
 
 
 data_subset.df <- master_data.df %>%
-  filter(Anio_arresto > 2010)  %>%
+  filter(Anio_arresto > 2015)  %>%
   group_by(Anio_arresto) %>%
   mutate(
     counter = 1,
@@ -181,7 +181,7 @@ data_subset.df <- master_data.df %>%
 
 
 # Pulling minimum and maximum available year
-minyear <- 2011
+minyear <- 2016
 maxyear <- 2021
 
 

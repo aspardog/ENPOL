@@ -43,9 +43,17 @@ loadVIZ(set = "ENPOL")
 
 # Loading data
 load(paste0(path2SP,"/National/Data_cleaning/Output/Main_database.RData"))
+
 master_data.df <- Main_database %>% 
   filter(Anio_arresto >= as.numeric(2008)) %>% 
   filter(NSJP == 1) 
+
+mapa <- st_read(paste0(path2SP,"/National/Visualization/Input/shp/México_Estados.shp")) %>%
+  mutate(
+    case_when(
+      ESTADO == "México" ~ "Estado de México"
+    )
+  )
 
 # select proper filters
 # Tenemos 3 filtros y para cada visualización se decide qué filtros usar
