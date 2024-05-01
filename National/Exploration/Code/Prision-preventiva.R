@@ -120,6 +120,7 @@ BarCategoricalBars.fn <- function(data = Main_database_2008,
   # Data manipulation
   data2plot <- data %>%
     select({{column1}}, {{column2}}) %>%
+    drop_na() %>%
     group_by({{column1}}, {{column2}}) %>%
     summarise(Frequency = n(), .groups = 'drop') %>%
     group_by({{column1}}) %>%
@@ -653,6 +654,33 @@ plot <- BarCategoricalBarsNames.fn(column1 = tipo_prision_preventiva, column2 = 
 plot
 
 
+# Defensa ----------------------------------------------------------
+
+## Exploración: El tener o no defensa tiene efecto en el número de años de sentencia
+
+defensa <- c("P4_1_05", 
+             "P5_1",
+             "P5_2_5")
+
+Main_database_2008 <- clean_columns.fn(Main_database_2008, defensa) %>% 
+  rename(defensa_mp  =  P4_1_05,
+         defensa_antes_juez = P5_1,
+         defensa_juez = P5_2_5,
+         sentencia_años = P5_4_A) %>% 
+  mutate(defensa_momento = case_when(defensa_mp == 1 & defensa_antes_juez == 1 ~ "MP-JUEZ",
+                                     defensa_mp == 0 & defensa_antes_juez == 0 ~ "NINGUNO",
+                                     defensa_mp == 0 & defensa_antes_juez == 1 ~ "JUEZ",
+                                     defensa_mp == 1 & defensa_antes_juez == 0 ~ "MP",
+                                     T~ NA_character_))
+
+colors4plot <- c("MP-JUEZ" = "#20204a", 
+                 "NINGUNO" = "#2a2a94", 
+                 "JUEZ" = "#756ef9", 
+                 "MP" = "#9c94ff")
+
+plot <- BarCategoricalBarsNames.fn(column1 = tipo_prision_preventiva, column2 = defensa_momento )
+plot
+
 # Tipo de prueba  por tipo de juicio----------------------------------------------------------
 
 Main_database_2008 <- Main_database_2008 %>% 
@@ -663,7 +691,7 @@ Main_database_2008 <- Main_database_2008 %>%
 colors4plot <- c("Prisión Preventiva Justificada" = "#003B88", 
                  "Prisión Preventiva Oficiosa" = "#fa4d57")
 
-plot <- BarCategoricalBars.fn(column1 = culpabilidad, column2 = tipo_prision_preventiva )
+plot <- BarCategoricalBars.fn(column1 = juicio_abreviado, column2 = tipo_prision_preventiva )
 plot
 
 
