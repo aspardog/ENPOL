@@ -177,7 +177,7 @@ defensa <- c("P4_1_05",
              "P5_1",
              "P5_2_5")
 
-Main_database_2008 <- clean_columns.fn(Main_database_2008, defensa) %>% 
+prueba <- clean_columns.fn(Main_database_2008, defensa) %>% 
   rename(defensa_mp  =  P4_1_05,
          defensa_antes_juez = P5_1,
          defensa_juez = P5_2_5,
