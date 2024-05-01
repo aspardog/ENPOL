@@ -76,8 +76,8 @@ PP_tiempo <- Main_database_2008 %>%
   mutate(
     PP_tiempo =
     case_when(
-      P5_10 < 7 ~ "Hasta 2 años",
-      P5_10 > 6 ~ "Más de 2 años",
+      P5_10 <= 6 ~ "Hasta 2 años",
+      P5_10 == 7 ~ "Más de 2 años",
       P5_10 == 8 ~ NA_character_,
       P5_10 == 9 ~ NA_character_
     ),
@@ -103,8 +103,8 @@ PP_tiempo_tipo <-  Main_database_2008 %>%
   mutate(
     PP_tiempo =
       case_when(
-        P5_10 < 7 ~ "Hasta 2 años",
-        P5_10 > 6 ~ "Más de 2 años",
+        P5_10 <= 6 ~ "Hasta 2 años",
+        P5_10 == 7 ~ "Más de 2 años",
         P5_10 == 8 ~ NA_character_,
         P5_10 == 9 ~ NA_character_
       ),
@@ -145,6 +145,7 @@ PP_tipo_tiempo <- PP_tiempo_tipo %>%
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 PP_defensa_juez <- Main_database_2008 %>%
+  filter(tipo_prision_preventiva == "Prisión Preventiva Oficiosa") %>%
   select(defensa_juez = P5_1, defensa_mp = P4_1_05) %>%
   mutate(
     defensa_juez =
@@ -161,12 +162,13 @@ PP_defensa_juez <- Main_database_2008 %>%
   ) %>%
   group_by(defensa_juez, defensa_mp) %>%
   summarise(
-    value = sum(counter , na.rm = T)
+    frequency = sum(counter , na.rm = T)
   ) %>%
+  ungroup() %>% 
   drop_na() %>%
   mutate(
-    value = value/sum(value)*100,
-    value = paste0(round(value, 0), "%")
+    value = frequency/sum(frequency),
+    Value = paste0(round(value*100, 0), "%")
   )
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -175,7 +177,8 @@ PP_defensa_juez <- Main_database_2008 %>%
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-PP_defensa_juez <- Main_database_2008 %>%
+PP_defensa_abreviado <- Main_database_2008 %>%
+  filter(tipo_prision_preventiva == "Prisión Preventiva Oficiosa") %>%
   mutate(
     procedimiento_abreviado =
       case_when(
