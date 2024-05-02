@@ -50,9 +50,11 @@ master_data.df <- Main_database %>%
 
 mapa <- st_read(paste0(path2SP,"/National/Visualization/Input/shp/México_Estados.shp")) %>%
   mutate(
-    case_when(
-      ESTADO == "México" ~ "Estado de México"
-    )
+    ESTADO = 
+      case_when(
+        ESTADO == "México" ~ "Estado de México",
+        T ~ ESTADO
+      )
   )
 
 # select proper filters
