@@ -59,10 +59,10 @@ dates_day       <- c("P3_5_D", "P3_8_D")
 dates_month     <- c("P3_5_M", "P3_8_M","P5_5_M")
 dates_year      <- c("P3_5_A", "P3_8_A","P5_5_A")
 arrest_vars     <- c("P3_2","P3_10")
-delitos_PPO1    <- c("P5_11_08", "P5_11_09", "P5_11_12", "P5_11_17", "P5_11_18", "P5_11_20",
-                     "P5_31_08", "P5_31_09", "P5_31_12", "P5_31_17", "P5_31_18", "P5_31_20")
-delitos_PPO2    <- c("P5_11_02", "P5_11_08", "P5_11_09", "P5_11_12", "P5_11_17", "P5_11_18", "P5_11_20",
-                     "P5_31_02", "P5_31_08", "P5_31_09", "P5_31_12", "P5_31_17", "P5_31_18", "P5_31_20")
+delitos_PPO1    <- c("P5_11_08", "P5_11_09", "P5_11_12", "P5_11_13", "P5_11_17", "P5_11_18", "P5_11_20",
+                     "P5_31_08", "P5_31_09", "P5_31_12", "P5_31_13", "P5_31_17", "P5_31_18", "P5_31_20")
+delitos_PPO2    <- c("P5_11_02", "P5_11_08", "P5_11_09", "P5_11_12", "P5_11_13", "P5_11_17", "P5_11_18", "P5_11_20",
+                     "P5_31_02", "P5_31_08", "P5_31_09", "P5_31_12", "P5_31_13", "P5_31_17", "P5_31_18", "P5_31_20")
 tortura_arr_f   <- c("P3_13_02", "P3_13_04", "P3_13_05", "P3_13_06", "P3_13_07", "P3_13_08", "P3_13_09", "P3_13_10", 
                      "P3_13_11", "P3_13_12")
 justifica_f     <- c("P3_15_4", "P3_15_5", "P3_15_6", "P3_15_8", "P3_15_9") 
@@ -5071,7 +5071,8 @@ Main_database <- Main_database %>%  rowwise() %>% mutate(Delito_unico = ifelse(s
       TRUE ~ NA_character_
     )) %>% 
   # Categoriza (tanto para procesados como para sentenciados) el tipo de prisión preventiva o si su proceso lo llevó en libertad (sentenciados)
-  mutate(tipo_prision_preventiva = case_when(procesado == 1  & PPO == 1 ~ "Prisión Preventiva Oficiosa", 
+  mutate(tipo_prision_preventiva = case_when(procesado == 0  & PPO == 1 ~ "Prisión Preventiva Oficiosa",
+                                            procesado == 1  & PPO == 1 ~ "Prisión Preventiva Oficiosa", 
                                              proceso_no_en_libertad == 1  & PPO == 1 ~ "Prisión Preventiva Oficiosa", 
                                              procesado ==  1 & PPO == 0 ~ "Prisión Preventiva Justificada",
                                              proceso_no_en_libertad == 1  & PPO == 0 ~ "Prisión Preventiva Justificada",
