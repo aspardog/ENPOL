@@ -5,6 +5,9 @@
 		/*size:8.5in 11in;*/
 		margin: 0px;
     }
+    body {
+        text-align: justify;
+    }
 
     @page :first {
      /*margin-right: 0cm;*/
