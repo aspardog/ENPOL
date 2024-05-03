@@ -108,10 +108,12 @@ Estados <- result_df %>%
         T ~ ESTADO
       ))
 
+
+
 table <- Estados %>%
   mutate(
     ` ` = "",
-    `%` = round(value2plot*100, 1)
+    `%` = round(value2plot*100, 0)
   ) %>%
   arrange(ESTADO) %>%
   select(
@@ -130,8 +132,12 @@ table <- Estados %>%
   width(j = " ", width = 0.5, unit = "mm") %>%
   width(j = "%", width = 0.75,   unit = "mm") %>%
   
-  bg(i = ~ Tiempo_traslado == "Hasta 30 minutos", j = ' ', bg = "#2a2a9A", part = "body") %>%
-  bg(i = ~ Tiempo_traslado == "Más de 6 horas hasta 24 horas", j = ' ', bg = "#fa4d57", part = "body") %>%
+  bg(i = ~ Tiempo_traslado == "Hasta 30 minutos" & `%` >= 10 & `%` < 25, j = ' ', bg = "#7E7EDF", part = "body") %>%
+  bg(i = ~ Tiempo_traslado == "Hasta 30 minutos" & `%` >= 25 & `%` < 40, j = ' ', bg = "#2a2a9A", part = "body") %>%
+  bg(i = ~ Tiempo_traslado == "Hasta 30 minutos" & `%` >= 40, j = ' ', bg = "#1B1B5D", part = "body") %>%
+  bg(i = ~ Tiempo_traslado == "Más de 6 horas hasta 24 horas" & `%` >= 10 & `%` < 20, j = ' ', bg = "#FC989D", part = "body") %>%
+  bg(i = ~ Tiempo_traslado == "Más de 6 horas hasta 24 horas" & `%` >= 20 & `%` < 25, j = ' ', bg = "#FA4D57", part = "body") %>%
+  bg(i = ~ Tiempo_traslado == "Más de 6 horas hasta 24 horas" & `%` >= 25 & `%` <= 30, j = ' ', bg = "#BE0A14", part = "body") %>%
 
   
   align(j     = 2, 
@@ -165,39 +171,34 @@ tpanel <- gen_grob(table,
 mexico_map <- mapa %>%
   left_join(Estados, by = "ESTADO") %>%
   mutate(
+    value2plot = round(value2plot*100, 0),
     color_group = case_when(
-      value2plot <=  0.10 ~ "0%-10%",
-      value2plot >  0.10 & value2plot <= 0.20 ~ "10%-20%",
-      value2plot >  0.20 & value2plot <= 0.30 ~ "20%-30%",
-      value2plot >  0.30 & value2plot <= 0.40 ~ "30%-40%",
-      value2plot >  0.40 & value2plot <= 0.50 ~ "40%-50%",
-      value2plot >  0.50 & value2plot <= 0.60 ~ "50%-60%",
-      value2plot >  0.60 & value2plot <= 0.70 ~ "60%-70%",
-      value2plot >  0.70 & value2plot <= 0.80 ~ "70%-80%",
-      value2plot >  0.80 & value2plot <= 0.90 ~ "80%-90%",
-      value2plot >  0.90 ~ "90%-100%"
+      Tiempo_traslado == "Hasta 30 minutos" & value2plot >= 10 & value2plot < 25 ~ "T1",
+      Tiempo_traslado == "Hasta 30 minutos" & value2plot >= 25 & value2plot < 40 ~ "T2",
+      Tiempo_traslado == "Hasta 30 minutos" & value2plot >= 40 ~ "T3",
+      Tiempo_traslado == "Más de 6 horas hasta 24 horas" & value2plot >= 10 & value2plot < 20 ~ "T4",
+      Tiempo_traslado == "Más de 6 horas hasta 24 horas" & value2plot >= 20 & value2plot < 25 ~ "T5",
+      Tiempo_traslado == "Más de 6 horas hasta 24 horas" & value2plot >= 25 & value2plot <= 30 ~ "T6"
       
     ),
     color_group = as.factor(color_group)
   )
 
-cat_palette <- c("0%-10%"   = "#b21e35",
-                 "10%-20%"  = "#E03849",
-                 "20%-30%"  = "#f1a7a9",
-                 "30%-40%"  = "#FFC818",
-                 "40%-50%"  = "#f5b82e",
-                 "50%-60%" =  "#fea14d",
-                 "60%-70%" =  "#FF7900",
-                 "70%-80%" =  "#46B5FF",
-                 "80%-90%" =  "#0C75B6",
-                 "90%-100%" =  "#18538E")
-
 cat_palette <- c("Hasta 30 minutos" = "#2a2a9A",
                  "Más de 6 horas hasta 24 horas" = "#fa4d57")
+
+cat_palette <- c("T1"   = "#7E7EDF",
+                 "T2"  = "#2a2a9A",
+                 "T3"  = "#1B1B5D",
+                 "T4"  = "#FC989D",
+                 "T5"  = "#FA4D57",
+                 "T6" =  "#BE0A14")
+
+
 # Drawing plot
 p <- ggplot(mexico_map, aes(label = ESTADO)) +
   geom_sf(data  = mexico_map,
-          aes(fill = Tiempo_traslado),
+          aes(fill = color_group),
           color = "grey65",
           size  = 0.5) +
   geom_sf(data  = mexico_map,
@@ -291,7 +292,9 @@ table <- Estados %>%
   width(j = " ", width = 0.5, unit = "mm") %>%
   width(j = "%", width = 0.75,   unit = "mm") %>%
   
-  bg(i = ~ Primer_lugar_traslado == "Agencia del Ministerio Público", j = ' ', bg = "#2a2a9A", part = "body") %>%
+  bg(i = ~ Primer_lugar_traslado == "Agencia del Ministerio Público" & `%` >= 30 & `%` < 50, j = ' ', bg = "#7E7EDF", part = "body") %>%
+  bg(i = ~ Primer_lugar_traslado == "Agencia del Ministerio Público" & `%` >= 50 & `%` < 70, j = ' ', bg = "#2a2a9A", part = "body") %>%
+  bg(i = ~ Primer_lugar_traslado == "Agencia del Ministerio Público" & `%` >= 70, j = ' ', bg = "#1B1B5D", part = "body") %>%
   bg(i = ~ Primer_lugar_traslado == "Instalación de la policía", j = ' ', bg = "#a90099", part = "body") %>%
   
   
@@ -326,39 +329,26 @@ tpanel <- gen_grob(table,
 mexico_map <- mapa %>%
   left_join(Estados, by = "ESTADO") %>%
   mutate(
+    value2plot = round(value2plot*100, 0),
     color_group = case_when(
-      value2plot <=  0.10 ~ "0%-10%",
-      value2plot >  0.10 & value2plot <= 0.20 ~ "10%-20%",
-      value2plot >  0.20 & value2plot <= 0.30 ~ "20%-30%",
-      value2plot >  0.30 & value2plot <= 0.40 ~ "30%-40%",
-      value2plot >  0.40 & value2plot <= 0.50 ~ "40%-50%",
-      value2plot >  0.50 & value2plot <= 0.60 ~ "50%-60%",
-      value2plot >  0.60 & value2plot <= 0.70 ~ "60%-70%",
-      value2plot >  0.70 & value2plot <= 0.80 ~ "70%-80%",
-      value2plot >  0.80 & value2plot <= 0.90 ~ "80%-90%",
-      value2plot >  0.90 ~ "90%-100%"
+      Primer_lugar_traslado == "Agencia del Ministerio Público" & value2plot >= 30 & value2plot < 50 ~ "T1",
+      Primer_lugar_traslado == "Agencia del Ministerio Público" & value2plot >= 50 & value2plot < 70 ~ "T2",
+      Primer_lugar_traslado == "Agencia del Ministerio Público" & value2plot >= 70 ~ "T3",
+      Primer_lugar_traslado == "Instalación de la policía" ~ "T4"
       
     ),
     color_group = as.factor(color_group)
   )
 
-cat_palette <- c("0%-10%"   = "#b21e35",
-                 "10%-20%"  = "#E03849",
-                 "20%-30%"  = "#f1a7a9",
-                 "30%-40%"  = "#FFC818",
-                 "40%-50%"  = "#f5b82e",
-                 "50%-60%" =  "#fea14d",
-                 "60%-70%" =  "#FF7900",
-                 "70%-80%" =  "#46B5FF",
-                 "80%-90%" =  "#0C75B6",
-                 "90%-100%" =  "#18538E")
+cat_palette <- c("T1"   = "#7E7EDF",
+                 "T2"  = "#2a2a9A",
+                 "T3"  = "#1B1B5D",
+                 "T4"  = "#a90099")
 
-cat_palette <- c("Agencia del Ministerio Público" = "#2a2a9A",
-                 "Instalación de la policía" = "#fa4d57")
 # Drawing plot
 p <- ggplot(mexico_map, aes(label = ESTADO)) +
   geom_sf(data  = mexico_map,
-          aes(fill = Primer_lugar_traslado),
+          aes(fill = color_group),
           color = "grey65",
           size  = 0.5) +
   geom_sf(data  = mexico_map,
