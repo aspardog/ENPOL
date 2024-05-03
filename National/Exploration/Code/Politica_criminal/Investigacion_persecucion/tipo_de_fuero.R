@@ -117,7 +117,7 @@ plot <- ggplot(data2plot,
                  x     = reorder(Corporacion_grupos,order_var), 
                  y     = Percentage,
                  fill  = fuero,
-                 label = figure
+                 label = paste0(figure, ", N =", Frequency)
                )) +
   geom_bar(stat = "identity",
            show.legend = FALSE, width = 0.9, position = "dodge")+
@@ -227,7 +227,7 @@ Main_database_2008 <- Main_database_2008 %>%
 
 
 # Use group_by to group data by two columns
-data2plot <- Main_database_2008 %>%
+data2plot <- Main_database_2008 %>% 
   select(Delito_unico_categ, fuero) %>% 
   group_by(Delito_unico_categ, fuero) %>%
   summarise(Frequency = n(), .groups = 'drop') %>% 
@@ -346,8 +346,7 @@ plot <- ggplot(data2plot,
                  x     = aut_interrogaron, 
                  y     = Percentage,
                  fill  = fuero,
-                 label = figure
-               )) +
+                 label = paste0(figure, ", N =", Frequency))) +
   geom_bar(stat = "identity",
            show.legend = FALSE, width = 0.9, position = "dodge")+
   geom_text(aes(y    = Percentage + 10), 
