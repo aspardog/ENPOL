@@ -177,7 +177,7 @@ defensa <- c("P4_1_05",
              "P5_1",
              "P5_2_5")
 
-prueba <- clean_columns.fn(Main_database_2008, defensa) %>% 
+Main_database_2008 <- clean_columns.fn(Main_database_2008, defensa) %>% 
   rename(defensa_mp  =  P4_1_05,
          defensa_antes_juez = P5_1,
          defensa_juez = P5_2_5,
@@ -192,7 +192,7 @@ prueba <- clean_columns.fn(Main_database_2008, defensa) %>%
 
 data2plot <- count_frequency.fn(Main_database_2008$defensa_momento) 
 
-data2plot <-  data2plot %>% mutate(order_var = case_when(Value == "DDefensa en Ministerio Público y con Juez" ~ 3,
+data2plot <-  data2plot %>% mutate(order_var = case_when(Value == "Defensa en Ministerio Público y con Juez" ~ 3,
                                                          Value == "Defensa sólo con Juez" ~ 1,
                                                          Value == "Defensa sólo en Ministerio Público" ~ 2,
                                                          Value == "Sin defensa en Ministerio Público ni con Juez" ~ 4,
@@ -205,7 +205,7 @@ barChart
 ggsave(plot = barChart, 
        filename = paste0(path2local,"/Visualizations/figure5.svg"),
        width = 189.7883,
-       height = 80,
+       height = 95,
        units  = "mm",
        dpi    = 72,
        device = "svg")
