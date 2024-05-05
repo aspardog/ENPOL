@@ -289,4 +289,10 @@ exp_data_mean(
   nombre = "defensa_momento_proabreviado"
 )
 
-
+data2plot <- count_frequency.fn(Main_database_2008$defensa_mp) %>% 
+            mutate(Value = case_when(Value == 0 ~ "Sin defensa en MP", 
+                                     Value == 1 ~ "Con defensa en MP",
+                                          T ~ NA_character_), 
+                   labels = Value)
+barChart <- BarSimpleChartViz(fill_colors = c("#003b8a","#fa4d57", "#9c94ff","#9c94ff")) + expand_limits(y = c(0, 80))
+barChart
