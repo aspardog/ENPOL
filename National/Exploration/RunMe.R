@@ -39,6 +39,60 @@ Main_database_2015 <- Main_database %>%
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
+## 0. Sociodemográficos                                                                           ----
+##
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+### 1.1.1. Ingreso  ----------------------------------------------------
+
+ingreso <- c("P2_14_1", 
+                     "P2_14_2",
+                     "P2_14_3",
+                     "P2_14_4",
+                     "P2_14_5", 
+                     "P2_14_6",
+                     "P2_14_7",
+                     "P2_14_8",
+                     "P2_14_9")
+
+labels <- c("Tenían suficiente comida todos los días, para todos",
+            "Estaba libre de deudas",
+            "Tenían dinero suficiente para comprar ropa y calzado",
+            "No tenían que trabajar los siete días de la semana para cubrir sus necesidades",
+            "Tenían dinero suficiente para divertirse",
+            "Podían pagar las medicinas y atención médica que alguien de su hogar pudiera necesitar",
+            "Tenían dinero suficiente para pagar sus necesidades escolares o las de sus hijos",
+            "Les alcanzaba para ahorrar",
+            "Tenían suficiente dinero para darle mantenimiento a su casa o pagar renta") 
+
+Main_database_2008 <- clean_columns.fn(Main_database_2008, ingreso) %>% 
+                      mutate(P2_14_2 = case_when(P2_14_2 == 1 ~ 0,
+                                                 P2_14_2 == 0 ~ 1, 
+                                                 T ~NA_real_),
+                             P2_14_4= case_when(P2_14_4 == 1 ~ 0,
+                                                P2_14_4 == 0 ~ 1, 
+                                                T ~NA_real_))
+
+  
+data2plot <- set_data.fn(Main_database_2008, ingreso, labels)
+
+barChart <- BarSimpleChartViz(data = data2plot, 
+                              x_var = labels, 
+                              y_var = PorcentajeUnos, 
+                              label_var = figure, 
+                              fill_var = Columna, 
+                              Observaciones = Observaciones,
+                              order_var = order_var,
+                              fill_colors = c("#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
+                                              "#003B88"),
+                              title = "Situaciones que ocurrieron en el año anterior a la detención")
+barChart
+
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##
 ## 1. Debido proceso                                                                             ----
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
