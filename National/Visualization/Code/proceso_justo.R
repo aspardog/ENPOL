@@ -1,0 +1,211 @@
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##
+## Script:            ENPOL - PP
+##
+## Author(s):         Santiago Pardo   (spardo@worldjusticeproject.org)
+##                    Cristina Alvarez (calvarez@worldjusticeproject.org)
+##
+## Dependencies:      World Justice Project
+##
+## Creation date:     Abril 24, 2024
+##
+## This version:      Abril 24, 2024
+##
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##
+## Outline:                                                                                                 ----
+##
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##
+## 1. Proceso justo en el tiempo                                              ----
+##
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+data_subset.df <- master_data.df %>%
+  filter(Anio_arresto > 2010)  %>%
+  mutate(
+    proceso_justo = 
+      case_when(
+        as.numeric(P5_26A) == 1 ~ 1,
+        as.numeric(P5_26A) == 0 ~ 0,
+        T ~ NA_real_
+      )) %>%
+  group_by(Anio_arresto) %>%
+  summarise(
+    value2plot = mean(proceso_justo, na.rm = T)
+  ) %>%
+  mutate(value2plot = value2plot*100,
+         label = paste0(format(round(value2plot, 0),
+                               nsmall = 0),
+                        "%"),
+         category = "proceso_justo",
+         year = as.numeric(Anio_arresto))
+
+# Pulling minimum and maximum available year
+minyear <- 2011
+maxyear <- 2021
+
+
+# Creating a vector for yearly axis
+x.axis.values <- seq(minyear, maxyear, by = 2)
+sec.ticks     <- seq(minyear, maxyear, by = 1)
+x.axis.labels <- paste0("'", str_sub(x.axis.values, start = -2))
+
+
+# Defining colors4plot
+colors4plot <- mainCOLOR
+names(colors4plot) <- "proceso_justo"
+
+# Saving data points
+data2plot <- data_subset.df %>% ungroup()
+
+# Applying plotting function
+chart <- LAC_lineChart(data           = data2plot,
+                       target_var     = "value2plot",
+                       grouping_var   = "year",
+                       ngroups        = 1, 
+                       labels_var     = "label",
+                       colors_var     = "category",
+                       colors         = colors4plot,
+                       repel          = F,
+                       custom.axis    = T,
+                       x.breaks       = x.axis.values,
+                       x.labels       = x.axis.labels,
+                       sec.ticks      = sec.ticks)
+
+ggsave(plot = chart, 
+       filename = paste0(path2SP,
+                         "/National/Visualization",
+                         "/Output/Debido proceso/Proceso justo/figure1.svg"),
+       width = 189.7883,
+       height = 68.88612,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
+
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##
+## 2. indicadores                                                          ----
+##
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+data_subset.df <- master_data.df %>%
+  filter(sentenciado == 1) %>%
+  mutate(
+    proceso_justo = 
+      case_when(
+        as.numeric(P5_26A) == 1 ~ 1,
+        as.numeric(P5_26A) == 0 ~ 0,
+        T ~ NA_real_
+      )
+  ) 
+
+data2table <- data_subset.df %>%
+  group_by(proceso_justo) %>%
+  summarise(
+    `Indice 13 criterios mínimos` = mean(indicator_general, na.rm = T),
+    `Indice protección de derechos humanos` = mean(indicator_GDH, na.rm = T),
+    `Indice uso apropiado de la fuerza` = mean(indicator_UAA, na.rm = T),
+    `Indice proceso justo` = mean(indicator_PJ, na.rm = T)
+    ) %>% 
+  drop_na() %>%
+  mutate(
+    proceso_justo = 
+      case_when(
+        proceso_justo == 1 ~ "Proceso justo",
+        proceso_justo == 0 ~ "Proceso injusto"
+      )
+  ) %>%
+  pivot_longer(cols = !proceso_justo, names_to = "category", values_to = "value2plot") %>%
+  rbind(data.frame(category = c(" ", " "),
+                   value2plot = c(NA_real_, NA_real_),
+                   proceso_justo = c("Proceso justo", "Proceso injusto"))
+  ) %>%
+  mutate(
+    order_value =
+      case_when(
+        category == "Indice 13 criterios mínimos" ~ 1,
+        category == "Indice uso apropiado de la fuerza" ~ 3,
+        category == "Indice protección de derechos humanos" ~ 5,
+        category == "Indice proceso justo" ~ 4,
+        category == " " ~ 2
+      )
+  )
+
+justo.df <- data2table %>%
+  filter(proceso_justo == "Proceso justo")
+
+injusto.df <- data2table %>%
+  filter(proceso_justo == "Proceso injusto")
+
+colors4plot <-  c("#2a2a9A","#ef4b4b")
+names(colors4plot) <- c("Proceso justo",
+                 "Proceso injusto")
+
+p <- ggplot(data2table,
+            aes(x = value2plot,
+                y = reorder(category, -order_value))) +
+  geom_segment(data = justo.df,
+               aes(x = value2plot, y = reorder(category, -order_value),
+                   yend = reorder(injusto.df$category, -order_value), xend = injusto.df$value2plot), #use the $ operator to fetch data from our "Females" tibble
+               color = "#aeb6bf",
+               size = 4.5, #Note that I sized the segment to fit the points
+               alpha = .5) +
+  geom_point(aes(x = value2plot, y = category, color = proceso_justo), size = 4, show.legend = F)  +
+  geom_text(aes(x = value2plot, y = category, 
+                label = paste0(round(value2plot*100,0),"%"), 
+                family = "Lato Full", fontface = "bold"), 
+            size= 3.514598, color = "black", vjust = -1) +
+  coord_cartesian(clip = "off") +
+  scale_color_manual(values = colors4plot) +
+  scale_x_continuous(breaks = seq(0, 1, by = 0.1),limits = c(0,1),
+                     labels = scales::percent_format(accuracy = 1), position = "top")+
+  WJP_theme() +
+  theme(legend.position="bottom",
+        panel.grid.major.x = element_line(colour = "#d1cfd1", 
+                                          size = 0.5),
+        panel.grid.major.y = element_blank(),
+        panel.background = element_blank(),
+        panel.grid.minor = element_blank(),
+        legend.text = element_text(family = "Lato Bold"),
+        axis.title.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        axis.title.x=element_blank(),
+        axis.text.y=element_text(family = "Lato Medium",
+                                 size = 3.514598*.pt,
+                                 color = "Black", hjust = 0))
+
+ggsave(plot = p, 
+       filename = paste0(path2SP,
+                         "/National/Visualization",
+                         "/Output/Debido proceso/Proceso justo/figure2.svg"),
+       width = 189.7883,
+       height = 110,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##
+## 2. Procedimiento                                                          ----
+##
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+data_subset.df <- master_data.df %>%
+  filter(sentenciado == 1) %>%
+  mutate(
+    proceso_justo = 
+      case_when(
+        as.numeric(P5_26A) == 1 ~ 1,
+        as.numeric(P5_26A) == 0 ~ 0,
+        T ~ NA_real_
+      ),
+    procedimiento =
+      case_when(
+        as.numeric(P5_6) == 1 ~ "juicio",
+        as.numeric(P5_6) == 2 ~ "procedimento_abreviado",
+        T ~ NA_character_
+      )
+  ) 
+    

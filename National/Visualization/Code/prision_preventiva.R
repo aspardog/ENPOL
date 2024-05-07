@@ -1,6 +1,6 @@
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
-## Script:            ENPOL - Detenciones
+## Script:            ENPOL - PP
 ##
 ## Author(s):         Santiago Pardo   (spardo@worldjusticeproject.org)
 ##                    Cristina Alvarez (calvarez@worldjusticeproject.org)
