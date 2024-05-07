@@ -295,3 +295,15 @@ count_frequency.fn <- function(column) {
   return(frequency_df)
 }
 
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##
+## 9.  Creating a to_percentage function                                                                    ----
+##
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+to_percentage.fn <- function(value){
+  perc <- paste0(format(round(value, 0),
+                        nsmall = 0),
+                 "%")
+  return(perc)
+}

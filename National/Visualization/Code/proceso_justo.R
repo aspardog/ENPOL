@@ -203,9 +203,99 @@ data_subset.df <- master_data.df %>%
       ),
     procedimiento =
       case_when(
-        as.numeric(P5_6) == 1 ~ "juicio",
-        as.numeric(P5_6) == 2 ~ "procedimento_abreviado",
+        as.numeric(P5_6) == 1 ~ "Juicio",
+        as.numeric(P5_6) == 2 ~ "Procedimiento abreviado",
         T ~ NA_character_
       )
-  ) 
-    
+  ) %>%
+  group_by(procedimiento) %>%
+  summarise(
+    value2plot = mean(proceso_justo, na.rm = T)
+  ) %>%
+  drop_na()
+  
+data2plot <- data_subset.df %>%
+  mutate(
+    value2plot = value2plot*100,
+    labels = procedimiento,
+    figure = paste0(round(value2plot,0), "%"),
+    order_var = case_when(
+      labels == "Juicio" ~ 2,
+      labels =="Procedimiento abreviado" ~ 1,
+      T ~ NA_real_)
+  )
+
+colors4plot <-  c("#2a2a9A","#ef4b4b")
+plot <- barsChart.fn(data.df                    = data2plot,
+                     groupVar                   = F,   
+                     categories_grouping_var    = labels,
+                     colors4plot                = colors4plot, 
+                     order                      = T,
+                     orientation                = "horizontal")    
+
+ggsave(plot = plot, 
+       filename = paste0(path2SP,
+                         "/National/Visualization",
+                         "/Output/Debido proceso/Proceso justo/figure3.svg"),
+       width = 189.7883,
+       height = 85,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
+
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##
+## 3. Culpabilidad                                                          ----
+##
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+data_subset.df <- master_data.df %>%
+  filter(sentenciado == 1) %>%
+  mutate(
+    proceso_justo = 
+      case_when(
+        as.numeric(P5_26A) == 1 ~ 1,
+        as.numeric(P5_26A) == 0 ~ 0,
+        T ~ NA_real_
+      ),
+    culpabilidad = 
+      case_when(
+        as.numeric(P3_1) == 1 | as.numeric(P3_1) == 2 ~ "Autoreconocimiento como culpable",
+        as.numeric(P3_1) == 3 | as.numeric(P3_1) == 4 ~ "Autoreconocimiento como inocente",
+        T ~ NA_character_
+      )
+  ) %>%
+  group_by(culpabilidad) %>%
+  summarise(
+    value2plot = mean(proceso_justo, na.rm = T)
+  ) %>%
+  drop_na()
+  
+data2plot <- data_subset.df %>%
+  mutate(
+    value2plot = value2plot*100,
+    labels = culpabilidad,
+    figure = paste0(round(value2plot,0), "%"),
+    order_var = case_when(
+      labels == "Autoreconocimiento como culpable" ~ 2,
+      labels == "Autoreconocimiento como inocente" ~ 1,
+      T ~ NA_real_)
+  )
+
+colors4plot <-  c("#2a2a9A","#ef4b4b")
+plot <- barsChart.fn(data.df                    = data2plot,
+                     groupVar                   = F,   
+                     categories_grouping_var    = labels,
+                     colors4plot                = colors4plot, 
+                     order                      = T,
+                     orientation                = "horizontal")    
+
+ggsave(plot = plot, 
+       filename = paste0(path2SP,
+                         "/National/Visualization",
+                         "/Output/Debido proceso/Proceso justo/figure4.svg"),
+       width = 189.7883,
+       height = 85,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
