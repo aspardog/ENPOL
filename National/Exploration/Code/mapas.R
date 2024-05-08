@@ -5,7 +5,7 @@ mapa <- st_read(paste0(path2SP,"/National/Exploration/Input/shp/México_Estados.
     )
   )
 
-Estados <- Main_database_2008 %>%
+Estados <- master_data.df %>%
   group_by(Estado_arresto) %>%
   summarise(indice = mean(indicator_general, na.rm = T)) %>%
   drop_na() %>%

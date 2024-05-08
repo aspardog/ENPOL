@@ -222,9 +222,15 @@ p <- ggplot(mexico_map, aes(label = ESTADO)) +
 
 
 viz <- wrap_elements(tpanel) + p +
-  plot_layout(ncol = 2, nrow = 1, widths = c(1, 2), heights = c(1,2))
+  plot_layout(ncol = 3, nrow = 1, widths = c(1,2), heights = c(1,2))
 
-ggsave(plot = viz, filename = paste0(path2SP,"/National/Exploration/Output/maps/","Mapa_tt_cat.svg"), width = 15, height = 10)
+ggsave(plot = viz, 
+       filename = paste0(path2SP,"/National/Exploration/Output/maps/","Mapa_tt_cat.svg"),
+       width = 200, 
+       height = 255, 
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
 
 
 #######
