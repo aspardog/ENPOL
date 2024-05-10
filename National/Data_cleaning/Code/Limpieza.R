@@ -4848,7 +4848,23 @@ Main_database %<>%
                                  Ingreso == "9 mil a 11 mil" ~ 0,
                                  Ingreso == "> 11 mil" ~ 0,
                                  T ~ NA
-                                 )
+                                 ),
+    vulnerabilidad_economica = case_when(P2_14_1 == "1" |
+                                           P2_14_3 == "1" |
+                                           P2_14_6 == "1" ~ 0,
+                                           P2_14_1 == "2" &
+                                           P2_14_3 == "2" &
+                                           P2_14_6 == "2" ~ 1,
+                                           T ~ NA_real_),
+    discapacidad = case_when(P1_31_1 == "1"|
+                             P1_31_2 == "1"|
+                             P1_31_3 == "1"|
+                             P1_31_4 == "1" ~ 1,
+                             P1_31_1 == "2" &
+                             P1_31_2 == "2" &
+                             P1_31_3 == "2" &
+                             P1_31_4 == "2" ~ 0,
+                             T ~ NA_real_)
     
   ) %>% 
   
