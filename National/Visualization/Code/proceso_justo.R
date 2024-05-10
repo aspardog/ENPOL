@@ -1,6 +1,6 @@
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
-## Script:            ENPOL - PP
+## Script:            ENPOL - Percepcion proceso justo
 ##
 ## Author(s):         Santiago Pardo   (spardo@worldjusticeproject.org)
 ##                    Cristina Alvarez (calvarez@worldjusticeproject.org)
@@ -26,21 +26,33 @@
 data_subset.df <- master_data.df %>%
   filter(Anio_arresto > 2010)  %>%
   mutate(
-    proceso_justo = 
+    guardar_silencio_detencion = 
       case_when(
-        as.numeric(P5_26A) == 1 ~ 1,
-        as.numeric(P5_26A) == 0 ~ 0,
-        T ~ NA_real_
-      )) %>%
+        P3_14_5 == 1 ~ 1,
+        P3_14_5 == 0 ~ 0
+      ),
+    guardar_silencio_mp = 
+      case_when(
+        P4_1_04 == 1 ~ 1,
+        P4_1_04 == 2 ~ 0
+      ),
+    guardar_silencio_juez = 
+      case_when(
+        P5_2_4 == 1 ~ 1,
+        P5_2_4 == 2 ~ 0
+      )
+  ) %>%
   group_by(Anio_arresto) %>%
   summarise(
-    value2plot = mean(proceso_justo, na.rm = T)
+    detencion = mean(guardar_silencio_detencion, na.rm = T),
+    mp = mean(guardar_silencio_mp, na.rm = T),
+    juez = mean(guardar_silencio_juez, na.rm = T)
   ) %>%
+  pivot_longer(cols = c(detencion, mp, juez), names_to = "category", values_to = "value2plot") %>%
   mutate(value2plot = value2plot*100,
          label = paste0(format(round(value2plot, 0),
                                nsmall = 0),
                         "%"),
-         category = "proceso_justo",
          year = as.numeric(Anio_arresto))
 
 # Pulling minimum and maximum available year
@@ -55,8 +67,9 @@ x.axis.labels <- paste0("'", str_sub(x.axis.values, start = -2))
 
 
 # Defining colors4plot
-colors4plot <- mainCOLOR
-names(colors4plot) <- "proceso_justo"
+colors4plot <- threeColors
+
+names(colors4plot) <- c("detencion", "mp", "juez")
 
 # Saving data points
 data2plot <- data_subset.df %>% ungroup()
@@ -65,11 +78,11 @@ data2plot <- data_subset.df %>% ungroup()
 chart <- LAC_lineChart(data           = data2plot,
                        target_var     = "value2plot",
                        grouping_var   = "year",
-                       ngroups        = 1, 
+                       ngroups        = data_subset.df$category, 
                        labels_var     = "label",
                        colors_var     = "category",
                        colors         = colors4plot,
-                       repel          = F,
+                       repel          = T,
                        custom.axis    = T,
                        x.breaks       = x.axis.values,
                        x.labels       = x.axis.labels,
@@ -80,222 +93,485 @@ ggsave(plot = chart,
                          "/National/Visualization",
                          "/Output/Debido proceso/Proceso justo/figure1.svg"),
        width = 189.7883,
-       height = 68.88612,
+       height = 145,
        units  = "mm",
        dpi    = 72,
        device = "svg")
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
-## 2. indicadores                                                          ----
+## 2. Presion para autoincriminarse                                              ----
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+
 data_subset.df <- master_data.df %>%
-  filter(sentenciado == 1) %>%
+  filter(Anio_arresto > 2010)  %>%
   mutate(
-    proceso_justo = 
+    presion_mp = 
       case_when(
-        as.numeric(P5_26A) == 1 ~ 1,
-        as.numeric(P5_26A) == 0 ~ 0,
-        T ~ NA_real_
+        as.numeric(P4_7) == 4 | as.numeric(P4_7) == 5 ~ 1,
+        as.numeric(P4_7) < 11 &  (as.numeric(P4_7) != 4 | as.numeric(P4_7) != 5) ~ 0
+      ),
+    presion_juez = 
+      case_when(
+        P5_7 == 1 ~ 1,
+        P5_7 == 2 ~ 0
       )
-  ) 
-
-data2table <- data_subset.df %>%
-  group_by(proceso_justo) %>%
+  ) %>%
+  group_by(Anio_arresto) %>%
   summarise(
-    `Indice 13 criterios mínimos` = mean(indicator_general, na.rm = T),
-    `Indice protección de derechos humanos` = mean(indicator_GDH, na.rm = T),
-    `Indice uso apropiado de la fuerza` = mean(indicator_UAA, na.rm = T),
-    `Indice proceso justo` = mean(indicator_PJ, na.rm = T)
-    ) %>% 
-  drop_na() %>%
-  mutate(
-    proceso_justo = 
-      case_when(
-        proceso_justo == 1 ~ "Proceso justo",
-        proceso_justo == 0 ~ "Proceso injusto"
-      )
+    mp = mean(presion_mp, na.rm = T),
+    juez = mean(presion_juez, na.rm = T)
   ) %>%
-  pivot_longer(cols = !proceso_justo, names_to = "category", values_to = "value2plot") %>%
-  rbind(data.frame(category = c(" ", " "),
-                   value2plot = c(NA_real_, NA_real_),
-                   proceso_justo = c("Proceso justo", "Proceso injusto"))
-  ) %>%
-  mutate(
-    order_value =
-      case_when(
-        category == "Indice 13 criterios mínimos" ~ 1,
-        category == "Indice uso apropiado de la fuerza" ~ 3,
-        category == "Indice protección de derechos humanos" ~ 5,
-        category == "Indice proceso justo" ~ 4,
-        category == " " ~ 2
-      )
-  )
+  pivot_longer(cols = c(mp, juez), names_to = "category", values_to = "value2plot") %>%
+  mutate(value2plot = value2plot*100,
+         label = paste0(format(round(value2plot, 0),
+                               nsmall = 0),
+                        "%"),
+         year = as.numeric(Anio_arresto))
 
-justo.df <- data2table %>%
-  filter(proceso_justo == "Proceso justo")
+# Pulling minimum and maximum available year
+minyear <- 2011
+maxyear <- 2021
 
-injusto.df <- data2table %>%
-  filter(proceso_justo == "Proceso injusto")
 
-colors4plot <-  c("#2a2a9A","#ef4b4b")
-names(colors4plot) <- c("Proceso justo",
-                 "Proceso injusto")
+# Creating a vector for yearly axis
+x.axis.values <- seq(minyear, maxyear, by = 2)
+sec.ticks     <- seq(minyear, maxyear, by = 1)
+x.axis.labels <- paste0("'", str_sub(x.axis.values, start = -2))
 
-p <- ggplot(data2table,
-            aes(x = value2plot,
-                y = reorder(category, -order_value))) +
-  geom_segment(data = justo.df,
-               aes(x = value2plot, y = reorder(category, -order_value),
-                   yend = reorder(injusto.df$category, -order_value), xend = injusto.df$value2plot), #use the $ operator to fetch data from our "Females" tibble
-               color = "#aeb6bf",
-               size = 4.5, #Note that I sized the segment to fit the points
-               alpha = .5) +
-  geom_point(aes(x = value2plot, y = category, color = proceso_justo), size = 4, show.legend = F)  +
-  geom_text(aes(x = value2plot, y = category, 
-                label = paste0(round(value2plot*100,0),"%"), 
-                family = "Lato Full", fontface = "bold"), 
-            size= 3.514598, color = "black", vjust = -1) +
-  coord_cartesian(clip = "off") +
-  scale_color_manual(values = colors4plot) +
-  scale_x_continuous(breaks = seq(0, 1, by = 0.1),limits = c(0,1),
-                     labels = scales::percent_format(accuracy = 1), position = "top")+
-  WJP_theme() +
-  theme(legend.position="bottom",
-        panel.grid.major.x = element_line(colour = "#d1cfd1", 
-                                          size = 0.5),
-        panel.grid.major.y = element_blank(),
-        panel.background = element_blank(),
-        panel.grid.minor = element_blank(),
-        legend.text = element_text(family = "Lato Bold"),
-        axis.title.y=element_blank(),
-        axis.ticks.y=element_blank(),
-        axis.title.x=element_blank(),
-        axis.text.y=element_text(family = "Lato Medium",
-                                 size = 3.514598*.pt,
-                                 color = "Black", hjust = 0))
 
-ggsave(plot = p, 
+# Defining colors4plot
+colors4plot <- c("#a90099","#43a9a7")
+
+names(colors4plot) <- c("mp", "juez")
+
+# Saving data points
+data2plot <- data_subset.df %>% ungroup()
+
+# Applying plotting function
+chart <- LAC_lineChart(data           = data2plot,
+                       target_var     = "value2plot",
+                       grouping_var   = "year",
+                       ngroups        = data_subset.df$category, 
+                       labels_var     = "label",
+                       colors_var     = "category",
+                       colors         = colors4plot,
+                       repel          = T,
+                       custom.axis    = T,
+                       x.breaks       = x.axis.values,
+                       x.labels       = x.axis.labels,
+                       sec.ticks      = sec.ticks)
+
+ggsave(plot = chart, 
        filename = paste0(path2SP,
                          "/National/Visualization",
                          "/Output/Debido proceso/Proceso justo/figure2.svg"),
        width = 189.7883,
-       height = 110,
+       height = 145,
        units  = "mm",
        dpi    = 72,
        device = "svg")
+
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
-## 2. Procedimiento                                                          ----
+## 3. Información detención                                             ----
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 data_subset.df <- master_data.df %>%
-  filter(sentenciado == 1) %>%
+  filter(Anio_arresto > 2010)  %>%
   mutate(
-    proceso_justo = 
+    explicacion_detencion = 
       case_when(
-        as.numeric(P5_26A) == 1 ~ 1,
-        as.numeric(P5_26A) == 0 ~ 0,
-        T ~ NA_real_
+        P3_14_4 == 1 ~ 1,
+        P3_14_4 == 0 ~ 0
       ),
-    procedimiento =
+    explicacion_mp = 
       case_when(
-        as.numeric(P5_6) == 1 ~ "Juicio",
-        as.numeric(P5_6) == 2 ~ "Procedimiento abreviado",
-        T ~ NA_character_
+        P4_1_03 == 1 ~ 1,
+        P4_1_03 == 2 ~ 0
+      ),
+    explicacion_juez = 
+      case_when(
+        P5_2_1 == 1 ~ 1,
+        P5_2_1 == 2 ~ 0
       )
   ) %>%
-  group_by(procedimiento) %>%
+  group_by(Anio_arresto) %>%
   summarise(
-    value2plot = mean(proceso_justo, na.rm = T)
+    detencion = mean(explicacion_detencion, na.rm = T),
+    mp = mean(explicacion_mp, na.rm = T),
+    juez = mean(explicacion_juez, na.rm = T)
   ) %>%
-  drop_na()
-  
-data2plot <- data_subset.df %>%
-  mutate(
-    value2plot = value2plot*100,
-    labels = procedimiento,
-    figure = paste0(round(value2plot,0), "%"),
-    order_var = case_when(
-      labels == "Juicio" ~ 2,
-      labels =="Procedimiento abreviado" ~ 1,
-      T ~ NA_real_)
-  )
+  pivot_longer(cols = c(detencion, mp, juez), names_to = "category", values_to = "value2plot") %>%
+  mutate(value2plot = value2plot*100,
+         label = paste0(format(round(value2plot, 0),
+                               nsmall = 0),
+                        "%"),
+         year = as.numeric(Anio_arresto))
 
-colors4plot <-  c("#2a2a9A","#ef4b4b")
-plot <- barsChart.fn(data.df                    = data2plot,
-                     groupVar                   = F,   
-                     categories_grouping_var    = labels,
-                     colors4plot                = colors4plot, 
-                     order                      = T,
-                     orientation                = "horizontal")    
+# Pulling minimum and maximum available year
+minyear <- 2011
+maxyear <- 2021
 
-ggsave(plot = plot, 
+
+# Creating a vector for yearly axis
+x.axis.values <- seq(minyear, maxyear, by = 2)
+sec.ticks     <- seq(minyear, maxyear, by = 1)
+x.axis.labels <- paste0("'", str_sub(x.axis.values, start = -2))
+
+
+# Defining colors4plot
+colors4plot <- threeColors
+
+names(colors4plot) <- c("detencion", "mp", "juez")
+
+# Saving data points
+data2plot <- data_subset.df %>% ungroup()
+
+# Applying plotting function
+chart <- LAC_lineChart(data           = data2plot,
+                       target_var     = "value2plot",
+                       grouping_var   = "year",
+                       ngroups        = data_subset.df$category, 
+                       labels_var     = "label",
+                       colors_var     = "category",
+                       colors         = colors4plot,
+                       repel          = T,
+                       custom.axis    = T,
+                       x.breaks       = x.axis.values,
+                       x.labels       = x.axis.labels,
+                       sec.ticks      = sec.ticks)
+
+ggsave(plot = chart, 
        filename = paste0(path2SP,
                          "/National/Visualization",
                          "/Output/Debido proceso/Proceso justo/figure3.svg"),
        width = 189.7883,
-       height = 85,
+       height = 145,
        units  = "mm",
        dpi    = 72,
        device = "svg")
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
-## 3. Culpabilidad                                                          ----
+## 4. Claridad                                           ----
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 data_subset.df <- master_data.df %>%
-  filter(sentenciado == 1) %>%
+  filter(Anio_arresto > 2010)  %>%
   mutate(
-    proceso_justo = 
+    claridad_mp = 
       case_when(
-        as.numeric(P5_26A) == 1 ~ 1,
-        as.numeric(P5_26A) == 0 ~ 0,
-        T ~ NA_real_
+        P5_17_3 == 1 | P5_17_3 == 2~ 1,
+        P5_17_3 == 3 | P5_17_3 == 4 ~ 0
       ),
-    culpabilidad = 
+    claridad_juez = 
       case_when(
-        as.numeric(P3_1) == 1 | as.numeric(P3_1) == 2 ~ "Autoreconocimiento como culpable",
-        as.numeric(P3_1) == 3 | as.numeric(P3_1) == 4 ~ "Autoreconocimiento como inocente",
-        T ~ NA_character_
+        P5_17_2 == 1 | P5_17_2 == 2~ 1,
+        P5_17_2 == 3 | P5_17_2 == 4 ~ 0
       )
   ) %>%
-  group_by(culpabilidad) %>%
+  group_by(Anio_arresto) %>%
   summarise(
-    value2plot = mean(proceso_justo, na.rm = T)
+    mp = mean(claridad_mp, na.rm = T),
+    juez = mean(claridad_juez, na.rm = T)
   ) %>%
-  drop_na()
-  
-data2plot <- data_subset.df %>%
-  mutate(
-    value2plot = value2plot*100,
-    labels = culpabilidad,
-    figure = paste0(round(value2plot,0), "%"),
-    order_var = case_when(
-      labels == "Autoreconocimiento como culpable" ~ 2,
-      labels == "Autoreconocimiento como inocente" ~ 1,
-      T ~ NA_real_)
-  )
+  pivot_longer(cols = c(mp, juez), names_to = "category", values_to = "value2plot") %>%
+  mutate(value2plot = value2plot*100,
+         label = paste0(format(round(value2plot, 0),
+                               nsmall = 0),
+                        "%"),
+         year = as.numeric(Anio_arresto))
 
-colors4plot <-  c("#2a2a9A","#ef4b4b")
-plot <- barsChart.fn(data.df                    = data2plot,
-                     groupVar                   = F,   
-                     categories_grouping_var    = labels,
-                     colors4plot                = colors4plot, 
-                     order                      = T,
-                     orientation                = "horizontal")    
+# Pulling minimum and maximum available year
+minyear <- 2011
+maxyear <- 2021
 
-ggsave(plot = plot, 
+
+# Creating a vector for yearly axis
+x.axis.values <- seq(minyear, maxyear, by = 2)
+sec.ticks     <- seq(minyear, maxyear, by = 1)
+x.axis.labels <- paste0("'", str_sub(x.axis.values, start = -2))
+
+
+# Defining colors4plot
+colors4plot <- c("#a90099","#43a9a7")
+
+names(colors4plot) <- c("mp", "juez")
+
+# Saving data points
+data2plot <- data_subset.df %>% ungroup()
+
+# Applying plotting function
+chart <- LAC_lineChart(data           = data2plot,
+                       target_var     = "value2plot",
+                       grouping_var   = "year",
+                       ngroups        = data_subset.df$category, 
+                       labels_var     = "label",
+                       colors_var     = "category",
+                       colors         = colors4plot,
+                       repel          = T,
+                       custom.axis    = T,
+                       x.breaks       = x.axis.values,
+                       x.labels       = x.axis.labels,
+                       sec.ticks      = sec.ticks)
+
+ggsave(plot = chart, 
        filename = paste0(path2SP,
                          "/National/Visualization",
                          "/Output/Debido proceso/Proceso justo/figure4.svg"),
        width = 189.7883,
-       height = 85,
+       height = 145,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
+
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##
+## 5. Defensa oportuna                                           ----
+##
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##
+## 6. Variación tipo de defensa                                          ----
+##
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##
+## 7. Tribunal transparente                                          ----
+##
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+data_subset.df <- master_data.df %>%
+  filter(Anio_arresto > 2010)  %>%
+  mutate(
+    video = 
+      case_when(
+        P5_19_3 == 1 ~ 1,
+        P5_19_3 == 2 ~ 0
+      ),
+    publico = 
+      case_when(
+        P5_16_5 == 1 | P5_16_5 == 2 | P5_16_5 == 3 ~ 1,
+        P5_16_5 == 4 ~ 0
+      )
+  ) %>%
+  group_by(Anio_arresto) %>%
+  summarise(
+    video = mean(video, na.rm = T),
+    publico = mean(publico, na.rm = T)
+  ) %>%
+  pivot_longer(cols = c(video, publico), names_to = "category", values_to = "value2plot") %>%
+  mutate(value2plot = value2plot*100,
+         label = paste0(format(round(value2plot, 0),
+                               nsmall = 0),
+                        "%"),
+         year = as.numeric(Anio_arresto))
+
+# Pulling minimum and maximum available year
+minyear <- 2011
+maxyear <- 2021
+
+
+# Creating a vector for yearly axis
+x.axis.values <- seq(minyear, maxyear, by = 2)
+sec.ticks     <- seq(minyear, maxyear, by = 1)
+x.axis.labels <- paste0("'", str_sub(x.axis.values, start = -2))
+
+
+# Defining colors4plot
+colors4plot <- twoCOLORS
+
+names(colors4plot) <- c("video", "publico")
+
+# Saving data points
+data2plot <- data_subset.df %>% ungroup()
+
+# Applying plotting function
+chart <- LAC_lineChart(data           = data2plot,
+                       target_var     = "value2plot",
+                       grouping_var   = "year",
+                       ngroups        = data_subset.df$category, 
+                       labels_var     = "label",
+                       colors_var     = "category",
+                       colors         = colors4plot,
+                       repel          = T,
+                       custom.axis    = T,
+                       x.breaks       = x.axis.values,
+                       x.labels       = x.axis.labels,
+                       sec.ticks      = sec.ticks)
+
+ggsave(plot = chart, 
+       filename = paste0(path2SP,
+                         "/National/Visualization",
+                         "/Output/Debido proceso/Proceso justo/figure7.svg"),
+       width = 189.7883,
+       height = 100,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
+
+
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##
+## 8. Tribunal imparcial                                          ----
+##
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+data_subset.df <- master_data.df %>%
+  filter(Anio_arresto > 2010)  %>%
+  mutate(
+    culpable_antes = 
+      case_when(
+        P5_25 == 1 ~ 1,
+        P5_25 == 2 ~ 0
+      ),
+    juez_diferente = 
+      case_when(
+        P5_14 == 1 ~ 1,
+        P5_14 == 2 ~ 0
+      )
+  ) %>%
+  group_by(Anio_arresto) %>%
+  summarise(
+    culpable = mean(culpable_antes, na.rm = T),
+    juez = mean(juez_diferente, na.rm = T)
+  ) %>%
+  pivot_longer(cols = c(culpable, juez), names_to = "category", values_to = "value2plot") %>%
+  mutate(value2plot = value2plot*100,
+         label = paste0(format(round(value2plot, 0),
+                               nsmall = 0),
+                        "%"),
+         year = as.numeric(Anio_arresto))
+
+# Pulling minimum and maximum available year
+minyear <- 2011
+maxyear <- 2021
+
+
+# Creating a vector for yearly axis
+x.axis.values <- seq(minyear, maxyear, by = 2)
+sec.ticks     <- seq(minyear, maxyear, by = 1)
+x.axis.labels <- paste0("'", str_sub(x.axis.values, start = -2))
+
+
+# Defining colors4plot
+colors4plot <- twoCOLORS
+
+names(colors4plot) <- c("culpable", "juez")
+
+# Saving data points
+data2plot <- data_subset.df %>% ungroup()
+
+# Applying plotting function
+chart <- LAC_lineChart(data           = data2plot,
+                       target_var     = "value2plot",
+                       grouping_var   = "year",
+                       ngroups        = data_subset.df$category, 
+                       labels_var     = "label",
+                       colors_var     = "category",
+                       colors         = colors4plot,
+                       repel          = T,
+                       custom.axis    = T,
+                       x.breaks       = x.axis.values,
+                       x.labels       = x.axis.labels,
+                       sec.ticks      = sec.ticks)
+
+ggsave(plot = chart, 
+       filename = paste0(path2SP,
+                         "/National/Visualization",
+                         "/Output/Debido proceso/Proceso justo/figure8.svg"),
+       width = 189.7883,
+       height = 100,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
+
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##
+## 9. Tribunal presente y responsivo                                         ----
+##
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+data_subset.df <- master_data.df %>%
+  filter(Anio_arresto > 2010)  %>%
+  mutate(
+    juez_presente = 
+      case_when(
+        P5_16_2 == 1  ~ 1,
+        P5_16_2 == 2 | P5_16_2 == 3 | P5_16_2 == 4 ~ 0
+      ),
+    juez_control = 
+      case_when(
+        P5_18 == 2 ~ 1,
+        P5_18 == 1 | P5_18 == 3 | P5_18 == 4 | P5_18 == 5 ~ 0
+      ),
+    juez_escucha =
+      case_when(
+        P5_26 == 1 | P5_26 == 2 ~ 1,
+        P5_26 == 3 | P5_26 == 4 ~ 0
+      )
+  ) %>%
+  group_by(Anio_arresto) %>%
+  summarise(
+    juez_presente = mean(juez_presente, na.rm = T),
+    juez_control = mean(juez_control, na.rm = T),
+    juez_escucha = mean(juez_escucha, na.rm = T)
+  ) %>%
+  pivot_longer(cols = c(juez_presente, juez_control, juez_escucha), names_to = "category", values_to = "value2plot") %>%
+  mutate(value2plot = value2plot*100,
+         label = paste0(format(round(value2plot, 0),
+                               nsmall = 0),
+                        "%"),
+         year = as.numeric(Anio_arresto))
+
+# Pulling minimum and maximum available year
+minyear <- 2011
+maxyear <- 2021
+
+
+# Creating a vector for yearly axis
+x.axis.values <- seq(minyear, maxyear, by = 2)
+sec.ticks     <- seq(minyear, maxyear, by = 1)
+x.axis.labels <- paste0("'", str_sub(x.axis.values, start = -2))
+
+
+# Defining colors4plot
+colors4plot <- threeColors
+
+names(colors4plot) <- c("juez_presente", "juez_control", "juez_escucha")
+
+# Saving data points
+data2plot <- data_subset.df %>% ungroup()
+
+# Applying plotting function
+chart <- LAC_lineChart(data           = data2plot,
+                       target_var     = "value2plot",
+                       grouping_var   = "year",
+                       ngroups        = data_subset.df$category, 
+                       labels_var     = "label",
+                       colors_var     = "category",
+                       colors         = colors4plot,
+                       repel          = T,
+                       custom.axis    = T,
+                       x.breaks       = x.axis.values,
+                       x.labels       = x.axis.labels,
+                       sec.ticks      = sec.ticks)
+
+ggsave(plot = chart, 
+       filename = paste0(path2SP,
+                         "/National/Visualization",
+                         "/Output/Debido proceso/Proceso justo/figure9.svg"),
+       width = 189.7883,
+       height = 100,
        units  = "mm",
        dpi    = 72,
        device = "svg")
