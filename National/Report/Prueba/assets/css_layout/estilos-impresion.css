@@ -23,6 +23,7 @@
 	}
 	body{
 		font-size:16px;
+		text-align: justify;
 	}
   .no-print, .no-print *
   {
