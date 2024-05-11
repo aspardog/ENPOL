@@ -335,6 +335,70 @@ ggsave(plot = chart,
 ## 5. Defensa oportuna                                           ----
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+data_subset.df <- master_data.df %>%  
+  filter(Anio_arresto >= 2008,
+         NSJP == 1) %>% 
+  mutate( P4_1_05 = as.numeric(P4_1_05), 
+          P5_1 = as.numeric(P5_1), 
+          P5_4_A = as.numeric(P5_4_A),
+          momento = case_when(P4_1_05 == 1 ~ "Defensa en Ministerio Público",
+                              P5_1    == 1 ~ "Defensa con Juez",
+                              P4_1_05 == 2 ~ "Defensa en Ministerio Público",
+                              P5_1    == 2 ~ "Defensa con Juez",
+                                      T~ NA_character_),
+          defensa = case_when(P4_1_05 == 1 ~ "Sí",
+                              P5_1    == 1 ~ "Sí",
+                              P4_1_05 == 2 ~ "No",
+                              P5_1    == 2 ~ "No",
+                              T~ NA_character_))
+
+
+
+
+data2plot <- data_subset.df %>%
+  drop_na(momento, defensa, P5_4_A) %>%
+  group_by(momento, defensa) %>% 
+  summarise(mean_value = mean(P5_4_A, na.rm = TRUE)) %>% 
+  mutate(category = momento,
+         group_var = case_when(defensa == "Sí" ~ "Sí",
+                               defensa == "No" ~ "No",
+                               T ~ NA_character_),
+         value2plot = mean_value,
+         labels = case_when(category == "Defensa en Ministerio Público"      ~ "Defensa en Ministerio Público",
+                            category == "Defensa con Juez" ~ "Defensa con Juez",
+                            T~NA_character_),
+         figure = round(mean_value, 0),
+         order_var = case_when(category ==  "Defensa en Ministerio Público" ~ 2,
+                               category == "Defensa con Juez"               ~ 1,
+                               T~NA_real_),
+         order_value_bars = case_when(group_var == "Sí" ~ 1,
+                                      group_var == "No" ~ 2, 
+                                      T ~ NA_real_))
+
+colors4plot <- twoCOLORS
+
+names(colors4plot) <- c("Sí",
+                        "No")
+
+plot <- barsChartAxis.fn(
+  data.df                    = data2plot,
+  categories_grouping_var    = data2plot$group_var,
+  colors4plot                = colors4plot, 
+  nbars = 2
+)
+
+plot
+
+
+ggsave(plot = plot, 
+       filename = paste0(path2SP,
+                         "/National/Visualization",
+                         "/Output/Debido proceso/Proceso justo/figure6.svg"),
+       width = 189.7883,
+       height = 125,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -342,6 +406,69 @@ ggsave(plot = chart,
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+data_subset.df <- master_data.df %>%  
+  filter(Anio_arresto >= 2008,
+         NSJP == 1) %>% 
+  mutate( P4_1_05 = as.numeric(P4_1_05), 
+          P5_1 = as.numeric(P5_1), 
+          P5_4_A = as.numeric(P5_4_A),
+          defensa_momento = case_when(P4_1_05 == 1 & P5_1 == 1 ~ "Defensa en Ministerio Público y con Juez",
+                                      P4_1_05 == 2 & P5_1 == 2 ~ "Sin defensa en Ministerio Público ni con Juez",
+                                      P4_1_05 == 2 & P5_1 == 1 ~ "Defensa sólo con Juez",
+                                      P4_1_05 == 1 & P5_1 == 2 ~ "Defensa sólo en Ministerio Público",
+                                      T~ NA_character_))
+
+
+
+
+data2plot <- data_subset.df %>%
+  drop_na(defensa_momento, abogado_publico, P5_4_A) %>%
+  group_by(defensa_momento, abogado_publico) %>% 
+  summarise(mean_value = mean(P5_4_A, na.rm = TRUE)) %>% 
+  mutate(category = defensa_momento,
+         group_var = case_when(abogado_publico == "1" ~ "Abogado público",
+                               abogado_publico == "0" ~ "Abogado privado",
+                               T ~ NA_character_),
+         value2plot = mean_value,
+         labels = case_when(category == "Defensa en Ministerio Público y con Juez"      ~ "Defensa en Ministerio Público  \ny con Juez",
+                            category == "Sin defensa en Ministerio Público ni con Juez" ~ "Sin defensa en Ministerio Público \nni con Juez",
+                            category ==  "Defensa sólo con Juez"                        ~ "Defensa sólo con Juez",
+                            category == "Defensa sólo en Ministerio Público"            ~ "Defensa sólo en \nMinisterio Público",
+                            T~NA_character_),
+         figure = round(mean_value, 0),
+         order_var = case_when(category == "Defensa en Ministerio Público y con Juez"      ~ 3,
+                               category == "Sin defensa en Ministerio Público ni con Juez" ~ 4,
+                               category ==  "Defensa sólo con Juez"                        ~ 2,
+                               category == "Defensa sólo en Ministerio Público"            ~ 1,
+                               T~NA_real_),
+         order_value_bars = case_when(group_var == "Abogado público" ~ 1,
+                                      group_var == "Abogado privado" ~ 2, 
+                                      T ~ NA_real_))
+
+colors4plot <- twoCOLORS
+
+names(colors4plot) <- c("Abogado público",
+                        "Abogado privado")
+
+plot <- barsChartAxis.fn(
+  data.df                    = data2plot,
+  categories_grouping_var    = data2plot$group_var,
+  colors4plot                = colors4plot, 
+  nbars = 4
+)
+
+plot
+
+
+ggsave(plot = plot, 
+       filename = paste0(path2SP,
+                         "/National/Visualization",
+                         "/Output/Debido proceso/Proceso justo/figure6.svg"),
+       width = 189.7883,
+       height = 125,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
