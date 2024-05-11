@@ -16,56 +16,6 @@
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-# Tiempo de traslado: 30 minutos
-
-data2plot <- master_data.df %>%
-  mutate(
-    TT_30min = 
-      if_else(Tiempo_traslado ==  "Hasta 30 minutos", 1, 0)
-  ) 
-
-plot <- mapas_Estado.fn(mainData = data2plot,
-                        mainVar = "TT_30min")
-
-ggsave(plot = plot, filename = paste0(path2SP,"/National/Exploration/Output/maps/","Mapa_tt30min_cat.svg"), width = 15, height = 10)
-
-# Tiempo de traslado: 6 horas
-
-data2plot <- master_data.df %>%
-  mutate(
-    TT_6h = 
-      if_else(Tiempo_traslado ==  "Más de 6 horas hasta 24 horas", 1, 0)
-  ) 
-
-plot <- mapas_Estado.fn(mainData = data2plot,
-                        mainVar = "TT_6h")
-
-ggsave(plot = plot, filename = paste0(path2SP,"/National/Exploration/Output/maps/","Mapa_tt6h_cat.svg"), width = 15, height = 10)
-
-# Primer lugar de traslado: MP
-
-data2plot <- master_data.df %>%
-  mutate(
-    LT_MP = 
-      if_else(Primer_lugar_traslado ==  "Agencia del Ministerio Público", 1, 0)
-  ) 
-
-plot <- mapas_Estado.fn(mainData = data2plot,
-                        mainVar = "LT_MP")
-
-ggsave(plot = plot, filename = paste0(path2SP,"/National/Exploration/Output/maps/","Mapa_ltmp_cat.svg"), width = 15, height = 10)
-
-# Primer lugar de traslado: Policía
-
-data2plot <- master_data.df %>%
-  mutate(
-    LT_Policia = 
-      if_else(Primer_lugar_traslado ==  "Instalación de la policía", 1, 0)
-  ) 
-
-plot <- mapas_Estado.fn(mainData = data2plot,
-                        mainVar = "LT_Policia")
-ggsave(plot = plot, filename = paste0(path2SP,"/National/Exploration/Output/maps/","Mapa_ltpolicia_cat.svg"), width = 15, height = 10)
 
 # Otro tipo de mapa tiempo
 
@@ -222,15 +172,11 @@ p <- ggplot(mexico_map, aes(label = ESTADO)) +
 
 
 viz <- wrap_elements(tpanel) + p +
-  plot_layout(ncol = 3, nrow = 1, widths = c(1,2), heights = c(1,2))
+  plot_layout(ncol = 2, nrow = 1, widths = c(1,3), heights = c(1,1))
 
 ggsave(plot = viz, 
        filename = paste0(path2SP,"/National/Exploration/Output/maps/","Mapa_tt_cat.svg"),
-       width = 200, 
-       height = 255, 
-       units  = "mm",
-       dpi    = 72,
-       device = "svg")
+       width = 15, height = 10)
 
 
 #######
@@ -378,6 +324,9 @@ p <- ggplot(mexico_map, aes(label = ESTADO)) +
 
 
 viz <- wrap_elements(tpanel) + p +
-  plot_layout(ncol = 2, nrow = 1, widths = c(1, 2), heights = c(1,2))
+  plot_layout(ncol = 2, nrow = 1, widths = c(1,3), heights = c(1,1))
 
-ggsave(plot = viz, filename = paste0(path2SP,"/National/Exploration/Output/maps/","Mapa_pt_cat.svg"), width = 15, height = 12)
+ggsave(plot = viz, 
+       filename = paste0(path2SP,"/National/Exploration/Output/maps/","Mapa_pt_cat.svg"),
+       width = 15, height = 12.5)
+

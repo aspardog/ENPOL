@@ -639,7 +639,7 @@
 		max-width: 50%;
 	}
 	#Trust .img-chart{
-		width: 85%;
+		width: 100%;
 	}
 	#Trust .container .row:nth-child(3) .col-md-11 .row:first-child .col-md-6:nth-child(4) p:nth-child(2){
 		width: 290px;
@@ -771,6 +771,13 @@
 		width: 90%;
 	}
 	#VictimSupport .col-md-11.mb-4{
+		text-align: center;
+	}
+	/* VICTIM SUPPORT chart 17 page 31 */
+	#MAP .img-chart.img-chart{
+		width: 100%;
+	}
+	#MAP .col-md-11.mb-4{
 		text-align: center;
 	}
 	/* AccessJusticeJourney chart 18 page 33 */
