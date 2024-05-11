@@ -393,9 +393,9 @@ plot
 ggsave(plot = plot, 
        filename = paste0(path2SP,
                          "/National/Visualization",
-                         "/Output/Debido proceso/Proceso justo/figure6.svg"),
+                         "/Output/Debido proceso/Proceso justo/figure5.svg"),
        width = 189.7883,
-       height = 125,
+       height = 85,
        units  = "mm",
        dpi    = 72,
        device = "svg")
@@ -430,10 +430,10 @@ data2plot <- data_subset.df %>%
                                abogado_publico == "0" ~ "Abogado privado",
                                T ~ NA_character_),
          value2plot = mean_value,
-         labels = case_when(category == "Defensa en Ministerio Público y con Juez"      ~ "Defensa en Ministerio Público  \ny con Juez",
-                            category == "Sin defensa en Ministerio Público ni con Juez" ~ "Sin defensa en Ministerio Público \nni con Juez",
+         labels = case_when(category == "Defensa en Ministerio Público y con Juez"      ~ "Defensa en <br>Ministerio Público <br>y con Juez",
+                            category == "Sin defensa en Ministerio Público ni con Juez" ~ "Sin defensa en <br>Ministerio Público <br>ni con Juez",
                             category ==  "Defensa sólo con Juez"                        ~ "Defensa sólo con Juez",
-                            category == "Defensa sólo en Ministerio Público"            ~ "Defensa sólo en \nMinisterio Público",
+                            category == "Defensa sólo en Ministerio Público"            ~ "Defensa sólo en <br>Ministerio Público",
                             T~NA_character_),
          figure = round(mean_value, 0),
          order_var = case_when(category == "Defensa en Ministerio Público y con Juez"      ~ 3,
@@ -465,7 +465,7 @@ ggsave(plot = plot,
                          "/National/Visualization",
                          "/Output/Debido proceso/Proceso justo/figure6.svg"),
        width = 189.7883,
-       height = 125,
+       height = 85,
        units  = "mm",
        dpi    = 72,
        device = "svg")
@@ -702,3 +702,96 @@ ggsave(plot = chart,
        units  = "mm",
        dpi    = 72,
        device = "svg")
+
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##
+## 10. Tiempo condena                                      ----
+##
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+data_subset.df <- master_data.df %>%
+  filter(Anio_arresto > 2010)  %>%
+  mutate(
+    rapida = 
+      case_when(
+        P5_10 == 1  | P5_10 == 2 | P5_10 == 3 | P5_10 == 4 ~ 1,
+        P5_10 == 5  | P5_10 == 6 | P5_10 == 7 ~ 0
+      ),
+    corta = 
+      case_when(
+        P5_10 == 5 ~ 1,
+        P5_10 == 1  | P5_10 == 2 | P5_10 == 3 | P5_10 == 4 | P5_10 == 6 | P5_10 == 7 ~ 0
+      ),
+    media =
+      case_when(
+        P5_10 == 6 ~ 1,
+        P5_10 == 1  | P5_10 == 2 | P5_10 == 3 | P5_10 == 4 | P5_10 == 5 | P5_10 == 7 ~ 0
+      ),
+    larga =
+      case_when(
+        P5_10 == 7 ~ 1,
+        P5_10 == 1  | P5_10 == 2 | P5_10 == 3 | P5_10 == 4 | P5_10 == 5 | P5_10 == 6 ~ 0
+      )
+  ) %>%
+  group_by(Anio_arresto) %>%
+  summarise(
+    rapida = mean(rapida, na.rm = T),
+    corta = mean(corta, na.rm = T),
+    media = mean(media, na.rm = T),
+    larga = mean(larga, na.rm = T)
+  ) %>%
+  pivot_longer(cols = c(rapida, corta, media, larga), names_to = "category", values_to = "value2plot") %>%
+  mutate(value2plot = value2plot*100,
+         label = paste0(format(round(value2plot, 0),
+                               nsmall = 0),
+                        "%"),
+         year = as.numeric(Anio_arresto)) %>%
+  mutate(filtro = 
+           if_else(category == "larga" & year > 2018, 0,
+                   if_else(category == "media" & year > 2019, 0, 1))) %>%
+  filter(filtro == 1) %>%
+  filter(year < 2021)
+
+# Pulling minimum and maximum available year
+minyear <- 2011
+maxyear <- 2021
+
+
+# Creating a vector for yearly axis
+x.axis.values <- seq(minyear, maxyear, by = 2)
+sec.ticks     <- seq(minyear, maxyear, by = 1)
+x.axis.labels <- paste0("'", str_sub(x.axis.values, start = -2))
+
+
+# Defining colors4plot
+colors4plot <- c(threeColors, "#ef4b4b")
+
+names(colors4plot) <- c("rapida", "corta", "media", "larga")
+
+# Saving data points
+data2plot <- data_subset.df %>% ungroup()
+
+# Applying plotting function
+chart <- LAC_lineChart(data           = data2plot,
+                       target_var     = "value2plot",
+                       grouping_var   = "year",
+                       ngroups        = data_subset.df$category, 
+                       labels_var     = "label",
+                       colors_var     = "category",
+                       colors         = colors4plot,
+                       repel          = T,
+                       custom.axis    = T,
+                       x.breaks       = x.axis.values,
+                       x.labels       = x.axis.labels,
+                       sec.ticks      = sec.ticks)
+
+ggsave(plot = chart, 
+       filename = paste0(path2SP,
+                         "/National/Visualization",
+                         "/Output/Debido proceso/Proceso justo/figure10.svg"),
+       width = 189.7883,
+       height = 100,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
+

@@ -28,14 +28,6 @@
 # loaded from the following script:
 source("Code/settings.R")
 
-# Loading functions for sections
-source("Code/S00.R")
-source("Code/S01.R")
-source("Code/S02.R")
-source("Code/S03.R")
-source("Code/S04.R")
-source("Code/S05.R")
-
 
 # Loading plotting functions from GitHub
 source("https://raw.githubusercontent.com/ctoruno/WJP-Data-Viz/main/loading.R")
