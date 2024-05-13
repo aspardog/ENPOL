@@ -273,14 +273,26 @@ data_subset.df <- master_data.df %>%
       case_when(
         P5_17_2 == 1 | P5_17_2 == 2~ 1,
         P5_17_2 == 3 | P5_17_2 == 4 ~ 0
+      ),
+    claridad_defensor =
+      case_when(
+        P5_17_1 == 1 | P5_17_1 == 2~ 1,
+        P5_17_1 == 3 | P5_17_1 == 4 ~ 0
+      ),
+    claridad_defendido =
+      case_when(
+        P5_17_4 == 1 | P5_17_4 == 2~ 1,
+        P5_17_4 == 3 | P5_17_4 == 4 ~ 0
       )
   ) %>%
   group_by(Anio_arresto) %>%
   summarise(
-    mp = mean(claridad_mp, na.rm = T),
-    juez = mean(claridad_juez, na.rm = T)
+    mp        = mean(claridad_mp, na.rm = T),
+    juez      = mean(claridad_juez, na.rm = T),
+    defensor  = mean(claridad_defensor, na.rm = T),
+    defendido = mean(claridad_defendido, na.rm = T)
   ) %>%
-  pivot_longer(cols = c(mp, juez), names_to = "category", values_to = "value2plot") %>%
+  pivot_longer(cols = c(mp, juez, defensor, defendido), names_to = "category", values_to = "value2plot") %>%
   mutate(value2plot = value2plot*100,
          label = paste0(format(round(value2plot, 0),
                                nsmall = 0),
@@ -299,9 +311,9 @@ x.axis.labels <- paste0("'", str_sub(x.axis.values, start = -2))
 
 
 # Defining colors4plot
-colors4plot <- c("#a90099","#43a9a7")
+colors4plot <- c("#a90099","#43a9a7", "#efa700", "#2c6d4f")
 
-names(colors4plot) <- c("mp", "juez")
+names(colors4plot) <- c("mp", "juez", "defensor", "defendido")
 
 # Saving data points
 data2plot <- data_subset.df %>% ungroup()
