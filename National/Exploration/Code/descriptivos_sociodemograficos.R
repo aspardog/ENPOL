@@ -628,3 +628,15 @@ barChart <- BarSimpleChartVizFlip(fill_colors = c("#E2E2F7","#E2E2F7", "#E2E2F7"
                                               "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
                                               "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7")) + expand_limits(y = c(10, 45))
 barChart
+
+
+# Vulnerabilidad socioeconómica --------------------------------------------------------------------
+
+
+data2plot <- count_frequency.fn(Main_database_2008$vulnerabilidad_economica) %>% 
+              mutate(Value = case_when(Value == 1 ~ "Vulnerable económicamente", 
+                                       Value == 0 ~ "No vulnerable económicamente", 
+                                       T ~ NA_character_), 
+                     labels = Value)
+barChart <- BarSimpleChartViz( fill_colors = c("#E2E2F7","#E2E2F7")) + expand_limits(y = c(0, 110))
+barChart
