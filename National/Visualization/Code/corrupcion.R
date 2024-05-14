@@ -127,7 +127,7 @@ ggsave(plot   = logitPlot,
                        "/National/Visualization",
                        "/Output/Debido proceso/Corrupcion/figure2.svg"), 
        width  = 175, 
-       height = 85,
+       height = 75,
        units  = "mm",
        dpi    = 72,
        device = "svg")
