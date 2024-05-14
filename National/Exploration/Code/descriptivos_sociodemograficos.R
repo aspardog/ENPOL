@@ -640,3 +640,16 @@ data2plot <- count_frequency.fn(Main_database_2008$vulnerabilidad_economica) %>%
                      labels = Value)
 barChart <- BarSimpleChartViz( fill_colors = c("#E2E2F7","#E2E2F7")) + expand_limits(y = c(0, 110))
 barChart
+
+
+# Culpabilidad --------------------------------------------------------------------
+
+
+data2plot <- count_frequency.fn(Main_database_2008$P4_6_4) %>% 
+  mutate(Value = case_when(Value == 1 ~ "Se declaran culpables ante el Ministerio Público", 
+                           Value == 0 ~ "Se declaran inocentesante el Ministerio Público", 
+                           T ~ NA_character_), 
+         labels = Value)
+
+barChart <- BarSimpleChartViz( fill_colors = c("#E2E2F7","#E2E2F7")) + expand_limits(y = c(0, 110))
+barChart
