@@ -134,7 +134,7 @@ logit_dataBase.fn <- function(data = Main_database,
       vulnerabilidad_economica          =
         if_else(
           vulnerabilidad_economica %in% "Vulnerable economicamente",
-          "ZVulnerable economicamente", Edad_menor30
+          "ZVulnerable economicamente", vulnerabilidad_economica
         ),
       discapacidad          =
         if_else(
@@ -165,8 +165,14 @@ logit_dataBase.fn <- function(data = Main_database,
     as.data.frame(coef(logit))
   )
   
+  marg_effects <- margins(logit, variables = selectables, atmeans = TRUE)
+  
+  # Calculate robust variance-covariance matrix
+  robust_vcov <- vcovHC(logit, type = "HC1", cluster = "group", group = logit_data$Estado_arresto)
+  
+  
   margEff      <- as.data.frame(
-    margins_summary(logit, data = logit$data)
+    summary(marg_effects, vcov = robust_vcov)
   ) %>%
     filter(factor %in% c("SexoZFemenino", "LGBTQZPertenece a la comunidad LGBTQ", 
                          "Educacion_superiorZCuenta con título de educación universitaria", 
