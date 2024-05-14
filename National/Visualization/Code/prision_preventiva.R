@@ -254,3 +254,49 @@ ggsave(plot   = logitPlot,
        units  = "mm",
        dpi    = 72,
        device = "svg")
+
+
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##
+## 5. Prision preventiva tipo                                                     ----
+##
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+data_subset.df <- data.frame(Value = master_data.df$tipo_prision_preventiva) %>% 
+  filter(complete.cases(.))
+
+# Count the frequency of each unique value
+data2plot <- data_subset.df %>%
+  group_by(Value) %>%
+  summarise(Frequency = n()) %>% 
+  mutate(Value = Value,
+         values = Frequency/sum(Frequency),
+         value2plot = values * 100,
+         figure = paste0(round(value2plot, 0), "%"),
+         labels = case_when(Value == "Prisión Preventiva Justificada" ~ "Prisión Preventiva \nJustificada",
+                            Value == "Prisión Preventiva Oficiosa" ~ "Prisión Preventiva \nOficiosa", 
+                            Value == "Proceso en libertad" ~ "Proceso en libertad", 
+                             T ~ NA_character_)) 
+data2plot <- data2plot %>% mutate(order_var = rank(values)) 
+
+
+colors4plot <- c("Prisión Preventiva \nOficiosa" = "#2a2a9A",
+                 "Prisión Preventiva \nJustificada" = "#a90099",
+                 "Proceso en libertad" ="#43a9a7")
+
+plot <- barsChart.fn(data.df                    = data2plot,
+                     groupVar                   = F,  
+                     categories_grouping_var    = labels,
+                     colors4plot                = colors4plot, 
+                     order                      = T,
+                     orientation                = "horizontal")
+
+ggsave(plot   = plot,
+       file   = paste0(path2SP,
+                       "/National/Visualization",
+                       "/Output/Debido proceso/Prision preventiva/figure5.svg"), 
+       width  = 175, 
+       height = 85,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
