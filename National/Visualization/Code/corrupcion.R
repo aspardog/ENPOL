@@ -89,7 +89,7 @@ ggsave(plot = chart,
                          "/National/Visualization",
                          "/Output/Debido proceso/Corrupcion/figure1.svg"),
        width = 189.7883,
-       height = 80,
+       height = 68.88612,
        units  = "mm",
        dpi    = 72,
        device = "svg")

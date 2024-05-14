@@ -3,7 +3,7 @@
     @page {
         size: letter portrait;
 		/*size:8.5in 11in;*/
-		margin: 0px;
+		margin: 0px
     }
 
     @page :first {
@@ -774,10 +774,10 @@
 		text-align: center;
 	}
 	/* VICTIM SUPPORT chart 17 page 31 */
-	#MAP .img-chart.img-chart{
+	.MAP .img-chart.img-chart{
 		width: 100%;
 	}
-	#MAP .col-md-11.mb-4{
+	.MAP .col-md-11.mb-4{
 		text-align: center;
 	}
 	/* AccessJusticeJourney chart 18 page 33 */
@@ -985,8 +985,81 @@
 	#InternationalMigration4 .img-chart{
 		width: 85%;
 	}
+	.presentacion{
+		height:100vh;
+		margin: 0 auto;
+		padding-top: 20rem !important;
+		width: 90%;
+	}
+	/* About This Report page 5 */
+	#Presentacion, #SpecialNote{
+		height: 34.47cm;
+	}
+	#Presentacion .container.pt-5, #SpecialNote .container.pt-5{
+		padding-top: 120px !important;
+	}
 	
+	/* INTERNATIONAL MIGRATION chart 21 page 38 */
 
+	.indice{
+		height: 34.47cm;
+	}
+	.indice .col-md-6 {
+		-ms-flex: 0 0 50%;
+		flex: 0 0 50%;
+		max-width: 50%;
+	}
+
+	.indice .img-chart{
+		width: 85%;
+
+	}
+
+	.fourPanels{
+		height: 34.47cm;
+	}
+	.fourPanels .col-md-6 {
+		-ms-flex: 0 0 50%;
+		flex: 0 0 50%;
+		max-width: 50%;
+	}
+	.fourPanels .img-chart{
+		width: 100%;
+	}
+	.fourPanels .container .row:nth-child(3) .col-md-11 .row:first-child .col-md-6:nth-child(4) p:nth-child(2){
+		width: 290px;
+	}
+	.fourPanels .bullet.bg-blue.ml-4{
+		margin-left: 0px!important;
+	}
+
+	/* Government Accountability chart 6 page 17 */
+	.twoRowsOneCol{
+		height: 34.47cm;
+	}
+	.twoRowsOneCol .img-chart{
+		width: 90%;
+	}
+
+	/* chart 15 page 28 */
+	.ThreeRowsOneCol{
+		height: 34.47cm;
+	}
+	.ThreeRowsOneCol .justify-content-center:nth-child(3) p:first-child{
+		margin-bottom: 15px !important;
+	}
+	.ThreeRowsOneCol .img-chart{
+		width: 83%;
+	}
+	.ThreeRowsOneCol .row.justify-content-center .mt-4{
+		margin-top: 0rem !important;
+	}
+	.ThreeRowsOneCol .row.justify-content-center .mb-4{
+		margin-bottom: 0.5rem !important;
+	}
+	.ThreeRowsOneCol .row.justify-content-center .mb-5{
+		margin-bottom: 2rem !important;
+	}
 	
 }
 

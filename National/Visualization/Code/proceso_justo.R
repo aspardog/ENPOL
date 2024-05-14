@@ -364,9 +364,6 @@ data_subset.df <- master_data.df %>%
                               P5_1    == 2 ~ "No",
                               T~ NA_character_))
 
-
-
-
 data2plot <- data_subset.df %>%
   drop_na(momento, defensa, P5_4_A) %>%
   group_by(momento, defensa) %>% 
@@ -570,8 +567,8 @@ data_subset.df <- master_data.df %>%
   mutate(
     culpable_antes = 
       case_when(
-        P5_25 == 1 ~ 1,
-        P5_25 == 2 ~ 0
+        P5_25 == 2 ~ 1,
+        P5_25 == 1 ~ 0
       ),
     juez_diferente = 
       case_when(

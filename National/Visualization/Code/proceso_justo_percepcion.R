@@ -106,9 +106,9 @@ data2table <- data_subset.df %>%
   group_by(proceso_justo) %>%
   summarise(
     `Indice 13 criterios mínimos` = mean(indicator_general, na.rm = T),
-    `Indice protección de derechos humanos` = mean(indicator_GDH, na.rm = T),
-    `Indice uso apropiado de la fuerza` = mean(indicator_UAA, na.rm = T),
-    `Indice proceso justo` = mean(indicator_PJ, na.rm = T)
+    `Sub-Índice de protección de derechos humanos` = mean(indicator_GDH, na.rm = T),
+    `Sub-Índice de uso no arbitrario de la autoridad` = mean(indicator_UAA, na.rm = T),
+    `Sub-Índice de proceso justo` = mean(indicator_PJ, na.rm = T)
     ) %>% 
   drop_na() %>%
   mutate(
@@ -126,10 +126,10 @@ data2table <- data_subset.df %>%
   mutate(
     order_value =
       case_when(
-        category == "Indice 13 criterios mínimos" ~ 1,
-        category == "Indice uso apropiado de la fuerza" ~ 3,
-        category == "Indice protección de derechos humanos" ~ 5,
-        category == "Indice proceso justo" ~ 4,
+        category == "Índice 13 criterios mínimos" ~ 1,
+        category == "Sub-Índice de uso no arbitrario de la autoridad" ~ 4,
+        category == "Sub-Índice de protección de derechos humanos" ~ 5,
+        category == "Sub-Índice de proceso justo" ~ 3,
         category == " " ~ 2
       )
   )
@@ -149,10 +149,12 @@ p <- ggplot(data2table,
                 y = reorder(category, -order_value))) +
   geom_segment(data = justo.df,
                aes(x = value2plot, y = reorder(category, -order_value),
-                   yend = reorder(injusto.df$category, -order_value), xend = injusto.df$value2plot), #use the $ operator to fetch data from our "Females" tibble
+                   yend = reorder(injusto.df$category, -order_value),
+                   xend = injusto.df$value2plot), #use the $ operator to fetch data from our "Females" tibble
                color = "#aeb6bf",
                size = 4.5, #Note that I sized the segment to fit the points
                alpha = .5) +
+  geom_hline(yintercept = 4, linetype = "dashed", color = "black") +
   geom_point(aes(x = value2plot, y = category, color = proceso_justo), size = 4, show.legend = F)  +
   geom_text(aes(x = value2plot, y = category, 
                 label = paste0(round(value2plot*100,0),"%"), 
