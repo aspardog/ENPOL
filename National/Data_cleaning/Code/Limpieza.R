@@ -46,7 +46,7 @@ load(paste0(path2DB,"/National/Data_cleaning/Input/BD_ENPOL_2021.RData"))
 
 # Subsetting relevant data
 
-Main_database <- purrr::reduce(list(ENPOL2021_SOC,ENPOL2021_2_3,ENPOL2021_4,ENPOL2021_5,ENPOL2021_6,ENPOL2021_8_9_10_11), 
+Main_database <- purrr::reduce(list(ENPOL2021_SOC,ENPOL2021_2_3,ENPOL2021_4,ENPOL2021_5,ENPOL2021_6,ENPOL2021_7,ENPOL2021_8_9_10_11), 
                                dplyr::left_join, by = "ID_PER") 
 rm(ENPOL2021_SOC,ENPOL2021_2_3,ENPOL2021_4,ENPOL2021_5,ENPOL2021_6,ENPOL2021_7,ENPOL2021_8_9_10_11)
 
