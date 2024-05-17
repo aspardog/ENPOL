@@ -106,7 +106,7 @@ data2plot <- setData.fn(data = Main_database_2008_sentenciados, Anio_arresto, PJ
 colors4plot <- c("Juez presente" = "#003B88", 
                  "Juez ausente" = "#fa4d57")
 
-MulipleBar.fn()  + geom_hline(yintercept = mean(data2plot$Percentage), linetype = "dashed", color = "#555454")
+MulipleBar.fn()  + geom_hline(yintercept = mean(data2plot$Percentage), linetype = "dashed", color = "#555454") + labs(title = "Ausencia del juez en audiencia por año ")
 
 plot + labs(title = "Ausencia del juez en audiencia por año ")
 
@@ -220,11 +220,7 @@ data2plot <- Main_database1 %>%
   arrange(value2plot) %>%
   mutate(Delito = factor(Delito, levels = Delito))
 
-colors4plot <- c("#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
-                 "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
-                 "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
-                 "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7", "#E2E2F7","#E2E2F7",
-                 "#E2E2F7","#E2E2F7")
+colors4plot <- rep("#E2E2F7", 34)
 
 
 plt <- ggplot(data2plot, 
@@ -347,4 +343,22 @@ plot <- barsChartN.fn(data.df                    = data2plot,
                       orientation                = "horizontal")
 
 plot + labs(title = "Sin incluir Robo a Casa y Posesión de Armas después de  abril de 2019 a PPO")
+
+# Mapa gap ----------------------------
+
+# Calcular gap
+
+
+
+Main_database_2008 <-  Main_database_2008 %>% 
+  mutate(corporacion_fuero = case_when(Corporacion_grupos == "Ejército o Marina" ~ "Corporación Federal", 
+                                       Corporacion_grupos == "Guardia Nacional" ~ "Corporación Federal",
+                                       Corporacion_grupos == "Policía Federal" ~ "Corporación Federal",
+                                       Corporacion_grupos == "Policía Federal Ministerial" ~ "Corporación Federal",
+                                       Corporacion_grupos == "Policía Estatal Ministerial o Judicial" ~ "Corporación Local",
+                                       Corporacion_grupos == "Operativo Conjunto" ~ "Operativo Conjunto",
+                                       Corporacion_grupos == "Policía Estatal" ~ "Corporación Local", 
+                                       Corporacion_grupos == "Policía Municipal" ~ "Corporación Local",
+                                       Corporacion_grupos == "Otra" ~ "Otra", 
+                                       T ~ NA_character_))
 
