@@ -720,6 +720,7 @@ ggsave(plot = chart,
 
 data_subset.df <- master_data.df %>%
   filter(Anio_arresto > 2010)  %>%
+  filter(sentenciado == 1) %>%
   mutate(
     rapida = 
       case_when(
@@ -758,8 +759,7 @@ data_subset.df <- master_data.df %>%
   mutate(filtro = 
            if_else(category == "larga" & year > 2018, 0,
                    if_else(category == "media" & year > 2019, 0, 1))) %>%
-  filter(filtro == 1) %>%
-  filter(year < 2021)
+  filter(year < 2020)
 
 # Pulling minimum and maximum available year
 minyear <- 2011

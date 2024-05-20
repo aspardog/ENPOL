@@ -105,7 +105,7 @@ data_subset.df <- master_data.df %>%
 data2table <- data_subset.df %>%
   group_by(proceso_justo) %>%
   summarise(
-    `Indice 13 criterios mínimos` = mean(indicator_general, na.rm = T),
+    `Índice 13 criterios mínimos` = mean(indicator_general, na.rm = T),
     `Sub-Índice de protección de derechos humanos` = mean(indicator_GDH, na.rm = T),
     `Sub-Índice de uso no arbitrario de la autoridad` = mean(indicator_UAA, na.rm = T),
     `Sub-Índice de proceso justo` = mean(indicator_PJ, na.rm = T)
@@ -119,7 +119,8 @@ data2table <- data_subset.df %>%
       )
   ) %>%
   pivot_longer(cols = !proceso_justo, names_to = "category", values_to = "value2plot") %>%
-  rbind(data.frame(category = c(" ", " "),
+  rbind(data.frame(category = c("— — — — — — — — — — — — — — — — — — — — — —", 
+                                "— — — — — — — — — — — — — — — — — — — — — —"),
                    value2plot = c(NA_real_, NA_real_),
                    proceso_justo = c("Proceso justo", "Proceso injusto"))
   ) %>%
@@ -130,7 +131,7 @@ data2table <- data_subset.df %>%
         category == "Sub-Índice de uso no arbitrario de la autoridad" ~ 4,
         category == "Sub-Índice de protección de derechos humanos" ~ 5,
         category == "Sub-Índice de proceso justo" ~ 3,
-        category == " " ~ 2
+        category == "— — — — — — — — — — — — — — — — — — — — — —" ~ 2
       )
   )
 
@@ -154,7 +155,7 @@ p <- ggplot(data2table,
                color = "#aeb6bf",
                size = 4.5, #Note that I sized the segment to fit the points
                alpha = .5) +
-  geom_hline(yintercept = 4, linetype = "dashed", color = "black") +
+  geom_hline(yintercept = 4, linetype = "longdash", color = "black", size = 0.25) +
   geom_point(aes(x = value2plot, y = category, color = proceso_justo), size = 4, show.legend = F)  +
   geom_text(aes(x = value2plot, y = category, 
                 label = paste0(round(value2plot*100,0),"%"), 
@@ -177,7 +178,7 @@ p <- ggplot(data2table,
         axis.title.x=element_blank(),
         axis.text.y=element_text(family = "Lato Medium",
                                  size = 3.514598*.pt,
-                                 color = "Black", hjust = 0))
+                                 color = "Black", hjust = 0));p
 
 ggsave(plot = p, 
        filename = paste0(path2SP,
