@@ -335,4 +335,5 @@ Main_database <- Main_database %>%
     ENPOL == 2021 & Anio_arresto>=2017 ~ 1,
     T ~ 0))
   
+save(Main_database, file = paste0(path2DB,"/National/Data_cleaning/Output/Main_database.RData"))
   
