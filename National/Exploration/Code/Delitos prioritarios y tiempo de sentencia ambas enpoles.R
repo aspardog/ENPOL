@@ -443,8 +443,9 @@ ggsave(plot   = lineChart,
 
 ##3.⁠Delitos ENVIPE en ENPOL, 2018-2021
 
+Base_2 <- Base_1 %>% filter(sentenciado==1)
 
-data2plot <- Base_1  %>%
+data2plot <- Base_2  %>%
   filter(Delito_unico_ungrouped_categ == "Robo de vehículo" |
            Delito_unico_ungrouped_categ == "Robo de autopartes" |
            Delito_unico_ungrouped_categ == "Daño a la propiedad" |

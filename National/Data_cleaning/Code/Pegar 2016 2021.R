@@ -242,6 +242,9 @@ old_enpol <- left_join(old_enpol1, old_enpol2, by = "id_per") %>%
     P5_31_24 = as.character(p5_29_23),
     P5_31_25 = as.character(p5_29_24),
     P5_31_26 = as.character(P5_31_26),
+    sentenciado = case_when(sentenciado == 2 ~ 1,
+                            sentenciado == 1 ~ 0,
+                            sentenciado == 3 ~ NA_real_),
     tortura_tra = as.character(tortura_arresto),
     tortura_mp = as.numeric(tortura_MP),
     tortura_generalizada = as.numeric(tortura_total),
@@ -429,7 +432,8 @@ old_enpol <- left_join(old_enpol1, old_enpol2, by = "id_per") %>%
     inspeccion,
     orden_det,
     det_ninguna,
-    ENPOL
+    sentenciado,
+    ENPOL,
   )
 
 Main_database <- Main_database %>%
