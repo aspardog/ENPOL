@@ -349,6 +349,7 @@ ggsave(plot   = lineChart,
 
 Base_homicidio <- Base_1 %>% filter(Delito_unico_categ == "homicidio(2016)" | Delito_unico_categ == "hom_dol"| Delito_unico_categ == "hom_cul" )
 
+
 lineChart <- timeline_cont(Base_homicidio,tiempo_sentencia)
 
 ggsave(plot   = lineChart,

@@ -5247,6 +5247,9 @@ Main_database$na_general <- rowSums(is.na(Main_database[c("GDH_1",
                                                           "PJ_7")]))
 
 
+
+save(Main_database_2, file = paste0(path2DB,"/National/Data_cleaning/Output/Main_database.RData"))
+
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
 ## 5.  ENPOL 2016                                                                                     ----
@@ -5638,7 +5641,7 @@ old_enpol <- left_join(old_enpol1, old_enpol2, by = "id_per") %>%
     ENPOL
   )
 
-Main_database <- Main_database %>%
+Main_database_completa <- Main_database %>%
   mutate (ENPOL = 2021) %>%
   bind_rows(., old_enpol)  %>%
   mutate(muestra_mixta = case_when( 
@@ -5656,4 +5659,4 @@ Main_database <- Main_database %>%
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
-save(Main_database, file = paste0(path2DB,"/National/Data_cleaning/Output/Main_database.RData"))
+save(Main_database_completa, file = paste0(path2DB,"/National/Data_cleaning/Output/Main_database_completa.RData"))
