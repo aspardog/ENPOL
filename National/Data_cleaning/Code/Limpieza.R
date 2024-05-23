@@ -5112,8 +5112,8 @@ Main_database <- Main_database %>% mutate(
   PJ_4 = case_when(P4_1_05 == "2" ~ 0,
                    P4_1_05 == "1" ~ 1,
                    T ~ NA_real_),
-  PJ_5 = case_when(P5_25 == 1 | P5_25 == 3 ~ 0,
-                   P5_25 == 2 ~ 1,
+  PJ_5 = case_when(P5_20_2 == 1 | P5_20_1 == 1 ~ 0,
+                   P5_20_2 == 2 & P5_20_1 == 2 ~ 1,
                    T ~ NA_real_),
   PJ_6 = case_when((P3_20 == "06" | P3_20 == "07" | P3_20 == "08" | P3_20 == "09") &
                      (P3_17_08 == 1 | (is.na(P3_17_08) == T | P3_19 != "01" & P3_19 != "02" & P3_19 !="03" & P3_19 !="13")) ~ 0,
@@ -5121,8 +5121,8 @@ Main_database <- Main_database %>% mutate(
                      (is.na(P3_17_08) == T | P3_17_08 != 1) & (P3_19 == "01" | P3_19 == "02" | P3_19 =="03" | P3_19 !="13") ~ 1,
                    P3_20 == "01" | P3_20 == "02" | P3_20 == "03" | P3_20 == "04" | P3_20 == "05" ~ 1,
                    T ~ NA_real_),
-  PJ_7 = case_when(P5_16_2 == 3 | P5_16_2 == 4 ~ 0,
-                   P5_16_2 == 1 | P5_16_2 == 2 ~ 1,
+  PJ_7 = case_when(P5_16_2 == 2 | P5_16_2 == 3| P5_16_2 == 4 ~ 0,
+                   P5_16_2 == 1  ~ 1,
                    T ~ NA_real_),
   UAA_1 = case_when(proporcionalidad_uso_fuerza == 1 ~ 1,
                     proporcionalidad_uso_fuerza == 0 ~ 0,
@@ -5248,7 +5248,7 @@ Main_database$na_general <- rowSums(is.na(Main_database[c("GDH_1",
 
 
 
-save(Main_database_2, file = paste0(path2DB,"/National/Data_cleaning/Output/Main_database.RData"))
+save(Main_database, file = paste0(path2DB,"/National/Data_cleaning/Output/Main_database.RData"))
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
