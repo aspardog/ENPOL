@@ -25,7 +25,10 @@ p_load(char = c(
   "margins", "quarto", "kableExtra", "WJPr",
   
   # Good 'ol Tidyverse
-  "tidyverse"
+  "tidyverse",
+  
+  # Estimattions
+  "sandwich"
   
 ))
 
