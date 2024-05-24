@@ -1,7 +1,7 @@
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ## Project:           ENPOL 
 ##
-## Script:            Exploration data & hipothesys
+## Script:            Exploration data & hypothesis
 ##
 ## Author(s):         Santiago Pardo G.        (spardo@worldjusticeproject.org)
 ##                    Cristina Alvares         (calvarez@worldjuticeproject.org)
@@ -646,3 +646,5 @@ plot <- ggplot(data2plot,
     panel.grid.major.x = element_line(color = "#D0D1D3"),       
     axis.title.y       = element_blank(),
     axis.title.x       = element_blank())
+
+
