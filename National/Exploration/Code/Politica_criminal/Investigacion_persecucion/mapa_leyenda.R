@@ -36,7 +36,6 @@ Main_database_2008 <- Main_database %>%
 
 
 
-
 # Porcentaje de delitos federales por estado ------------------------------
 
 Estados <- Main_database_2008 %>% 
@@ -56,6 +55,7 @@ Estados <- Main_database_2008 %>%
         ESTADO == "Michoacán de Ocampo"  ~ "Michoacán",
         ESTADO == "Veracruz de Ignacio de la Llave" ~ "Veracruz",
         ESTADO == "México" ~ "Estado de México",
+        ESTADO == "Distrito Federal" ~ "Ciudad de México",
         T ~ ESTADO
       ))
 
@@ -66,6 +66,7 @@ mapa <- st_read(paste0(path2SP,"/National/Exploration/Input/shp/México_Estados.
   mutate( ESTADO = 
             case_when(
               ESTADO == "México" ~ "Estado de México",
+              ESTADO == "Distrito Federal" ~ "Ciudad de México",
               T ~ ESTADO
             )
   )
@@ -130,8 +131,8 @@ table <- Estados %>%
   )
 
 tpanel <- gen_grob(table, 
-                   fit      = "fixed",
-                   scaling  = "fixed", 
+                   fit      = "auto",
+                   scaling  = "min", 
                    just     = c("left", "top"),
                    wrapping = T)
 
@@ -231,10 +232,10 @@ leyend <- gen_grob(leyend,
                    wrapping = T)
 
 layout <- "ABB
-           ##C"
+           A#C"
 
 viz <- wrap_elements(tpanel) + p + wrap_elements(leyend) +
-  plot_layout(ncol = 3, nrow = 2, widths = c(1, 3,0.5), heights = c(1,0.25,0.25), design = layout)
+  plot_layout(ncol = 3, nrow = 3, widths = c(1, 3.25,0.4), heights = c(1,.2,0.25), design = layout)
 plot(viz)
 
-ggsave(plot = viz, filename = "map_indice.svg", width = 10, height = 10)
+ggsave(plot = viz, filename = "Input/map_ejemplo.svg", width = 10, height = 10)
