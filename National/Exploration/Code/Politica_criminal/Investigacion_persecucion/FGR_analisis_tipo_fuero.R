@@ -39,13 +39,14 @@ Main_database_2008 <- Main_database %>%
 
 
 
-# Tipos de detención por Policía Federal Ministerial ----------------------
+# Tipos de detención por Policía Federal Ministerial y GN ----------------------
 
 
 Main_database_2008_FGR <- Main_database_2008 %>% 
   filter(Anio_arresto >= 2008,
          NSJP == 1, 
-         Corporacion_grupos == "Policía Federal Ministerial") %>% 
+         Corporacion_grupos == "Policía Federal Ministerial" | 
+         Corporacion_grupos == "Guardia Nacional" ) %>% 
   mutate(tipo_detencion = case_when(flagrancia  == 1 ~ "flagrancia",
                                     orden_det   == 1 ~ "orden de detención",
                                     inspeccion  == 1 ~ "inspeccion",
@@ -55,48 +56,54 @@ Main_database_2008_FGR <- Main_database_2008 %>%
 
 
 data2plot <- Main_database_2008_FGR %>%
-  select(tipo_detencion) %>% 
-  group_by(tipo_detencion) %>%
+  select(tipo_detencion, Corporacion_grupos) %>% 
+  group_by(tipo_detencion, Corporacion_grupos) %>%
   drop_na() %>% 
   summarise(Frequency = n(), .groups = 'drop') %>% 
+  group_by(Corporacion_grupos) %>% 
   mutate(values = tipo_detencion,
          value2plot = Frequency / sum(Frequency) * 100,
          figure = paste0(round(value2plot, 0), "%"),
-         labels = str_wrap(tipo_detencion, width = 20),
-         order_var = case_when(figure == "37%" ~ 4, 
-                               figure == "35%" ~ 3,
-                               figure == "17%" ~ 2,
-                               figure == "11%" ~ 1,
-                               T ~ NA_real_))
+         labels = str_wrap(tipo_detencion, width = 20))
 
 
-plt <- ggplot(data2plot, 
-              aes(x     = reorder(values, order_var),
-                  y     = value2plot,
-                  label = paste0(figure, "\n", "N =", Frequency),
-                  fill  = values)) +
+colors4plot <- c("Guardia Nacional" = "#fa4d57",
+                 "Policía Federal Ministerial" = "#3273ff")
+
+
+plot <- ggplot(data2plot,
+               aes(
+                 x     = values, 
+                 y     = value2plot,
+                 fill  = Corporacion_grupos,
+                 label = paste0(figure, ", N =", Frequency)
+               )) +
   geom_bar(stat = "identity",
-           show.legend = FALSE, width = 0.9)+
-  scale_fill_manual(values = rep("#3273ff", 4)) +
-  geom_text(aes(y    = value2plot + 5),
+           show.legend = FALSE, width = 0.9, position = "dodge")+
+  geom_text(aes(y    = value2plot + 10), 
+            position = position_dodge(widt = 0.9),
             color    = "#4a4a49",
             family   = "Lato Full",
-            fontface = "bold") +
-  labs(y = "% of respondents",
-       title = "Tipo de detenciones Policía Federal Ministerial") +
+            fontface = "bold", 
+            size = 3.514598)  +
+  geom_vline(xintercept = 5.5, linetype = "dashed", color = "black") +
+  scale_fill_manual(values = colors4plot) +
   scale_y_continuous(limits = c(0, 105),
-                     breaks = seq(0, 100, 20),
-                     labels = paste0(seq(0, 100, 20), "%"),
+                     breaks = seq(0,100,20),
+                     labels = paste0(seq(0,100,20), "%"),
                      position = "left") +
-  scale_x_discrete(limits = rev) +
-  # coord_flip() +
-  WJP_theme() +
-  theme(panel.grid.major.y = element_blank(),
-        panel.grid.major.x = element_line(color = "#D0D1D3"),
-        axis.title.y       = element_blank(),
-        axis.title.x       = element_blank(),
-        axis.text.y        = element_text(hjust = 1, size = 10),
-        plot.title = element_text(face = "bold", size = 12))
+  theme(
+    panel.background   = element_blank(),
+    plot.background    = element_blank(),
+    panel.grid.major   = element_line(size     = 0.25,
+                                      colour   = "#5e5c5a",
+                                      linetype = "dashed"),
+    panel.grid.minor   = element_blank(),
+    panel.grid.major.y = element_blank(),
+    panel.grid.major.x = element_line(color = "#D0D1D3"),       
+    axis.title.y       = element_blank(),
+    axis.title.x       = element_blank())
+
 
 
 
@@ -175,3 +182,381 @@ plot <- ggplot(data2plot,
     panel.grid.major.x = element_line(color = "#D0D1D3"),       
     axis.title.y       = element_blank(),
     axis.title.x       = element_blank())
+
+
+
+# Tipos de conclusión del proceso por delitos federales -------------------
+
+
+Main_database_2008_federales <- Main_database_2008 %>% 
+  filter(Anio_arresto >= 2008,
+         NSJP == 1, 
+         fuero == "Sólo federal" ) %>% 
+  mutate(juicio_abreviado = case_when(P5_6 == "1" ~ "Juicio", 
+                                      P5_6 == "2" ~ "Procedimiento abreviado o juicio sumario", 
+                                               T ~ NA_character_))
+
+
+
+data2plot <- Main_database_2008_federales %>%
+  select(juicio_abreviado) %>% 
+  group_by(juicio_abreviado) %>%
+  drop_na() %>% 
+  summarise(Frequency = n(), .groups = 'drop') %>% 
+  mutate(value2plot = Frequency / sum(Frequency) * 100,
+         figure = paste0(round(value2plot, 0), "%")) %>% 
+  rename(values = juicio_abreviado)
+
+
+colors4plot 
+
+plot <- ggplot(data2plot,
+               aes(
+                 x     = values, 
+                 y     = value2plot,
+                 fill  = values,
+                 label = paste0(figure, ", N =", Frequency)
+               )) +
+  geom_bar(stat = "identity",
+           show.legend = FALSE, width = 0.9, position = "dodge")+
+  geom_text(aes(y    = value2plot + 10), 
+            position = position_dodge(widt = 0.9),
+            color    = "#4a4a49",
+            family   = "Lato Full",
+            fontface = "bold", 
+            size = 3.514598)  +
+  geom_vline(xintercept = 5.5, linetype = "dashed", color = "black") +
+  scale_fill_manual(values = rep("#3273ff",2)) +
+  scale_y_continuous(limits = c(0, 105),
+                     breaks = seq(0,100,20),
+                     labels = paste0(seq(0,100,20), "%"),
+                     position = "left") +
+  theme(
+    panel.background   = element_blank(),
+    plot.background    = element_blank(),
+    panel.grid.major   = element_line(size     = 0.25,
+                                      colour   = "#5e5c5a",
+                                      linetype = "dashed"),
+    panel.grid.minor   = element_blank(),
+    panel.grid.major.y = element_blank(),
+    panel.grid.major.x = element_line(color = "#D0D1D3"),       
+    axis.title.y       = element_blank(),
+    axis.title.x       = element_blank())
+
+# Tipos de conclusión del proceso por delitos ambos fueros comparación -------------------
+
+
+Main_database_2008_federales <- Main_database_2008 %>% 
+  filter(Anio_arresto >= 2008,
+         NSJP == 1) %>% 
+  mutate(juicio_abreviado = case_when(P5_6 == "1" ~ "Juicio", 
+                                      P5_6 == "2" ~ "Procedimiento abreviado o juicio sumario", 
+                                      T ~ NA_character_))
+
+
+
+data2plot <- Main_database_2008_federales %>%
+  select(juicio_abreviado) %>% 
+  group_by(juicio_abreviado) %>%
+  drop_na() %>% 
+  summarise(Frequency = n(), .groups = 'drop') %>% 
+  mutate(value2plot = Frequency / sum(Frequency) * 100,
+         figure = paste0(round(value2plot, 0), "%")) %>% 
+  rename(values = juicio_abreviado)
+
+
+colors4plot 
+
+plot <- ggplot(data2plot,
+               aes(
+                 x     = values, 
+                 y     = value2plot,
+                 fill  = values,
+                 label = paste0(figure, ", N =", Frequency)
+               )) +
+  geom_bar(stat = "identity",
+           show.legend = FALSE, width = 0.9, position = "dodge")+
+  geom_text(aes(y    = value2plot + 10), 
+            position = position_dodge(widt = 0.9),
+            color    = "#4a4a49",
+            family   = "Lato Full",
+            fontface = "bold", 
+            size = 3.514598)  +
+  geom_vline(xintercept = 5.5, linetype = "dashed", color = "black") +
+  scale_fill_manual(values = rep("#2a2a9A",2)) +
+  scale_y_continuous(limits = c(0, 105),
+                     breaks = seq(0,100,20),
+                     labels = paste0(seq(0,100,20), "%"),
+                     position = "left") +
+  theme(
+    panel.background   = element_blank(),
+    plot.background    = element_blank(),
+    panel.grid.major   = element_line(size     = 0.25,
+                                      colour   = "#5e5c5a",
+                                      linetype = "dashed"),
+    panel.grid.minor   = element_blank(),
+    panel.grid.major.y = element_blank(),
+    panel.grid.major.x = element_line(color = "#D0D1D3"),       
+    axis.title.y       = element_blank(),
+    axis.title.x       = element_blank())
+
+# Tipos de conclusión del proceso por delitos locales -------------------
+
+
+Main_database_2008_federales <- Main_database_2008 %>% 
+  filter(Anio_arresto >= 2008,
+         NSJP == 1, 
+         fuero == "Sólo común") %>% 
+  mutate(juicio_abreviado = case_when(P5_6 == "1" ~ "Juicio", 
+                                      P5_6 == "2" ~ "Procedimiento abreviado o juicio sumario", 
+                                      T ~ NA_character_))
+
+
+
+data2plot <- Main_database_2008_federales %>%
+  select(juicio_abreviado) %>% 
+  group_by(juicio_abreviado) %>%
+  drop_na() %>% 
+  summarise(Frequency = n(), .groups = 'drop') %>% 
+  mutate(value2plot = Frequency / sum(Frequency) * 100,
+         figure = paste0(round(value2plot, 0), "%")) %>% 
+  rename(values = juicio_abreviado)
+
+
+
+plot <- ggplot(data2plot,
+               aes(
+                 x     = values, 
+                 y     = value2plot,
+                 fill  = values,
+                 label = paste0(figure, ", N =", Frequency)
+               )) +
+  geom_bar(stat = "identity",
+           show.legend = FALSE, width = 0.9, position = "dodge")+
+  geom_text(aes(y    = value2plot + 10), 
+            position = position_dodge(widt = 0.9),
+            color    = "#4a4a49",
+            family   = "Lato Full",
+            fontface = "bold", 
+            size = 3.514598)  +
+  geom_vline(xintercept = 5.5, linetype = "dashed", color = "black") +
+  scale_fill_manual(values = rep("#20204a",2)) +
+  scale_y_continuous(limits = c(0, 105),
+                     breaks = seq(0,100,20),
+                     labels = paste0(seq(0,100,20), "%"),
+                     position = "left") +
+  theme(
+    panel.background   = element_blank(),
+    plot.background    = element_blank(),
+    panel.grid.major   = element_line(size     = 0.25,
+                                      colour   = "#5e5c5a",
+                                      linetype = "dashed"),
+    panel.grid.minor   = element_blank(),
+    panel.grid.major.y = element_blank(),
+    panel.grid.major.x = element_line(color = "#D0D1D3"),       
+    axis.title.y       = element_blank(),
+    axis.title.x       = element_blank())
+
+# Logit de probabilidad de conclusión por procedimiento abreviado  --------
+# Loading plotting functions from GitHub
+source("https://raw.githubusercontent.com/ctoruno/WJP-Data-Viz/main/loading.R")
+loadVIZ(set = "ENPOL")
+
+logit_dataBase.fn <- function(data = Main_database_2008_federales,
+                              selectables = c("Sexo", 
+                                              "Educacion_superior", 
+                                              "Color_piel_claro", 
+                                              "LGBTQ", 
+                                              "Etnia", 
+                                              "Edad_menor30", 
+                                              "vulnerabilidad_economica",
+                                              "discapacidad"),
+                              dependent_var
+) {
+  
+  master_data.df <- data %>%
+    filter(Anio_arresto >= 2008) %>%
+    filter(NSJP == 1) %>%
+    filter(Delito_unico == 1) %>%
+    mutate(
+      Educacion_superior = 
+        case_when(
+          Educacion_superior == 1 ~ "Cuenta con título de educación universitaria",
+          Educacion_superior == 0 ~ "No cuenta con título de educación universitario",
+          T ~ NA_character_
+        ),
+      Color_piel_claro       =
+        case_when(
+          Color_piel_claro      == 1 ~ "Color de piel claro",
+          Color_piel_claro      == 0 ~ "Color de piel oscuro",
+          T ~ NA_character_
+        ),
+      LGBTQ                 = 
+        case_when(
+          LGBTQ                 == 1 ~ "Pertenece a la comunidad LGBTQ",
+          LGBTQ                 == 0 ~ "No pertenece a la comunidad LGBTQ",
+          T ~ NA_character_
+        ),
+      Etnia                 =
+        case_when(
+          Etnia                 == 1 ~ "Afromexicano o indígena",
+          Etnia                 == 0 ~ "No se identifica con ninguna etnia",
+          T ~ NA_character_
+        ),
+      Edad_menor30          =
+        case_when(
+          Edad_menor30          == 1 ~ "Menor a 30 años",
+          Edad_menor30          == 0 ~ "Mayor o igual a 30 años",
+          T ~ NA_character_
+        ),
+      vulnerabilidad_economica  =
+        case_when(
+          vulnerabilidad_economica == 1 ~ "Vulnerable economicamente",
+          vulnerabilidad_economica == 0 ~ "No vulnerable economicamente",
+          T ~ NA_character_
+        ),
+      discapacidad      =
+        case_when(
+          discapacidad == 1 ~ "Reporta algún tipo de discapacidad",
+          discapacidad == 0 ~ "No presenta discapacidad",
+          T ~ NA_character_
+        )
+    )
+  
+  selectables <- c(selectables)
+  
+  logit_data <- master_data.df %>%
+    select(all_of(selectables),
+           all_of(dependent_var),
+           Delito_unico_categ, 
+           Estado_arresto) %>%
+    mutate(
+      Educacion_superior =
+        if_else(
+          Educacion_superior %in% "Cuenta con título de educación universitaria",
+          "ZCuenta con título de educación universitaria", Educacion_superior
+        ),
+      Sexo                  =
+        if_else(
+          Sexo %in% "Femenino",
+          "ZFemenino", Sexo
+        ),
+      Color_piel_claro       =
+        if_else(
+          Color_piel_claro %in% "Color de piel claro",
+          "ZColor de piel claro", Color_piel_claro
+        ),
+      LGBTQ                 =
+        if_else(
+          LGBTQ %in% "Pertenece a la comunidad LGBTQ",
+          "ZPertenece a la comunidad LGBTQ", LGBTQ
+        ),
+      Etnia                 =
+        if_else(
+          Etnia %in% "Afromexicano o indígena",
+          "ZAfromexicano o indígena", Etnia
+        ),
+      Edad_menor30          =
+        if_else(
+          Edad_menor30 %in% "Menor a 30 años",
+          "ZMenor a 30 años", Edad_menor30
+        ),
+      vulnerabilidad_economica          =
+        if_else(
+          vulnerabilidad_economica %in% "Vulnerable economicamente",
+          "ZVulnerable economicamente", vulnerabilidad_economica
+        ),
+      discapacidad          =
+        if_else(
+          discapacidad %in% "Reporta algún tipo de discapacidad",
+          "ZReporta algún tipo de discapacidad", discapacidad
+        ),
+    ) %>%
+    arrange(Sexo, Educacion_superior, Color_piel_claro, LGBTQ, Etnia, Edad_menor30, 
+            Delito_unico_categ, Estado_arresto, vulnerabilidad_economica, discapacidad)
+  
+  formula <- selectables %>%
+    t() %>%
+    as.data.frame() %>%
+    unite(., formula, sep = "+") %>%
+    as.character()
+  
+  depVar <- dependent_var
+  
+  formula  <- as.formula(paste(depVar, "~", 
+                               formula, 
+                               "+factor(Delito_unico_categ)+factor(Estado_arresto)")
+  )
+  logit    <- glm(formula,
+                  data   = logit_data, 
+                  family = "binomial")
+  
+  summaryLogit <- bind_rows(
+    as.data.frame(coef(logit))
+  )
+  
+  marg_effects <- margins(logit, variables = selectables, atmeans = TRUE)
+  
+  # Calculate robust variance-covariance matrix
+  robust_vcov <- vcovHC(logit, type = "HC1", cluster = "group", group = logit_data$Estado_arresto)
+  
+  
+  margEff      <- as.data.frame(
+    summary(marg_effects, vcov = robust_vcov)
+  ) %>%
+    filter(factor %in% c("SexoZFemenino", "LGBTQZPertenece a la comunidad LGBTQ", 
+                         "Educacion_superiorZCuenta con título de educación universitaria", 
+                         "Color_piel_claroZColor de piel claro", "EtniaZAfromexicano o indígena",
+                         "Edad_menor30ZMenor a 30 años", "vulnerabilidad_economicaZVulnerable economicamente", 
+                         "discapacidadZReporta algún tipo de discapacidad"))
+  
+  margEff$factor <-recode(margEff$factor,
+                          "SexoZFemenino"                                            = "Mujer",
+                          "LGBTQZPertenece a la comunidad LGBTQ"                     = "Perteneciente a \ncomunidad LGBTQ",
+                          "EtniaZAfromexicano o indígena"                            = "Afromexicano/a o \nindígena",
+                          "Educacion_superiorZCuenta con título de educación universitaria"  = "Con educación \nuniveristaria",
+                          "Edad_menor30ZMenor a 30 años"                             = "Menor a 30 años",
+                          "Color_piel_claroZColor de piel claro"                     = "Color de piel \nclaro",
+                          "vulnerabilidad_economicaZVulnerable economicamente"       = "Vulnerable \neconómicamente",
+                          "discapacidadZReporta algún tipo de discapacidad"          = "Persona con \ndiscapacidad"
+  )
+  
+  data2table <- margEff %>%
+    mutate(order_variable =
+             case_when(
+               factor == "Mujer"                                  ~ 1,
+               factor == "Perteneciente a \ncomunidad LGBTQ"      ~ 2,
+               factor == "Menor a 30 años"                        ~ 3,
+               factor == "Con educación \nuniveristaria"          ~ 4,
+               factor == "Afromexicano/a o \nindígena"            ~ 5,
+               factor == "Color de piel \nclaro"                  ~ 6,
+               factor == "Vulnerable \neconómicamente"            ~ 7,
+               factor == "Persona con \ndiscapacidad"             ~ 8,
+             ),
+           dependent_var  =
+             dependent_var
+    )
+  
+  return(data2table)
+  
+}
+
+
+## Arreglo base
+
+Main_database_2008_federales <- Main_database_2008 %>% 
+  filter(Anio_arresto >= 2008,
+         NSJP == 1) %>% 
+  mutate(procedimiento_abreviado= case_when(P5_6 == "1" ~ 0, 
+                            P5_6 == "2" ~ 1, 
+                                      T ~ NA_real_))
+
+# # Applying plotting function
+
+
+
+data2plot <- logit_dataBase.fn(dependent_var = "procedimiento_abreviado")
+
+logitPlot <- logit_demo_panel(mainData = data2plot, shadow = F)
+logitPlot
+
