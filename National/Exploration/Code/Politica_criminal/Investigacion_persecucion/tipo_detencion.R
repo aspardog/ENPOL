@@ -55,7 +55,11 @@ data2plot <- Main_database_2008 %>%
          value2plot = Frequency / sum(Frequency) * 100,
          figure = paste0(round(value2plot, 0), "%"),
          labels = str_wrap(tipo_detencion, width = 20),
-         order_var = -rank(values))
+         order_var = case_when( values == "Flagrancia"          ~ 1,
+                                values == "Inspeccion"          ~ 4,
+                                values == "Irregulares"         ~ 2,
+                                values == "Orden de detención"  ~ 3,
+                                T ~ NA_real_))
 
 
 
@@ -75,7 +79,7 @@ plot <- ggplot(data2plot,
             fontface = "bold", 
             size = 3.514598)  +
   geom_vline(xintercept = 5.5, linetype = "dashed", color = "black") +
-  scale_fill_manual(values =  c("#20204a", "#2e2e95","#756ef9", "#b1a6ff")) +
+  scale_fill_manual(values =  c("#20204a", "#b1a6ff","#ff003d", "#2e2e95")) +
   scale_y_continuous(limits = c(0, 105),
                      breaks = seq(0,100,20),
                      labels = paste0(seq(0,100,20), "%"),
@@ -142,7 +146,12 @@ data2plot <- Main_database_2008 %>%
          values = case_when(labels == "drogas" ~ "Posesión o Comercio\n de Drogas", 
                             labels == "hom_dol" ~ "Homicido Doloso",
                             labels == "secuestro" ~ "Secuestro",
-                            T ~ NA_character_))
+                            T ~ NA_character_),
+         tipo_detencion = case_when(tipo_detencion == "Flagrancia" ~ "DFlagrancia", 
+                                    tipo_detencion == "Inspeccion" ~ "AInspeccion",
+                                    tipo_detencion == "Irregulares" ~ "CIrregulares",
+                                    tipo_detencion == "Orden de detención" ~ "BOrden de detención",
+                                    T ~ NA_character_))
 
 
 
@@ -162,7 +171,7 @@ plot <- ggplot(data2plot,
             fontface = "bold", 
             size = 3.514598)  +
   geom_vline(xintercept = 5.5, linetype = "dashed", color = "black") +
-  scale_fill_manual(values =  c("#20204a", "#2e2e95","#756ef9", "#b1a6ff")) +
+  scale_fill_manual(values =  c("#b1a6ff", "#2e2e95","#ff003d", "#20204a")) +
   scale_y_continuous(limits = c(0, 105),
                      breaks = seq(0,100,20),
                      labels = paste0(seq(0,100,20), "%"),
