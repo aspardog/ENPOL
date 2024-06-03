@@ -34,7 +34,8 @@ source("https://raw.githubusercontent.com/ctoruno/WJP-Data-Viz/main/loading.R")
 loadVIZ(set = "ENPOL")
 
 # Loading data
-load(paste0(path2SP,"/National/Data_cleaning/Output/Main_database.RData"))
+load(paste0(path2SP,
+            "/National/Data_cleaning/Output/Main_database.RData"))
 
 master_data.df <- Main_database %>% 
   filter(Anio_arresto >= as.numeric(2008)) %>% 
