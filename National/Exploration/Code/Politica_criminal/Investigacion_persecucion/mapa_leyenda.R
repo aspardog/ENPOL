@@ -101,9 +101,8 @@ table <- Estados %>%
   # bg(i = ~ `%` >= 85, j = ' ', bg = "#18538E", part = "body") %>%
   # 
 
-  bg(i = ~ `%` <= quintiles[1], j = ' ', bg = "#ffd7f5", part = "body") %>%
-  bg(i = ~ `%` > quintiles[1] & `%` <= quintiles[2], j = ' ', bg = "#e2a4ff", part = "body") %>%
-  bg(i = ~ `%` > quintiles[2] & `%` <= quintiles[3], j = ' ', bg = "#9c94ff", part = "body") %>%
+  bg(i = ~ `%` >= quintiles[1] & `%` <= quintiles[2], j = ' ', bg = "#E8DAEF", part = "body") %>%
+  bg(i = ~ `%` > quintiles[2] & `%` <= quintiles[3], j = ' ', bg = "#D2B4DE", part = "body") %>%
   bg(i = ~ `%` > quintiles[3] & `%` <= quintiles[4], j = ' ', bg = "#4e43dd", part = "body") %>%
   bg(i = ~ `%` > quintiles[4] & `%` <= quintiles[5], j = ' ', bg = "#2a2a9A", part = "body") %>%
   bg(i = ~ `%` > quintiles[5] & `%` <= quintiles[6], j = ' ', bg = "#20204a", part = "body") %>%  
@@ -141,8 +140,7 @@ mexico_map <- mapa %>%
   mutate(value2plot = round(Percentage), 0) %>%
   mutate(
     color_group = case_when(
-      value2plot <= quintiles[1] ~ "0%-5.1%",
-      value2plot > quintiles[1] & value2plot <= quintiles[2] ~ "5.1%-9.8%",
+      value2plot >= quintiles[1] & value2plot <= quintiles[2] ~ "5.1%-9.8%",
       value2plot > quintiles[2] & value2plot <= quintiles[3] ~ "9.8%-12.6%",
       value2plot > quintiles[3] & value2plot <= quintiles[4] ~ "12.6%-18.2%",
       value2plot > quintiles[4] & value2plot <= quintiles[5] ~ "18.2%-23.3%",
@@ -151,9 +149,8 @@ mexico_map <- mapa %>%
     color_group = as.factor(color_group)
   )
 
-cat_palette <- c("0%-5.1%"   = "#ffd7f5",
-                 "5.1%-9.8%"  = "#e2a4ff",
-                 "9.8%-12.6%"  = "#9c94ff",
+cat_palette <- c( "5.1%-9.8%"  = "#E8DAEF",
+                 "9.8%-12.6%"  = "#D2B4DE",
                  "12.6%-18.2%"  = "#4e43dd",
                  "18.2%-23.3%"  = "#2a2a9A",
                  "23.3%-36.8%" = "#20204a")
@@ -182,12 +179,11 @@ p <- ggplot(mexico_map, aes(label = ESTADO)) +
     plot.margin     = margin(0,0,0,0)
   ) 
 
-categories <- c("0%-5%",
-                "5%-10%",
-                "10%-13%",
-                "13%-18%",
-                "18%-23%",
-                "23%-37%")
+categories <- c("[5%-10%]",
+                "(10%-13%]",
+                "(13%-18%]",
+                "(18%-23%]",
+                "(23%-37%]")
 
 leyend <- data.frame(
   Values = categories,
@@ -195,12 +191,11 @@ leyend <- data.frame(
 leyend <- flextable(leyend)  %>% 
   width(j = "Blank", width = 0.5, unit = "mm") %>% 
   set_header_labels(Values = "Escala", Blank = " ") %>% 
-  bg(i = ~ Values == "0%-5%", j = "Blank", bg = "#ffd7f5", part = "body") %>%
-  bg(i = ~ Values == "5%-10%", j = "Blank", bg = "#e2a4ff", part = "body") %>%
-  bg(i = ~ Values == "10%-13%", j = "Blank", bg = "#9c94ff", part = "body") %>%
-  bg(i = ~ Values == "13%-18%", j = "Blank", bg = "#4e43dd", part = "body") %>%
-  bg(i = ~ Values == "18%-23%", j = "Blank", bg = "#2a2a9A", part = "body") %>%
-  bg(i = ~ Values == "23%-37%", j = "Blank", bg = "#20204a", part = "body") %>%  
+  bg(i = ~ Values == "[5%-10%]", j = "Blank", bg = "#E8DAEF", part = "body") %>%
+  bg(i = ~ Values == "(10%-13%]", j = "Blank", bg = "#D2B4DE", part = "body") %>%
+  bg(i = ~ Values == "(13%-18%]", j = "Blank", bg = "#4e43dd", part = "body") %>%
+  bg(i = ~ Values == "(18%-23%]", j = "Blank", bg = "#2a2a9A", part = "body") %>%
+  bg(i = ~ Values == "(23%-37%]", j = "Blank", bg = "#20204a", part = "body") %>%  
   
   
   align(j     = 2, 
