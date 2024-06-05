@@ -38,14 +38,29 @@ master_data.df <- Main_database_completa %>%
   filter(Anio_arresto != 9998) %>%
   filter(Anio_arresto != 9999)
 
-mainVar <- c("det_ninguna", "flagrancia")
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##
+## Detenciones                                                                                      ----
+##
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-##
-## 1.  Paralalel Trends                                                                                        ----
-##
-## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# Figure 4.2.1
+mainVar <- c("det_ninguna")
+
+figure4_2_1 <- list(
+  Paralalel_trends.pl <- paralel_trends.fn(
+    mainVar = mainVar
+  )
+)
+
+names(figure4_2_1) <- c("Tendencias paralelas")
+
+# Dato curioso
+
+mainVar <- c("det_ninguna", "flagrancia", "inspeccion", "orden_det") 
 
 Paralalel_trends.ls <- paralel_trends.fn(
   mainVar = mainVar
 )
+
+

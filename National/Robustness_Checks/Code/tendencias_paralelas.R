@@ -92,8 +92,3 @@ paralel_trends.fn <- function(
   }
   print(paralel_trends.ls)
 }
-
-hola <- paralel_trends.fn(mainVar = mainVar)
-
-
-
