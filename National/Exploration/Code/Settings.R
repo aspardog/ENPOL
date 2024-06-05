@@ -499,7 +499,7 @@ BarSimpleChartViz <- function(data = data2plot,
     geom_bar(stat = "identity",
              show.legend = FALSE, width = 0.9)+
     scale_fill_manual(values = {{fill_colors}}) +
-    geom_text(aes(y    = {{y_var}} + 5),
+    geom_text(aes(y    = {{y_var}} + 6),
               color    = "#4a4a49",
               family   = "Lato Full",
               fontface = "bold") +
