@@ -124,12 +124,13 @@ table <- Estados %>%
   # bg(i = ~ `%` >= 85, j = ' ', bg = "#18538E", part = "body") %>%
   # 
   
-  bg(i = ~ `%` <= quintiles[1], j = ' ', bg = "#ffd7f5", part = "body") %>%
-  bg(i = ~ `%` > quintiles[1] & `%` <= quintiles[2], j = ' ', bg = "#e2a4ff", part = "body") %>%
-  bg(i = ~ `%` > quintiles[2] & `%` <= quintiles[3], j = ' ', bg = "#9c94ff", part = "body") %>%
-  bg(i = ~ `%` > quintiles[3] & `%` <= quintiles[4], j = ' ', bg = "#4e43dd", part = "body") %>%
-  bg(i = ~ `%` > quintiles[4] & `%` <= quintiles[5], j = ' ', bg = "#2a2a9A", part = "body") %>%
-  bg(i = ~ `%` > quintiles[5] & `%` <= quintiles[6], j = ' ', bg = "#20204a", part = "body") %>%  
+  bg(i = ~ `%` >= quintiles[1] & `%` <= quintiles[2], j = ' ', bg = "#C0392B", part = "body") %>%
+  bg(i = ~ `%` > quintiles[2] & `%` <= quintiles[3], j = ' ', bg = "#F1948A", part = "body") %>%
+  bg(i = ~ `%` > quintiles[3] & `%` <= quintiles[4], j = ' ', bg = "#F9E79F", part = "body") %>%
+  bg(i = ~ `%` > quintiles[4] & `%` <= quintiles[5], j = ' ', bg = "#7DCEA0", part = "body") %>%
+  bg(i = ~ `%` > quintiles[5] & `%` <= quintiles[6], j = ' ', bg = "#186A3B", part = "body") %>%  
+  bg(i = ~ Estado == "Campeche", j = ' ', bg = "#D6D3D3", part = "body") %>%
+  bg(i = ~ Estado == "Yucatán", j = ' ', bg = "#D6D3D3", part = "body") %>%
   
   
   align(j     = 2, 
@@ -164,22 +165,23 @@ mexico_map <- mapa %>%
   mutate(value2plot = round(gap), 0) %>%
   mutate(
     color_group = case_when(
-      value2plot <= quintiles[1]                             ~ "0%-21%",
-      value2plot > quintiles[1] & value2plot <= quintiles[2] ~ "21%-41%",
+      ESTADO == "Campeche" | ESTADO == "Yucatán"            ~ "none",
+      value2plot >= quintiles[1] & value2plot <= quintiles[2] ~ "21%-41%",
       value2plot > quintiles[2] & value2plot <= quintiles[3] ~ "41%-46%",
       value2plot > quintiles[3] & value2plot <= quintiles[4] ~ "46%-52%",
       value2plot > quintiles[4] & value2plot <= quintiles[5] ~ "52%-61%",
-      value2plot > quintiles[5] & value2plot <= quintiles[6] ~ "61%-86%"
+      value2plot > quintiles[5] & value2plot <= quintiles[6] ~ "61%-86%",
     ),
     color_group = as.factor(color_group)
   )
 
-cat_palette <- c("0%-21%"   = "#ffd7f5",
-                 "21%-41%"  = "#e2a4ff",
-                 "41%-46%"  = "#9c94ff",
-                 "46%-52%"  = "#4e43dd",
-                 "52%-61%"  = "#2a2a9A",
-                 "61%-86%" = "#20204a")
+cat_palette <- c(
+                 "21%-41%"  = "#C0392B",
+                 "41%-46%"  = "#F1948A",
+                 "46%-52%"  = "#F9E79F",
+                 "52%-61%"  = "#7DCEA0",
+                 "61%-86%"  = "#186A3B",
+                 "none"     = "#D6D3D3")
 # Drawing plot
 p <- ggplot(mexico_map, aes(label = ESTADO)) +
   geom_sf(data  = mexico_map,
@@ -205,12 +207,12 @@ p <- ggplot(mexico_map, aes(label = ESTADO)) +
     plot.margin     = margin(0,0,0,0)
   ) 
 
-categories <- c("0%-21%",
-                "21%-41%",
-                "41%-46%",
-                "46%-52%",
-                "52%-61%",
-                "61%-86%")
+categories <- c("(21%-41%]",
+                "(41%-46%]",
+                "(46%-52%]",
+                "(52%-61%]",
+                "(61%-86%]",
+                "No info.")
 
 leyend <- data.frame(
   Values = categories,
@@ -218,12 +220,12 @@ leyend <- data.frame(
 leyend <- flextable(leyend)  %>% 
   width(j = "Blank", width = 0.5, unit = "mm") %>% 
   set_header_labels(Values = "Escala", Blank = " ") %>% 
-  bg(i = ~ Values == "0%-21%", j = "Blank", bg = "#ffd7f5", part = "body") %>%
-  bg(i = ~ Values == "21%-41%", j = "Blank", bg = "#e2a4ff", part = "body") %>%
-  bg(i = ~ Values == "41%-46%", j = "Blank", bg = "#9c94ff", part = "body") %>%
-  bg(i = ~ Values == "46%-52%", j = "Blank", bg = "#4e43dd", part = "body") %>%
-  bg(i = ~ Values == "52%-61%", j = "Blank", bg = "#2a2a9A", part = "body") %>%
-  bg(i = ~ Values == "61%-86%", j = "Blank", bg = "#20204a", part = "body") %>%  
+  bg(i = ~ Values == "(21%-41%]", j = "Blank",  bg = "#C0392B", part = "body") %>%
+  bg(i = ~ Values == "(41%-46%]", j = "Blank",  bg = "#F1948A", part = "body") %>%
+  bg(i = ~ Values == "(46%-52%]", j = "Blank",  bg = "#F9E79F", part = "body") %>%
+  bg(i = ~ Values == "(52%-61%]", j = "Blank",  bg = "#7DCEA0", part = "body") %>%
+  bg(i = ~ Values == "(61%-86%]", j = "Blank",  bg = "#186A3B", part = "body") %>%
+  bg(i = ~ Values == "No info.", j = "Blank", bg = "#D6D3D3", part = "body") %>%
   
   
   align(j     = 2, 
