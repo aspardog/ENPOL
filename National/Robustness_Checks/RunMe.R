@@ -55,12 +55,5 @@ figure4_2_1 <- list(
 
 names(figure4_2_1) <- c("Tendencias paralelas")
 
-# Dato curioso
-
-mainVar <- c("det_ninguna", "flagrancia", "inspeccion", "orden_det") 
-
-Paralalel_trends.ls <- paralel_trends.fn(
-  mainVar = mainVar
-)
 
 

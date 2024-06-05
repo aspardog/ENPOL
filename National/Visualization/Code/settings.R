@@ -135,13 +135,15 @@ threeColors    <- c("#2a2a9A", "#a90099", "#43a9a7")
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-logit_dataBase.fn <- function(data = data_subset.df,
+logit_dataBase.fn <- function(data = Main_database,
                               selectables = c("Sexo", 
                                               "Educacion_superior", 
-                                              "Color_piel_claro", 
+                                              "Color_piel_oscuro", 
                                               "LGBTQ", 
                                               "Etnia", 
-                                              "Edad_menor30"),
+                                              "Edad_menor30", 
+                                              "vulnerabilidad_economica",
+                                              "discapacidad"),
                               dependent_var
 ) {
   
@@ -156,7 +158,7 @@ logit_dataBase.fn <- function(data = data_subset.df,
           Educacion_superior == 0 ~ "No cuenta con título de educación universitario",
           T ~ NA_character_
         ),
-      Color_piel_claro       =
+      Color_piel_oscuro       =
         case_when(
           Color_piel_claro      == 1 ~ "Color de piel claro",
           Color_piel_claro      == 0 ~ "Color de piel oscuro",
@@ -170,7 +172,7 @@ logit_dataBase.fn <- function(data = data_subset.df,
         ),
       Etnia                 =
         case_when(
-          Etnia                 == 1 ~ "Afroamericano o indígena",
+          Etnia                 == 1 ~ "Afromexicano o indígena",
           Etnia                 == 0 ~ "No se identifica con ninguna etnia",
           T ~ NA_character_
         ),
@@ -178,6 +180,18 @@ logit_dataBase.fn <- function(data = data_subset.df,
         case_when(
           Edad_menor30          == 1 ~ "Menor a 30 años",
           Edad_menor30          == 0 ~ "Mayor o igual a 30 años",
+          T ~ NA_character_
+        ),
+      vulnerabilidad_economica  =
+        case_when(
+          vulnerabilidad_economica == 1 ~ "Vulnerable economicamente",
+          vulnerabilidad_economica == 0 ~ "No vulnerable economicamente",
+          T ~ NA_character_
+        ),
+      discapacidad      =
+        case_when(
+          discapacidad == 1 ~ "Reporta algún tipo de discapacidad",
+          discapacidad == 0 ~ "No presenta discapacidad",
           T ~ NA_character_
         )
     )
@@ -192,18 +206,18 @@ logit_dataBase.fn <- function(data = data_subset.df,
     mutate(
       Educacion_superior =
         if_else(
-          Educacion_superior %in% "Cuenta con título de educación universitaria",
-          "ZCuenta con título de educación universitaria", Educacion_superior
+          Educacion_superior %in% "No cuenta con título de educación universitario",
+          "ZNo cuenta con título de educación universitario", Educacion_superior
         ),
       Sexo                  =
         if_else(
           Sexo %in% "Femenino",
           "ZFemenino", Sexo
         ),
-      Color_piel_claro       =
+      Color_piel_oscuro     =
         if_else(
-          Color_piel_claro %in% "Color de piel claro",
-          "ZColor de piel claro", Color_piel_claro
+          Color_piel_oscuro %in% "Color de piel oscuro",
+          "ZColor de piel oscuro", Color_piel_oscuro
         ),
       LGBTQ                 =
         if_else(
@@ -212,17 +226,28 @@ logit_dataBase.fn <- function(data = data_subset.df,
         ),
       Etnia                 =
         if_else(
-          Etnia %in% "Afroamericano o indígena",
-          "ZAfroamericano o indígena", Etnia
+          Etnia %in% "Afromexicano o indígena",
+          "ZAfromexicano o indígena", Etnia
         ),
       Edad_menor30          =
         if_else(
           Edad_menor30 %in% "Menor a 30 años",
           "ZMenor a 30 años", Edad_menor30
         ),
+      vulnerabilidad_economica          =
+        if_else(
+          vulnerabilidad_economica %in% "Vulnerable economicamente",
+          "ZVulnerable economicamente", vulnerabilidad_economica
+        ),
+      discapacidad          =
+        if_else(
+          discapacidad %in% "Reporta algún tipo de discapacidad",
+          "ZReporta algún tipo de discapacidad", discapacidad
+        ),
     ) %>%
-    arrange(Sexo, Educacion_superior, Color_piel_claro, LGBTQ, Etnia, Edad_menor30, 
-            Delito_unico_categ, Estado_arresto)
+    arrange(Sexo, Educacion_superior, Color_piel_oscuro, LGBTQ, Etnia, 
+            Edad_menor30, Delito_unico_categ, Estado_arresto, 
+            vulnerabilidad_economica, discapacidad)
   
   formula <- selectables %>%
     t() %>%
@@ -235,7 +260,7 @@ logit_dataBase.fn <- function(data = data_subset.df,
   formula  <- as.formula(paste(depVar, "~", 
                                formula, 
                                "+factor(Delito_unico_categ)+factor(Estado_arresto)")
-                         )
+  )
   logit    <- glm(formula,
                   data   = logit_data, 
                   family = "binomial")
@@ -244,32 +269,45 @@ logit_dataBase.fn <- function(data = data_subset.df,
     as.data.frame(coef(logit))
   )
   
+  marg_effects <- margins(logit, variables = selectables, atmeans = TRUE)
+  
+  # Calculate robust variance-covariance matrix
+  robust_vcov <- vcovHC(logit, type = "HC1", cluster = "group", group = logit_data$Estado_arresto)
+  
+  
   margEff      <- as.data.frame(
-    margins_summary(logit, data = logit$data)
+    summary(marg_effects, vcov = robust_vcov)
   ) %>%
     filter(factor %in% c("SexoZFemenino", "LGBTQZPertenece a la comunidad LGBTQ", 
-                         "Educacion_superiorZCuenta con título de educación universitaria", 
-                         "Color_piel_claroZColor de piel claro", "EtniaZAfroamericano o indígena",
-                         "Edad_menor30ZMenor a 30 años"))
+                         "Educacion_superiorZNo cuenta con título de educación universitario", 
+                         "Color_piel_oscuroZColor de piel oscuro", 
+                         "EtniaZAfromexicano o indígena",
+                         "Edad_menor30ZMenor a 30 años", 
+                         "vulnerabilidad_economicaZVulnerable economicamente", 
+                         "discapacidadZReporta algún tipo de discapacidad"))
   
   margEff$factor <-recode(margEff$factor,
-                          "SexoZFemenino" = "Mujer",
-                          "LGBTQZPertenece a la comunidad LGBTQ"                     = "Perteneciente a \ncomunidad LGBTQ",
-                          "EtniaZAfroamericano o indígena"                           = "Afroamericano/a o indígena",
-                          "Educacion_superiorZCuenta con título de educación universitaria"  = "Con educación univeristaria \n o más",
-                          "Edad_menor30ZMenor a 30 años"                             = "Menor a 30 años",
-                          "Color_piel_claroZColor de piel claro"                     = "Color de piel claro"
+                          "SexoZFemenino"                                                       = "Mujer",
+                          "LGBTQZPertenece a la comunidad LGBTQ"                                = "Perteneciente a \ncomunidad LGBTQ",
+                          "EtniaZAfromexicano o indígena"                                       = "Afromexicano/a o \nindígena",
+                          "Educacion_superiorZNo cuenta con título de educación universitario"  = "Sin educación \nuniveristaria",
+                          "Edad_menor30ZMenor a 30 años"                                        = "Menor a 30 años",
+                          "Color_piel_oscuroZColor de piel oscuro"                              = "Color de piel \noscuro",
+                          "vulnerabilidad_economicaZVulnerable economicamente"                  = "Vulnerable \neconómicamente",
+                          "discapacidadZReporta algún tipo de discapacidad"                     = "Persona con \ndiscapacidad"
   )
   
   data2table <- margEff %>%
     mutate(order_variable =
              case_when(
-               factor == "Mujer"                              ~ 1,
-               factor == "Perteneciente a \ncomunidad LGBTQ"  ~ 2,
-               factor == "Menor a 30 años"                    ~ 3,
-               factor == "Con educación univeristaria \n o más" ~ 4,
-               factor == "Afroamericano/a o indígena"         ~ 5,
-               factor == "Color de piel claro"               ~ 6
+               factor == "Mujer"                                  ~ 1,
+               factor == "Perteneciente a \ncomunidad LGBTQ"      ~ 2,
+               factor == "Menor a 30 años"                        ~ 3,
+               factor == "Sin educación \nuniveristaria"          ~ 4,
+               factor == "Afromexicano/a o \nindígena"            ~ 5,
+               factor == "Color de piel \noscuro"                 ~ 6,
+               factor == "Vulnerable \neconómicamente"            ~ 7,
+               factor == "Persona con \ndiscapacidad"             ~ 8,
              ),
            dependent_var  =
              dependent_var
