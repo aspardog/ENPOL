@@ -39,18 +39,23 @@ Main_database_2008 <- Main_database %>%
 
 
 
-# Tipos de detención por Policía Federal Ministerial y GN ----------------------
+# Tipos de detención por Policía Federal Ministerial y GN/Policía federal ----------------------
 
 
 Main_database_2008_FGR <- Main_database_2008 %>% 
   filter(Anio_arresto >= 2008,
          NSJP == 1, 
          Corporacion_grupos == "Policía Federal Ministerial" | 
-         Corporacion_grupos == "Guardia Nacional" ) %>% 
+         Corporacion_grupos == "Guardia Nacional" |
+         Corporacion_grupos == "Policía Federal" ) %>% 
   mutate(tipo_detencion = case_when(flagrancia  == 1 ~ "flagrancia",
                                     orden_det   == 1 ~ "orden de detención",
                                     inspeccion  == 1 ~ "inspeccion",
                                     det_ninguna == 1 ~ "ninguna de las enteriores",
+                                    T ~ NA_character_),
+         Corporacion_grupos = case_when(Corporacion_grupos == "Policía Federal Ministerial" ~ "Policía Federal Ministerial",
+                                      Corporacion_grupos == "Guardia Nacional" ~ "GN/Polcía Federal",
+                                      Corporacion_grupos == "Policía Federal" ~ "GN/Polcía Federal",
                                     T ~ NA_character_))
 
 
@@ -67,7 +72,7 @@ data2plot <- Main_database_2008_FGR %>%
          labels = str_wrap(tipo_detencion, width = 20))
 
 
-colors4plot <- c("Guardia Nacional" = "#fa4d57",
+colors4plot <- c("GN/Polcía Federal" = "#fa4d57",
                  "Policía Federal Ministerial" = "#3273ff")
 
 
@@ -76,7 +81,7 @@ plot <- ggplot(data2plot,
                  x     = values, 
                  y     = value2plot,
                  fill  = Corporacion_grupos,
-                 label = paste0(figure, ", N =", Frequency)
+                 label = paste0(figure,",",  "\n","N =" ,Frequency)
                )) +
   geom_bar(stat = "identity",
            show.legend = FALSE, width = 0.9, position = "dodge")+
@@ -104,7 +109,7 @@ plot <- ggplot(data2plot,
     axis.title.y       = element_blank(),
     axis.title.x       = element_blank())
 
-
+plot
 
 
 # Tipos de detención por Policía Federal Ministeriala nivel entidad ----------------------
@@ -356,6 +361,73 @@ plot <- ggplot(data2plot,
     panel.grid.major.x = element_line(color = "#D0D1D3"),       
     axis.title.y       = element_blank(),
     axis.title.x       = element_blank())
+
+
+# Tipos de conclusión del proceso por delitos ambos fueros comparación (barras juntas) -------------------
+
+
+Main_database_2008 <- Main_database_2008 %>% 
+  filter(Anio_arresto >= 2008,
+         NSJP == 1,
+         fuero != "Algunos delitos de fuero común y algunos de fuero federal") %>% 
+  mutate(juicio_abreviado = case_when(P5_6 == "1" ~ "Juicio", 
+                                      P5_6 == "2" ~ "Procedimiento abreviado o juicio sumario", 
+                                      T ~ NA_character_))
+
+
+
+data2plot <- Main_database_2008 %>%
+  select(juicio_abreviado, fuero) %>% 
+  group_by(juicio_abreviado, fuero) %>%
+  drop_na() %>% 
+  summarise(Frequency = n(), .groups = 'drop') %>% 
+  group_by(juicio_abreviado) %>% 
+  mutate(values = juicio_abreviado,
+         value2plot = Frequency / sum(Frequency) * 100,
+         figure = paste0(round(value2plot, 0), "%"),
+         labels = str_wrap(juicio_abreviado, width = 20))
+
+
+colors4plot <- c("Sólo común" = "#fa4d57",
+                 "Sólo federal" = "#3273ff")
+
+
+plot <- ggplot(data2plot,
+               aes(
+                 x     = values, 
+                 y     = value2plot,
+                 fill  = fuero,
+                 label = paste0(figure,",",  "\n","N =" ,Frequency)
+               )) +
+  geom_bar(stat = "identity",
+           show.legend = FALSE, width = 0.9, position = "dodge")+
+  geom_text(aes(y    = value2plot + 10), 
+            position = position_dodge(widt = 0.9),
+            color    = "#4a4a49",
+            family   = "Lato Full",
+            fontface = "bold", 
+            size = 3.514598)  +
+  geom_vline(xintercept = 5.5, linetype = "dashed", color = "black") +
+  scale_fill_manual(values = colors4plot) +
+  scale_y_continuous(limits = c(0, 105),
+                     breaks = seq(0,100,20),
+                     labels = paste0(seq(0,100,20), "%"),
+                     position = "left") +
+  theme(
+    panel.background   = element_blank(),
+    plot.background    = element_blank(),
+    panel.grid.major   = element_line(size     = 0.25,
+                                      colour   = "#5e5c5a",
+                                      linetype = "dashed"),
+    panel.grid.minor   = element_blank(),
+    panel.grid.major.y = element_blank(),
+    panel.grid.major.x = element_line(color = "#D0D1D3"),       
+    axis.title.y       = element_blank(),
+    axis.title.x       = element_blank())
+
+plot
+
+
 
 # Logit de probabilidad de conclusión por procedimiento abreviado  --------
 # Loading plotting functions from GitHub
