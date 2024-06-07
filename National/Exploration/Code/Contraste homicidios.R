@@ -287,6 +287,13 @@ plt <- ggplot(data2plot,
             color = "#fa4d57",
             size  = 1,
             show.legend = F) +
+  geom_text_repel(aes(x     = Anio,
+                y     = value2plot_Brecha,
+                label = labels,
+                group = group_var,
+                color = group_var),
+                size        = 3.514598,
+                show.legend = F,) +
   geom_text_repel(
     size        = 3.514598,
     show.legend = F,
