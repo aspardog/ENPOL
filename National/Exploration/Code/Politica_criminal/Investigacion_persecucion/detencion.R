@@ -265,7 +265,7 @@ plot
 
 data_subset.df <- Main_database %>% 
   filter(Anio_arresto >= 2008,
-         NSJP == 1) ,
+         NSJP == 1,
          P5_6 == 2) %>% 
   mutate(tipo_detencion = case_when(flagrancia  == 1 ~ "Flagrancia",
                                     orden_det   == 1 ~ "Orden de detención",
