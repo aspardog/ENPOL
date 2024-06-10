@@ -5448,6 +5448,25 @@ old_enpol <- left_join(old_enpol1, old_enpol2, by = "id_per") %>%
     P5_31_24 = as.character(p5_29_23),
     P5_31_25 = as.character(p5_29_24),
     #P5_31_26 = as.character(P5_31_26),
+    P4_7 = as.character(p4_7),
+    P4_1_03 = as.character(p4_1_2),
+    P5_2_1 = as.character(p5_2_3),
+    P5_17_1 = as.character(p5_20_1),
+    P5_17_2 = as.character(p5_20_2),
+    P5_17_3 = as.character(p5_20_3),
+    P5_10   = as.character(p5_7),
+    P5_19_3 = as.character(p5_17_3),
+    P5_16_5 = as.character(p5_15_4),
+    P5_16_2 = as.character(p5_15_2),
+    P5_18   = as.character(p5_16),
+    P5_26   = as.character(p5_19),
+    P5_14   = as.character(p5_14),
+    P3_21_1 = as.character(p3_16_1),
+    P3_21_2 = as.character(p3_16_2),
+    P4_15_1 = as.character(p4_13_1),
+    P4_15_3 = as.character(p4_13_3),
+    P5_45_1 = as.character(p5_43_1),
+    P5_45_3 = as.character(p5_43_3),
     tortura_tra = as.character(tortura_arresto),
     tortura_mp = as.numeric(tortura_MP),
     tortura_generalizada = as.numeric(tortura_total),
@@ -5545,6 +5564,31 @@ old_enpol <- left_join(old_enpol1, old_enpol2, by = "id_per") %>%
       p3_3 == 4  ~ 1,
       p3_3 == 1 | p3_3 == 2 | p3_3 == 3 ~ 0,
       T ~ NA),
+    Tiempo_traslado = case_when(p3_15 == 1 ~ "Hasta 30 minutos",
+                                p3_15 == 2 ~ "Más de 30 minutos hasta 1 hora",
+                                p3_15 == 3 ~ "Más de 1 hora hasta 2 horas",
+                                p3_15 == 4 ~ "Más de 2 horas hasta 4 horas",
+                                p3_15 == 5 ~ "Más de 4 horas hasta 6 horas",
+                                p3_15 == 6 ~ "Más de 6 horas hasta 24 horas",
+                                p3_15 == 7 ~ "Más de 24 horas hasta 48 horas",
+                                p3_15 == 8 ~ "Más de 48 horas",
+                                p3_15 == 9 | p3_15 == 10 ~ NA,
+                                T ~ NA_character_),
+    Primer_lugar_traslado = case_when(p3_14 == 1 ~ "Agencia del Ministerio Público",
+                                      p3_14 == 2 ~ "Juez de lo penal",
+                                      p3_14 == 3 ~ "Instalación de la policía",
+                                      p3_14 == 9 ~ "Centro de arraigo",
+                                      p3_14 == 11 ~ "Centro penitenciario",
+                                      p3_14 == 4 ~ "Oficina del gobierno",
+                                      p3_14 == 5 ~ "Casa particular",
+                                      p3_14 == 6 ~ "Establecimiento comercial",
+                                      p3_14 == 7 ~ "Vehículo",
+                                      p3_14 == 8 ~ "Terreno baldío",
+                                      p3_14 == 10 ~ "Zona militar",
+                                      p3_14 == 12 ~ "Hospital",                                         
+                                      p3_14 == 13  ~ "Otra",
+                                      p3_14 == 14 | p3_14 == 15 ~ NA,
+                                      T ~ NA_character_),
     ENPOL = 2016
     
   ) %>%
@@ -5638,6 +5682,27 @@ old_enpol <- left_join(old_enpol1, old_enpol2, by = "id_per") %>%
     inspeccion,
     orden_det,
     det_ninguna,
+    P4_7,
+    P4_1_03,
+    P5_2_1, 
+    P5_17_1,
+    P5_17_2,
+    P5_17_3,
+    P5_10,
+    P5_19_3,
+    P5_16_5,
+    P5_16_2,
+    P5_18,
+    P5_26,
+    P5_14,
+    P3_21_1, 
+    P3_21_2,
+    P4_15_1,
+    P4_15_3,
+    P5_45_1,
+    P5_45_3,
+    Tiempo_traslado,
+    Primer_lugar_traslado,
     ENPOL
   )
 
@@ -5647,16 +5712,13 @@ Main_database_completa <- Main_database %>%
   mutate(muestra_mixta = case_when( 
     ENPOL == 2016 & Anio_arresto>=2011 ~ 1,
     ENPOL == 2021 & Anio_arresto>=2017 ~ 1,
-    T ~ 0))
-
-
-
+    T ~ 0)
+    )
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
 ## 6.  Saving the Output database                                                                        ----
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
 
 save(Main_database_completa, file = paste0(path2DB,"/National/Data_cleaning/Output/Main_database_completa.RData"))

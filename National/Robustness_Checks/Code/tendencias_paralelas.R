@@ -45,7 +45,10 @@ paralel_trends.fn <- function(
       mutate(
         lag_var = lag(mainVar, n = 1),
         difference = mainVar - lag_var,
-        trend_direction = if_else(difference > 0, "Positive", "Negative")
+        trend_direction = if_else(difference > 5, "Positive", 
+                                  if_else(difference < -5, "Negative",
+                                          "No trends")
+        )
       ) %>%
       ungroup() %>%
       filter(Anio_arresto < 2017) %>%

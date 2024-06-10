@@ -427,9 +427,6 @@ data_subset.df <- master_data.df %>%
                                       P4_1_05 == 1 & P5_1 == 2 ~ "Defensa sólo en Ministerio Público",
                                       T~ NA_character_))
 
-
-
-
 data2plot <- data_subset.df %>%
   drop_na(defensa_momento, abogado_publico, P5_4_A) %>%
   group_by(defensa_momento, abogado_publico) %>% 
