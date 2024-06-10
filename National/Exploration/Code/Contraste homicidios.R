@@ -73,7 +73,6 @@ snsp_2<- snsp %>%
   filter(Anio>=2017 & Anio<= 2021) %>%
   mutate(Incidencia = Enero+Febrero+Marzo+Abril+Mayo+Junio+Julio+Agosto+Septiembre+Octubre+Noviembre+Diciembre) %>%
   mutate(Delito=case_when(`Subtipo de delito`== "Homicidio doloso" ~ "Homicidio doloso, SESNSP",
-                          `Subtipo de delito`== "Homicidio culposo" ~ "Homicidio culposo, SESNSP",
                           T ~ "Otro")) %>% 
   group_by(Delito,Anio) %>%
   summarize(Incidencia = sum(Incidencia)) %>%
@@ -108,7 +107,7 @@ group_by(Anio_arresto,Delito) %>%
 
 
 enpol_2 <- Main_database %>% 
-  filter(Anio_arresto>=2017 & Anio_arresto<= 2021 & sentenciado == 1 & Delito_unico == 1)  %>%
+  filter(Anio_arresto>=2017 & Anio_arresto<= 2021 & Delito_unico == 1)  %>%
   select(Anio_arresto,Delito_gr_1_robos,Delito_gr_2_drogas,Delito_gr_3_del_org,Delito_gr_4_lesiones,Delito_gr_5_hom_cul,
          Delito_gr_6_hom_dol,Delito_gr_7_armas,Delito_gr_8_viol_fam,Delito_gr_9_secuestro,Delito_gr_10_sexuales,
          Delito_gr_11_extorsion,Delito_gr_12_fraude,Delito_gr_13_amenazas,Delito_gr_14_otro,Delito_gr_15_ns_nr)  %>% 
@@ -131,23 +130,22 @@ enpol_2 <- Main_database %>%
 
 
 enpol_3 <- Main_database %>% 
-  filter(Anio_arresto>=2017 & Anio_arresto<= 2021 & sentenciado == 1)  %>%
+  filter(Anio_arresto>=2017 & Anio_arresto<= 2021 )  %>%
   select(Anio_arresto,Delito_gr_1_robos,Delito_gr_2_drogas,Delito_gr_3_del_org,Delito_gr_4_lesiones,Delito_gr_5_hom_cul,
          Delito_gr_6_hom_dol,Delito_gr_7_armas,Delito_gr_8_viol_fam,Delito_gr_9_secuestro,Delito_gr_10_sexuales,
          Delito_gr_11_extorsion,Delito_gr_12_fraude,Delito_gr_13_amenazas,Delito_gr_14_otro,Delito_gr_15_ns_nr,FAC_PER)  %>% 
   pivot_longer(cols = c(Delito_gr_1_robos,Delito_gr_2_drogas,Delito_gr_3_del_org,Delito_gr_4_lesiones,Delito_gr_5_hom_cul,
                        Delito_gr_6_hom_dol,Delito_gr_7_armas,Delito_gr_8_viol_fam,Delito_gr_9_secuestro,Delito_gr_10_sexuales,
                        Delito_gr_11_extorsion,Delito_gr_12_fraude,Delito_gr_13_amenazas,Delito_gr_14_otro,Delito_gr_15_ns_nr), 
-               names_to = "Tipo_de_delito", values_to = "Sentenciados") %>%
-  mutate(Sentenciados = Sentenciados*as.numeric(FAC_PER),
+               names_to = "Tipo_de_delito", values_to = "Detenidos") %>%
+  mutate(Detenidos = Detenidos*as.numeric(FAC_PER),
          Delito = case_when(Tipo_de_delito== "Delito_gr_6_hom_dol" ~ "Homicidio doloso, ENPOL",
-                          Tipo_de_delito== "Delito_gr_5_hom_cul" ~ "Homicidio culposo, ENPOL",
                           T ~ "Otro")) %>%
   group_by(Anio_arresto,Delito) %>%
-  summarize(Sentenciados = sum(Sentenciados)) %>%
-  mutate(value2plot = Sentenciados ,
+  summarize(Detenidos = sum(Detenidos)) %>%
+  mutate(value2plot = Detenidos ,
          labels = paste0(round(value2plot,0)),
-         group_var =  "Sentenciados_ENPOL") %>%
+         group_var =  "Detenidos_ENPOL") %>%
   filter(Delito!="Otro") %>%
   rename(Anio = Anio_arresto)
 
@@ -261,18 +259,41 @@ ggsave(plot   = plt,
 
 #Absolutos
 
-data2plot <- bind_rows(snsp_2,enpol_3)
+data2plot <- bind_rows(snsp_2,enpol_3) %>%
+  ungroup() %>%
+  select(Anio, value2plot, labels, group_var) %>%
+  pivot_wider(names_from = "group_var" , id_cols = "Anio", values_from = c("value2plot","labels")) %>% 
+  mutate(value2plot_Brecha = value2plot_Homicidios_SNSP - value2plot_Detenidos_ENPOL,
+         labels_Brecha = paste0(round(value2plot_Brecha,0)))  %>%
+  pivot_longer(cols = c("value2plot_Homicidios_SNSP", "value2plot_Detenidos_ENPOL", "labels_Homicidios_SNSP", "labels_Detenidos_ENPOL", "labels_Brecha"), 
+               names_to = c(".value", "group_var"), names_sep = "_") %>%
+  mutate(value2plot_Brecha= case_when(group_var=="Brecha" ~ value2plot_Brecha,
+                                      T~ NA))
+
+colors4plot <- c( "#fa4d57","#003B88", "#43a9a7")
 
 plt <- ggplot(data2plot, 
               aes(x     = Anio,
                   y     = value2plot,
                   label = labels,
-                  group = Delito,
-                  color = Delito)) +
+                  group = group_var,
+                  color = group_var)) +
   geom_point(size = 2,
              show.legend = F) +
   geom_line(size  = 1,
             show.legend = F) +
+  geom_line(aes(y=value2plot_Brecha),
+            linetype="dotted",
+            color = "#fa4d57",
+            size  = 1,
+            show.legend = F) +
+  geom_text_repel(aes(x     = Anio,
+                y     = value2plot_Brecha,
+                label = labels,
+                group = group_var,
+                color = group_var),
+                size        = 3.514598,
+                show.legend = F,) +
   geom_text_repel(
     size        = 3.514598,
     show.legend = F,
