@@ -17,7 +17,7 @@ paralel_trends.fn <- function(
       ) %>%
       pivot_wider(id_cols = Anio_arresto, names_from = "ENPOL", values_from = "mainVar", names_prefix = "ENPOL_") %>%
       mutate(
-        GAP = abs(((ENPOL_2021-ENPOL_2016))/ENPOL_2016)*100
+        GAP = abs((ENPOL_2021-ENPOL_2016))
       ) %>%
       pivot_longer(cols = !c(Anio_arresto, GAP), names_to = "ENPOL", values_to = "mainVar") %>%
       drop_na(mainVar)
@@ -31,22 +31,24 @@ paralel_trends.fn <- function(
       ))
     
     GAP <- data_subset.df %>%
-      select(Anio_arresto, GAP) %>% 
+      ungroup() %>%
+      select(GAP) %>% 
       distinct() %>%
-      group_by(Anio_arresto) %>%
+      drop_na() %>%
       summarise(
         TC_promedio = mean(GAP, na.rm = T)
       ) %>%
       pull()
     
     Trends <- data_subset.df %>%
+      ungroup() %>%
       arrange(Anio_arresto) %>%
       group_by(ENPOL) %>%
       mutate(
         lag_var = lag(mainVar, n = 1),
         difference = mainVar - lag_var,
-        trend_direction = if_else(difference > 5, "Positive", 
-                                  if_else(difference < -5, "Negative",
+        trend_direction = if_else(difference > 3, "Positive", 
+                                  if_else(difference < -3, "Negative",
                                           "No trends")
         )
       ) %>%
@@ -64,31 +66,59 @@ paralel_trends.fn <- function(
     
     p <- ggplot() +
       geom_vline(xintercept = "2016", color = "red", linetype = "dotted") + # Add vertical line at 2016
-      geom_line(data = subset(data_2021, Anio_arresto > 2015), aes(x = Anio_arresto, y = mainVar, color = "2021", group = "2021"), size = 1.2)  +
-      geom_line(data = data_2016, aes(x = Anio_arresto, y = mainVar, color = "2016", group = group_var,  linetype = group_var,), size = 1.2) +
-      geom_line(data = data_2021, aes(x = Anio_arresto, y = mainVar, color = "2021", linetype = group_var, group = group_var), size = 1.2)  +
+      geom_line(data = subset(data_2021, Anio_arresto > 2015), aes(x = Anio_arresto, y = mainVar, color = "2021", group = "2021"), size = 1.2, color = "#2a2a9A")  +
+      geom_line(data = data_2016, aes(x = Anio_arresto, y = mainVar, color = "2016", group = group_var,  linetype = group_var), size = 1.2, show.legend = T) +
+      geom_line(data = data_2021, aes(x = Anio_arresto, y = mainVar, color = "2021", linetype = group_var, group = group_var), size = 1.2, show.legend = T)  +
+      scale_color_manual(values = c("2016" = "#ef4b4b", "2021" = "#2a2a9A")) +
       scale_linetype_manual(values = c("dotted" = "dotted", "normal" = "solid")) +
       labs(title = mainVar,
-           subtitle = paste0("La tasa de cambio porcentual promedio es de ", round(GAP,0), "%.", "\nExiste una diferencia en tendencias en ", length(Trends), " años entre las dos encuestas"),
+           subtitle = paste0("La brecha promedio es de ", 
+                             round(GAP,0),
+                             " puntos porcentuales",
+                             "\nExiste una divergencia en las tendencias en ", 
+                             length(Trends), 
+                             " año/s entre las dos encuestas"),
            x = "Year of Arrest",
            y = "mainVar",
            color = "ENPOL",
-           linetype = "Line Type") +
+           linetype = "Line Type",
+           caption = "Nota: Las divergencias en las tendencias se resaltan cuando las diferencias son mayores a 5%") +
       theme_minimal() +
-      theme(legend.position = "bottom") +
+      theme(legend.position = "top") +
       scale_y_continuous(limits = c(0, 105),
                          expand = c(0,0),
                          breaks = seq(0,100,10),
-                         labels = paste0(seq(0,100,10), "%"))  +
+                         labels = paste0(seq(0,100,10), "%"))   +
       WJP_theme() +
-      theme(panel.grid.major.x = element_line(colour = "#d1cfd1"),
-            panel.grid.major.y = element_line(colour = "#d1cfd1"),
-            axis.title.x       = element_blank(),
-            axis.title.y       = element_blank(),
-            axis.line.x        = element_line(color    = "#d1cfd1"),
-            axis.ticks.x       = element_line(color    = "#d1cfd1",
-                                              linetype = "solid"),
-            ggh4x.axis.ticks.length.minor = rel(1))
+      theme(legend.key = element_blank(),
+            legend.position = "top",
+            legend.title = element_blank(),
+            axis.line        = element_line(color    = "#5e5c5a", linetype = "solid"),
+            legend.text = element_text(size = 8), #change legend text font size
+            panel.grid.major.y = element_line(size = 0.5, 
+                                              colour = "grey75", 
+                                              linetype = "dotted"),
+            panel.grid.major.x = element_blank(),
+            plot.title = element_text(family="Lato Black", 
+                                      size = 12, 
+                                      color = "Black"),
+            plot.subtitle = element_text(family="Lato Full", 
+                                         size = 10, 
+                                         color = "Black"),
+            axis.text     = element_text(family = "Lato Full",
+                                         face     = "plain",
+                                         size     = 10,
+                                         color    = "Black"),
+            axis.title     = element_text(family = "Lato Full",
+                                          face     = "plain",
+                                          size     = 10,
+                                          color    = "Black"),
+            plot.caption = element_text(family = "Lato Full",
+                                        face     = "plain",
+                                        size     = 8,
+                                        color    = "Black", 
+                                        hjust = 0))+
+      guides(linetype = "none");p
     
     paralel_trends.ls[[i]] <- p
 

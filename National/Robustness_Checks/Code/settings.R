@@ -16,13 +16,13 @@ library(pacman)
 p_load(char = c(
   # Visualizations
   "showtext", "ggtext", "ggsankey", "ggwaffle", "ggplotify", "gridExtra", 
-  "patchwork", "ggh4x", "ggrepel", "sf", "flextable",  "officer",
+  "patchwork", "ggh4x", "ggrepel", "sf", "flextable",  "officer", "cowplot",
   
   # Data Loading and Saving
   "haven", "readxl", "writexl", "openxlsx",
   
   # Utilities
-  "margins", "quarto", "kableExtra", "WJPr", "sandwich",
+  "margins", "quarto", "kableExtra", "WJPr", "sandwich", "broom",
   
   # Good 'ol Tidyverse
   "tidyverse",

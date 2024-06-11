@@ -28,6 +28,8 @@
 # loaded from the following script:
 source("Code/settings.R")
 source("Code/tendencias_paralelas.R")
+source("Code/efectos_diferenciados.R")
+
 # Loading data
 load(paste0(path2SP,
             "/National/Data_cleaning/Output/Main_database_completa.RData"))
@@ -173,9 +175,14 @@ mainVar <- c("presion_mp",
 figure2_1 <- list(
   Paralalel_trends.pl <- paralel_trends.fn(
     mainVar = mainVar
+  ),
+  Het_effects.pl <- het_effects.fn(
+    mainVar = mainVar
   )
 )
-names(figure2_1) <- c("Tendencias paralelas")
+names(figure2_1) <- c("Tendencias paralelas",
+                      "Efectos heterogeneos")
+
 
 ### Figure 2.3 --------------------------------------------------------------
 
@@ -187,9 +194,13 @@ mainVar <- c("video", "publico", "juez_diferente",
 figure2_3 <- list(
   Paralalel_trends.pl <- paralel_trends.fn(
     mainVar = mainVar
+  ),
+  Het_effects.pl <- het_effects.fn(
+    mainVar = mainVar
   )
 )
-names(figure2_3) <- c("Tendencias paralelas")
+names(figure2_3) <- c("Tendencias paralelas",
+                      "Efectos heterogeneos")
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -205,10 +216,13 @@ mainVar <- c("detencion_corrupcion", "mp_corrupcion",
 figure3_2 <- list(
   Paralalel_trends.pl <- paralel_trends.fn(
     mainVar = mainVar
+  ),
+  Het_effects.pl <- het_effects.fn(
+    mainVar = mainVar
   )
 )
-names(figure3_2) <- c("Tendencias paralelas")
-
+names(figure3_2) <- c("Tendencias paralelas",
+                      "Efectos heterogeneos")
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -225,7 +239,11 @@ mainVar <- c("det_ninguna",
 figure4_2_1 <- list(
   Paralalel_trends.pl <- paralel_trends.fn(
     mainVar = mainVar
+  ),
+  Het_effects.pl <- het_effects.fn(
+    mainVar = mainVar
   )
 )
 
-names(figure4_2_1) <- c("Tendencias paralelas")
+names(figure4_2_1) <- c("Tendencias paralelas",
+                        "Efectos heterogeneos")
