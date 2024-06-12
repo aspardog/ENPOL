@@ -55,6 +55,7 @@ paralel_trends.fn <- function(
       ungroup() %>%
       filter(Anio_arresto < 2017) %>%
       drop_na() %>%
+      filter(trend_direction != "No trends") %>%
       group_by(Anio_arresto) %>%
       mutate(
         paralalel_trends = if_else(length(unique(trend_direction)) > 1, "mixed_trends", "same trends")
@@ -72,16 +73,12 @@ paralel_trends.fn <- function(
       scale_color_manual(values = c("2016" = "#ef4b4b", "2021" = "#2a2a9A")) +
       scale_linetype_manual(values = c("dotted" = "dotted", "normal" = "solid")) +
       labs(title = mainVar,
-           subtitle = paste0("La brecha promedio es de ", 
+           subtitle = paste0("La brecha promedio es de <b>", 
                              round(GAP,0),
-                             " puntos porcentuales",
-                             "\nExiste una divergencia en las tendencias en ", 
+                             "</b> puntos porcentuales",
+                             "\nExiste una divergencia en las tendencias en <b>", 
                              length(Trends), 
-                             " año/s entre las dos encuestas"),
-           x = "Year of Arrest",
-           y = "mainVar",
-           color = "ENPOL",
-           linetype = "Line Type",
+                             "</b> año/s entre las dos encuestas"),
            caption = "Nota: Las divergencias en las tendencias se resaltan cuando las diferencias son mayores a 5%") +
       theme_minimal() +
       theme(legend.position = "top") +
@@ -102,9 +99,9 @@ paralel_trends.fn <- function(
             plot.title = element_text(family="Lato Black", 
                                       size = 12, 
                                       color = "Black"),
-            plot.subtitle = element_text(family="Lato Full", 
-                                         size = 10, 
-                                         color = "Black"),
+            plot.subtitle = element_markdown(family="Lato Full", 
+                                             size = 10, 
+                                             color = "Black"),
             axis.text     = element_text(family = "Lato Full",
                                          face     = "plain",
                                          size     = 10,

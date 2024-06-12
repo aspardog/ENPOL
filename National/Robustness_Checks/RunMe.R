@@ -29,6 +29,7 @@
 source("Code/settings.R")
 source("Code/tendencias_paralelas.R")
 source("Code/efectos_diferenciados.R")
+source("Code/años_sentencia.R")
 
 # Loading data
 load(paste0(path2SP,
@@ -40,6 +41,10 @@ master_data.df <- Main_database_completa %>%
   filter(Anio_arresto != 9998) %>%
   filter(Anio_arresto != 9999) %>%
   mutate(
+    P5_4_A = as.numeric(P5_4_A),
+    tiempo_sentencia = case_when(P5_4_A == 0 ~ NA_real_,
+                                 P5_4_A >= 97 ~ NA_real_,
+                                 T ~ P5_4_A),
     presion_mp = 
       case_when(
         as.numeric(P4_7) == 4 | as.numeric(P4_7) == 5 ~ 1,
@@ -178,10 +183,15 @@ figure2_1 <- list(
   ),
   Het_effects.pl <- het_effects.fn(
     mainVar = mainVar
+  ),
+  time_effects.pl <- time_checks.fn(
+    mainVar = mainVar
   )
 )
+
 names(figure2_1) <- c("Tendencias paralelas",
-                      "Efectos heterogeneos")
+                      "Efectos heterogeneos",
+                      "Años de sentencia")
 
 
 ### Figure 2.3 --------------------------------------------------------------
@@ -197,10 +207,14 @@ figure2_3 <- list(
   ),
   Het_effects.pl <- het_effects.fn(
     mainVar = mainVar
+  ),
+  time_effects.pl <- time_checks.fn(
+    mainVar = mainVar
   )
 )
 names(figure2_3) <- c("Tendencias paralelas",
-                      "Efectos heterogeneos")
+                      "Efectos heterogeneos",
+                      "Años de sentencia")
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -219,10 +233,14 @@ figure3_2 <- list(
   ),
   Het_effects.pl <- het_effects.fn(
     mainVar = mainVar
+  ),
+  time_effects.pl <- time_checks.fn(
+    mainVar = mainVar
   )
 )
 names(figure3_2) <- c("Tendencias paralelas",
-                      "Efectos heterogeneos")
+                      "Efectos heterogeneos",
+                      "Años de sentencia")
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -242,8 +260,12 @@ figure4_2_1 <- list(
   ),
   Het_effects.pl <- het_effects.fn(
     mainVar = mainVar
+  ),
+  time_effects.pl <- time_checks.fn(
+    mainVar = mainVar
   )
 )
 
 names(figure4_2_1) <- c("Tendencias paralelas",
-                        "Efectos heterogeneos")
+                        "Efectos heterogeneos",
+                        "Años de sentencia")

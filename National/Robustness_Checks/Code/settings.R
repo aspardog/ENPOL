@@ -22,13 +22,13 @@ p_load(char = c(
   "haven", "readxl", "writexl", "openxlsx",
   
   # Utilities
-  "margins", "quarto", "kableExtra", "WJPr", "sandwich", "broom",
-  
-  # Good 'ol Tidyverse
-  "tidyverse",
+  "margins", "quarto", "kableExtra", "WJPr", "sandwich", "broom",   
   
   # Estimattions
-  "sandwich"
+  "sandwich",
+  
+  # Good 'ol Tidyverse
+  "tidyverse"
   
 ))
 
