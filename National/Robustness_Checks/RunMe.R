@@ -50,6 +50,16 @@ master_data.df <- Main_database_completa %>%
         as.numeric(P4_7) == 4 | as.numeric(P4_7) == 5 ~ 1,
         as.numeric(P4_7) < 11 &  (as.numeric(P4_7) != 4 | as.numeric(P4_7) != 5) ~ 0
       ),
+    presion_juez = 
+      case_when(
+        P5_7 == 1 ~ 1,
+        P5_7 == 2 ~ 0
+      ),
+    explicacion_detencion = 
+      case_when(
+        P3_14_4 == 1 ~ 1,
+        P3_14_4 == 0 ~ 0
+      ),
     explicacion_mp = 
       case_when(
         P4_1_03 == 1 ~ 1,
@@ -74,6 +84,31 @@ master_data.df <- Main_database_completa %>%
       case_when(
         P5_17_3 == 1 | P5_17_3 == 2~ 1,
         P5_17_3 == 3 | P5_17_3 == 4 ~ 0
+      ),
+    claridad_defensor =
+      case_when(
+        P5_17_1 == 1 | P5_17_1 == 2~ 1,
+        P5_17_1 == 3 | P5_17_1 == 4 ~ 0
+      ),
+    claridad_defendido =
+      case_when(
+        P5_17_4 == 1 | P5_17_4 == 2~ 1,
+        P5_17_4 == 3 | P5_17_4 == 4 ~ 0
+      ),
+    guardar_silencio_detencion = 
+      case_when(
+        P3_14_5 == 1 ~ 1,
+        P3_14_5 == 0 ~ 0
+      ),
+    guardar_silencio_mp = 
+      case_when(
+        P4_1_04 == 1 ~ 1,
+        P4_1_04 == 2 ~ 0
+      ),
+    guardar_silencio_juez = 
+      case_when(
+        P5_2_4 == 1 ~ 1,
+        P5_2_4 == 2 ~ 0
       ),
     rapida = 
       case_when(
@@ -109,6 +144,11 @@ master_data.df <- Main_database_completa %>%
       case_when(
         P5_14 == 1 ~ 1,
         P5_14 == 2 ~ 0
+      ),
+    culpable_antes = 
+      case_when(
+        P5_25 == 2 ~ 1,
+        P5_25 == 1 ~ 0
       ),
     juez_presente = 
       case_when(
@@ -156,15 +196,28 @@ master_data.df <- Main_database_completa %>%
       case_when(
         Tiempo_traslado == "Más de 6 horas hasta 24 horas" ~ 1,
         T ~ 0 
+      ),
+    uso_excesivo =
+      case_when(
+        proporcionalidad_uso_fuerza == 0 ~ 1,
+        proporcionalidad_uso_fuerza == 1 ~ 0
+      ),
+    proceso_justo = 
+      case_when(
+        as.numeric(P5_26A) == 1 ~ 1,
+        as.numeric(P5_26A) == 0 ~ 0,
+        T ~ NA_real_
       )
   )
 
+saveRDS(object = master_data.df, file = "Output/master_data.df.rds")
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
 ## Proceso justo                                                                                     ----
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
+# Render to HTML
+quarto_render("Prueba de robustez.qmd")
 
 ### Figure 2.1 --------------------------------------------------------------
 
@@ -175,7 +228,10 @@ mainVar <- c("presion_mp",
              "claridad_defensor", 
              "claridad_juez", 
              "claridad_mp",
-             "rapida", "corta", "media", "larga")
+             "rapida", 
+             "corta", 
+             "media", 
+             "larga")
 
 figure2_1 <- list(
   Paralalel_trends.pl <- paralel_trends.fn(

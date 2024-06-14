@@ -170,7 +170,8 @@ time_checks.fn <- function(
             plot.subtitle = element_markdown(family="Lato Full", 
                                              size = 10, 
                                              color = "Black",
-                                             margin = margin(5,0,0,0)));plt
+                                             margin = margin(5,0,0,0)),
+            plot.title = element_blank());plt
     
     time_checks.ls[[i]] <- plt
   }
