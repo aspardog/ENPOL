@@ -265,7 +265,10 @@ mainVar <- c("explicacion_detencion",
              "tiempo_30m", 
              "tiempo_6h",
              "uso_excesivo",
-             "tortura_generalizada")
+             "tortura_generalizada",
+             "proceso_justo",
+             "presion_mp",
+             "presion_juez")
 
 # Efectos heterogeneos
 
@@ -441,11 +444,10 @@ Het_effects.pl$claridad_defensor
 
 :::
 
-:::
-
 #### Claridad abogado de la víctima
 
 ::: panel-tabset
+
 #### Años de sentencia
 
 ```{r a6, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
@@ -460,6 +462,7 @@ Het_effects.pl$claridad_defendido
 
 :::
 
+:::
 
 ## Derecho a guardar silencio y no autoincriminarse
 
@@ -908,9 +911,11 @@ Het_effects.pl$tortura_generalizada
 :::
 </details>
 
+
 ## Violación a la libertad
 
 <details>
+
 <summary>Detenciones irregulares</summary>
 
 <br>
@@ -937,12 +942,15 @@ Het_effects.pl$det_ninguna
 ```
 
 :::
+
 </details>
 
 <details>
+
 <summary>Cambios en los tiempos de traslado</summary>
 
 <br>
+
 ::: panel-tabset
 
 <br>
@@ -969,9 +977,11 @@ Paralalel_trends.pl$tiempo_30m
 ```{r c28, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
 Het_effects.pl$tiempo_30m
 ```
+
 :::
 
 ### 6 a 24 horas
+
 ::: panel-tabset
 
 #### Años de sentencia
@@ -994,13 +1004,17 @@ Het_effects.pl$tiempo_6h
 ```
 
 :::
+
 ::: 
 
 </details>
+
 <details>
+
 <summary>Cambios en el lugar de traslado</summary>
 
 <br>
+
 ::: panel-tabset
 
 <br>
@@ -1054,15 +1068,16 @@ Het_effects.pl$primer_policia
 ```
 
 :::
-
 :::
-<details>
+
+</details>
 
 # PERCEPCIÓN PROCESO JUSTO
 
 ## Violación a la integridad personal
 
 <details>
+
 <summary>Percepciones de un proceso justo</summary>
 
 <br>
@@ -1082,4 +1097,5 @@ Het_effects.pl$proceso_justo
 ```
 
 :::
+
 </details>
