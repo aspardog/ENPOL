@@ -236,3 +236,5 @@ National/Data_cleaning/Input/ENPOL 2016_GIZ_work_20181015.dta
 National/Exploration/Output/tarea_logit-MacBook Air de Cristina.xlsx
 National/Exploration/Output/Politica_criminal/FGR_tipodetencion_estado.xlsx
 National/Exploration/Output/INEGI_homicidios.xlsx
+National/Robustness_Checks/Prueba_robustez.rmarkdown
+National/Robustness_Checks/Output/master_data.df.rds

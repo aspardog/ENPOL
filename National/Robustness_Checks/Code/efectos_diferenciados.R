@@ -254,13 +254,10 @@ het_effects.fn <- function(
   
   # Combine the plots and the legend using patchwork
   combined_plot <- p1 / p2 + plot_layout(guides = 'collect', nrow = 2)  + 
-    plot_annotation(title = paste0("<b>",mainVar, "</b>"), 
-                    caption = "Nota: Las líneas negras representan los umbrales para determinar los outliers respecto a su medida intercuartil. <br>Las líneas rojas representan el promedio nacional.",
+    plot_annotation(caption = "Nota: Las líneas negras representan los umbrales para determinar los outliers respecto a su medida intercuartil. <br>Las líneas rojas representan el promedio nacional.",
                     theme = 
                       theme(
-                        plot.title = element_markdown(family="Lato Black", 
-                                                      size = 12, 
-                                                      color = "Black", hjust = 0.5),
+                        plot.title = element_blank(),
                         plot.caption = element_markdown(family = "Lato Full",
                                                     face     = "plain",
                                                     size     = 8,

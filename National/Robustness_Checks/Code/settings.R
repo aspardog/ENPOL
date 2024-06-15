@@ -28,6 +28,7 @@ p_load(char = c(
   "sandwich",
   
   # Good 'ol Tidyverse
+  "quarto", "bslib", "htmltools",
   "tidyverse"
   
 ))
