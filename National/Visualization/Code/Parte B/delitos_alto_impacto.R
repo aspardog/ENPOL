@@ -122,7 +122,7 @@ p <- ggplot(data2table,
 ggsave(plot   = p,
        file   = paste0(path2SP,"National/Presentations/INL_JUNIO/charts_and_images/delitos_alto_impacto/Figure2_1.svg"), 
        width  = 189.7883, 
-       height = 175,
+       height = 130,
        units  = "mm",
        dpi    = 72,
        device = "svg")
