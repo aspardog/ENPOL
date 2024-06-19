@@ -113,7 +113,7 @@ plot <- data2plot %>%
 ggsave(plot   = plot,
        file   = paste0(path2SP,"National/Presentations/INL_JUNIO/charts_and_images/delincuencia_prolifica/Figure2_1.svg"), 
        width  = 189.7883, 
-       height = 95,
+       height = 70,
        units  = "mm",
        dpi    = 72,
        device = "svg")
@@ -190,7 +190,7 @@ plt <- ggplot(data2plot,
   geom_bar(stat = "identity", fill = colors4plot, color = colors4plot,
            show.legend = F, width = 0.9) +
   scale_fill_manual(values = colors4plot) +
-  geom_text(aes(y    = value2plot + 3 ),
+  geom_text(aes(y    = value2plot + 5 ),
             color    = "#4a4a49",
             family   = "Lato Full",
             fontface = "bold") +
@@ -223,7 +223,7 @@ plt
 ggsave(plot   = plt,
        file   = paste0(path2SP,"National/Presentations/INL_JUNIO/charts_and_images/delincuencia_prolifica/Figure2_2.svg"), 
        width  = 189.7883, 
-       height = 85,
+       height = 65,
        units  = "mm",
        dpi    = 72,
        device = "svg")
@@ -296,3 +296,112 @@ ggsave(plot   = plot,
        units  = "mm",
        dpi    = 72,
        device = "svg")
+
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##
+## 3. Proporción de personas que fueron sentenciadas por más de un delito                                          ----
+##
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+delitos_data <- Main_database      %>% 
+  filter(Anio_arresto >= 2008,
+         NSJP == 1,
+         sentenciado == 1,
+         Delito_unico == 0)        %>% 
+  select(starts_with("Delito_gr")) %>% 
+  mutate_all(as.numeric) %>%
+  select(Delito_gr_1_robos, 
+         Delito_gr_2_drogas, 
+         Delito_gr_7_armas, 
+         Delito_gr_6_hom_dol,
+         Delito_gr_11_extorsion)   %>% 
+  mutate(total = sum(c_across(where(is.numeric)))) %>% 
+  filter(total >= 2) %>% 
+  mutate(Delito_gr_1_robos = case_when(Delito_gr_1_robos          == 1 ~ "Robos", 
+                                       T ~ "0"), 
+         Delito_gr_2_drogas = case_when(Delito_gr_2_drogas        == 1 ~ "Drogas", 
+                                        T ~ "0"), 
+         Delito_gr_7_armas = case_when(Delito_gr_7_armas          == 1 ~ "Armas", 
+                                       T ~ "0"), 
+         Delito_gr_6_hom_dol = case_when(Delito_gr_6_hom_dol       == 1 ~ "Homicidio doloso", 
+                                         T ~ "0"),
+         Delito_gr_11_extorsion = case_when(Delito_gr_11_extorsion == 1 ~ "Extorsión", 
+                                            T ~ "0")) %>%
+  rowwise() %>%
+  mutate(concat = paste(c_across(where(is.character)), collapse = " ")) %>%
+  mutate(concat = str_replace_all(concat, "0", ""),
+         concat = str_replace_all(concat, " ", ""),
+         concat = case_when(concat == "DrogasArmas" ~ "Drogas y Armas",
+                             concat == "RobosArmas" ~ "Robos y Armas",
+                             concat == "RobosHomicidiodoloso" ~ "Robos y Homicidio doloso",
+                             concat == "RobosDrogas" ~ "Robos y Drogas",
+                             concat == "DrogasHomicidiodoloso" ~ "Drogas y Homicidio doloso",
+                             concat == "ArmasHomicidiodoloso" ~ "Armas y Homicidio doloso",
+                             concat == "RobosDrogasArmas" ~ "Robos, Drogas y Armas",
+                             concat == "RobosExtorsión" ~ "Robos y Extorsión",
+                             T ~ "Otras combinaciones"))
+                      
+
+data2plot <- delitos_data %>%
+  group_by(concat) %>%
+  summarise(n = n()) %>%
+  mutate(value2plot =  100 * n / sum(n),
+         labels = paste0(round(value2plot,0),"%"),
+         Delito = concat,
+         Delito = str_wrap(Delito, width = 30)) %>%
+  select(Delito,value2plot,labels) %>%
+  arrange(value2plot) %>%
+  mutate(Delito = factor(Delito, levels = Delito)) 
+
+colors4plot <- rep("#E2E2F7", 9)
+
+
+plt <- ggplot(data2plot, 
+              aes(x     = Delito,
+                  y     = value2plot,
+                  label = labels,
+                  color = Delito)) +
+  geom_bar(stat = "identity", fill = colors4plot, color = colors4plot,
+           show.legend = F, width = 0.9) +
+  scale_fill_manual(values = colors4plot) +
+  geom_text(aes(y    = value2plot + 5 ),
+            color    = "#4a4a49",
+            family   = "Lato Full",
+            fontface = "bold") +
+  labs(y = "% of respondents") +
+  scale_y_continuous(limits = c(0, 100),
+                     breaks = seq(0,100,20),
+                     labels = paste0(seq(0,100,20), "%"),
+                     position = "right") +
+  scale_x_discrete( ) +
+  WJP_theme() +
+  theme(legend.position="none",
+        panel.grid.major.x = element_line(colour = "#d1cfd1", 
+                                          size = 0.5),
+        panel.grid.major.y = element_blank(),
+        panel.background = element_blank(),
+        panel.grid.minor = element_blank(),
+        legend.text = element_text(family = "Lato Bold"),
+        axis.title.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        axis.title.x=element_blank(),
+        axis.text.y=element_text(family = "Lato Medium",
+                                 size = 3.514598*.pt,
+                                 color = "Black", hjust = 0),
+        legend.title = element_blank())+
+  coord_flip()
+
+plt
+
+
+ggsave(plot   = plt,
+       file   = paste0(path2SP,"National/Presentations/INL_JUNIO/charts_and_images/delincuencia_prolifica/Figure2_4.svg"), 
+       width  = 189.7883, 
+       height = 65,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
+
+
+
+
