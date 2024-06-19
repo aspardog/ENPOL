@@ -98,7 +98,7 @@ plt
 ggsave(plot   = plt,
        file   = paste0(path2SP,"National/Presentations/INL_JUNIO/charts_and_images/estudio_FGR/Figure2_1.svg"), 
        width  = 189.7883, 
-       height = 85,
+       height = 80,
        units  = "mm",
        dpi    = 72,
        device = "svg")
@@ -183,7 +183,7 @@ plot
 ggsave(plot   = plot,
        file   = paste0(path2SP,"National/Presentations/INL_JUNIO/charts_and_images/estudio_FGR/Figure2_2.svg"), 
        width  = 189.7883, 
-       height = 85,
+       height = 80,
        units  = "mm",
        dpi    = 72,
        device = "svg")
@@ -279,7 +279,7 @@ plt
 ggsave(plot   = plt,
        file   = paste0(path2SP,"National/Presentations/INL_JUNIO/charts_and_images/estudio_FGR/Figure2_3.svg"), 
        width  = 189.7883, 
-       height = 85,
+       height = 80,
        units  = "mm",
        dpi    = 72,
        device = "svg")
@@ -298,7 +298,7 @@ Main_database_2008 <- Main_database %>%
          NSJP == 1,
          fuero != "Algunos delitos de fuero común y algunos de fuero federal") %>% 
   mutate(juicio_abreviado = case_when(P5_6 == "1" ~ "Juicio", 
-                                      P5_6 == "2" ~ "Procedimiento abreviado o juicio sumario", 
+                                      P5_6 == "2" ~ "Procedimiento abreviado", 
                                       T ~ NA_character_))
 
 
@@ -358,7 +358,7 @@ plot
 ggsave(plot   = plot,
        file   = paste0(path2SP,"National/Presentations/INL_JUNIO/charts_and_images/estudio_FGR/Figure2_4.svg"), 
        width  = 189.7883, 
-       height = 85,
+       height = 75,
        units  = "mm",
        dpi    = 72,
        device = "svg")
