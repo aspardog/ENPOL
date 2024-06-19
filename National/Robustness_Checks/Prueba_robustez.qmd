@@ -285,16 +285,15 @@ time_effects.pl <- time_checks.fn(
 
 # PROCESO JUSTO
 
-
 ## Derecho a la información en el tiempo
 
 <details>
+
 <summary>Informar sobre motivo de la detención</summary>
 
 <br>
 
 ::: panel-tabset
-
 <br>
 
 #### Detencion
@@ -311,7 +310,6 @@ time_effects.pl$explicacion_detencion
 ```{r c1, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
 Het_effects.pl$explicacion_detencion
 ```
-
 :::
 
 #### Ministerio Publico
@@ -334,9 +332,7 @@ Paralalel_trends.pl$explicacion_mp
 ```{r c2, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
 Het_effects.pl$explicacion_mp
 ```
-
 :::
-
 
 #### Juzgado
 
@@ -358,9 +354,7 @@ Paralalel_trends.pl$explicacion_juez
 ```{r c3, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
 Het_effects.pl$explicacion_juez
 ```
-
 :::
-
 :::
 
 </details>
@@ -372,7 +366,6 @@ Het_effects.pl$explicacion_juez
 <br>
 
 ::: panel-tabset
-
 <br>
 
 #### Claridad ministerio publico
@@ -395,7 +388,6 @@ Paralalel_trends.pl$claridad_mp
 ```{r c5, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
 Het_effects.pl$claridad_mp
 ```
-
 :::
 
 #### Claridad juez
@@ -418,7 +410,6 @@ Paralalel_trends.pl$claridad_juez
 ```{r c7, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
 Het_effects.pl$claridad_juez
 ```
-
 :::
 
 #### Claridad abogado defensor
@@ -441,13 +432,11 @@ Paralalel_trends.pl$claridad_defensor
 ```{r c4, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
 Het_effects.pl$claridad_defensor
 ```
-
 :::
 
 #### Claridad abogado de la víctima
 
 ::: panel-tabset
-
 #### Años de sentencia
 
 ```{r a6, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
@@ -459,9 +448,7 @@ time_effects.pl$claridad_defendido
 ```{r c6, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
 Het_effects.pl$claridad_defendido
 ```
-
 :::
-
 :::
 
 ## Derecho a guardar silencio y no autoincriminarse
@@ -473,7 +460,6 @@ Het_effects.pl$claridad_defendido
 <br>
 
 ::: panel-tabset
-
 <br>
 
 ### Detención
@@ -490,7 +476,6 @@ time_effects.pl$guardar_silencio_detencion
 ```{r c8, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
 Het_effects.pl$guardar_silencio_detencion
 ```
-
 :::
 
 ### Ministerio Público
@@ -507,7 +492,6 @@ time_effects.pl$guardar_silencio_mp
 ```{r c9, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
 Het_effects.pl$guardar_silencio_mp
 ```
-
 :::
 
 ### Juzgado
@@ -524,10 +508,9 @@ time_effects.pl$guardar_silencio_juez
 ```{r c10, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
 Het_effects.pl$guardar_silencio_juez
 ```
-
+:::
 :::
 
-:::
 </details>
 
 <details>
@@ -537,7 +520,6 @@ Het_effects.pl$guardar_silencio_juez
 <br>
 
 ::: panel-tabset
-
 <br>
 
 ### Ministerio Público
@@ -560,7 +542,6 @@ Paralalel_trends.pl$presion_mp
 ```{r c11, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
 Het_effects.pl$presion_mp
 ```
-
 :::
 
 ### Juzgado
@@ -577,10 +558,9 @@ time_effects.pl$presion_juez
 ```{r c12, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
 Het_effects.pl$presion_juez
 ```
-
+:::
 :::
 
-:::
 </details>
 
 ## Tribunal imparcial, competente y transparente
@@ -592,7 +572,6 @@ Het_effects.pl$presion_juez
 <br>
 
 ::: panel-tabset
-
 <br>
 
 ### Registro de audiencia en video
@@ -615,7 +594,6 @@ Paralalel_trends.pl$video
 ```{r c13, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
 Het_effects.pl$video
 ```
-
 :::
 
 ### Acceso al público
@@ -640,6 +618,7 @@ Het_effects.pl$publico
 ```
 :::
 :::
+
 </details>
 
 <details>
@@ -654,7 +633,6 @@ Het_effects.pl$publico
 ### Juez de control distinto al que lo sentenció
 
 ::: panel-tabset
-
 #### Años de sentencia
 
 ```{r a15, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
@@ -672,13 +650,11 @@ Paralalel_trends.pl$juez_diferente
 ```{r c15, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
 Het_effects.pl$juez_diferente
 ```
-
 :::
 
 ### La persona sintió que el juez le consideró culpable después de que se presentaron las pruebas
 
 ::: panel-tabset
-
 #### Años de sentencia
 
 ```{r a16, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
@@ -690,10 +666,9 @@ time_effects.pl$culpable_antes
 ```{r c16, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
 Het_effects.pl$culpable_antes
 ```
-
+:::
 :::
 
-:::
 </details>
 
 <details>
@@ -703,13 +678,11 @@ Het_effects.pl$culpable_antes
 <br>
 
 ::: panel-tabset
-
 <br>
 
 ### Juez presente en las audiencias
 
 ::: panel-tabset
-
 #### Años de sentencia
 
 ```{r a17, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
@@ -727,13 +700,11 @@ Paralalel_trends.pl$juez_presente
 ```{r c17, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
 Het_effects.pl$juez_presente
 ```
-
 :::
 
 ### Juez llevó el control de las audiencias
 
 ::: panel-tabset
-
 #### Años de sentencia
 
 ```{r a18, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
@@ -751,13 +722,11 @@ Paralalel_trends.pl$juez_control
 ```{r c18, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
 Het_effects.pl$juez_control
 ```
-
 :::
 
 ### La persona se sintió escuchada
 
 ::: panel-tabset
-
 #### Años de sentencia
 
 ```{r a19, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
@@ -769,10 +738,9 @@ time_effects.pl$juez_escucha
 ```{r c19, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
 Het_effects.pl$juez_escucha
 ```
-
+:::
 :::
 
-:::
 </details>
 
 # USO NO ARBITRARIO DE LA AUTORIDAD
@@ -780,12 +748,12 @@ Het_effects.pl$juez_escucha
 ## Uso de la fuerza durante la detención
 
 <details>
+
 <summary>Uso excesivo de la fuerza</summary>
 
 <br>
 
 ::: panel-tabset
-
 #### Años de sentencia
 
 ```{r a20, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
@@ -797,7 +765,6 @@ time_effects.pl$uso_excesivo
 ```{r c20, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
 Het_effects.pl$uso_excesivo
 ```
-
 :::
 
 </details>
@@ -805,16 +772,15 @@ Het_effects.pl$uso_excesivo
 ## Prácticas de corrupción
 
 <details>
+
 <summary>Prácticas de corrupción</summary>
 
 <br>
 
 ::: panel-tabset
-
 ### Detención
 
 ::: panel-tabset
-
 #### Años de sentencia
 
 ```{r a21, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
@@ -832,13 +798,11 @@ Paralalel_trends.pl$detencion_corrupcion
 ```{r c23, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
 Het_effects.pl$detencion_corrupcion
 ```
-
 :::
 
 ### Ministerio Público
 
 ::: panel-tabset
-
 #### Años de sentencia
 
 ```{r a24, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
@@ -861,7 +825,6 @@ Het_effects.pl$mp_corrupcion
 ### Juzgado
 
 ::: panel-tabset
-
 #### Años de sentencia
 
 ```{r a25, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
@@ -880,7 +843,6 @@ Paralalel_trends.pl$juzgado_corrupcion
 Het_effects.pl$juzgado_corrupcion
 ```
 :::
-
 :::
 
 </details>
@@ -890,12 +852,12 @@ Het_effects.pl$juzgado_corrupcion
 ## Violación a la integridad personal
 
 <details>
+
 <summary>Tortura generalizada</summary>
 
 <br>
 
 ::: panel-tabset
-
 #### Años de sentencia
 
 ```{r a26, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
@@ -907,10 +869,9 @@ time_effects.pl$tortura_generalizada
 ```{r c26, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
 Het_effects.pl$tortura_generalizada
 ```
-
 :::
-</details>
 
+</details>
 
 ## Violación a la libertad
 
@@ -921,7 +882,6 @@ Het_effects.pl$tortura_generalizada
 <br>
 
 ::: panel-tabset
-
 #### Años de sentencia
 
 ```{r a27, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
@@ -934,13 +894,11 @@ time_effects.pl$det_ninguna
 Paralalel_trends.pl$det_ninguna
 ```
 
-
 #### Heterogeneidad
 
 ```{r c27, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
 Het_effects.pl$det_ninguna
 ```
-
 :::
 
 </details>
@@ -952,13 +910,11 @@ Het_effects.pl$det_ninguna
 <br>
 
 ::: panel-tabset
-
 <br>
 
 ### 30 minutos
 
 ::: panel-tabset
-
 #### Años de sentencia
 
 ```{r a28, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
@@ -971,19 +927,16 @@ time_effects.pl$tiempo_30m
 Paralalel_trends.pl$tiempo_30m
 ```
 
-
 #### Heterogeneidad
 
 ```{r c28, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
 Het_effects.pl$tiempo_30m
 ```
-
 :::
 
 ### 6 a 24 horas
 
 ::: panel-tabset
-
 #### Años de sentencia
 
 ```{r a29, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
@@ -996,16 +949,13 @@ time_effects.pl$tiempo_6h
 Paralalel_trends.pl$tiempo_6h
 ```
 
-
 #### Heterogeneidad
 
 ```{r c29, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
 Het_effects.pl$tiempo_6h
 ```
-
 :::
-
-::: 
+:::
 
 </details>
 
@@ -1016,13 +966,11 @@ Het_effects.pl$tiempo_6h
 <br>
 
 ::: panel-tabset
-
 <br>
 
 ### Ministerio público
 
 ::: panel-tabset
-
 #### Años de sentencia
 
 ```{r a30, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
@@ -1035,19 +983,16 @@ time_effects.pl$primer_mp
 Paralalel_trends.pl$primer_mp
 ```
 
-
 #### Heterogeneidad
 
 ```{r c30, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
 Het_effects.pl$primer_mp
 ```
-
 :::
 
 ### Instalación de policía
 
 ::: panel-tabset
-
 #### Años de sentencia
 
 ```{r a31, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
@@ -1060,13 +1005,11 @@ time_effects.pl$primer_policia
 Paralalel_trends.pl$primer_policia
 ```
 
-
 #### Heterogeneidad
 
 ```{r c31, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
 Het_effects.pl$primer_policia
 ```
-
 :::
 :::
 
@@ -1083,7 +1026,6 @@ Het_effects.pl$primer_policia
 <br>
 
 ::: panel-tabset
-
 #### Años de sentencia
 
 ```{r a32, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
@@ -1095,7 +1037,6 @@ time_effects.pl$proceso_justo
 ```{r c32, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
 Het_effects.pl$proceso_justo
 ```
-
 :::
 
 </details>
