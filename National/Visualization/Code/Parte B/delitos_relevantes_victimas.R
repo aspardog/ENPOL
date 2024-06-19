@@ -128,20 +128,20 @@ ENVIPE <- read_dta(paste0(path2SP,"/National/Exploration/Input/Politica_criminal
   pivot_longer(cols = del_1:del_15, names_to = "Delito_envipe",values_to = "Ocurrencias")  %>%
   group_by(anio, Delito_envipe) %>%
   summarise(Ocurrencias = sum(Ocurrencias, na.rm = T)) %>%
-  mutate(Delito_envipe = case_when(Delito_envipe == "del_1" ~ "Robo total de vehículo", 
-                                   Delito_envipe == "del_2" ~ "Robo de accesorios, refacciones o \n herramientas de vehículos", 
-                                   Delito_envipe == "del_3" ~ "Pinta de barda o grafiti en su casa, \n rayones intencionales en su vehículo u otro \n tipo de vandalismo", 
-                                   Delito_envipe == "del_4" ~ "Alguien entró a su casa o departamento \n sin permiso mediante el uso de la fuerza o \n por engaños y robó o intentó robar algo", 
-                                   Delito_envipe == "del_5" ~ "Robo o asalto en la calle o en el \n transporte público", 
-                                   Delito_envipe == "del_6" ~ "Robo en forma distinta a la anterior", 
-                                   Delito_envipe == "del_7" ~ "Alguien usó su chequera, número de \n tarjeta o cuenta bancaria sin su permiso para \n realizar cargos o para extraer dinero de sus cuentas \n (fraude bancario) o le dio dinero falso", 
-                                   Delito_envipe == "del_8" ~ "Entregó dinero por un producto o un \n servicio que no recibió conforme a lo acordado \n (fraude al consumidor)", 
-                                   Delito_envipe == "del_9" ~ "Amenazas, presiones o engaños para \n exigirle dinero o bienes; o para que hiciera algo \n o dejara de hacerlo (extorsión)", 
-                                   Delito_envipe == "del_10" ~ "Amenazas verbales de alguien plenamente \n identificado o por escrito hacia su persona \n diciendo que le va a causar un daño a usted, \n a su familia, a sus bienes o su trabajo", 
-                                   Delito_envipe == "del_11" ~ "Alguien sólo por actitud abusiva o por \n una discusión lo(a) golpeó, empujó o atacó generándole \n una lesión física (moretones, fracturas, cortadas, etc.)", 
-                                   Delito_envipe == "del_12" ~ "Lo secuestraron para exigir dinero o bienes", 
-                                   Delito_envipe == "del_13" ~ "Alguien en contra de su voluntad lo(a) \n agredió mediante hostigamiento o intimidación sexual, manoseo, \n exhibicionismo o intento de violación", 
-                                   Delito_envipe == "del_14" ~ "Fue obligado(a) mediante violencia física o \n amenaza por alguien conocido o desconocido a tener una \n actividad sexual no deseada (Violación sexual) ", 
+  mutate(Delito_envipe = case_when(Delito_envipe == "del_1" ~ "Robo de vehículo", 
+                                   Delito_envipe == "del_2" ~ "Robo de autopartes", 
+                                   Delito_envipe == "del_3" ~ "Pinta de barda u otro\n tipo de vandalismo", 
+                                   Delito_envipe == "del_4" ~ "Entraron sin permiso y robó\n o intentó robar algo", 
+                                   Delito_envipe == "del_5" ~ "Robo en la calle o en el\n transporte público", 
+                                   Delito_envipe == "del_6" ~ "Otro tipo de robo", 
+                                   Delito_envipe == "del_7" ~ "Fraude bancario", 
+                                   Delito_envipe == "del_8" ~ "Fraude al consumidor", 
+                                   Delito_envipe == "del_9" ~ "Extorsión", 
+                                   Delito_envipe == "del_10" ~ "Amenazas", 
+                                   Delito_envipe == "del_11" ~ "Lesiones", 
+                                   Delito_envipe == "del_12" ~ "Secuestro", 
+                                   Delito_envipe == "del_13" ~ "Otros delitos sexuales", 
+                                   Delito_envipe == "del_14" ~ "Violación sexual ", 
                                    Delito_envipe == "del_15" ~ "Otro"))
 
 
@@ -153,7 +153,7 @@ data2plot <- ENVIPE %>%
          labels = paste0(round(value2plot,0),"%"),
          group_var = "ENVIPE",
          Delito = Delito_envipe,
-         Delito = str_wrap(Delito, width = 50)) %>%
+         Delito = str_wrap(Delito, width = 30)) %>%
   select(Delito,value2plot,labels,group_var) %>%
   arrange(value2plot) %>%
   mutate(Delito = factor(Delito, levels = Delito))
@@ -169,7 +169,7 @@ plt <- ggplot(data2plot,
   geom_bar(stat = "identity", fill = colors4plot, color = colors4plot,
            show.legend = F, width = 0.9) +
   scale_fill_manual(values = colors4plot) +
-  geom_text(aes(y    = value2plot + 4  ),
+  geom_text(aes(y    = value2plot + 5  ),
             color    = "#4a4a49",
             family   = "Lato Full",
             fontface = "bold") +
@@ -204,6 +204,9 @@ ggsave(plot   = plt,
 ## 3. Proporción de sentencias de los delitos más prevalentes según ENVIPE, 2018-2021                                                            ----
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+# requiere de Main_database1
 
 Main_database1 <- Main_database %>%
   filter(Anio_arresto >= 2018, 
@@ -271,6 +274,88 @@ ggsave(plot   = plt,
        dpi    = 72,
        device = "svg")
 
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##
+## 3. Proporción de sentencias de los delitos más prevalentes según ENVIPE, 2018-2021                                                            ----
+##
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+data2plot <- Main_database1 %>%
+  filter(Anio_arresto >= 2018) %>%
+  filter(Delito_unico_ungrouped_categ == "Robo de vehículo" |
+           Delito_unico_ungrouped_categ == "Robo de autopartes" |
+           Delito_unico_ungrouped_categ == "Daño a la propiedad" |
+           Delito_unico_ungrouped_categ == "Robo de casa habitación" |
+           Delito_unico_ungrouped_categ == "Robo a transeunte en vía pública" |
+           Delito_unico_ungrouped_categ == "Robo en transporte público" |
+           Delito_unico_ungrouped_categ == "Robo en forma distinta a las anteriores" |
+           Delito_unico_ungrouped_categ == "Fraude" |
+           Delito_unico_ungrouped_categ == "Extorsión" |
+           Delito_unico_ungrouped_categ == "Amenazas" |
+           Delito_unico_ungrouped_categ == "Lesiones" |
+           Delito_unico_ungrouped_categ == "Secuestro o secuestro expres" |
+           Delito_unico_ungrouped_categ == "Otros delitos sexualesl" |
+           Delito_unico_ungrouped_categ == "Violación sexual"
+  ) %>%
+  group_by(Anio_arresto,Delito_prioritario_ENVIPE) %>%
+  summarise(n = n()) %>%
+  mutate(value2plot =  100 * n / sum(n),
+         labels = paste0(round(value2plot,0), "%"),
+         group_var =  "Delito_prioritario_ENVIPE",
+  ) %>%
+  select(Anio_arresto,Delito_prioritario_ENVIPE,value2plot,labels,group_var) %>%
+  filter(Delito_prioritario_ENVIPE == 1)
+
+
+
+# Creating ggplot
+
+colors4plot <- c("#003B88")
+
+plt <- ggplot(data2plot, 
+              aes(x     = Anio_arresto,
+                  y     = value2plot,
+                  label = labels,
+                  group = group_var,
+                  color = group_var)) +
+  geom_point(size = 2,
+             show.legend = F) +
+  geom_line(size  = 1,
+            show.legend = F) +
+  geom_text_repel(
+    size        = 3.514598,
+    show.legend = F,
+    
+    # Additional options from ggrepel package:
+    min.segment.length = 1000,
+    seed               = 42,
+    box.padding        = 0.5,
+    direction          = "y",
+    force              = 5,
+    force_pull         = 1) +
+  scale_y_continuous(limits = c(0, 105),
+                     expand = c(0,0),
+                     breaks = seq(0,100,20),
+                     labels = paste0(seq(0,100,20), "%")) %>%
+  scale_color_manual(values = colors4plot) +
+  WJP_theme() +
+  expand_limits(y = c(0, 100))+
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.major.y = element_line(colour = "#d1cfd1"),
+        axis.title.x       = element_blank(),
+        axis.title.y       = element_blank(),
+        axis.line.x        = element_line(color    = "#d1cfd1"),
+        axis.ticks.x       = element_line(color    = "#d1cfd1",
+                                          linetype = "solid"))
+
+ggsave(plot   = plt,
+       file   = paste0(path2SP,"National/Presentations/INL_JUNIO/charts_and_images/delitos_relevantes_victimas/Figure1_3.svg"), 
+       width  = 189.7883, 
+       height = 85,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
+
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -284,11 +369,11 @@ inegi <- read_xlsx(paste0(path2SP,"/National/Exploration/Input/INEGI_homicidios.
 
 
 snsp_2<- snsp %>%
-  mutate(Agosto = case_when(Anio==2021 ~ 0, T ~ Agosto),
+  mutate(Agosto = case_when(Anio==2021 ~ 0,     T ~ Agosto),
          Septiembre = case_when(Anio==2021 ~ 0, T ~ Septiembre),
-         Octubre = case_when(Anio==2021 ~ 0, T ~ Octubre),
-         Noviembre = case_when(Anio==2021 ~ 0, T ~ Noviembre),
-         Diciembre = case_when(Anio==2021 ~ 0, T ~ Diciembre)) %>%
+         Octubre = case_when(Anio==2021 ~ 0,    T ~ Octubre),
+         Noviembre = case_when(Anio==2021 ~ 0,  T ~ Noviembre),
+         Diciembre = case_when(Anio==2021 ~ 0,  T ~ Diciembre)) %>%
   filter(Anio>=2017 & Anio<= 2021) %>%
   mutate(Incidencia = Enero+Febrero+Marzo+Abril+Mayo+Junio+Julio+Agosto+Septiembre+Octubre+Noviembre+Diciembre) %>%
   mutate(Delito=case_when(`Subtipo de delito`== "Homicidio doloso" ~ "Homicidio doloso, SESNSP",
@@ -332,9 +417,10 @@ data2plot <- bind_rows(snsp_2,enpol_3) %>%
   pivot_longer(cols = c("value2plot_Homicidios_SNSP", "value2plot_Detenidos_ENPOL", "labels_Homicidios_SNSP", "labels_Detenidos_ENPOL", "labels_Brecha"), 
                names_to = c(".value", "group_var"), names_sep = "_") %>%
   mutate(value2plot_Brecha= case_when(group_var=="Brecha" ~ value2plot_Brecha,
-                                      T~ NA))
+                                      T~ NA)) %>% 
+  filter(group_var != "Brecha")
 
-colors4plot <- c( "#fa4d57","#003B88", "#43a9a7")
+colors4plot <- c( "#20204a","#a90099")
 
 plt <- ggplot(data2plot, 
               aes(x     = Anio,
@@ -346,11 +432,6 @@ plt <- ggplot(data2plot,
              show.legend = F) +
   geom_line(size  = 1,
             show.legend = F) +
-  geom_line(aes(y=value2plot_Brecha),
-            linetype="dotted",
-            color = "#fa4d57",
-            size  = 1,
-            show.legend = F) +
   geom_text_repel(aes(x     = Anio,
                       y     = value2plot_Brecha,
                       label = labels,
@@ -361,13 +442,12 @@ plt <- ggplot(data2plot,
   geom_text_repel(
     size        = 3.514598,
     show.legend = F,
-    
-    # Additional options from ggrepel package:
     min.segment.length = 1000,
-    seed               = 42,
-    box.padding        = 0.5,
+    seed               = 50,
+    box.padding        = 0.9,
+    point.padding      = 0.5,
     direction          = "y",
-    force              = 5,
+    force              = 9,
     force_pull         = 1) +
   scale_y_continuous(limits = c(0, 105),
                      expand = c(0,0),
