@@ -420,8 +420,8 @@ table <- Estados %>%
   )
 
 tpanel <- gen_grob(table, 
-                   fit      = "fixed",
-                   scaling  = "fixed", 
+                   fit      = "auto",
+                   scaling  = "min", 
                    just     = c("left", "top"),
                    wrapping = T)
 
@@ -515,6 +515,7 @@ leyend <- flextable(leyend)  %>%
   )
 
 
+
 leyend <- gen_grob(leyend, 
                    fit      = "auto",
                    scaling  = "min", 
@@ -522,11 +523,14 @@ leyend <- gen_grob(leyend,
                    wrapping = T)
 
 layout <- "ABB
-           ##C"
+           A#C"
 
 viz <- wrap_elements(tpanel) + p + wrap_elements(leyend) +
-  plot_layout(ncol = 3, nrow = 2, widths = c(1, 3,0.5), heights = c(1,0.25,0.25), design = layout)
+  plot_layout(ncol = 3, nrow = 3, widths = c(1, 3.25,0.4), heights = c(1,.2,0.25), design = layout)
 plot(viz)
+
+
+
 
 ggsave(plot   = viz,
        file   = paste0(path2SP,"National/Presentations/INL_JUNIO/charts_and_images/fuero_incidencia/Figure2_3.svg"), 
@@ -663,8 +667,8 @@ table <- Estados %>%
   )
 
 tpanel <- gen_grob(table, 
-                   fit      = "fixed",
-                   scaling  = "fixed", 
+                   fit      = "auto",
+                   scaling  = "min", 
                    just     = c("left", "top"),
                    wrapping = T)
 
@@ -759,11 +763,13 @@ leyend <- gen_grob(leyend,
                    just     = c("left", "top"),
                    wrapping = T)
 
+
+
 layout <- "ABB
-           ##C"
+           A#C"
 
 viz <- wrap_elements(tpanel) + p + wrap_elements(leyend) +
-  plot_layout(ncol = 3, nrow = 2, widths = c(1, 3,0.5), heights = c(1,0.25,0.25), design = layout)
+  plot_layout(ncol = 3, nrow = 3, widths = c(1, 3.25,0.4), heights = c(1,.2,0.25), design = layout)
 plot(viz)
 
 ggsave(plot   = viz,
