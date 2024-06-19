@@ -35,14 +35,16 @@ data_subset.df <- master_data.df %>%
   ) %>%
   group_by(Anio_arresto) %>%
   summarise(
-    value2plot = mean(uso_excesivo, na.rm = T)
+    value2plot = mean(uso_excesivo, na.rm = T),
+    n_obs = sum(uso_excesivo, na.rm = T)
   ) %>%
   mutate(value2plot = value2plot*100,
          label = paste0(format(round(value2plot, 0),
                                nsmall = 0),
                         "%"),
          category = "uso_excesivo",
-         year = as.numeric(Anio_arresto))
+         year = as.numeric(Anio_arresto)
+         )
 
 # Pulling minimum and maximum available year
 minyear <- 2011
@@ -52,7 +54,7 @@ maxyear <- 2021
 # Creating a vector for yearly axis
 x.axis.values <- seq(minyear, maxyear, by = 2)
 sec.ticks     <- seq(minyear, maxyear, by = 1)
-x.axis.labels <- paste0("'", str_sub(x.axis.values, start = -2))
+x.axis.labels <- paste0(x.axis.values)
 
 
 # Defining colors4plot

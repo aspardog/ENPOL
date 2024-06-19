@@ -1,0 +1,1042 @@
+---
+title: "Pruebas de robustez"
+format:
+  html:
+    smooth-scroll: true
+    css: styles.css
+    self-contained: true
+    embed-resources: true
+editor: visual
+toc: true
+toc-title: "Tabla de contenidos"
+theme: minty
+title-block-banner: true
+toc-depth: 2
+toc-expand: 2
+---
+
+```{r setup, include=FALSE}
+source("Code/settings.R")
+source("Code/tendencias_paralelas.R")
+source("Code/efectos_diferenciados.R")
+source("Code/años_sentencia.R")
+
+# Loading data
+
+load(paste0(path2SP,
+            "/National/Data_cleaning/Output/Main_database_completa.RData"))
+
+master_data.df <- Main_database_completa %>% 
+  filter(Anio_arresto >= as.numeric(2008)) %>% 
+  filter(NSJP == 1) %>%
+  filter(Anio_arresto != 9998) %>%
+  filter(Anio_arresto != 9999) %>%
+  mutate(
+    P5_4_A = as.numeric(P5_4_A),
+    tiempo_sentencia = case_when(P5_4_A == 0 ~ NA_real_,
+                                 P5_4_A >= 97 ~ NA_real_,
+                                 T ~ P5_4_A),
+    presion_mp = 
+      case_when(
+        as.numeric(P4_7) == 4 | as.numeric(P4_7) == 5 ~ 1,
+        as.numeric(P4_7) < 11 &  (as.numeric(P4_7) != 4 | as.numeric(P4_7) != 5) ~ 0
+      ),
+    presion_juez = 
+      case_when(
+        P5_7 == 1 ~ 1,
+        P5_7 == 2 ~ 0
+      ),
+    explicacion_detencion = 
+      case_when(
+        P3_14_4 == 1 ~ 1,
+        P3_14_4 == 0 ~ 0
+      ),
+    explicacion_mp = 
+      case_when(
+        P4_1_03 == 1 ~ 1,
+        P4_1_03 == 2 ~ 0
+      ),
+    explicacion_juez = 
+      case_when(
+        P5_2_1 == 1 ~ 1,
+        P5_2_1 == 2 ~ 0
+      ),
+    claridad_defensor =
+      case_when(
+        P5_17_1 == 1 | P5_17_1 == 2~ 1,
+        P5_17_1 == 3 | P5_17_1 == 4 ~ 0
+      ),
+    claridad_juez = 
+      case_when(
+        P5_17_2 == 1 | P5_17_2 == 2~ 1,
+        P5_17_2 == 3 | P5_17_2 == 4 ~ 0
+      ),
+    claridad_mp = 
+      case_when(
+        P5_17_3 == 1 | P5_17_3 == 2~ 1,
+        P5_17_3 == 3 | P5_17_3 == 4 ~ 0
+      ),
+    claridad_defensor =
+      case_when(
+        P5_17_1 == 1 | P5_17_1 == 2~ 1,
+        P5_17_1 == 3 | P5_17_1 == 4 ~ 0
+      ),
+    claridad_defendido =
+      case_when(
+        P5_17_4 == 1 | P5_17_4 == 2~ 1,
+        P5_17_4 == 3 | P5_17_4 == 4 ~ 0
+      ),
+    guardar_silencio_detencion = 
+      case_when(
+        P3_14_5 == 1 ~ 1,
+        P3_14_5 == 0 ~ 0
+      ),
+    guardar_silencio_mp = 
+      case_when(
+        P4_1_04 == 1 ~ 1,
+        P4_1_04 == 2 ~ 0
+      ),
+    guardar_silencio_juez = 
+      case_when(
+        P5_2_4 == 1 ~ 1,
+        P5_2_4 == 2 ~ 0
+      ),
+    rapida = 
+      case_when(
+        P5_10 == 1  | P5_10 == 2 | P5_10 == 3 | P5_10 == 4 ~ 1,
+        P5_10 == 5  | P5_10 == 6 | P5_10 == 7 ~ 0
+      ),
+    corta = 
+      case_when(
+        P5_10 == 5 ~ 1,
+        P5_10 == 1  | P5_10 == 2 | P5_10 == 3 | P5_10 == 4 | P5_10 == 6 | P5_10 == 7 ~ 0
+      ),
+    media =
+      case_when(
+        P5_10 == 6 ~ 1,
+        P5_10 == 1  | P5_10 == 2 | P5_10 == 3 | P5_10 == 4 | P5_10 == 5 | P5_10 == 7 ~ 0
+      ),
+    larga =
+      case_when(
+        P5_10 == 7 ~ 1,
+        P5_10 == 1  | P5_10 == 2 | P5_10 == 3 | P5_10 == 4 | P5_10 == 5 | P5_10 == 6 ~ 0
+      ),
+    video = 
+      case_when(
+        P5_19_3 == 1 ~ 1,
+        P5_19_3 == 2 ~ 0
+      ),
+    publico = 
+      case_when(
+        P5_16_5 == 1 | P5_16_5 == 2 | P5_16_5 == 3 ~ 1,
+        P5_16_5 == 4 ~ 0
+      ),
+    juez_diferente = 
+      case_when(
+        P5_14 == 1 ~ 1,
+        P5_14 == 2 ~ 0
+      ),
+    culpable_antes = 
+      case_when(
+        P5_25 == 2 ~ 1,
+        P5_25 == 1 ~ 0
+      ),
+    juez_presente = 
+      case_when(
+        P5_16_2 == 1  ~ 1,
+        P5_16_2 == 2 | P5_16_2 == 3 | P5_16_2 == 4 ~ 0
+      ),
+    juez_control = 
+      case_when(
+        P5_18 == 2 ~ 1,
+        P5_18 == 1 | P5_18 == 3 | P5_18 == 4 | P5_18 == 5 ~ 0
+      ),
+    juez_escucha =
+      case_when(
+        P5_26 == 1 | P5_26 == 2 ~ 1,
+        P5_26 == 3 | P5_26 == 4 ~ 0
+      ),
+    detencion_corrupcion = case_when(P3_21_1 == "1" | P3_21_2 == "1" ~ 1,
+                                     P3_21_1 == "2" & P3_21_2 == "2" ~ 0,
+                                     T ~ NA_real_),
+    mp_corrupcion = case_when(P4_15_1 == "1" | P4_15_3 == "1" ~ 1,
+                             P4_15_1 == "2" & P4_15_3 == "2" ~ 0,
+                             T ~ NA_real_),
+    juzgado_corrupcion = case_when(P5_45_1 == "1" | P5_45_3 == "1" ~ 1,
+                                  P5_45_1 == "2" & P5_45_3 == "2" ~ 0,
+                                  T ~ NA_real_),
+    corrupcion_general = case_when(detencion_corrupcion == 1 | mp_corrupcion == 1  | juzgado_corrupcion == 1 ~ 1,
+                                   detencion_corrupcion == 0 & mp_corrupcion == 0  & juzgado_corrupcion == 0 ~ 0,
+                                   T~ NA_real_),
+    primer_mp = 
+      case_when(
+        Primer_lugar_traslado == "Agencia del Ministerio Público" ~ 1,
+        T ~ 0
+      ),
+    primer_policia = 
+      case_when(
+        Primer_lugar_traslado == "Instalación de la policía" ~ 1,
+        T ~ 0 
+      ),
+    tiempo_30m =
+      case_when(
+        Tiempo_traslado == "Hasta 30 minutos" ~ 1,
+        T ~ 0 
+      ),
+    tiempo_6h =
+      case_when(
+        Tiempo_traslado == "Más de 6 horas hasta 24 horas" ~ 1,
+        T ~ 0 
+      ),
+    uso_excesivo =
+      case_when(
+        proporcionalidad_uso_fuerza == 0 ~ 1,
+        proporcionalidad_uso_fuerza == 1 ~ 0
+      ),
+    proceso_justo = 
+      case_when(
+        as.numeric(P5_26A) == 1 ~ 1,
+        as.numeric(P5_26A) == 0 ~ 0,
+        T ~ NA_real_
+      )
+  )
+
+# Loading data
+
+# Tendencias paralelas
+
+mainVar <- c("explicacion_mp", 
+             "explicacion_juez", 
+             "claridad_defensor", 
+             "claridad_juez", 
+             "claridad_mp",
+             "rapida", 
+             "corta", 
+             "media", 
+             "larga",
+             "video", 
+             "publico", 
+             "juez_diferente", 
+             "juez_presente", 
+             "juez_control", 
+             "juez_escucha",
+             "detencion_corrupcion", 
+             "mp_corrupcion", 
+             "juzgado_corrupcion", 
+             "corrupcion_general",
+             "det_ninguna", 
+             "primer_mp", 
+             "primer_policia", 
+             "tiempo_30m", 
+             "tiempo_6h")
+
+Paralalel_trends.pl <- paralel_trends.fn(
+    mainVar = mainVar
+    )
+
+mainVar <- c("explicacion_detencion",
+             "explicacion_mp", 
+             "explicacion_juez", 
+             "claridad_defensor", 
+             "claridad_juez", 
+             "claridad_mp",
+             "claridad_defensor",
+             "claridad_defendido",
+             "guardar_silencio_detencion",
+             "guardar_silencio_mp",
+             "guardar_silencio_juez",
+             "rapida", 
+             "corta", 
+             "media", 
+             "larga",
+             "video", 
+             "publico", 
+             "juez_diferente", 
+             "juez_presente", 
+             "juez_control", 
+             "juez_escucha",
+             "detencion_corrupcion", 
+             "mp_corrupcion", 
+             "juzgado_corrupcion", 
+             "corrupcion_general",
+             "det_ninguna", 
+             "primer_mp", 
+             "primer_policia", 
+             "tiempo_30m", 
+             "tiempo_6h",
+             "uso_excesivo",
+             "tortura_generalizada",
+             "proceso_justo",
+             "presion_mp",
+             "presion_juez")
+
+# Efectos heterogeneos
+
+Het_effects.pl <- het_effects.fn(
+   mainVar = mainVar
+ )
+# Años de sentencia
+
+time_effects.pl <- time_checks.fn(
+    mainVar = mainVar
+  )
+
+```
+
+# PROCESO JUSTO
+
+## Derecho a la información en el tiempo
+
+<details>
+
+<summary>Informar sobre motivo de la detención</summary>
+
+<br>
+
+::: panel-tabset
+<br>
+
+#### Detencion
+
+::: panel-tabset
+#### Años de sentencia
+
+```{r a1, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
+time_effects.pl$explicacion_detencion
+```
+
+#### Heterogeneidad
+
+```{r c1, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
+Het_effects.pl$explicacion_detencion
+```
+:::
+
+#### Ministerio Publico
+
+::: panel-tabset
+#### Años de sentencia
+
+```{r a2, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
+time_effects.pl$explicacion_mp
+```
+
+#### Tendencias paralelas
+
+```{r b2, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
+Paralalel_trends.pl$explicacion_mp
+```
+
+#### Heterogeneidad
+
+```{r c2, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
+Het_effects.pl$explicacion_mp
+```
+:::
+
+#### Juzgado
+
+::: panel-tabset
+#### Años de sentencia
+
+```{r a3, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
+time_effects.pl$explicacion_juez
+```
+
+#### Tendencias paralelas
+
+```{r b3, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
+Paralalel_trends.pl$explicacion_juez
+```
+
+#### Heterogeneidad
+
+```{r c3, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
+Het_effects.pl$explicacion_juez
+```
+:::
+:::
+
+</details>
+
+<details>
+
+<summary>Claridad actores</summary>
+
+<br>
+
+::: panel-tabset
+<br>
+
+#### Claridad ministerio publico
+
+::: panel-tabset
+#### Años de sentencia
+
+```{r a5, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
+time_effects.pl$claridad_mp
+```
+
+#### Tendencias paralelas
+
+```{r b5, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
+Paralalel_trends.pl$claridad_mp
+```
+
+#### Heterogeneidad
+
+```{r c5, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
+Het_effects.pl$claridad_mp
+```
+:::
+
+#### Claridad juez
+
+::: panel-tabset
+#### Años de sentencia
+
+```{r a7, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
+time_effects.pl$claridad_juez
+```
+
+#### Tendencias paralelas
+
+```{r b7, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
+Paralalel_trends.pl$claridad_juez
+```
+
+#### Heterogeneidad
+
+```{r c7, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
+Het_effects.pl$claridad_juez
+```
+:::
+
+#### Claridad abogado defensor
+
+::: panel-tabset
+#### Años de sentencia
+
+```{r a4, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
+time_effects.pl$claridad_defensor
+```
+
+#### Tendencias paralelas
+
+```{r b4, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
+Paralalel_trends.pl$claridad_defensor
+```
+
+#### Heterogeneidad
+
+```{r c4, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
+Het_effects.pl$claridad_defensor
+```
+:::
+
+#### Claridad abogado de la víctima
+
+::: panel-tabset
+#### Años de sentencia
+
+```{r a6, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
+time_effects.pl$claridad_defendido
+```
+
+#### Heterogeneidad
+
+```{r c6, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
+Het_effects.pl$claridad_defendido
+```
+:::
+:::
+
+## Derecho a guardar silencio y no autoincriminarse
+
+<details>
+
+<summary>Derecho a guardar silencio</summary>
+
+<br>
+
+::: panel-tabset
+<br>
+
+### Detención
+
+::: panel-tabset
+#### Años de sentencia
+
+```{r a8, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
+time_effects.pl$guardar_silencio_detencion
+```
+
+#### Heterogeneidad
+
+```{r c8, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
+Het_effects.pl$guardar_silencio_detencion
+```
+:::
+
+### Ministerio Público
+
+::: panel-tabset
+#### Años de sentencia
+
+```{r a9, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
+time_effects.pl$guardar_silencio_mp
+```
+
+#### Heterogeneidad
+
+```{r c9, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
+Het_effects.pl$guardar_silencio_mp
+```
+:::
+
+### Juzgado
+
+::: panel-tabset
+#### Años de sentencia
+
+```{r a10, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
+time_effects.pl$guardar_silencio_juez
+```
+
+#### Heterogeneidad
+
+```{r c10, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
+Het_effects.pl$guardar_silencio_juez
+```
+:::
+:::
+
+</details>
+
+<details>
+
+<summary>Autoincriminacion por presión</summary>
+
+<br>
+
+::: panel-tabset
+<br>
+
+### Ministerio Público
+
+::: panel-tabset
+#### Años de sentencia
+
+```{r a11, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
+time_effects.pl$presion_mp
+```
+
+#### Tendencias paralelas
+
+```{r b11, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
+Paralalel_trends.pl$presion_mp
+```
+
+#### Heterogeneidad
+
+```{r c11, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
+Het_effects.pl$presion_mp
+```
+:::
+
+### Juzgado
+
+::: panel-tabset
+#### Años de sentencia
+
+```{r a12, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
+time_effects.pl$presion_juez
+```
+
+#### Heterogeneidad
+
+```{r c12, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
+Het_effects.pl$presion_juez
+```
+:::
+:::
+
+</details>
+
+## Tribunal imparcial, competente y transparente
+
+<details>
+
+<summary>Tribunal transparente</summary>
+
+<br>
+
+::: panel-tabset
+<br>
+
+### Registro de audiencia en video
+
+::: panel-tabset
+#### Años de sentencia
+
+```{r a13, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
+time_effects.pl$video
+```
+
+#### Tendencias paralelas
+
+```{r b13, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
+Paralalel_trends.pl$video
+```
+
+#### Heterogeneidad
+
+```{r c13, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
+Het_effects.pl$video
+```
+:::
+
+### Acceso al público
+
+::: panel-tabset
+#### Años de sentencia
+
+```{r a14, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
+time_effects.pl$publico
+```
+
+#### Tendencias paralelas
+
+```{r b14, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
+Paralalel_trends.pl$publico
+```
+
+#### Heterogeneidad
+
+```{r c14, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
+Het_effects.pl$publico
+```
+:::
+:::
+
+</details>
+
+<details>
+
+<summary>Tribunal imparcial</summary>
+
+<br>
+
+::: panel-tabset
+<br>
+
+### Juez de control distinto al que lo sentenció
+
+::: panel-tabset
+#### Años de sentencia
+
+```{r a15, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
+time_effects.pl$juez_diferente
+```
+
+#### Tendencias paralelas
+
+```{r b15, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
+Paralalel_trends.pl$juez_diferente
+```
+
+#### Heterogeneidad
+
+```{r c15, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
+Het_effects.pl$juez_diferente
+```
+:::
+
+### La persona sintió que el juez le consideró culpable después de que se presentaron las pruebas
+
+::: panel-tabset
+#### Años de sentencia
+
+```{r a16, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
+time_effects.pl$culpable_antes
+```
+
+#### Heterogeneidad
+
+```{r c16, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
+Het_effects.pl$culpable_antes
+```
+:::
+:::
+
+</details>
+
+<details>
+
+<summary>Triunal presente y responsivo</summary>
+
+<br>
+
+::: panel-tabset
+<br>
+
+### Juez presente en las audiencias
+
+::: panel-tabset
+#### Años de sentencia
+
+```{r a17, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
+time_effects.pl$juez_presente
+```
+
+#### Tendencias paralelas
+
+```{r b17, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
+Paralalel_trends.pl$juez_presente
+```
+
+#### Heterogeneidad
+
+```{r c17, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
+Het_effects.pl$juez_presente
+```
+:::
+
+### Juez llevó el control de las audiencias
+
+::: panel-tabset
+#### Años de sentencia
+
+```{r a18, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
+time_effects.pl$juez_control
+```
+
+#### Tendencias paralelas
+
+```{r b18, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
+Paralalel_trends.pl$juez_control
+```
+
+#### Heterogeneidad
+
+```{r c18, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
+Het_effects.pl$juez_control
+```
+:::
+
+### La persona se sintió escuchada
+
+::: panel-tabset
+#### Años de sentencia
+
+```{r a19, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
+time_effects.pl$juez_escucha
+```
+
+#### Heterogeneidad
+
+```{r c19, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
+Het_effects.pl$juez_escucha
+```
+:::
+:::
+
+</details>
+
+# USO NO ARBITRARIO DE LA AUTORIDAD
+
+## Uso de la fuerza durante la detención
+
+<details>
+
+<summary>Uso excesivo de la fuerza</summary>
+
+<br>
+
+::: panel-tabset
+#### Años de sentencia
+
+```{r a20, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
+time_effects.pl$uso_excesivo
+```
+
+#### Heterogeneidad
+
+```{r c20, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
+Het_effects.pl$uso_excesivo
+```
+:::
+
+</details>
+
+## Prácticas de corrupción
+
+<details>
+
+<summary>Prácticas de corrupción</summary>
+
+<br>
+
+::: panel-tabset
+### Detención
+
+::: panel-tabset
+#### Años de sentencia
+
+```{r a21, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
+time_effects.pl$detencion_corrupcion
+```
+
+#### Tendencias paralelas
+
+```{r b22, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
+Paralalel_trends.pl$detencion_corrupcion
+```
+
+#### Heterogeneidad
+
+```{r c23, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
+Het_effects.pl$detencion_corrupcion
+```
+:::
+
+### Ministerio Público
+
+::: panel-tabset
+#### Años de sentencia
+
+```{r a24, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
+time_effects.pl$mp_corrupcion
+```
+
+#### Tendencias paralelas
+
+```{r b24, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
+Paralalel_trends.pl$mp_corrupcion
+```
+
+#### Heterogeneidad
+
+```{r c24, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
+Het_effects.pl$mp_corrupcion
+```
+:::
+
+### Juzgado
+
+::: panel-tabset
+#### Años de sentencia
+
+```{r a25, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
+time_effects.pl$juzgado_corrupcion
+```
+
+#### Tendencias paralelas
+
+```{r b25, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
+Paralalel_trends.pl$juzgado_corrupcion
+```
+
+#### Heterogeneidad
+
+```{r c25, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
+Het_effects.pl$juzgado_corrupcion
+```
+:::
+:::
+
+</details>
+
+# PROTECCIÓN A LOS DERECHOS HUMANOS
+
+## Violación a la integridad personal
+
+<details>
+
+<summary>Tortura generalizada</summary>
+
+<br>
+
+::: panel-tabset
+#### Años de sentencia
+
+```{r a26, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
+time_effects.pl$tortura_generalizada
+```
+
+#### Heterogeneidad
+
+```{r c26, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
+Het_effects.pl$tortura_generalizada
+```
+:::
+
+</details>
+
+## Violación a la libertad
+
+<details>
+
+<summary>Detenciones irregulares</summary>
+
+<br>
+
+::: panel-tabset
+#### Años de sentencia
+
+```{r a27, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
+time_effects.pl$det_ninguna
+```
+
+#### Tendencias paralelas
+
+```{r b27, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
+Paralalel_trends.pl$det_ninguna
+```
+
+#### Heterogeneidad
+
+```{r c27, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
+Het_effects.pl$det_ninguna
+```
+:::
+
+</details>
+
+<details>
+
+<summary>Cambios en los tiempos de traslado</summary>
+
+<br>
+
+::: panel-tabset
+<br>
+
+### 30 minutos
+
+::: panel-tabset
+#### Años de sentencia
+
+```{r a28, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
+time_effects.pl$tiempo_30m
+```
+
+#### Tendencias paralelas
+
+```{r b28, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
+Paralalel_trends.pl$tiempo_30m
+```
+
+#### Heterogeneidad
+
+```{r c28, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
+Het_effects.pl$tiempo_30m
+```
+:::
+
+### 6 a 24 horas
+
+::: panel-tabset
+#### Años de sentencia
+
+```{r a29, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
+time_effects.pl$tiempo_6h
+```
+
+#### Tendencias paralelas
+
+```{r b29, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
+Paralalel_trends.pl$tiempo_6h
+```
+
+#### Heterogeneidad
+
+```{r c29, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
+Het_effects.pl$tiempo_6h
+```
+:::
+:::
+
+</details>
+
+<details>
+
+<summary>Cambios en el lugar de traslado</summary>
+
+<br>
+
+::: panel-tabset
+<br>
+
+### Ministerio público
+
+::: panel-tabset
+#### Años de sentencia
+
+```{r a30, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
+time_effects.pl$primer_mp
+```
+
+#### Tendencias paralelas
+
+```{r b30, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
+Paralalel_trends.pl$primer_mp
+```
+
+#### Heterogeneidad
+
+```{r c30, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
+Het_effects.pl$primer_mp
+```
+:::
+
+### Instalación de policía
+
+::: panel-tabset
+#### Años de sentencia
+
+```{r a31, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
+time_effects.pl$primer_policia
+```
+
+#### Tendencias paralelas
+
+```{r b31, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
+Paralalel_trends.pl$primer_policia
+```
+
+#### Heterogeneidad
+
+```{r c31, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
+Het_effects.pl$primer_policia
+```
+:::
+:::
+
+</details>
+
+# PERCEPCIÓN PROCESO JUSTO
+
+## Violación a la integridad personal
+
+<details>
+
+<summary>Percepciones de un proceso justo</summary>
+
+<br>
+
+::: panel-tabset
+#### Años de sentencia
+
+```{r a32, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
+time_effects.pl$proceso_justo
+```
+
+#### Heterogeneidad
+
+```{r c32, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
+Het_effects.pl$proceso_justo
+```
+:::
+
+</details>
