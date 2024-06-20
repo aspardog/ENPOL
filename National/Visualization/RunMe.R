@@ -27,7 +27,7 @@
 # Required Packages, Fonts, ggplot theme, color palettes, comparison countries and other general routines are
 # loaded from the following script:
 source("Code/settings.R")
-
+source("Code/uso_excesivo_fuerza.R")
 
 # Loading plotting functions from GitHub
 source("https://raw.githubusercontent.com/ctoruno/WJP-Data-Viz/main/loading.R")
@@ -55,10 +55,17 @@ mapa <- st_read(paste0(path2SP,"/National/Visualization/Input/shp/México_Estado
 # sentenciado = 1
 # Anio_arresto >= 2011
 
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##
+## Proceso justo                                                                             ----
+##
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+proceso_justo_tiempo <- proceso_justo_tiempo()
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
-## 1. Índice de deibido proceso                                                                             ----
+## Índice de deibido proceso                                                                             ----
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 

@@ -23,80 +23,103 @@
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-data_subset.df <- master_data.df %>%
-  filter(Anio_arresto > 2010)  %>%
-  mutate(
-    guardar_silencio_detencion = 
-      case_when(
-        P3_14_5 == 1 ~ 1,
-        P3_14_5 == 0 ~ 0
-      ),
-    guardar_silencio_mp = 
-      case_when(
-        P4_1_04 == 1 ~ 1,
-        P4_1_04 == 2 ~ 0
-      ),
-    guardar_silencio_juez = 
-      case_when(
-        P5_2_4 == 1 ~ 1,
-        P5_2_4 == 2 ~ 0
-      )
-  ) %>%
-  group_by(Anio_arresto) %>%
-  summarise(
-    detencion = mean(guardar_silencio_detencion, na.rm = T),
-    mp = mean(guardar_silencio_mp, na.rm = T),
-    juez = mean(guardar_silencio_juez, na.rm = T)
-  ) %>%
-  pivot_longer(cols = c(detencion, mp, juez), names_to = "category", values_to = "value2plot") %>%
-  mutate(value2plot = value2plot*100,
-         label = paste0(format(round(value2plot, 0),
-                               nsmall = 0),
-                        "%"),
-         year = as.numeric(Anio_arresto))
+proceso_justo_tiempo <- function(
+    data = master_data.df
+) {
+  
+  data_subset.df <- master_data.df %>%
+    filter(Anio_arresto > 2010)  %>%
+    mutate(
+      guardar_silencio_detencion = 
+        case_when(
+          P3_14_5 == 1 ~ 1,
+          P3_14_5 == 0 ~ 0
+        ),
+      guardar_silencio_mp = 
+        case_when(
+          P4_1_04 == 1 ~ 1,
+          P4_1_04 == 2 ~ 0
+        ),
+      guardar_silencio_juez = 
+        case_when(
+          P5_2_4 == 1 ~ 1,
+          P5_2_4 == 2 ~ 0
+        )
+    ) %>%
+    group_by(Anio_arresto) %>%
+    summarise(
+      detencion = mean(guardar_silencio_detencion, na.rm = T),
+      mp        = mean(guardar_silencio_mp, na.rm = T),
+      juez      = mean(guardar_silencio_juez, na.rm = T),
+      nobs_detencion      = sum(guardar_silencio_detencion, na.rm = T),
+      nobs_mp             = sum(guardar_silencio_mp, na.rm = T),
+      nobs_juez           = sum(guardar_silencio_juez, na.rm = T)
+    ) %>%
+    pivot_longer(cols = c(detencion, mp, juez), 
+                 names_to = "category", values_to = "value2plot") %>%
+    mutate(value2plot = value2plot*100,
+           label = paste0(format(round(value2plot, 0),
+                                 nsmall = 0),
+                          "%"),
+           year  = as.numeric(Anio_arresto),
+           n_obs = if_else(
+             category == "detencion", nobs_detencion,
+             if_else(
+               category == "mp", nobs_mp,
+               if_else(
+                 category == "juez", nobs_juez, NA_real_
+               )
+             )
+           )) %>%
+    select(!starts_with("nobs_"))
+  
+  # Pulling minimum and maximum available year
+  minyear <- 2011
+  maxyear <- 2021
+  
+  
+  # Creating a vector for yearly axis
+  x.axis.values <- seq(minyear, maxyear, by = 2)
+  sec.ticks     <- seq(minyear, maxyear, by = 1)
+  x.axis.labels <- paste0("'", str_sub(x.axis.values, start = -2))
+  
+  
+  # Defining colors4plot
+  colors4plot <- threeColors
+  
+  names(colors4plot) <- c("detencion", "mp", "juez")
+  
+  # Saving data points
+  data2plot <- data_subset.df %>% ungroup()
+  
+  # Applying plotting function
+  chart <- LAC_lineChart(data           = data2plot,
+                         target_var     = "value2plot",
+                         grouping_var   = "year",
+                         ngroups        = data_subset.df$category, 
+                         labels_var     = "label",
+                         colors_var     = "category",
+                         colors         = colors4plot,
+                         repel          = T,
+                         custom.axis    = T,
+                         x.breaks       = x.axis.values,
+                         x.labels       = x.axis.labels,
+                         sec.ticks      = sec.ticks)
+  
+  ggsave(plot = chart, 
+         filename = paste0(path2SP,
+                           "/National/Visualization",
+                           "/Output/Debido proceso/Proceso justo/proceso_justo_tiempo.svg"),
+         width = 189.7883,
+         height = 120,
+         units  = "mm",
+         dpi    = 72,
+         device = "svg")
+  
+  return(data2plot)
+  
+}
 
-# Pulling minimum and maximum available year
-minyear <- 2011
-maxyear <- 2021
-
-
-# Creating a vector for yearly axis
-x.axis.values <- seq(minyear, maxyear, by = 2)
-sec.ticks     <- seq(minyear, maxyear, by = 1)
-x.axis.labels <- paste0("'", str_sub(x.axis.values, start = -2))
-
-
-# Defining colors4plot
-colors4plot <- threeColors
-
-names(colors4plot) <- c("detencion", "mp", "juez")
-
-# Saving data points
-data2plot <- data_subset.df %>% ungroup()
-
-# Applying plotting function
-chart <- LAC_lineChart(data           = data2plot,
-                       target_var     = "value2plot",
-                       grouping_var   = "year",
-                       ngroups        = data_subset.df$category, 
-                       labels_var     = "label",
-                       colors_var     = "category",
-                       colors         = colors4plot,
-                       repel          = T,
-                       custom.axis    = T,
-                       x.breaks       = x.axis.values,
-                       x.labels       = x.axis.labels,
-                       sec.ticks      = sec.ticks)
-
-ggsave(plot = chart, 
-       filename = paste0(path2SP,
-                         "/National/Visualization",
-                         "/Output/Debido proceso/Proceso justo/figure1.svg"),
-       width = 189.7883,
-       height = 120,
-       units  = "mm",
-       dpi    = 72,
-       device = "svg")
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
