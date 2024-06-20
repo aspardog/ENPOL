@@ -132,6 +132,8 @@ for (i in Estados) {
   ###
   ### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   
+  print("Generando proceso justo")
+  
   #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   ####
   #### Proceso justo                                                                             ----
@@ -152,6 +154,7 @@ for (i in Estados) {
   
   proceso_justo_lista <- list('Guardar silencio en el tiempo' = guardar_silencio, 
                               'Información de la detencion' = informacion_detencion)
+  
   openxlsx::write.xlsx(x = proceso_justo_lista,
     file = paste0(
     path2SP,
@@ -161,7 +164,7 @@ for (i in Estados) {
     "/proceso_justo.xlsx")
   )
   
-  
+  print("Proceso justo finalizado")
   
   ### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   ###

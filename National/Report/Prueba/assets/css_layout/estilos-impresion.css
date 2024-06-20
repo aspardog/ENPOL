@@ -773,13 +773,6 @@
 	#VictimSupport .col-md-11.mb-4{
 		text-align: center;
 	}
-	/* VICTIM SUPPORT chart 17 page 31 */
-	.MAP .img-chart.img-chart{
-		width: 100%;
-	}
-	.MAP .col-md-11.mb-4{
-		text-align: center;
-	}
 	/* AccessJusticeJourney chart 18 page 33 */
 	#AccessJusticeJourney{
 		height: 34.47cm;
@@ -985,12 +978,6 @@
 	#InternationalMigration4 .img-chart{
 		width: 85%;
 	}
-	.presentacion{
-		height:100vh;
-		margin: 0 auto;
-		padding-top: 20rem !important;
-		width: 90%;
-	}
 	/* About This Report page 5 */
 	#Presentacion, #SpecialNote{
 		height: 34.47cm;
@@ -999,8 +986,14 @@
 		padding-top: 120px !important;
 	}
 	
-	/* INTERNATIONAL MIGRATION chart 21 page 38 */
+	/* REPORTE ENPOL */
 
+	.presentacion{
+		height:100vh;
+		margin: 0 auto;
+		padding-top: 20rem !important;
+		width: 90%;
+	}
 	.indice{
 		height: 34.47cm;
 	}
@@ -1013,6 +1006,13 @@
 	.indice .img-chart{
 		width: 85%;
 
+	}
+
+	.onePanel .img-chart.img-chart{
+		width: 100%;
+	}
+	.onePanel .col-md-11.mb-4{
+		text-align: center;
 	}
 
 	.fourPanels{
