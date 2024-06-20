@@ -27,7 +27,8 @@
 # Required Packages, Fonts, ggplot theme, color palettes, comparison countries and other general routines are
 # loaded from the following script:
 source("Code/settings.R")
-source("Code/uso_excesivo_fuerza.R")
+source("Code/proceso_justo.R")
+#source("Code/uso_excesivo_fuerza.R")
 
 # Loading plotting functions from GitHub
 source("https://raw.githubusercontent.com/ctoruno/WJP-Data-Viz/main/loading.R")
@@ -36,10 +37,6 @@ loadVIZ(set = "ENPOL")
 # Loading data
 load(paste0(path2SP,
             "/National/Data_cleaning/Output/Main_database.RData"))
-
-master_data.df <- Main_database %>% 
-  filter(Anio_arresto >= as.numeric(2008)) %>% 
-  filter(NSJP == 1) 
 
 mapa <- st_read(paste0(path2SP,"/National/Visualization/Input/shp/México_Estados.shp")) %>%
   mutate(
@@ -50,68 +47,128 @@ mapa <- st_read(paste0(path2SP,"/National/Visualization/Input/shp/México_Estado
       )
   )
 
-# select proper filters
-# Tenemos 3 filtros y para cada visualización se decide qué filtros usar
-# sentenciado = 1
-# Anio_arresto >= 2011
-
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
-## Proceso justo                                                                             ----
+## 1.  Reporte Nacional                                                                                        ----
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+National <- T
 
-proceso_justo_tiempo <- proceso_justo_tiempo()
+if (National == T) {
+  
+  Estados <- 'National'
+  
+} else {
+  
+  Estados <- Main_database %>%
+    select(Estado_arresto) %>%
+    distinct() %>%
+    drop_na() %>%
+    pull() %>%
+    as.character()
+  
+}
 
-## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-##
-## Índice de deibido proceso                                                                             ----
-##
-## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+for (i in Estados) {
+  
+  if(National == T){ 
+    
+    Estados <- "National"
+    
+    master_data.df <- Main_database %>% 
+      filter(Anio_arresto >= as.numeric(2008)) %>% 
+      filter(NSJP == 1) 
+    
+    savePath <- "Nacional"
+    
+    # Definir la ruta al directorio "nacional"
+    nacional_dir <- paste0(
+      path2SP, "/National/Visualization", 
+      "/Output/Debido proceso/", 
+      savePath
+    )
+    
+    # Listar todas las subcarpetas dentro de "nacional"
+    subdirs <- list.dirs(nacional_dir, 
+                         recursive = FALSE, full.names = TRUE)
+    
+    # Borrar todas las subcarpetas dentro de "nacional"
+    sapply(subdirs, unlink, recursive = TRUE)
+    
+  } else {
+    
+    master_data.df <- Main_database %>% 
+      filter(Estado_arresto == i) %>%
+      filter(Anio_arresto >= as.numeric(2008)) %>% 
+      filter(NSJP == 1) 
+    
+    savePath <- paste0("Estados/", i)
+    
+    # Definir la ruta al directorio "nacional"
+    nacional_dir <- paste0(
+      path2SP, "/National/Visualization", 
+      "/Output/Debido proceso/", 
+      savePath
+    )
+    
+    # Listar todas las subcarpetas dentro de "nacional"
+    subdirs <- list.dirs(nacional_dir, 
+                         recursive = FALSE, full.names = TRUE)
+    
+    # Borrar todas las subcarpetas dentro de "nacional"
+    sapply(subdirs, unlink, recursive = TRUE)
+    
+    dir.create(paste0(
+      path2SP,
+      "/National/Visualization",
+      "/Output/Debido proceso/",
+      savePath)
+    )
+  }
+  
+  ### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  ###
+  ### Capítulo 1                                                                                        ----
+  ###
+  ### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  
+  #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  ####
+  #### Proceso justo                                                                             ----
+  ####
+  #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  
+  dir.create(paste0(
+    path2SP,
+    "/National/Visualization",
+    "/Output/Debido proceso/",
+    savePath,"/Proceso justo")
+  )
 
-### Figure 1.1 cumplimiento 13 criterios -----------------------------------------------------------
+  
+  guardar_silencio <- guardar_silencio.fn()
+  
+  informacion_detencion <- informacion_detencion.fn()
+  
+  proceso_justo_lista <- list('Guardar silencio en el tiempo' = guardar_silencio, 
+                              'Información de la detencion' = informacion_detencion)
+  openxlsx::write.xlsx(x = proceso_justo_lista,
+    file = paste0(
+    path2SP,
+    "/National/Visualization",
+    "/Output/Debido proceso/",
+    savePath,"/Proceso justo",
+    "/proceso_justo.xlsx")
+  )
+  
+  
+  
+  ### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  ###
+  ### Capítulo 2                                                                                      ----
+  ###
+  ### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  
+  
+}
 
-### Figure 1.2.1 cumplimiento menos del 50%  de los 13 criterios -----------------------------------------------------------
-
-### Figure 1.2.2 cumplimiento más del 90%   de los 13 criterios -----------------------------------------------------------
-
-### Figure 2.1 cumplimiento Proceso Justo -----------------------------------------------------------
-
-### Figure 2.2.1 cumplimiento menos del 50%  de Proceso Justo -----------------------------------------------------------
-
-### Figure 2.2.2 cumplimiento más del 90%   de Proceso Justo -----------------------------------------------------------
-
-### Figure 3.1 cumplimiento 13 Uso no arbitrario de la autoridad -----------------------------------------------------------
-
-### Figure 3.2.1 cumplimiento menos del 50%  Uso no arbitrario de la autoridad -----------------------------------------------------------
-
-### Figure 3.2.2 cumplimiento más del 90%   Uso no arbitrario de la autoridad -----------------------------------------------------------
-
-### Figure 4.1 cumplimiento 13 criterios -----------------------------------------------------------
-
-### Figure 4.2.1 cumplimiento menos del 50%  de los 13 criterios -----------------------------------------------------------
-
-### Figure 4.2.2 cumplimiento más del 90%   de los 13 criterios -----------------------------------------------------------
-
-
-## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-##
-## 2. Debido proceso                                                                                     ----
-##
-## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-
-### 1.1 Proceso justo -----------------------------------------------------------
-
-#### Figure 1.1 Proceso justo -----------------------------------------------------------
-
-### 1.2	Uso no arbitrario de la autoridad -----------------------------------------------------------
-
-
-
-
-## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-##
-## 3. Política criminal                                                                                  ----
-##
-## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
