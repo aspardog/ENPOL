@@ -198,6 +198,12 @@ master_data.df <- Main_database_completa %>%
         as.numeric(P5_26A) == 1 ~ 1,
         as.numeric(P5_26A) == 0 ~ 0,
         T ~ NA_real_
+      ),
+    prision_p_oficiosa = 
+      case_when(
+        tipo_prision_preventiva == "Prisión Preventiva Oficiosa" ~ 1,
+        tipo_prision_preventiva == "Prisión Preventiva Justificada" | tipo_prision_preventiva == "Proceso en libertad" ~ 0,
+        T ~ NA_real_
       )
   )
 
@@ -205,6 +211,7 @@ master_data.df <- Main_database_completa %>%
 
 # Tendencias paralelas
 
+# Las variables de esta lista son las que se encuentran en ambas ENPOL
 mainVar <- c("explicacion_mp", 
              "explicacion_juez", 
              "claridad_defensor", 
@@ -233,6 +240,8 @@ mainVar <- c("explicacion_mp",
 Paralalel_trends.pl <- paralel_trends.fn(
     mainVar = mainVar
     )
+
+# Las variables de esta lista son las que se encuentran en ENPOL 2021
 
 mainVar <- c("explicacion_detencion",
              "explicacion_mp", 
@@ -268,7 +277,8 @@ mainVar <- c("explicacion_detencion",
              "tortura_generalizada",
              "proceso_justo",
              "presion_mp",
-             "presion_juez")
+             "presion_juez",
+             "prision_p_oficiosa")
 
 # Efectos heterogeneos
 
@@ -283,7 +293,9 @@ time_effects.pl <- time_checks.fn(
 
 ```
 
-# PROCESO JUSTO
+# CAPÍTULO 1: DEBIDO PROCESO
+
+# Proceso justo
 
 ## Derecho a la información en el tiempo
 
@@ -743,7 +755,7 @@ Het_effects.pl$juez_escucha
 
 </details>
 
-# USO NO ARBITRARIO DE LA AUTORIDAD
+# Uso no arbitrario de la autoridad
 
 ## Uso de la fuerza durante la detención
 
@@ -847,7 +859,7 @@ Het_effects.pl$juzgado_corrupcion
 
 </details>
 
-# PROTECCIÓN A LOS DERECHOS HUMANOS
+# Protección a los derechos humanos
 
 ## Violación a la integridad personal
 
@@ -1015,9 +1027,9 @@ Het_effects.pl$primer_policia
 
 </details>
 
-# PERCEPCIÓN PROCESO JUSTO
+# Percepción proceso justo
 
-## Violación a la integridad personal
+## Percepciones de un proceso justo
 
 <details>
 
@@ -1036,6 +1048,30 @@ time_effects.pl$proceso_justo
 
 ```{r c32, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
 Het_effects.pl$proceso_justo
+```
+:::
+
+</details>
+
+# PRUEBAS
+
+<details>
+
+<summary>Prisión preventiva oficiosa</summary>
+
+<br>
+
+::: panel-tabset
+#### Años de sentencia
+
+```{r a33, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
+time_effects.pl$prision_p_oficiosa
+```
+
+#### Heterogeneidad
+
+```{r c33, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
+Het_effects.pl$prision_p_oficiosa
 ```
 :::
 
