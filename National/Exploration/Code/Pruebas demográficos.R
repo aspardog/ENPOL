@@ -33,7 +33,7 @@ library(sandwich)
 load(paste0(path2DB,"/National/Data_cleaning/Output/Main_database.RData")) 
 
 
-#FILTRO 2016 EN ADELANTE
+#FILTRO 2008 EN ADELANTE
 
 Main_database <- Main_database %>%
   filter(Anio_arresto >= 2008) %>%
