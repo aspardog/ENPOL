@@ -1053,6 +1053,10 @@ Het_effects.pl$proceso_justo
 
 </details>
 
+<br>
+<br>
+<br>
+
 # PRUEBAS
 
 <details>
