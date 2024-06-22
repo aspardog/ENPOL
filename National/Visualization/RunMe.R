@@ -28,6 +28,7 @@
 # loaded from the following script:
 source("Code/settings.R")
 source("Code/proceso_justo.R")
+source("Code/proceso_justo_percepcion.R")
 #source("Code/uso_excesivo_fuerza.R")
 
 # Loading plotting functions from GitHub
@@ -47,12 +48,13 @@ mapa <- st_read(paste0(path2SP,"/National/Visualization/Input/shp/México_Estado
       )
   )
 
+National <- T
+
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
 ## 1.  Reporte Nacional                                                                                        ----
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-National <- T
 
 if (National == T) {
   
@@ -146,14 +148,25 @@ for (i in Estados) {
     "/Output/Debido proceso/",
     savePath,"/Proceso justo")
   )
-
   
-  guardar_silencio <- guardar_silencio.fn()
-  
+  guardar_silencio      <- guardar_silencio.fn()
   informacion_detencion <- informacion_detencion.fn()
+  claridad_actores      <- claridad_actores.fn()
+  defensa_oportuna      <- defensa_oportuna.fn()
+  tipo_defensa          <- tipo_defensa.fn()
+  tribunal_transparente <- tribunal_transparente.fn()
+  tribunal_imparcial    <- tribunal_imparcial.fn()
+  tribunal_presente     <- tribunal_presente.fn()
   
   proceso_justo_lista <- list('Guardar silencio en el tiempo' = guardar_silencio, 
-                              'Información de la detencion' = informacion_detencion)
+                              'Información de la detencion'   = informacion_detencion,
+                              'Claridad de actores'           = claridad_actores,
+                              'Defensa oportuna'              = defensa_oportuna,
+                              'Tipo de defensa'               = tipo_defensa,
+                              'Tribunal transparente'         = tribunal_transparente,
+                              'Tribunal imparcial'            = tribunal_imparcial,
+                              'Tribunal presente'             = tribunal_presente
+                              )
   
   openxlsx::write.xlsx(x = proceso_justo_lista,
     file = paste0(
@@ -165,12 +178,58 @@ for (i in Estados) {
   )
   
   print("Proceso justo finalizado")
+  print("Generando percepcion de proceso justo")
+  
+  #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  ####
+  #### Percepción proceso justo                                                                             ----
+  ####
+  #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  
+  dir.create(paste0(
+    path2SP,
+    "/National/Visualization",
+    "/Output/Debido proceso/",
+    savePath,"/Percepcion proceso justo")
+  )
+  
+  proceso_justo <- proceso_justo.fn()
+  percepcion_indicadores <- percepcion_indicadores.fn()
+  procedimiento <- procedimiento.fn()
+  percepcion_procedimiento <- percepcion_procedimiento.fn()
+  culpabilidad <- culpabilidad.fn()
+  percepcion_culpabilidad <- percepcion_culpabilidad.fn()
+  escucha <- escucha.fn()
+  percepcion_escucha <- percepcion_escucha.fn()
+  
+  proceso_percepcion_lista <- list('Percepcion proceso'       = proceso_justo, 
+                                   'Percepcion indicadores'   = percepcion_indicadores,
+                                   'Tipo procedimiento'       = procedimiento,
+                                   'Percepcion procedimiento' = percepcion_procedimiento,
+                                   'Culpabilidad'             = culpabilidad,
+                                   'Percepcion culpabilidad'  = percepcion_culpabilidad,
+                                   'Sentimiento de escucha'   = escucha,
+                                   'Percepcion escucha'       = percepcion_escucha
+                                   )
+  
+  openxlsx::write.xlsx(x = proceso_percepcion_lista,
+                       file = paste0(
+                         path2SP,
+                         "/National/Visualization",
+                         "/Output/Debido proceso/",
+                         savePath,"/Percepcion proceso justo",
+                         "/proceso_justo.xlsx")
+  )
+  
+  print("Percepcion de proceso justo finalizado")
+  
   
   ### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   ###
   ### Capítulo 2                                                                                      ----
   ###
   ### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  
   
   
 }
