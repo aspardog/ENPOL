@@ -29,7 +29,11 @@
 source("Code/settings.R")
 source("Code/proceso_justo.R")
 source("Code/proceso_justo_percepcion.R")
-#source("Code/uso_excesivo_fuerza.R")
+source("Code/uso_excesivo_fuerza.R")
+source("Code/corrupcion.R")
+source("Code/tortura.R")
+source("Code/detenciones.R")
+source("Code/prision_preventiva.R")
 
 # Loading plotting functions from GitHub
 source("https://raw.githubusercontent.com/ctoruno/WJP-Data-Viz/main/loading.R")
@@ -128,9 +132,11 @@ for (i in Estados) {
     )
   }
   
+  print("CAPÍTULO 1: DEBIDO PROCESO")
+  
   ### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   ###
-  ### Capítulo 1                                                                                        ----
+  ### Capítulo 1: Debido proceso                                                                              ----
   ###
   ### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   
@@ -222,11 +228,180 @@ for (i in Estados) {
   )
   
   print("Percepcion de proceso justo finalizado")
+  print("Generando Uso excesivo de la fuerza")
+  
+  #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  ####
+  #### Uso excesivo de la fuerza                                                                           ----
+  ####
+  #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  
+  dir.create(paste0(
+    path2SP,
+    "/National/Visualization",
+    "/Output/Debido proceso/",
+    savePath,"/Uso excesivo fuerza")
+  )
+  
+  uso_fuerza_tiempo <- uso_fuerza_tiempo.fn()
+  uso_fuerza_corporacion <- uso_fuerza_corporacion.fn()
+  
+  uso_fuerza_lista <- list('Uso fuerza tiempo'        = uso_fuerza_tiempo, 
+                           'Uso fuerza corporacion'   = uso_fuerza_corporacion
+                           )
+  
+  openxlsx::write.xlsx(x = proceso_percepcion_lista,
+                       file = paste0(
+                         path2SP,
+                         "/National/Visualization",
+                         "/Output/Debido proceso/",
+                         savePath,"/Uso excesivo fuerza",
+                         "/uso_excesivo_fuerza.xlsx")
+  )
+  print("Uso excesivo de la fuerza finalizado")
+  print("Generando corrupción")
+  
+  #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  ####
+  #### Corrupción                                                                        ----
+  ####
+  #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  
+  dir.create(paste0(
+    path2SP,
+    "/National/Visualization",
+    "/Output/Debido proceso/",
+    savePath,"/Corrupción")
+  )
+  
+  corrupcion_tiempo <- corrupcion_tiempo.fn()
+  corrupcion_elementos <- corrupcion_elementos.fn()
+  
+  uso_fuerza_lista <- list('Corrupción tiempo'      = corrupcion_tiempo, 
+                           'Corrupción elementos'   = corrupcion_elementos
+  )
+  
+  openxlsx::write.xlsx(x = proceso_percepcion_lista,
+                       file = paste0(
+                         path2SP,
+                         "/National/Visualization",
+                         "/Output/Debido proceso/",
+                         savePath,"/Corrupción",
+                         "/Corrupción.xlsx")
+  )
+  print("Corrupción finalizado")
+  print("Generando tortura")
+  
+  #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  ####
+  #### Tortura                                                                      ----
+  ####
+  #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  
+  dir.create(paste0(
+    path2SP,
+    "/National/Visualization",
+    "/Output/Debido proceso/",
+    savePath,"/Tortura")
+  )
+  
+  tortura_tiempo <- tortura_tiempo.fn()
+  tortura_tipo <- tortura_tipo.fn()
+  tortura_psicologica <- tortura_psicologica.fn()
+  tortura_fisica <- tortura_fisica.fn()
+  
+  tortura_lista <- list('Tortura tiempo'      = tortura_tiempo,
+                        'Tortura tipo'        = tortura_tipo,
+                        'Tortura psicologica' = tortura_psicologica,
+                        'Tortura fisica'      = tortura_fisica
+                        )
+  
+  openxlsx::write.xlsx(x = tortura_lista,
+                       file = paste0(
+                         path2SP,
+                         "/National/Visualization",
+                         "/Output/Debido proceso/",
+                         savePath,"/Tortura",
+                         "/Tortura.xlsx")
+  )
+  print("Tortura finalizado")
+  print("Generando detenciones")
+  
+  #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  ####
+  #### Detenciones                                                                   ----
+  ####
+  #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  
+  dir.create(paste0(
+    path2SP,
+    "/National/Visualization",
+    "/Output/Debido proceso/",
+    savePath,"/Detenciones")
+  )
+  
+  detenciones_tiempo <- detenciones_tiempo.fn()
+  detenciones_traslado <- tiempos_traslado.fn()
+  detenciones_lugar <- lugar_traslado.fn()
+  
+  detenciones_lista <- list('Detenciones tiempo'      = detenciones_tiempo,
+                        'Detenciones traslado' = detenciones_traslado,
+                        'Detenciones lugar'      = detenciones_lugar
+                        )
+  
+  openxlsx::write.xlsx(x = detenciones_lista,
+                       file = paste0(
+                         path2SP,
+                         "/National/Visualization",
+                         "/Output/Debido proceso/",
+                         savePath,"/Tortura",
+                         "/Detenciones.xlsx")
+  )
+  print("Detenciones finalizado")
+  print("Generando Prisión preventiva")
+  
+  #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  ####
+  #### Prision preventiva                                                                   ----
+  ####
+  #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  
+  dir.create(paste0(
+    path2SP,
+    "/National/Visualization",
+    "/Output/Debido proceso/",
+    savePath,"/Prisión preventiva")
+  )
+  
+  pp_proporcion <- pp_proporcion.fn()
+  pp_tiempo_total <- pp_tiempo_total.fn()
+  pp_tiempo <- pp_tiempo.fn()
+  pp_tipo <- pp_tipo.fn()
+  
+  pp_list <- list(
+    
+    'PP proporcion' = pp_proporcion,
+    'PP duracion' = pp_tiempo_total,
+    'PP tiempo' = pp_tiempo,
+    'PP tipo' = pp_tipo
+    
+  )
+  openxlsx::write.xlsx(x = detenciones_lista,
+                       file = paste0(
+                         path2SP,
+                         "/National/Visualization",
+                         "/Output/Debido proceso/",
+                         savePath,"/Prisión preventiva",
+                         "/PP.xlsx")
+  )
+  print("Prisión Preventiva finalizado")
   
   
+  
+  print("CAPÍTULO 2: ESTRATEGIAS DE INVESTIGACIÓN")
   ### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   ###
-  ### Capítulo 2                                                                                      ----
+  ### Capítulo 2: Estrategias de investigación                                                              ----
   ###
   ### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   

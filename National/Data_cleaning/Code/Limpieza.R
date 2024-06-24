@@ -4191,14 +4191,14 @@ Main_database %<>%
     tortura_tra_f = case_when(
       if_any(tortura_t_f, ~ .x == "1") ~ 1,
       T ~ 0),
-    tortura = case_when(
+    tortura_tra = case_when(
       tortura_tra_p == 1 | tortura_tra_f == 1 ~ 1,
       T ~ 0),
-    tortura_tra = case_when(
+    tortura_tra_tipo = case_when(
       tortura_tra_p == 1 & tortura_tra_f == 1 ~ "Ambas",
       tortura_tra_p == 1 ~ "Psicológica",
       tortura_tra_f == 1 ~ "Física",
-      T ~ NA),
+      T ~ "Ninguna"),
     tortura_mp_f = case_when(
       if_any(tortura_mp_f, ~ .x == "1") ~ 1,
       T ~ 0), 
@@ -5722,3 +5722,4 @@ Main_database_completa <- Main_database %>%
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 save(Main_database_completa, file = paste0(path2DB,"/National/Data_cleaning/Output/Main_database_completa.RData"))
+
