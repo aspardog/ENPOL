@@ -4216,8 +4216,8 @@ Main_database %<>%
     # Torture MP or Detention
     
     tortura_lugar = case_when(
-      tortura_mp_p == 1 | tortura_mp_f == 1 & (tortura_tra_p == 0 & tortura_tra_f == 0) ~  "Ministerio Público",
-      tortura_tra_p == 1 | tortura_tra_f == 1 & (tortura_mp_p == 0 & tortura_mp_f == 0) ~  "Traslado",
+      (tortura_mp_p == 1 | tortura_mp_f == 1) & (tortura_tra_p == 0 & tortura_tra_f == 0) ~  "Ministerio Público",
+      (tortura_tra_p == 1 | tortura_tra_f == 1) & (tortura_mp_p == 0 & tortura_mp_f == 0) ~  "Traslado",
       (tortura_tra_p == 1 | tortura_tra_f == 1) & (tortura_mp_p == 1 | tortura_mp_f == 1) ~  "Traslado y Ministerio Público",
       (tortura_tra_p == 0 & tortura_tra_f == 0) & (tortura_mp_p == 0 & tortura_mp_f == 0) ~  "Ninguno",
       T ~ NA),
@@ -5467,7 +5467,7 @@ old_enpol <- left_join(old_enpol1, old_enpol2, by = "id_per") %>%
     P4_15_3 = as.character(p4_13_3),
     P5_45_1 = as.character(p5_43_1),
     P5_45_3 = as.character(p5_43_3),
-    tortura_tra = as.character(tortura_arresto),
+    tortura_tra = as.numeric(tortura_arresto),
     tortura_mp = as.numeric(tortura_MP),
     tortura_generalizada = as.numeric(tortura_total),
     sentenciado = case_when(sentenciado == 2 ~ 1,
