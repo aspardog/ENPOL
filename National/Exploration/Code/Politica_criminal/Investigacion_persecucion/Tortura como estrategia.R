@@ -37,26 +37,26 @@ load(paste0(path2DB,"/National/Data_cleaning/Output/Main_database.RData"))
 #Replace wjp theme function because it doesn't work on my computer
 
 WJP_theme <- function() {
-theme(panel.background   = element_blank(),
+  theme(panel.background   = element_blank(),
         plot.background    = element_blank(),
         panel.grid.major   = element_line(size     = 0.25,
                                           colour   = "#5e5c5a",
                                           linetype = "dashed"),
         panel.grid.minor   = element_blank(),
         axis.title.y       = element_text(
-                                          size     = 3.514598*.pt,
-                                          color    = "#524F4C",
-                                          margin   = margin(0, 10, 0, 0)),
+          size     = 3.514598*.pt,
+          color    = "#524F4C",
+          margin   = margin(0, 10, 0, 0)),
         axis.title.x       = element_text(
-                                          size     = 3.514598*.pt,
-                                          color    = "#524F4C",
-                                          margin   = margin(10, 0, 0, 0)),
+          size     = 3.514598*.pt,
+          color    = "#524F4C",
+          margin   = margin(10, 0, 0, 0)),
         axis.text.y        = element_text(
-                                          size     = 3.514598*.pt,
-                                          color    = "#524F4C"),
+          size     = 3.514598*.pt,
+          color    = "#524F4C"),
         axis.text.x = element_text(
-                                   size   = 3.514598*.pt,
-                                   color  = "#524F4C"),
+          size   = 3.514598*.pt,
+          color  = "#524F4C"),
         axis.ticks  = element_blank(),
         plot.margin  = unit(c(0, 0, 0, 0), "points")
   ) 
@@ -153,37 +153,41 @@ ggsave(plot   = plt,
 # La tortura es una estrategia o mecanismo para conseguir declaraciones como pruebas inculpatoriass
 
 data2plot <- Main_database1  %>%
-  group_by(tortura_lugar, culpabilidad) %>%
+  mutate(tortura_mp_ = case_when(tortura_mp == 1 ~ "Torturado en el MP",
+                                 tortura_mp == 0 ~ "No torturado en el MP")) %>%
+  group_by(tortura_mp_, culpabilidad) %>%
   summarise(declaro_culpa = mean(declaro_culpable, na.rm=T)) %>%
   mutate(value2plot =  100 * declaro_culpa,
          labels = paste0(round(value2plot,0), "%"),
-         group_var = tortura_lugar,
+         group_var = tortura_mp_,
          culpa = case_when(culpabilidad == 1 ~ "Se reconoce como culpable",
                            culpabilidad == 0 ~ "No se reconoce como culpable"),
          group_var2 = culpa) %>%
   select(value2plot,labels,group_var,group_var2) %>%
-  filter(group_var2 == "No se reconoce como culpable")
+  filter(!is.na(group_var2))
 
 
 
 
 colors4plot <- c("#1a2589",
+                 
+                 "#1a2589",
                  "#a90099",
-                 "#3273ff",
-                 "#ef4b4b")
+                 "#a90099")
+
 
 plt <- ggplot(data2plot, 
-              aes(x     = group_var,
+              aes(x     = group_var2,
                   y     = value2plot,
                   label = labels,
                   group = group_var,
-                  color = group_var)) +
+                  color = group_var2)) +
   geom_bar(position = "dodge", stat = "identity", fill = colors4plot, color = colors4plot, width = 0.9, show.legend = T)+
-  scale_fill_manual(name = "Lugar de tortura", values = colors4plot) +
+  scale_fill_manual(name = "Tortura en el MP", values = colors4plot) +
   geom_text(aes(y    = value2plot + 7  ),
             color    = "#4a4a49",
             position = position_dodge(width = .9)) +
-  labs(y = "% que se declaró culpable en el MP, entre quienes no se reconocen culpables") +
+  labs(y = "% que se declaró culpable en el MP, por reconocimiento de culpabilidad ante INEGI") +
   scale_y_discrete() +
   scale_x_discrete( ) +
   expand_limits(y = c(0, 100)) +
@@ -199,9 +203,11 @@ plt <- ggplot(data2plot,
 
 
 ggsave(plot   = plt,
-       file   = paste0("National/Exploration/Output/Tortura/Figure2.svg"), 
+       file   = paste0("National/Exploration/Output/Tortura/Figure2_.svg"), 
        width  = 175, 
        height = 85,
        units  = "mm",
        dpi    = 72,
        device = "svg")
+
+
