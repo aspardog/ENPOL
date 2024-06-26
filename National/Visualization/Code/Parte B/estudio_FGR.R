@@ -96,7 +96,7 @@ plt
 
 
 ggsave(plot   = plt,
-       file   = paste0(path2SP,"National/Presentations/INL_JUNIO/charts_and_images/estudio_FGR/Figure2_1.svg"), 
+       file   = paste0(path2SP,"National/Report/prueba/Capitulo 2/charts_and_images/estudio_FGR/Figure2_1.svg"), 
        width  = 189.7883, 
        height = 80,
        units  = "mm",
@@ -181,7 +181,7 @@ plot <- ggplot(data2plot,
 plot
 
 ggsave(plot   = plot,
-       file   = paste0(path2SP,"National/Presentations/INL_JUNIO/charts_and_images/estudio_FGR/Figure2_2.svg"), 
+       file   = paste0(path2SP,"National/Report/prueba/Capitulo 2/charts_and_images/estudio_FGR/Figure2_2.svg"), 
        width  = 189.7883, 
        height = 80,
        units  = "mm",
@@ -277,7 +277,7 @@ plt <- ggplot(data2plot,
 plt
 
 ggsave(plot   = plt,
-       file   = paste0(path2SP,"National/Presentations/INL_JUNIO/charts_and_images/estudio_FGR/Figure2_3.svg"), 
+       file   = paste0(path2SP,"National/Report/prueba/Capitulo 2/charts_and_images/estudio_FGR/Figure2_3.svg"), 
        width  = 189.7883, 
        height = 80,
        units  = "mm",
@@ -356,7 +356,7 @@ plot
 
 
 ggsave(plot   = plot,
-       file   = paste0(path2SP,"National/Presentations/INL_JUNIO/charts_and_images/estudio_FGR/Figure2_4.svg"), 
+       file   = paste0(path2SP,"National/Report/prueba/Capitulo 2/charts_and_images/estudio_FGR/Figure2_4.svg"), 
        width  = 189.7883, 
        height = 75,
        units  = "mm",
