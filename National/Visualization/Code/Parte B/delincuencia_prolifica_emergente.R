@@ -111,7 +111,7 @@ plot <- data2plot %>%
     legend.position = "none"); plot
 
 ggsave(plot   = plot,
-       file   = paste0(path2SP,"National/Presentations/INL_JUNIO/charts_and_images/delincuencia_prolifica/Figure2_1.svg"), 
+       file   = paste0(path2SP,"National/Report/prueba/Capitulo 2/charts_and_images/delincuencia_prolifica/Figure2_1.svg"), 
        width  = 189.7883, 
        height = 70,
        units  = "mm",
@@ -221,7 +221,7 @@ plt
 
 
 ggsave(plot   = plt,
-       file   = paste0(path2SP,"National/Presentations/INL_JUNIO/charts_and_images/delincuencia_prolifica/Figure2_2.svg"), 
+       file   = paste0(path2SP,"National/Report/prueba/Capitulo 2/charts_and_images/delincuencia_prolifica/Figure2_2.svg"), 
        width  = 189.7883, 
        height = 65,
        units  = "mm",
@@ -290,7 +290,7 @@ plot <- data2plot %>%
     legend.position      = "none"); plot
 
 ggsave(plot   = plot,
-       file   = paste0(path2SP,"National/Presentations/INL_JUNIO/charts_and_images/delincuencia_prolifica/Figure2_3.svg"), 
+       file   = paste0(path2SP,"National/Report/prueba/Capitulo 2/charts_and_images/delincuencia_prolifica/Figure2_3.svg"), 
        width  = 189.7883, 
        height = 85,
        units  = "mm",
@@ -395,7 +395,7 @@ plt
 
 
 ggsave(plot   = plt,
-       file   = paste0(path2SP,"National/Presentations/INL_JUNIO/charts_and_images/delincuencia_prolifica/Figure2_4.svg"), 
+       file   = paste0(path2SP,"National/Report/prueba/Capitulo 2/charts_and_images/delincuencia_prolifica/Figure2_4.svg"), 
        width  = 189.7883, 
        height = 65,
        units  = "mm",
