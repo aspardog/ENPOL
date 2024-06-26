@@ -70,7 +70,7 @@ plot <- data2plot %>%
              family   = "Lato Full",
              fontface = "bold", 
              size = 4.514598) +
-  scale_fill_manual(values =  c("#3273ff","#a90099"))+
+  scale_fill_manual(values =  c("#2a2a94","#a90099"))+
   theme_void() +
   theme(
     panel.background   = element_blank(),
@@ -86,7 +86,7 @@ plot <- data2plot %>%
     legend.position = "none"); plot
 
 ggsave(plot   = plot,
-       file   = paste0(path2SP,"National/Presentations/POLITICA_CRIMINAL/charts_and_images/señalamientos/Figure3_1.svg"), 
+       file   = paste0(path2SP,"National/Report/prueba/Capitulo 2/charts_and_images/señalamientos/Figure3_1.svg"), 
        width  = 189.7883, 
        height = 85,
        units  = "mm",
@@ -137,7 +137,7 @@ data2plot <- df %>%
     order_var = rank(value2plot))
 
 
-colors4plot <- rep("#3273ff", 4)
+colors4plot <- rep("#2a2a94", 4)
 
 
 plt <- ggplot(data2plot, 
@@ -175,8 +175,8 @@ plt <- ggplot(data2plot,
         legend.title = element_blank())+
   coord_flip(); plt
 
-ggsave(plot   = plot,
-       file   = paste0(path2SP,"National/Presentations/POLITICA_CRIMINAL/charts_and_images/señalamientos/Figure3_2.svg"), 
+ggsave(plot   = plt,
+       file   = paste0(path2SP,"National/Report/prueba/Capitulo 2/charts_and_images/señalamientos/Figure3_2.svg"), 
        width  = 189.7883, 
        height = 85,
        units  = "mm",
