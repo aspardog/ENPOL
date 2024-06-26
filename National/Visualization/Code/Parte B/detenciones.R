@@ -57,7 +57,10 @@ data2table <- data_subset.df %>%
 
 
 
-colors4plot <- c("#20204a" ,"#b1a6ff", "#ff003d","#2e2e95" )
+colors4plot <- c("Flagrancia" = "#2a2a94" ,
+                 "Orden de detención" = "#a90099", 
+                 "Inspeccion" = "#3273ff",
+                 "Irregulares" = "#fa4d57" )
 
 # Creating ggplot
 plot <- ggplot(data2table, 
@@ -101,7 +104,7 @@ plot <- ggplot(data2table,
   ); plot
 
 ggsave(plot   = plot,
-       file   = paste0(path2SP,"National/Presentations/POLITICA_CRIMINAL/charts_and_images/detenciones/Figure3_1.svg"), 
+       file   = paste0(path2SP,"National/Report/prueba/Capitulo 2/charts_and_images/detenciones/Figure3_1.svg"), 
        width  = 189.7883, 
        height = 85,
        units  = "mm",
@@ -152,6 +155,11 @@ data2plot <- data_subset.df %>%
   mutate(order = row_number()) 
 
 
+colors4plot <- c("D)Flagrancia" = "#2a2a94" ,
+                 "B)Orden de detención" = "#a90099", 
+                 "A)Inspeccion" = "#3273ff",
+                 "C)Irregulares" = "#fa4d57" )
+
 
 plot <- ggplot(data2plot,
                aes(
@@ -169,7 +177,7 @@ plot <- ggplot(data2plot,
             family   = "Lato Full",
             fontface = "bold", 
             size = 3.514598)  +
-  scale_fill_manual(values =  c("#b1a6ff", "#2e2e95","#ff003d", "#20204a")) +
+  scale_fill_manual(values =  colors4plot) +
   scale_y_continuous(limits = c(0, 105),
                      breaks = seq(0,100,20),
                      labels = paste0(seq(0,100,20), "%"),
@@ -192,9 +200,9 @@ plot <- ggplot(data2plot,
 plot
 
 ggsave(plot   = plot,
-       file   = paste0(path2SP,"National/Presentations/POLITICA_CRIMINAL/charts_and_images/detenciones/Figure3_2.svg"), 
-       width  = 189.7883, 
-       height = 85,
+       file   = paste0(path2SP,"National/Report/prueba/Capitulo 2/charts_and_images/detenciones/Figure3_2.svg"), 
+       width  = 230, 
+       height = 200,
        units  = "mm",
        dpi    = 72,
        device = "svg")
@@ -289,7 +297,7 @@ plot <- ggplot(data2plot,
 plot
 
 ggsave(plot   = plot,
-       file   = paste0(path2SP,"National/Presentations/POLITICA_CRIMINAL/charts_and_images/detenciones/Figure3_3.svg"), 
+       file   = paste0(path2SP,"National/Report/prueba/Capitulo 2/charts_and_images/detenciones/Figure3_3.svg"), 
        width  = 189.7883, 
        height = 85,
        units  = "mm",
