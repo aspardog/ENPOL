@@ -27,13 +27,13 @@
 # Required Packages, Fonts, ggplot theme, color palettes, comparison countries and other general routines are
 # loaded from the following script:
 source("Code/settings.R")
-source("Code/proceso_justo.R")
-source("Code/proceso_justo_percepcion.R")
-source("Code/uso_excesivo_fuerza.R")
-source("Code/corrupcion.R")
-source("Code/tortura.R")
-source("Code/detenciones.R")
-source("Code/prision_preventiva.R")
+source("Code/Parte A/proceso_justo.R")
+source("Code/Parte A/proceso_justo_percepcion.R")
+source("Code/Parte A/uso_excesivo_fuerza.R")
+source("Code/Parte A/corrupcion.R")
+source("Code/Parte A/tortura.R")
+source("Code/Parte A/detenciones.R")
+source("Code/Parte A/prision_preventiva.R")
 
 # Loading plotting functions from GitHub
 source("https://raw.githubusercontent.com/ctoruno/WJP-Data-Viz/main/loading.R")
@@ -315,11 +315,13 @@ for (i in Estados) {
   tortura_tipo <- tortura_tipo.fn()
   tortura_psicologica <- tortura_psicologica.fn()
   tortura_fisica <- tortura_fisica.fn()
+  tortura_RND <- tortura_RND.fn()
   
   tortura_lista <- list('Tortura tiempo'      = tortura_tiempo,
                         'Tortura tipo'        = tortura_tipo,
                         'Tortura psicologica' = tortura_psicologica,
-                        'Tortura fisica'      = tortura_fisica
+                        'Tortura fisica'      = tortura_fisica,
+                        'Tortura RND'         = tortura_RND
                         )
   
   openxlsx::write.xlsx(x = tortura_lista,

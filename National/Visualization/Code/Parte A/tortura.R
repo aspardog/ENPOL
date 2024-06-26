@@ -20,7 +20,7 @@
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
-## 1. Tortura: Serie temporal                                                            ----
+## Tortura: Serie temporal                                                            ----
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -95,31 +95,120 @@ tortura_tiempo.fn <- function(
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
-## 2. Tortura: Logit                                                          ----
+## Tortura: RND                                                          ----
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-# Applying plotting function
-# data_subset.df <- master_data.df
-# 
-# data2plot <- logit_dataBase.fn(data = data_subset.df,
-#                                dependent_var = "tortura_generalizada")
-# 
-# logitPlot <- logit_demo_panel(mainData = data2plot)
-# 
-# ggsave(plot   = logitPlot,
-#        file   = paste0(path2SP,
-#                        "/National/Visualization",
-#                        "/Output/Debido proceso/Tortura/figure2.svg"), 
-#        width  = 175, 
-#        height = 85,
-#        units  = "mm",
-#        dpi    = 72,
-#        device = "svg")
+tortura_RND.fn <- function(
+    
+  data.df = master_data.df  
+  
+) {
+  
+  data_subset.df <- master_data.df %>%
+    select(years_since_RND_3, tortura_tra_p, tortura_tra_f, tortura_mp_f, tortura_mp_p) %>%
+    mutate(
+      across(!years_since_RND_3,
+             ~case_when(
+               .x == 1 ~ 1,
+               .x == 0 | .x == 2 ~ 0,
+               T ~ NA_real_
+             )),
+      group_var = 
+        if_else(
+          as.numeric(years_since_RND_3) < 2 & as.numeric(years_since_RND_3) > 0, "Post RND",
+          if_else(
+            as.numeric(years_since_RND_3) > -2 & as.numeric(years_since_RND_3) < 0, "PRE RND", 
+            NA_character_
+          )
+        )
+    ) %>%
+    select(!years_since_RND_3) %>%
+    mutate(
+      tortura_fisica = 
+        case_when(
+          tortura_tra_f == 1 | tortura_mp_f == 1 ~ 1,
+          tortura_tra_f == 0 & tortura_mp_f == 0 ~ 0,
+          T ~ NA_real_
+        ),
+      tortura_psicologica = 
+        case_when(
+          tortura_tra_p == 1 | tortura_mp_p == 1 ~ 1,
+          tortura_tra_p == 0 & tortura_mp_p == 0 ~ 0,
+          T ~ NA_real_
+        ),
+      tortura_ambas = 
+        case_when(
+          tortura_fisica == 1 & tortura_psicologica == 1 ~ 1,
+          tortura_fisica == 0 | tortura_psicologica == 0 ~ 0,
+          T ~ NA_real_
+        )
+    ) %>%
+    select(!tortura_tra_p) %>%
+    select(!tortura_tra_f) %>%
+    select(!tortura_mp_f) %>%
+    select(!tortura_mp_p) %>%
+    pivot_longer(cols = !group_var, 
+                 names_to = "category", 
+                 values_to = "value2plot") %>%
+    group_by(category, group_var) %>%
+    summarise(value2plot = mean(value2plot, na.rm = T)*100) %>%
+    drop_na()
+  
+  data2plot <- data_subset.df %>%
+    mutate(
+      value2plot = round(value2plot, 0),
+      labels = 
+        case_when(
+          category == "tortura_fisica" ~ "Tortura <br>física",
+          category == "tortura_psicologica" ~ "Tortura <br>psicologica",
+          category == "tortura_ambas" ~ "Ambas"
+        ),
+      figure = paste0(value2plot, "%"),
+      order_var = case_when(
+        labels == "Ambas" ~ 3,
+        labels == "Tortura física" ~ 2,
+        labels =="Tortura psicológica" ~ 1,
+        T ~ NA_real_),
+      order_value_bars = case_when(
+        labels == "PRE RND" ~ 1,
+        labels == "Post RND" ~ 2,
+        T ~ NA_real_)
+    )
+  
+  colors4plot <- c("#FA4D57",
+                   "#009AA9")
+  
+  names(colors4plot) <- c("PRE RND",
+                          "Post RND")
+  
+  plot <- barsChart.fn(
+    data.df                    = data2plot,
+    categories_grouping_var    = data2plot$group_var,
+    colors4plot                = colors4plot, 
+    nbars = 3
+  )
+  
+  ggsave(plot = plot, 
+         filename = paste0(path2SP,
+                           "/National/Visualization",
+                           "/Output/Debido proceso/",
+                           savePath,"/Tortura",
+                           "/tortura_RND.svg"),
+         width = 189.7883,
+         height = 105,
+         units  = "mm",
+         dpi    = 72,
+         device = "svg")
+  
+  return(data2plot)
+  
+}
+
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
-## 3. Tortura tipo                                                      ----
+## Tortura tipo                                                      ----
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -201,7 +290,7 @@ tortura_tipo.fn <- function(
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
-## 4. Tortura Psicologica                                                        ----
+## Tortura Psicologica                                                        ----
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -333,7 +422,7 @@ tortura_psicologica.fn <- function(
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
-## 5. Tortura Física: Mecanismos                                                          ----
+## Tortura Física: Mecanismos                                                          ----
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 

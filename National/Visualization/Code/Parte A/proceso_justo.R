@@ -19,7 +19,7 @@
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
-## 1. Guardar silencio en el tiempo                                              ----
+## Guardar silencio en el tiempo                                              ----
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -113,7 +113,7 @@ guardar_silencio.fn <- function(
                            savePath,"/Proceso justo",
                            "/guardar_silencio.svg"),
          width = 189.7883,
-         height = 85,
+         height = 70,
          units  = "mm",
          dpi    = 72,
          device = "svg")
@@ -122,86 +122,9 @@ guardar_silencio.fn <- function(
   
 }
 
-
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
-## 2. Presion para autoincriminarse                                              ----
-##
-## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-# 
-# data_subset.df <- master_data.df %>%
-#   filter(Anio_arresto > 2010)  %>%
-#   mutate(
-#     presion_mp =
-#       case_when(
-#         as.numeric(P4_7) == 4 | as.numeric(P4_7) == 5 ~ 1,
-#         as.numeric(P4_7) < 11 &  (as.numeric(P4_7) != 4 | as.numeric(P4_7) != 5) ~ 0
-#       ),
-#     presion_juez =
-#       case_when(
-#         P5_7 == 1 ~ 1,
-#         P5_7 == 2 ~ 0
-#       )
-#   ) %>%
-#   group_by(Anio_arresto) %>%
-#   summarise(
-#     mp = mean(presion_mp, na.rm = T),
-#     juez = mean(presion_juez, na.rm = T)
-#   ) %>%
-#   pivot_longer(cols = c(mp, juez), names_to = "category", values_to = "value2plot") %>%
-#   mutate(value2plot = value2plot*100,
-#          label = paste0(format(round(value2plot, 0),
-#                                nsmall = 0),
-#                         "%"),
-#          year = as.numeric(Anio_arresto))
-# 
-# # Pulling minimum and maximum available year
-# minyear <- 2011
-# maxyear <- 2021
-# 
-# 
-# # Creating a vector for yearly axis
-# x.axis.values <- seq(minyear, maxyear, by = 2)
-# sec.ticks     <- seq(minyear, maxyear, by = 1)
-# x.axis.labels <- paste0("'", str_sub(x.axis.values, start = -2))
-# 
-# 
-# # Defining colors4plot
-# colors4plot <- c("#a90099","#43a9a7")
-# 
-# names(colors4plot) <- c("mp", "juez")
-# 
-# # Saving data points
-# data2plot <- data_subset.df %>% ungroup()
-# 
-# # Applying plotting function
-# chart <- LAC_lineChart(data           = data2plot,
-#                        target_var     = "value2plot",
-#                        grouping_var   = "year",
-#                        ngroups        = data_subset.df$category,
-#                        labels_var     = "label",
-#                        colors_var     = "category",
-#                        colors         = colors4plot,
-#                        repel          = T,
-#                        custom.axis    = T,
-#                        x.breaks       = x.axis.values,
-#                        x.labels       = x.axis.labels,
-#                        sec.ticks      = sec.ticks)
-# 
-# ggsave(plot = chart,
-#        filename = paste0(path2SP,
-#                          "/National/Visualization",
-#                          "/Output/Debido proceso/Proceso justo/figure2.svg"),
-#        width = 189.7883,
-#        height = 120,
-#        units  = "mm",
-#        dpi    = 72,
-#        device = "svg")
-
-## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-##
-## 3. Información detención                                             ----
+## Información detención                                             ----
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -285,7 +208,7 @@ informacion_detencion.fn <- function(
                            savePath,"/Proceso justo",
                            "/informacion_detencion.svg"),
          width = 189.7883,
-         height = 130,
+         height = 175,
          units  = "mm",
          dpi    = 72,
          device = "svg")
@@ -297,7 +220,7 @@ informacion_detencion.fn <- function(
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
-## 4. Claridad                                           ----
+## Claridad                                           ----
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -357,7 +280,7 @@ claridad_actores.fn <- function(
   
   
   # Defining colors4plot
-  colors4plot <- c("#a90099","#43a9a7", "#efa700", "#2c6d4f")
+  colors4plot <- c("#a90099","#3273FF", "#efa700", "#00B67F")
   
   names(colors4plot) <- c("mp", "juez", "defensor", "defendido")
   
@@ -385,7 +308,7 @@ claridad_actores.fn <- function(
                            savePath,"/Proceso justo",
                            "/claridad_actores.svg"),
          width = 189.7883,
-         height = 130,
+         height = 175,
          units  = "mm",
          dpi    = 72,
          device = "svg")
@@ -396,7 +319,7 @@ claridad_actores.fn <- function(
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
-## 5. Defensa oportuna                                           ----
+## Defensa oportuna                                           ----
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -779,21 +702,15 @@ tribunal_presente.fn <- function(
           P5_18 == 2 ~ 1,
           P5_18 == 1 | P5_18 == 3 | P5_18 == 4 | P5_18 == 5 ~ 0
         ),
-      juez_escucha =
-        case_when(
-          P5_26 == 1 | P5_26 == 2 ~ 1,
-          P5_26 == 3 | P5_26 == 4 ~ 0
-        ),
       counter = 1
     ) %>%
     group_by(Anio_arresto) %>%
     summarise(
       juez_presente = mean(juez_presente, na.rm = T),
       juez_control = mean(juez_control, na.rm = T),
-      juez_escucha = mean(juez_escucha, na.rm = T),
       n_obs = sum(counter, na.rm = T)
     ) %>%
-    pivot_longer(cols = c(juez_presente, juez_control, juez_escucha), names_to = "category", values_to = "value2plot") %>%
+    pivot_longer(cols = c(juez_presente, juez_control), names_to = "category", values_to = "value2plot") %>%
     mutate(value2plot = value2plot*100,
            label = paste0(format(round(value2plot, 0),
                                  nsmall = 0),
@@ -814,7 +731,7 @@ tribunal_presente.fn <- function(
   # Defining colors4plot
   colors4plot <- threeColors
   
-  names(colors4plot) <- c("juez_presente", "juez_control", "juez_escucha")
+  names(colors4plot) <- c("juez_presente", "juez_control")
   
   # Saving data points
   data2plot <- data_subset.df %>% ungroup()
