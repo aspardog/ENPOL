@@ -59,7 +59,7 @@ data2plot <- df %>%
     order_var = rank(value2plot))
 
 
-colors4plot <- rep("#b1a6ff", 2)
+colors4plot <- rep("#2a2a94", 2)
 
 
 plt <- ggplot(data2plot, 
@@ -99,7 +99,7 @@ plt <- ggplot(data2plot,
 
 
 ggsave(plot   = plt,
-       file   = paste0(path2SP,"National/Presentations/POLITICA_CRIMINAL/charts_and_images/entrevistas_interrogatorios/Figure3_1.svg"), 
+       file   = paste0(path2SP,"National/Report/prueba/Capitulo 2/charts_and_images/entrevistas_interrogatorios/Figure3_1.svg"), 
        width  = 189.7883, 
        height = 85,
        units  = "mm",
@@ -161,7 +161,7 @@ data2plot <- df %>%
 
 
 
-colors4plot <- rep("#b1a6ff", 6)
+colors4plot <- rep("#2a2a94", 6)
 
 
 plt <- ggplot(data2plot, 
@@ -200,7 +200,7 @@ plt <- ggplot(data2plot,
   coord_flip(); plt
 
 ggsave(plot   = plt,
-       file   = paste0(path2SP,"National/Presentations/POLITICA_CRIMINAL/charts_and_images/entrevistas_interrogatorios/Figure3_2.svg"), 
+       file   = paste0(path2SP,"National/Report/prueba/Capitulo 2/charts_and_images/entrevistas_interrogatorios/Figure3_2.svg"), 
        width  = 189.7883, 
        height = 85,
        units  = "mm",
@@ -278,8 +278,8 @@ plot <- ggplot(data2plot,
     axis.title.y       = element_blank(),
     axis.title.x       = element_blank()); plot
 
-ggsave(plot   = plt,
-       file   = paste0(path2SP,"National/Presentations/POLITICA_CRIMINAL/charts_and_images/entrevistas_interrogatorios/Figure3_3.svg"), 
+ggsave(plot   = plot,
+       file   = paste0(path2SP,"National/Report/prueba/Capitulo 2/charts_and_images/entrevistas_interrogatorios/Figure3_3.svg"), 
        width  = 189.7883, 
        height = 85,
        units  = "mm",
@@ -354,8 +354,8 @@ plot <- ggplot(data2plot,
     axis.title.x       = element_blank()); plot
 
 
-ggsave(plot   = plt,
-       file   = paste0(path2SP,"National/Presentations/POLITICA_CRIMINAL/charts_and_images/entrevistas_interrogatorios/Figure3_4.svg"), 
+ggsave(plot   = plot,
+       file   = paste0(path2SP,"National/Report/prueba/Capitulo 2/charts_and_images/Figure3_4.svg"), 
        width  = 189.7883, 
        height = 85,
        units  = "mm",
@@ -431,8 +431,8 @@ plot <- ggplot(data2plot,
     axis.title.y       = element_blank(),
     axis.title.x       = element_blank()); plot
 
-ggsave(plot   = plt,
-       file   = paste0(path2SP,"National/Presentations/POLITICA_CRIMINAL/charts_and_images/entrevistas_interrogatorios/Figure3_4.svg"), 
+ggsave(plot   = plot,
+       file   = paste0(path2SP,"National/Report/prueba/Capitulo 2/charts_and_images/entrevistas_interrogatorios/Figure3_4.svg"), 
        width  = 189.7883, 
        height = 85,
        units  = "mm",
