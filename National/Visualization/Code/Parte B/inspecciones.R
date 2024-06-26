@@ -58,7 +58,7 @@ data2plot <- data_subset.df %>%
     order_var = rank(value2plot))
 
 
-colors4plot <- rep("#E2E2F7", 5)
+colors4plot <- rep("#2a2a94", 5)
 
 
 plt <- ggplot(data2plot, 
@@ -97,7 +97,7 @@ plt <- ggplot(data2plot,
   coord_flip(); plt
 
 ggsave(plot   = plt,
-       file   = paste0(path2SP,"National/Presentations/POLITICA_CRIMINAL/charts_and_images/inspecciones/Figure3_1.svg"), 
+       file   = paste0(path2SP,"National/Report/prueba/Capitulo 2/charts_and_images/inspecciones/Figure3_1.svg"), 
        width  = 189.7883, 
        height = 85,
        units  = "mm",
@@ -142,15 +142,16 @@ data2plot <- data_subset.df %>%
                              values == "secuestro" ~ "Secuestro",
                              values == "hom_dol" ~ "Homicidio doloso",))
 
+colors4plot <- rep("#2a2a94", 7)
 
 plt <- ggplot(data2plot, 
               aes(x     = reorder(values, -value2plot),
                   y     = value2plot,
-                  fill  = encontro_sinsembrar,
                   label = figure)) +
   geom_bar(stat = "identity",
-           show.legend = FALSE, width = 0.9 ) +
-  # scale_fill_manual(values = "#2a2a94" ) +
+           show.legend = FALSE, width = 0.9, 
+           fill  = colors4plot, ) +
+  #scale_fill_manual(values = "#2a2a94" ) +
   geom_text(aes(y    =  value2plot + 5),
             color    = "#4a4a49",
             family   = "Lato Full",
@@ -171,7 +172,7 @@ plt <- ggplot(data2plot,
         plot.title = element_text(face = "bold", size = 12)); plt
 
 ggsave(plot   = plt,
-       file   = paste0(path2SP,"National/Presentations/POLITICA_CRIMINAL/charts_and_images/inspecciones/Figure3_2.svg"), 
+       file   = paste0(path2SP,"National/Report/prueba/Capitulo 2/charts_and_images/inspecciones/Figure3_2.svg"), 
        width  = 189.7883, 
        height = 85,
        units  = "mm",
