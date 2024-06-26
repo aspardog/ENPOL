@@ -72,7 +72,7 @@ plt
 
 
 ggsave(plot   = plt,
-       file   = paste0(path2SP,"National/Presentations/INL_JUNIO/charts_and_images/fuero_incidencia/Figure2_1.svg"), 
+       file   = paste0(path2SP,"National/Report/prueba/Capitulo 2/charts_and_images/distribucion_competencia/Figure3_1.svg"), 
        width  = 189.7883, 
        height = 85,
        units  = "mm",
@@ -286,7 +286,7 @@ plot(viz)
 
 
 ggsave(plot   = viz,
-       file   = paste0(path2SP,"National/Presentations/INL_JUNIO/charts_and_images/fuero_incidencia/Figure2_2.svg"), 
+       file   = paste0(path2SP,"National/Report/prueba/Capitulo 2/charts_and_images/distribucion_competencia/Figure3_2.svg"), 
        width  = 189.7883, 
        height = 175,
        units  = "mm",
@@ -533,7 +533,7 @@ plot(viz)
 
 
 ggsave(plot   = viz,
-       file   = paste0(path2SP,"National/Presentations/INL_JUNIO/charts_and_images/fuero_incidencia/Figure2_3.svg"), 
+       file   = paste0(path2SP,"National/Report/prueba/Capitulo 2/charts_and_images/distribucion_competencia/Figure3_3.svg"), 
        width  = 189.7883, 
        height = 175,
        units  = "mm",
@@ -773,7 +773,7 @@ viz <- wrap_elements(tpanel) + p + wrap_elements(leyend) +
 plot(viz)
 
 ggsave(plot   = viz,
-       file   = paste0(path2SP,"National/Presentations/INL_JUNIO/charts_and_images/fuero_incidencia/Figure2_4.svg"), 
+       file   = paste0(path2SP,"National/Report/prueba/Capitulo 2/charts_and_images/distribucion_competencia/Figure3_4.svg"), 
        width  = 189.7883, 
        height = 175,
        units  = "mm",
