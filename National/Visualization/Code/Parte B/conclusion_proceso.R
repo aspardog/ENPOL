@@ -95,7 +95,7 @@ plot <- data2plot %>%
   ); plot
 
 ggsave(plot   = plot,
-       file   = paste0(path2SP,"National/Presentations/POLITICA_CRIMINAL/charts_and_images/conclusion_proceso/Figure3_1.svg"), 
+       file   = paste0(path2SP,"National/Report/prueba/Capitulo 2/charts_and_images/conclusion_proceso/Figure3_1.svg"), 
        width  = 189.7883, 
        height = 85,
        units  = "mm",
@@ -180,7 +180,7 @@ plt <- ggplot(data2plot,
   coord_flip(); plt
 
 ggsave(plot   = plt,
-       file   = paste0(path2SP,"National/Presentations/POLITICA_CRIMINAL/charts_and_images/conclusion_proceso/Figure3_2.svg"), 
+       file   = paste0(path2SP,"National/Report/prueba/Capitulo 2/charts_and_images/conclusion_proceso/Figure3_2.svg"), 
        width  = 189.7883, 
        height = 85,
        units  = "mm",
@@ -272,7 +272,7 @@ plot <- ggplot(data2plot,
 
 
 ggsave(plot   = plot,
-       file   = paste0(path2SP,"National/Presentations/POLITICA_CRIMINAL/charts_and_images/conclusion_proceso/Figure3_3.svg"), 
+       file   = paste0(path2SP,"National/Report/prueba/Capitulo 2/charts_and_images/conclusion_proceso/Figure3_3.svg"), 
        width  = 189.7883, 
        height = 85,
        units  = "mm",
