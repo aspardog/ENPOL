@@ -20,7 +20,7 @@
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
-## 1. Detenciones irregulares: Serie temporal                                                            ----
+## Detenciones irregulares: Serie temporal                                                            ----
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -93,10 +93,39 @@ detenciones_tiempo.fn <- function(
   
 }
 
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##
+## Tiempos de traslado                                                            ----
+##
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+data_subset.df <- data.df %>%
+  mutate(
+    counter = 1,
+    n_obs = if_else(!is.na(Tiempo_traslado), 
+                    sum(counter, na.rm = T), NA_real_)
+  ) %>%
+  ungroup() %>%
+  group_by(Tiempo_traslado) %>%
+  summarise(
+    value2plot = sum(counter, na.rm = T),
+  ) %>%
+  ungroup() %>%
+  drop_na() %>%
+  distinct() %>%
+  mutate(
+    n_obs = sum(value2plot, na.rm = T),
+    value2plot = value2plot/n_obs,
+    value2plot = value2plot*100,
+    figure = paste0(format(round(value2plot, 0),
+                               nsmall = 0),
+                    "%"),
+    category = Tiempo_traslado
+    )
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
-## 4. Cambios en los tiempos de traslado                                                            ----
+## Cambios en los tiempos de traslado                                                            ----
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -146,8 +175,8 @@ tiempos_traslado.fn <- function(
   
   
   # Defining colors4plot
-  colors4plot <- c("Hasta 30 minutos" = "#003B88",
-                   "Más de 6 horas hasta 24 horas" = "#fa4d57"
+  colors4plot <- c("Hasta 30 minutos" = "#009AA9",
+                   "Más de 6 horas hasta 24 horas" = "#FA4D57"
   )
   
   # Saving data points
