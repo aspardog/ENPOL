@@ -104,34 +104,80 @@ uso_fuerza_tiempo.fn <- function(
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
-## 2. Uso Excesivo de la fuerza: Logit                                                          ----
+## 2. Uso Excesivo de la fuerza: Tipo                                                        ----
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# 
-# # Applying plotting function
-# data_subset.df <- master_data.df %>%
-#   mutate(
-#     uso_excesivo =
-#       case_when(
-#         proporcionalidad_uso_fuerza == 0 ~ 1,
-#         proporcionalidad_uso_fuerza == 1 ~ 0
-#       )
-#   )
-# 
-# data2plot <- logit_dataBase.fn(data = data_subset.df,
-#                                dependent_var = "uso_excesivo")
-# 
-# logitPlot <- logit_demo_panel(mainData = data2plot)
-# 
-# ggsave(plot   = logitPlot,
-#        file   = paste0(path2SP,
-#                        "/National/Visualization",
-#                        "/Output/Debido proceso/Uso excesivo/figure2.svg"), 
-#        width  = 175, 
-#        height = 85,
-#        units  = "mm",
-#        dpi    = 72,
-#        device = "svg")
+
+controles_tipo.fn <- function(
+  
+  data.df = master_data.df  
+  
+){
+  
+  data_subset.df <- data.df %>%
+    mutate(
+      counter = 1,
+    ) %>%
+    ungroup()%>%
+    summarise(
+      control_contacto = mean(control_contacto, na.rm = T),
+      control_cooperativo = mean(controles_cooperativos, na.rm = T),
+      control_sometimiento = mean(sometimiento, na.rm = T),
+      control_defensivo = mean(tacticas_defensivas, na.rm = T),
+      control_letal = mean(fuerza_letal, na.rm = T),
+      n_obs = sum(counter, na.rm = T)) %>%
+    ungroup() %>%
+    distinct() %>%
+    drop_na() %>%
+    pivot_longer(cols = starts_with("control"), 
+                 names_to = "category", 
+                 values_to = "value2plot")
+  
+  data2plot <- data_subset.df %>%
+    mutate(
+      value2plot = value2plot*100,
+      figure = paste0(round(value2plot,0), "%"),
+      labels = category,
+      order_var = case_when(
+        labels == "control_letal" ~ 1,
+        labels == "control_defensivo" ~ 2,
+        labels == "control_sometimiento" ~ 3,
+        labels == "control_contacto" ~ 4,
+        labels =="control_cooperativo" ~ 5,
+        T ~ NA_real_),
+      labels = case_when(
+        labels == "control_letal" ~ "Fuerza <br>letal",
+        labels == "control_defensivo" ~ "Tácticas <br>defensivas",
+        labels == "control_sometimiento" ~ "Tácticas de <br>sometimiento",
+        labels == "control_contacto" ~ "Control mediamente <br>contacto",
+        labels =="control_cooperativo" ~ "Controles <br>cooperativos",
+        T ~ NA_character_)
+    )
+  colors4plot <- rep(mainCOLOR,5)
+  
+  plot <- barsChart.fn(data.df                    = data2plot,
+                       groupVar                   = F,   
+                       categories_grouping_var    = labels,
+                       colors4plot                = colors4plot, 
+                       order                      = T,
+                       orientation                = "horizontal")
+  
+  ggsave(plot = plot, 
+         filename = paste0(path2SP,
+                           "/National/Visualization",
+                           "/Output/Debido proceso/",
+                           savePath,"/Uso excesivo fuerza",
+                           "/controles.svg"),
+         width = 189.7883,
+         height = 85,
+         units  = "mm",
+         dpi    = 72,
+         device = "svg")
+  
+  return(data2plot)
+  
+}
+
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
 ## 3. Uso Excesivo de la fuerza: Corporación                                                      ----

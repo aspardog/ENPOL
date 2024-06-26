@@ -163,6 +163,7 @@ for (i in Estados) {
   tribunal_transparente <- tribunal_transparente.fn()
   tribunal_imparcial    <- tribunal_imparcial.fn()
   tribunal_presente     <- tribunal_presente.fn()
+  tiempo_proceso        <- tiempo_condena.fn()
   
   proceso_justo_lista <- list('Guardar silencio en el tiempo' = guardar_silencio, 
                               'Información de la detencion'   = informacion_detencion,
@@ -171,7 +172,8 @@ for (i in Estados) {
                               'Tipo de defensa'               = tipo_defensa,
                               'Tribunal transparente'         = tribunal_transparente,
                               'Tribunal imparcial'            = tribunal_imparcial,
-                              'Tribunal presente'             = tribunal_presente
+                              'Tribunal presente'             = tribunal_presente,
+                              'Tiempo proceso'                = tiempo_proceso
                               )
   
   openxlsx::write.xlsx(x = proceso_justo_lista,
@@ -243,14 +245,18 @@ for (i in Estados) {
     savePath,"/Uso excesivo fuerza")
   )
   
+  controles_tipo <- controles_tipo.fn()
   uso_fuerza_tiempo <- uso_fuerza_tiempo.fn()
   uso_fuerza_corporacion <- uso_fuerza_corporacion.fn()
   
-  uso_fuerza_lista <- list('Uso fuerza tiempo'        = uso_fuerza_tiempo, 
-                           'Uso fuerza corporacion'   = uso_fuerza_corporacion
-                           )
+  uso_fuerza_lista <- list(
+    'Tipo de control'          = controles_tipo,
+    'Uso fuerza tiempo'        = uso_fuerza_tiempo, 
+    'Uso fuerza corporacion'   = uso_fuerza_corporacion
+    
+  )
   
-  openxlsx::write.xlsx(x = proceso_percepcion_lista,
+  openxlsx::write.xlsx(x = uso_fuerza_lista,
                        file = paste0(
                          path2SP,
                          "/National/Visualization",
@@ -277,11 +283,11 @@ for (i in Estados) {
   corrupcion_tiempo <- corrupcion_tiempo.fn()
   corrupcion_elementos <- corrupcion_elementos.fn()
   
-  uso_fuerza_lista <- list('Corrupción tiempo'      = corrupcion_tiempo, 
+  corrupcion_lista <- list('Corrupción tiempo'      = corrupcion_tiempo, 
                            'Corrupción elementos'   = corrupcion_elementos
   )
   
-  openxlsx::write.xlsx(x = proceso_percepcion_lista,
+  openxlsx::write.xlsx(x = corrupcion_lista,
                        file = paste0(
                          path2SP,
                          "/National/Visualization",
@@ -386,7 +392,7 @@ for (i in Estados) {
     'PP tipo' = pp_tipo
     
   )
-  openxlsx::write.xlsx(x = detenciones_lista,
+  openxlsx::write.xlsx(x = pp_list,
                        file = paste0(
                          path2SP,
                          "/National/Visualization",

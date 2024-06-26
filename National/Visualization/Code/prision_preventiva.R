@@ -125,7 +125,7 @@ pp_tiempo_total.fn <- function(
     mutate(
       mas2anios_prisionpreventiva = 
         case_when(mas2anios_prisionpreventiva == 1 ~ "Más de 2 años",
-                  mas2anios_prisionpreventiva == 0 ~ "Menos, o hasta, 2 años",
+                  mas2anios_prisionpreventiva == 0 ~ "Menos de 2 años",
                   T ~ NA_character_),) %>%
     group_by(mas2anios_prisionpreventiva) %>%
     summarise(
@@ -261,38 +261,6 @@ pp_tiempo.fn <- function(
   
 }
 
-## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-##
-## 4. Prision preventiva: Logit                                                          ----
-##
-## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-# Applying plotting function
-# data_subset.df <- master_data.df %>%
-#   mutate(
-#     prision_preventiva = 
-#       case_when(
-#         tipo_prision_preventiva == "Prisión Preventiva Oficiosa" ~ 1,
-#         tipo_prision_preventiva == "Prisión Preventiva Justificada" ~ 0,
-#         tipo_prision_preventiva == "Proceso en libertad" ~ 0
-#       )
-#   )
-# 
-# data2plot <- logit_dataBase.fn(data = data_subset.df,
-#                                dependent_var = "prision_preventiva")
-# 
-# logitPlot <- logit_demo_panel(mainData = data2plot, shadow = F)
-# 
-# ggsave(plot   = logitPlot,
-#        file   = paste0(path2SP,
-#                        "/National/Visualization",
-#                        "/Output/Debido proceso/Prision preventiva/figure4.svg"), 
-#        width  = 175, 
-#        height = 85,
-#        units  = "mm",
-#        dpi    = 72,
-#        device = "svg")
-#        
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
 ## 5. Prision preventiva tipo                                                     ----

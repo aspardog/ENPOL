@@ -113,7 +113,7 @@ guardar_silencio.fn <- function(
                            savePath,"/Proceso justo",
                            "/guardar_silencio.svg"),
          width = 189.7883,
-         height = 120,
+         height = 85,
          units  = "mm",
          dpi    = 72,
          device = "svg")
@@ -285,7 +285,7 @@ informacion_detencion.fn <- function(
                            savePath,"/Proceso justo",
                            "/informacion_detencion.svg"),
          width = 189.7883,
-         height = 120,
+         height = 130,
          units  = "mm",
          dpi    = 72,
          device = "svg")
@@ -385,7 +385,7 @@ claridad_actores.fn <- function(
                            savePath,"/Proceso justo",
                            "/claridad_actores.svg"),
          width = 189.7883,
-         height = 120,
+         height = 130,
          units  = "mm",
          dpi    = 72,
          device = "svg")
@@ -589,6 +589,7 @@ tribunal_transparente.fn <- function(
   
   data_subset.df <- data.df %>%
     filter(Anio_arresto > 2014)  %>%
+    filter(sentenciado == 1) %>%
     mutate(
       video =
         case_when(
@@ -766,6 +767,7 @@ tribunal_presente.fn <- function(
   
   data_subset.df <- master_data.df %>%
     filter(Anio_arresto > 2014)  %>%
+    filter(sentenciado == 1) %>%
     mutate(
       juez_presente =
         case_when(
@@ -853,89 +855,81 @@ tribunal_presente.fn <- function(
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-# data_subset.df <- master_data.df %>%
-#   filter(Anio_arresto > 2010)  %>%
-#   filter(sentenciado == 1) %>%
-#   mutate(
-#     rapida =
-#       case_when(
-#         P5_10 == 1  | P5_10 == 2 | P5_10 == 3 | P5_10 == 4 ~ 1,
-#         P5_10 == 5  | P5_10 == 6 | P5_10 == 7 ~ 0
-#       ),
-#     corta =
-#       case_when(
-#         P5_10 == 5 ~ 1,
-#         P5_10 == 1  | P5_10 == 2 | P5_10 == 3 | P5_10 == 4 | P5_10 == 6 | P5_10 == 7 ~ 0
-#       ),
-#     media =
-#       case_when(
-#         P5_10 == 6 ~ 1,
-#         P5_10 == 1  | P5_10 == 2 | P5_10 == 3 | P5_10 == 4 | P5_10 == 5 | P5_10 == 7 ~ 0
-#       ),
-#     larga =
-#       case_when(
-#         P5_10 == 7 ~ 1,
-#         P5_10 == 1  | P5_10 == 2 | P5_10 == 3 | P5_10 == 4 | P5_10 == 5 | P5_10 == 6 ~ 0
-#       )
-#   ) %>%
-#   group_by(Anio_arresto) %>%
-#   summarise(
-#     rapida = mean(rapida, na.rm = T),
-#     corta = mean(corta, na.rm = T),
-#     media = mean(media, na.rm = T),
-#     larga = mean(larga, na.rm = T)
-#   ) %>%
-#   pivot_longer(cols = c(rapida, corta, media, larga), names_to = "category", values_to = "value2plot") %>%
-#   mutate(value2plot = value2plot*100,
-#          label = paste0(format(round(value2plot, 0),
-#                                nsmall = 0),
-#                         "%"),
-#          year = as.numeric(Anio_arresto)) %>%
-#   mutate(filtro =
-#            if_else(category == "larga" & year > 2018, 0,
-#                    if_else(category == "media" & year > 2019, 0, 1))) %>%
-#   filter(year < 2020)
-# 
-# # Pulling minimum and maximum available year
-# minyear <- 2011
-# maxyear <- 2021
-# 
-# 
-# # Creating a vector for yearly axis
-# x.axis.values <- seq(minyear, maxyear, by = 2)
-# sec.ticks     <- seq(minyear, maxyear, by = 1)
-# x.axis.labels <- paste0("'", str_sub(x.axis.values, start = -2))
-# 
-# 
-# # Defining colors4plot
-# colors4plot <- c(threeColors, "#ef4b4b")
-# 
-# names(colors4plot) <- c("rapida", "corta", "media", "larga")
-# 
-# # Saving data points
-# data2plot <- data_subset.df %>% ungroup()
-# 
-# # Applying plotting function
-# chart <- LAC_lineChart(data           = data2plot,
-#                        target_var     = "value2plot",
-#                        grouping_var   = "year",
-#                        ngroups        = data_subset.df$category,
-#                        labels_var     = "label",
-#                        colors_var     = "category",
-#                        colors         = colors4plot,
-#                        repel          = T,
-#                        custom.axis    = T,
-#                        x.breaks       = x.axis.values,
-#                        x.labels       = x.axis.labels,
-#                        sec.ticks      = sec.ticks)
-# 
-# ggsave(plot = chart,
-#        filename = paste0(path2SP,
-#                          "/National/Visualization",
-#                          "/Output/Debido proceso/Proceso justo/figure10.svg"),
-#        width = 189.7883,
-#        height = 100,
-#        units  = "mm",
-#        dpi    = 72,
-#        device = "svg")
-# 
+tiempo_condena.fn <- function(
+    
+  data.df = master_data.df
+  
+){
+  
+  data_subset.df <- master_data.df %>%
+    filter(sentenciado == 1) %>%
+    ungroup() %>%
+    mutate(
+      rapida =
+        case_when(
+          P5_10 == 1  | P5_10 == 2 | P5_10 == 3 | P5_10 == 4 ~ 1,
+          P5_10 == 5  | P5_10 == 6 | P5_10 == 7 ~ 0
+        ),
+      corta =
+        case_when(
+          P5_10 == 5 ~ 1,
+          P5_10 == 1  | P5_10 == 2 | P5_10 == 3 | P5_10 == 4 | P5_10 == 6 | P5_10 == 7 ~ 0
+        ),
+      media =
+        case_when(
+          P5_10 == 6 ~ 1,
+          P5_10 == 1  | P5_10 == 2 | P5_10 == 3 | P5_10 == 4 | P5_10 == 5 | P5_10 == 7 ~ 0
+        ),
+      larga =
+        case_when(
+          P5_10 == 7 ~ 1,
+          P5_10 == 1  | P5_10 == 2 | P5_10 == 3 | P5_10 == 4 | P5_10 == 5 | P5_10 == 6 ~ 0
+        )
+    ) %>%
+    summarise(
+      `Menos de seis meses`       = mean(rapida, na.rm = T),
+      `Entre seis meses y un año` = mean(corta, na.rm = T),
+      `Entre uno y dos años`      = mean(media, na.rm = T),
+      `Más de dos años`           = mean(larga, na.rm = T)
+    ) %>%
+    pivot_longer(cols = c(`Menos de seis meses`, `Entre seis meses y un año`, `Entre uno y dos años`, `Más de dos años`), 
+                 names_to = "category", values_to = "value2plot") %>%
+    mutate(value2plot = value2plot*100,
+           label = paste0(format(round(value2plot, 0),
+                                 nsmall = 0),
+                          "%"))
+  
+  data2plot <- data_subset.df %>%
+    mutate(
+      value2plot = value2plot,
+      labels = category,
+      figure = paste0(round(value2plot,0), "%"),
+      order_var = case_when(
+        labels == "Menos de seis meses" ~ 4,
+        labels == "Entre seis meses y un año" ~ 3,
+        labels == "Entre uno y dos años" ~ 2,
+        labels == "Más de dos años" ~ 1,
+        T ~ NA_real_)
+    )
+  
+  colors4plot <- rep(mainCOLOR,4)
+  plot <- barsChart.fn(data.df                    = data2plot,
+                       groupVar                   = F,   
+                       categories_grouping_var    = labels,
+                       colors4plot                = colors4plot, 
+                       order                      = T,
+                       orientation                = "horizontal")
+  
+  ggsave(plot = plot, 
+         filename = paste0(path2SP,
+                           "/National/Visualization",
+                           "/Output/Debido proceso/",
+                           savePath,"/Proceso justo",
+                           "/tiempo_sentencia.svg"),
+         width = 189.7883,
+         height = 100,
+         units  = "mm",
+         dpi    = 72,
+         device = "svg")
+  
+}

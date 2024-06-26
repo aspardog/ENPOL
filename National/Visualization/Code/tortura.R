@@ -190,7 +190,7 @@ tortura_tipo.fn <- function(
                            savePath,"/Tortura",
                            "/tortura_tipo.svg"),
          width = 189.7883,
-         height = 125,
+         height = 70,
          units  = "mm",
          dpi    = 72,
          device = "svg")
