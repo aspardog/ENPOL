@@ -109,7 +109,7 @@ plt <- ggplot(data2plot,
 plt
 
 ggsave(plot   = plt,
-       file   = paste0(path2SP,"National/Presentations/INL_JUNIO/charts_and_images/delitos_relevantes_victimas/Figure1_1.svg"), 
+       file   = paste0(path2SP,"National/Report/prueba/Capitulo 2/charts_and_images/delitos_relevantes_victimas/Figure1_1.svg"), 
        width  = 100, 
        height = 225,
        units  = "mm",
@@ -192,7 +192,7 @@ plt
 
 
 ggsave(plot   = plt,
-       file   = paste0(path2SP,"National/Presentations/INL_JUNIO/charts_and_images/delitos_relevantes_victimas/Figure1_2.svg"), 
+       file   = paste0(path2SP,"National/Report/prueba/Capitulo 2/charts_and_images/delitos_relevantes_victimas/Figure1_2.svg"), 
        width  = 100, 
        height = 225,
        units  = "mm",
@@ -267,7 +267,7 @@ plt <- ggplot(data2plot,
 plt
 
 ggsave(plot   = plt,
-       file   = paste0(path2SP,"National/Presentations/INL_JUNIO/charts_and_images/delitos_relevantes_victimas/Figure1_3.svg"), 
+       file   = paste0(path2SP,"National/Report/prueba/Capitulo 2/charts_and_images/delitos_relevantes_victimas/Figure1_3.svg"), 
        width  = 189.7883, 
        height = 85,
        units  = "mm",
@@ -349,7 +349,7 @@ plt <- ggplot(data2plot,
                                           linetype = "solid"))
 
 ggsave(plot   = plt,
-       file   = paste0(path2SP,"National/Presentations/INL_JUNIO/charts_and_images/delitos_relevantes_victimas/Figure1_3.svg"), 
+       file   = paste0(path2SP,"National/Report/prueba/Capitulo 2/charts_and_images/delitos_relevantes_victimas/Figure1_3.svg"), 
        width  = 189.7883, 
        height = 85,
        units  = "mm",
@@ -469,7 +469,7 @@ plt
 
 
 ggsave(plot   = plt,
-       file   = paste0(path2SP,"National/Presentations/INL_JUNIO/charts_and_images/delitos_relevantes_victimas/Figure1_4.svg"), 
+       file   = paste0(path2SP,"National/Report/prueba/Capitulo 2/charts_and_images/delitos_relevantes_victimas/Figure1_4.svg"), 
        width  = 189.7883, 
        height = 85,
        units  = "mm",
