@@ -74,13 +74,13 @@ plot <- data2plot %>%
       y = (ymin + ymax) / 2, 
       label = figure
     ), 
-    x = 3.5,
+    x = 3.35,
     color = "white",
     family = "Lato Full",
     fontface = "bold", 
     size = 4.514598
   ) +
-  scale_fill_manual(values = c("#cfb3ff", "#fa4d57", "#43a9a7")) +
+  scale_fill_manual(values = c("#a90099", "#2a2a9A", "#3273ff")) +
   theme_void() +
   theme(
     panel.background = element_blank(),
@@ -141,7 +141,7 @@ data2plot <- Main_database_2008 %>%
     labels = str_wrap(labels, width = 20),
     order_var = rank(value2plot))
 
-colors4plot <- rep("#fa4d57", 5)
+colors4plot <- rep("#2a2a9A", 5)
 
 
 plt <- ggplot(data2plot, 
