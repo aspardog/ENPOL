@@ -77,6 +77,11 @@ data2plot <- Main_database_2008 %>%
     ymin = c(0, head(value2plot, -1)))
 
 
+colors4plot <- c("Mismo delito" = "#2a2a9A", 
+                 "No reincidentes" = "#a90099", 
+                 "Distinto delito" = "#3273ff")
+
+
 plot <- data2plot %>% 
   ggplot(aes(
     ymax=value2plot, 
@@ -88,14 +93,14 @@ plot <- data2plot %>%
   coord_polar(theta="y") + 
   xlim(c(2, 4)) +
   geom_text( x= 3.5,
-             aes(y    = value2plot-2.9 , 
+             aes(y    = value2plot -3, 
                  label = figure), 
-             # position = "stack",
+             #position = "stack",
              color    = "white",
              family   = "Lato Full",
              fontface = "bold", 
-             size = 4.514598) +
-  scale_fill_manual(values =  c("#cfb3ff","#fa4d57", "#43a9a7"))+
+             size = 4) +
+  scale_fill_manual(values =  colors4plot)+
   theme_void() +
   theme(
     panel.background   = element_blank(),
@@ -179,7 +184,7 @@ data2plot <- Main_database_2008 %>%
   filter(value2plot >= 1,
          Delito != "Distinto delito")
 
-colors4plot <- rep("#E2E2F7", 7)
+colors4plot <- rep("#2a2a9A", 7)
 
 
 plt <- ggplot(data2plot, 
@@ -274,7 +279,7 @@ plot <- data2plot %>%
              family   = "Lato Full",
              fontface = "bold", 
              size = 4.514598) +
-  scale_fill_manual(values =  c("#2a2a9A","#3273ff"))+
+  scale_fill_manual(values =  c("#2a2a9A","#a90099"))+
   theme_void() +
   theme(
     panel.background   = element_blank(),
@@ -353,7 +358,7 @@ data2plot <- delitos_data %>%
   arrange(value2plot) %>%
   mutate(Delito = factor(Delito, levels = Delito)) 
 
-colors4plot <- rep("#E2E2F7", 9)
+colors4plot <- rep("#2a2a9A", 9)
 
 
 plt <- ggplot(data2plot, 
