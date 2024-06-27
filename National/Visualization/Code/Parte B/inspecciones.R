@@ -140,7 +140,8 @@ data2plot <- data_subset.df %>%
                              values == "org" ~ "Delincuencia organizada",
                              values == "robos" ~ "Robos",
                              values == "secuestro" ~ "Secuestro",
-                             values == "hom_dol" ~ "Homicidio doloso",))
+                             values == "hom_dol" ~ "Homicidio doloso",), 
+         values = str_wrap(values, width = 20))
 
 colors4plot <- rep("#2a2a94", 7)
 
