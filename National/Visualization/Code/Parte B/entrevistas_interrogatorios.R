@@ -55,7 +55,7 @@ data2plot <- df %>%
     labels = case_when(values == "P3_16"     ~ "Antes de rendir y firmar su declaración, fue interrogado por las autoridades del MP", 
                        values == "P4_3"   ~ "Desde su detención y hasta antes de llegar a la Agencia del MP o con un Juez, fue interrogado por la policía o autoridad"),
     figure = paste0(round(value2plot, 0), "%"),
-    labels = str_wrap(labels, width = 20),
+    labels = str_wrap(labels, width = 30),
     order_var = rank(value2plot))
 
 
@@ -101,7 +101,7 @@ plt <- ggplot(data2plot,
 ggsave(plot   = plt,
        file   = paste0(path2SP,"National/Report/prueba/Capitulo 2/charts_and_images/entrevistas_interrogatorios/Figure3_1.svg"), 
        width  = 189.7883, 
-       height = 85,
+       height = 65,
        units  = "mm",
        dpi    = 72,
        device = "svg")
@@ -150,11 +150,11 @@ data2plot <- df %>%
          value2plot = Percentage) %>% 
   mutate(
     labels = case_when(values == "Comp_interrogatorio_1"     ~ "Estuvo presente su abogado", 
-                       values == "Comp_interrogatorio_2"     ~ "Le explicaron que podía guardar silencio y no responder",
-                       values == "Comp_interrogatorio_3_4"   ~ "Se realizó un registro escrito o grabación de lo que le preguntaron y lo que usted respondió",
-                       values == "Comp_interrogatorio_5_6"   ~ "Fue engañado para echarse la culpa o inculpar a alguien más", 
-                       values == "Comp_interrogatorio_7_8"   ~ "Usted fue golpeado para echarse la culpa o inculpar a alguien más", 
-                       values == "Comp_interrogatorio_9"     ~ "Usted se declaró culpable"),
+                       values == "Comp_interrogatorio_2"     ~ "Le explicaron que podía guardar silencio",
+                       values == "Comp_interrogatorio_3_4"   ~ "Se realizó registro escrito o grabado",
+                       values == "Comp_interrogatorio_5_6"   ~ "Fue engañado para echarse la culpa o a alguien más", 
+                       values == "Comp_interrogatorio_7_8"   ~ "Fue golpeado para echarse la culpa o a alguien más", 
+                       values == "Comp_interrogatorio_9"     ~ "Se declaró culpable"),
     figure = paste0(round(value2plot, 0), "%"),
     labels = str_wrap(labels, width = 20),
     order_var = rank(value2plot))
@@ -172,7 +172,7 @@ plt <- ggplot(data2plot,
   geom_bar(stat = "identity", fill = colors4plot, color = colors4plot,
            show.legend = F, width = 0.9) +
   scale_fill_manual(values = colors4plot) +
-  geom_text(aes(y    = value2plot + 5 ),
+  geom_text(aes(y    = value2plot + 10 ),
             color    = "#4a4a49",
             family   = "Lato Full",
             fontface = "bold") +
@@ -201,7 +201,7 @@ plt <- ggplot(data2plot,
 
 ggsave(plot   = plt,
        file   = paste0(path2SP,"National/Report/prueba/Capitulo 2/charts_and_images/entrevistas_interrogatorios/Figure3_2.svg"), 
-       width  = 189.7883, 
+       width  = 94.89, 
        height = 85,
        units  = "mm",
        dpi    = 72,
@@ -399,14 +399,14 @@ colors4plot <- c("No se reconoce como\nculpable"  = "#2a2a94",
 
 plot <- ggplot(data2plot,
                aes(
-                 x     = values, 
+                 x     = labels, 
                  y     = value2plot,
                  fill  = category,
                  label = figure
                )) +
   geom_bar(stat = "identity",
            show.legend = FALSE, width = 0.9, position = "dodge")+
-  geom_text(aes(y    = value2plot+ 5), 
+  geom_text(aes(y    = value2plot+ 10), 
             position = position_dodge(width = 0.5),
             color    = "black",
             family   = "Lato Full",
@@ -433,7 +433,7 @@ plot <- ggplot(data2plot,
 
 ggsave(plot   = plot,
        file   = paste0(path2SP,"National/Report/prueba/Capitulo 2/charts_and_images/entrevistas_interrogatorios/Figure3_5.svg"), 
-       width  = 189.7883, 
+       width  = 94.89, 
        height = 85,
        units  = "mm",
        dpi    = 72,
