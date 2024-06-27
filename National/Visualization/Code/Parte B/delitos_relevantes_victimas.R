@@ -75,7 +75,7 @@ data2plot <- Main_database1 %>%
   arrange(value2plot) %>%
   mutate(Delito = factor(Delito, levels = Delito))
 
-colors4plot <- rep("#E2E2F7", 26)
+colors4plot <- rep(mainColor, 26)
 
 
 plt <- ggplot(data2plot, 
@@ -158,7 +158,7 @@ data2plot <- ENVIPE %>%
   arrange(value2plot) %>%
   mutate(Delito = factor(Delito, levels = Delito))
 
-colors4plot <- rep("#E2E2F7", 15)
+colors4plot <- rep(mainColor, 15)
 
 plt <- ggplot(data2plot, 
               aes(x     = Delito,
@@ -208,7 +208,7 @@ ggsave(plot   = plt,
 
 # requiere de Main_database1
 
-Main_database1 <- Main_database %>%
+Main_database2 <- Main_database %>%
   filter(Anio_arresto >= 2018, 
          Delito_unico == 1, 
          sentenciado == 1) %>%
@@ -220,7 +220,7 @@ Main_database1 <- Main_database %>%
                                                Delito_unico == 1 & (P5_11_22 == 1|P5_31_22 == 1) ~ "Extorsión",
                                                T ~ NA_character_))
 
-data2plot <- Main_database1 %>%
+data2plot <- Main_database2 %>%
   filter(!is.na(Delito_prioritario_ENVIPE)) %>%
   group_by(Delito_prioritario_ENVIPE) %>%
   summarise(n = n()) %>%
@@ -233,7 +233,7 @@ data2plot <- Main_database1 %>%
   arrange(value2plot) %>%
   mutate(Delito = factor(Delito, levels = Delito))
 
-colors4plot <- rep("#E2E2F7", 6)
+colors4plot <- rep(mainColor, 6)
 
 
 plt <- ggplot(data2plot, 
@@ -310,7 +310,7 @@ data2plot <- Main_database1 %>%
 
 # Creating ggplot
 
-colors4plot <- c("#003B88")
+colors4plot <- c("#2a2a9A")
 
 plt <- ggplot(data2plot, 
               aes(x     = Anio_arresto,
@@ -420,7 +420,7 @@ data2plot <- bind_rows(snsp_2,enpol_3) %>%
                                       T~ NA)) %>% 
   filter(group_var != "Brecha")
 
-colors4plot <- c( "#20204a","#a90099")
+colors4plot <- twoColorS
 
 plt <- ggplot(data2plot, 
               aes(x     = Anio,
