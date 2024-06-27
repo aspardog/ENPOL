@@ -355,7 +355,7 @@ plot <- ggplot(data2plot,
 
 
 ggsave(plot   = plot,
-       file   = paste0(path2SP,"National/Report/prueba/Capitulo 2/charts_and_images/Figure3_4.svg"), 
+       file   = paste0(path2SP,"National/Report/prueba/Capitulo 2/charts_and_images/entrevistas_interrogatorios/Figure3_4.svg"), 
        width  = 189.7883, 
        height = 85,
        units  = "mm",
@@ -432,7 +432,7 @@ plot <- ggplot(data2plot,
     axis.title.x       = element_blank()); plot
 
 ggsave(plot   = plot,
-       file   = paste0(path2SP,"National/Report/prueba/Capitulo 2/charts_and_images/entrevistas_interrogatorios/Figure3_4.svg"), 
+       file   = paste0(path2SP,"National/Report/prueba/Capitulo 2/charts_and_images/entrevistas_interrogatorios/Figure3_5.svg"), 
        width  = 189.7883, 
        height = 85,
        units  = "mm",
