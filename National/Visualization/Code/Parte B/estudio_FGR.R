@@ -48,7 +48,10 @@ data2table <- data_subset.df %>%
 
 
 
-colors4plot <- c("#20204a" ,"#b1a6ff", "#ff003d","#2e2e95" )
+colors4plot <- c("Flagrancia" = "#2a2a94",
+                 "Orden de detención" = "#a90099",
+                 "Inspeccion" = "#3273ff",
+                 "Irregulares" = "#FA4D57",)
 
 # Creating ggplot
 plt <- ggplot(data2table, 
@@ -141,8 +144,8 @@ data2plot <- Main_database_2008_FGR %>%
          labels = str_wrap(tipo_detencion, width = 20))
 
 
-colors4plot <- c("GN/Polcía Federal" = "#a90099",
-                 "Policía Federal Ministerial" = "#2a2a94")
+colors4plot <- c("GN/Polcía Federal" = "#2a2a94",
+                 "Policía Federal Ministerial" = "#a90099")
 
 
 plot <- ggplot(data2plot,
@@ -242,7 +245,7 @@ data2plot <- Main_database_2008 %>%
   mutate(Delito = factor(Delito, levels = Delito)) %>% 
   filter(value2plot >= 1)
 
-colors4plot <- rep("#E2E2F7", 9)
+colors4plot <- rep("#2a2a9A", 9)
 
 
 plt <- ggplot(data2plot, 
@@ -315,8 +318,8 @@ data2plot <- Main_database_2008 %>%
          labels = str_wrap(juicio_abreviado, width = 20))
 
 
-colors4plot <- c("Sólo común" = "#fa4d57",
-                 "Sólo federal" = "#3273ff")
+colors4plot <- c("Sólo común" = "#2a2a9A",
+                 "Sólo federal" = "#a90099")
 
 
 plot <- ggplot(data2plot,
