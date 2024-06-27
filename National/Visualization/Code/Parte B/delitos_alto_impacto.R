@@ -82,12 +82,12 @@ data2table <- Main_database_2008 %>%
   arrange(order_var)
 
 
-colors4plot <-  c("#2a2a9A","#43a9a7", "#3273ff", "#9d61f2", "#ef4b4b", "#2c6d4f")
-names(colors4plot) <- c("d)control_contacto",
-                        "e)controles_cooperativos",
-                        "b)tacticas_defensivas",
-                        "c)sometimiento",
-                        "a)fuerza_letal")
+
+colors4plot <- c("d)control_contacto"       = "#2a2a9A",
+                 "e)controles_cooperativos" = "#a90099",
+                 "b)tacticas_defensivas"    = "#3273ff",
+                 "c)sometimiento"           = "#EFA700",
+                 "a)fuerza_letal"           = "#FA4D57")
 
 p <- ggplot(data2table,
             aes(x = value2plot, y = reorder(Delito_unico_categ, -order_var), color = category)) +
@@ -191,7 +191,10 @@ data2plot <- Main_database_2008 %>%
                                labels == "robo-vehiculo"   ~ 7,
                                T ~ NA_real_))
 
-
+colors4plot <- c("A)Inspeccion"         = "#3273ff",
+                 "B)Orden de detención" = "#a90099",
+                 "C)Irregulares"        = "#FA4D57",
+                 "D)Flagrancia"         = "#2a2a9A")
 
 plot <- ggplot(data2plot,
                aes(
@@ -209,7 +212,7 @@ plot <- ggplot(data2plot,
             fontface = "bold", 
             size = 3.514598)  +
   # geom_vline(xintercept = 5.5, linetype = "dashed", color = "black") +
-  scale_fill_manual(values =  c("#b1a6ff", "#2e2e95","#ff003d", "#20204a")) +
+  scale_fill_manual(values =  colors4plot) +
   scale_y_continuous(limits = c(0, 105),
                      breaks = seq(0,100,20),
                      labels = paste0(seq(0,100,20), "%"),
@@ -295,6 +298,8 @@ data2plot <- Main_database_2008 %>%
                             labels == "robo-vehiculo" ~ "Robo de\n vehículos",
                             T ~ NA_character_))
 
+colors4plot <- c("Procedimiento abreviado"        = "#2a2a9A",
+                 "Jucio"                          = "#a90099")
 
 
 plot <- ggplot(data2plot,
@@ -312,7 +317,7 @@ plot <- ggplot(data2plot,
             family   = "Lato Full",
             fontface = "bold", 
             size = 3.514598)  +
-  scale_fill_manual(values =  c("#a90099", "#3273ff")) +
+  scale_fill_manual(values =  colors4plot) +
   scale_y_continuous(limits = c(0, 105),
                      breaks = seq(0,100,20),
                      labels = paste0(seq(0,100,20), "%"),
