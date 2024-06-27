@@ -132,7 +132,7 @@ plot <- ggplot(data2plot,
     axis.title.x       = element_blank()); plot
 
 
-ggsave(plot   = plt,
+ggsave(plot   = plot,
        file   = paste0(path2SP,"National/Report/prueba/Capitulo 2/charts_and_images/pruebas/Figure3_1.svg"), 
        width  = 189.7883, 
        height = 85,
@@ -252,7 +252,7 @@ plot <- ggplot(data2plot,
     axis.title.x       = element_blank()); plot
 
 
-ggsave(plot   = plt,
+ggsave(plot   = plot,
        file   = paste0(path2SP,"National/Report/prueba/Capitulo 2/charts_and_images/pruebas/Figure3_2.svg"), 
        width  = 189.7883, 
        height = 85,
