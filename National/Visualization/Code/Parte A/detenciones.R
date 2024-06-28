@@ -514,8 +514,8 @@ mapa_tiempo_traslado.fn <- function(
   
   
   tpanel <- gen_grob(table.df, 
-                     fit      = "fixed",
-                     scaling  = "fixed", 
+                     fit      = "auto",
+                     scaling  = "min", 
                      just     = c("left", "top"),
                      wrapping = T)
   
@@ -569,9 +569,63 @@ mapa_tiempo_traslado.fn <- function(
       plot.margin     = margin(0,0,0,0)
     ) 
   
+ 
+  categories <- c("[10%-25%]",
+                  "(25%-40%]",
+                  "(40%-45%]",
+                  "(10%-20%]",
+                  "(20%-25%]", 
+                  "(25%-30%]")
   
-  viz <- wrap_elements(tpanel) + p +
-    plot_layout(ncol = 2, nrow = 1, widths = c(1,3), heights = c(1,1))
+  leyend <- data.frame(
+    Values = categories,
+    Blank = "")
+  leyend <- flextable(leyend)  %>% 
+    width(j = "Blank", width = 0.5, unit = "mm") %>% 
+    set_header_labels(Values = "Escala", Blank = " ") %>% 
+    bg(i = ~ Values == "[10%-25%]", j = "Blank", bg = "#99D7DD", part = "body") %>%
+    bg(i = ~ Values == "(25%-40%]", j = "Blank", bg = "#33AEBA", part = "body") %>%
+    bg(i = ~ Values == "(40%-45%]", j = "Blank", bg = "#00759D", part = "body") %>%
+    bg(i = ~ Values == "(10%-20%]", j = "Blank", bg = "#FFCBD0", part = "body") %>%
+    bg(i = ~ Values == "(20%-25%]", j = "Blank", bg = "#FF7E8A", part = "body") %>%  
+    bg(i = ~ Values == "(25%-30%]", j = "Blank", bg = "#F4475C", part = "body") %>%
+    
+    
+    align(j     = 2, 
+          align = "center", 
+          part  = "all") %>%
+    bold(bold = FALSE, 
+         part = "header") %>%
+    flextable::style(pr_t = fp_text(font.size   = 12, 
+                                    color       = "#524F4C",
+                                    font.family = "Lato Full"), 
+                     part = "header") %>%
+    flextable::style(pr_t = fp_text(font.size   = 10, 
+                                    color       = "#524F4C",
+                                    font.family = "Lato Full"), 
+                     part = "body") %>%
+    italic(italic = TRUE, 
+           part = "header") %>%
+    surround(j = c(1,2),
+             border.top    = fp_border("white"),
+             border.bottom = fp_border("white"),
+             part = "body"
+    )
+  
+  
+  leyend <- gen_grob(leyend, 
+                     fit      = "auto",
+                     scaling  = "min", 
+                     just     = c("left", "top"),
+                     wrapping = T)
+  
+  layout <- "ABB
+           A#C"
+  
+  viz <- wrap_elements(tpanel) + p + wrap_elements(leyend) +
+    plot_layout(ncol = 3, nrow = 3, widths = c(1, 3.25,0.4), heights = c(1,.2,0.25), design = layout)
+  # plot(viz) 
+  
   
   ggsave(plot = viz, 
          filename = paste0(path2SP,
@@ -642,7 +696,7 @@ mapa_lugar_traslado.fn <- function(
   table <- Estados %>%
     mutate(
       ` ` = "",
-      `%` = round(value2plot*100, 1)
+      `%` = round(value2plot*100, 0)
     ) %>%
     arrange(ESTADO) %>%
     select(
@@ -688,8 +742,8 @@ mapa_lugar_traslado.fn <- function(
   
   
   tpanel <- gen_grob(table, 
-                     fit      = "fixed",
-                     scaling  = "fixed", 
+                     fit      = "auto",
+                     scaling  = "min", 
                      just     = c("left", "top"),
                      wrapping = T)
   
@@ -735,10 +789,65 @@ mapa_lugar_traslado.fn <- function(
       panel.border    = element_blank(),
       plot.margin     = margin(0,0,0,0)
     ) 
+ 
+  
+  #leyenda
+  
+  categories <- c("[30%-40%]",
+                  "(40%-50%]",
+                  "(50%-80%]")
+  
+  leyend <- data.frame(
+    Values = categories,
+    Blank = "")
+  leyend <- flextable(leyend)  %>% 
+    width(j = "Blank", width = 0.5, unit = "mm") %>% 
+    set_header_labels(Values = "Escala", Blank = " ") %>% 
+    bg(i = ~ Values == "[30%-40%]", j = "Blank", bg = "#99D7DD", part = "body") %>%
+    bg(i = ~ Values == "(40%-50%]", j = "Blank", bg = "#33AEBA", part = "body") %>%
+    bg(i = ~ Values == "(50%-80%]", j = "Blank", bg = "#0087A3", part = "body") %>%
+    
+    
+    align(j     = 2, 
+          align = "center", 
+          part  = "all") %>%
+    bold(bold = FALSE, 
+         part = "header") %>%
+    flextable::style(pr_t = fp_text(font.size   = 12, 
+                                    color       = "#524F4C",
+                                    font.family = "Lato Full"), 
+                     part = "header") %>%
+    flextable::style(pr_t = fp_text(font.size   = 10, 
+                                    color       = "#524F4C",
+                                    font.family = "Lato Full"), 
+                     part = "body") %>%
+    italic(italic = TRUE, 
+           part = "header") %>%
+    surround(j = c(1,2),
+             border.top    = fp_border("white"),
+             border.bottom = fp_border("white"),
+             part = "body"
+    )
   
   
-  viz <- wrap_elements(tpanel) + p +
-    plot_layout(ncol = 2, nrow = 1, widths = c(1,3), heights = c(1,1))
+  leyend <- gen_grob(leyend, 
+                     fit      = "auto",
+                     scaling  = "min", 
+                     just     = c("left", "top"),
+                     wrapping = T)
+  
+  layout <- "ABB
+           A#C"
+  
+  viz <- wrap_elements(tpanel) + p + wrap_elements(leyend) +
+    plot_layout(ncol = 3, nrow = 3, widths = c(1, 3.25,0.4), heights = c(1,.2,0.25), design = layout)
+  plot(viz)
+  
+  
+   ##
+  
+  # viz <- wrap_elements(tpanel) + p +
+  #   plot_layout(ncol = 2, nrow = 1, widths = c(1,3), heights = c(1,1))
   
   ggsave(plot = viz, 
          filename = paste0(path2SP,
