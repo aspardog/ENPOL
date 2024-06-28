@@ -693,6 +693,9 @@ mapa_lugar_traslado.fn <- function(
           T ~ ESTADO
         ))
   
+  
+  quintiles <- round(quantile(round((Estados$value2plot *100), 0), probs = seq(0, 1, by = 0.2)),0)
+  
   table <- Estados %>%
     mutate(
       ` ` = "",
@@ -752,18 +755,20 @@ mapa_lugar_traslado.fn <- function(
     mutate(
       value2plot = round(value2plot*100, 0),
       color_group = case_when(
-        Primer_lugar_traslado == "Agencia del Ministerio Público" & value2plot >= 30 & value2plot < 40 ~ "T1",
-        Primer_lugar_traslado == "Agencia del Ministerio Público" & value2plot >= 40 & value2plot < 50 ~ "T1",
-        Primer_lugar_traslado == "Agencia del Ministerio Público" & value2plot >= 50 & value2plot < 60 ~ "T2",
-        Primer_lugar_traslado == "Agencia del Ministerio Público" & value2plot >= 60 & value2plot < 70 ~ "T2",
-        Primer_lugar_traslado == "Agencia del Ministerio Público" & value2plot >= 70 ~ "T5"
+        Primer_lugar_traslado == "Agencia del Ministerio Público" & value2plot >= 30 & value2plot < 47 ~ "T1",
+        Primer_lugar_traslado == "Agencia del Ministerio Público" & value2plot >= 47 & value2plot < 51 ~ "T2",
+        Primer_lugar_traslado == "Agencia del Ministerio Público" & value2plot >= 51 & value2plot < 61 ~ "T3",
+        Primer_lugar_traslado == "Agencia del Ministerio Público" & value2plot >= 61 & value2plot < 70 ~ "T4",
+        Primer_lugar_traslado == "Agencia del Ministerio Público" & value2plot >= 70 & value2plot <= 88 ~ "T5"
       ),
       color_group = as.factor(color_group)
     )
   
   cat_palette <- c("T1"  = "#99D7DD",
                    "T2"  = "#33AEBA",
-                   "T5"  = "#00759D")
+                   "T3"  = "#0087A3",
+                   "T4"  = "#00617f",
+                   "T5"  = "#004E70")
   
   # Drawing plot
   p <- ggplot(mexico_map, aes(label = ESTADO)) +
@@ -793,9 +798,11 @@ mapa_lugar_traslado.fn <- function(
   
   #leyenda
   
-  categories <- c("[30%-40%]",
-                  "(40%-50%]",
-                  "(50%-80%]")
+  categories <- c("[30%-47%]",
+                  "(47%-51%]",
+                  "(51%-61%]",
+                  "(61%-70%]",
+                  "(70%-88%]")
   
   leyend <- data.frame(
     Values = categories,
@@ -803,9 +810,11 @@ mapa_lugar_traslado.fn <- function(
   leyend <- flextable(leyend)  %>% 
     width(j = "Blank", width = 0.5, unit = "mm") %>% 
     set_header_labels(Values = "Escala", Blank = " ") %>% 
-    bg(i = ~ Values == "[30%-40%]", j = "Blank", bg = "#99D7DD", part = "body") %>%
-    bg(i = ~ Values == "(40%-50%]", j = "Blank", bg = "#33AEBA", part = "body") %>%
-    bg(i = ~ Values == "(50%-80%]", j = "Blank", bg = "#0087A3", part = "body") %>%
+    bg(i = ~ Values == "[30%-47%]", j = "Blank", bg = "#99D7DD", part = "body") %>%
+    bg(i = ~ Values == "(47%-51%]", j = "Blank", bg = "#33AEBA", part = "body") %>%
+    bg(i = ~ Values == "(51%-61%]", j = "Blank", bg = "#0087A3", part = "body") %>%
+    bg(i = ~ Values == "(61%-70%]", j = "Blank", bg = "#00617f", part = "body") %>%
+    bg(i = ~ Values == "(70%-88%]", j = "Blank", bg = "#004E70", part = "body") %>%
     
     
     align(j     = 2, 
@@ -864,3 +873,5 @@ mapa_lugar_traslado.fn <- function(
   
   
 }
+
+
