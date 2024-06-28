@@ -230,7 +230,7 @@ for (i in Estados) {
   )
   
   print("Percepcion de proceso justo finalizado")
-  print("Generando Uso excesivo de la fuerza")
+  print("Generando uso excesivo de la fuerza")
   
   #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   ####
@@ -351,18 +351,25 @@ for (i in Estados) {
   detenciones_tiempo <- detenciones_tiempo.fn()
   detenciones_traslado <- tiempos_traslado.fn()
   detenciones_lugar <- lugar_traslado.fn()
+  tiempo_traslado <- tiempo_traslado.fn()
+  mapa_tiempo_traslado <- mapa_tiempo_traslado.fn()
+  mapa_lugar_traslado <- mapa_lugar_traslado.fn()
   
-  detenciones_lista <- list('Detenciones tiempo'      = detenciones_tiempo,
-                        'Detenciones traslado' = detenciones_traslado,
-                        'Detenciones lugar'      = detenciones_lugar
-                        )
+  detenciones_lista <- list(
+    'Detenciones tiempo'          = detenciones_tiempo,
+    'Detenciones traslado'        = detenciones_traslado,
+    'Tiempo de traslado'          = tiempo_traslado,
+    'Mapa tiempo de traslado'     = mapa_tiempo_traslado,
+    'Detenciones lugar'           = detenciones_lugar,
+    'Mapa lugar de traslado'      = mapa_tiempo_traslado
+    )
   
   openxlsx::write.xlsx(x = detenciones_lista,
                        file = paste0(
                          path2SP,
                          "/National/Visualization",
                          "/Output/Debido proceso/",
-                         savePath,"/Tortura",
+                         savePath,"/Detenciones",
                          "/Detenciones.xlsx")
   )
   print("Detenciones finalizado")
@@ -385,14 +392,17 @@ for (i in Estados) {
   pp_tiempo_total <- pp_tiempo_total.fn()
   pp_tiempo <- pp_tiempo.fn()
   pp_tipo <- pp_tipo.fn()
+  ppo_defensa <- ppo_defensa.fn()
+  sentencias <- sentencias.fn()
   
   pp_list <- list(
     
     'PP proporcion' = pp_proporcion,
     'PP duracion' = pp_tiempo_total,
     'PP tiempo' = pp_tiempo,
-    'PP tipo' = pp_tipo
-    
+    'PP tipo' = pp_tipo,
+    'PPO defensa' = ppo_defensa,
+    'Sentencias' = sentencias
   )
   openxlsx::write.xlsx(x = pp_list,
                        file = paste0(

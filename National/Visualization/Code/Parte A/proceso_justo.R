@@ -113,7 +113,7 @@ guardar_silencio.fn <- function(
                            savePath,"/Proceso justo",
                            "/guardar_silencio.svg"),
          width = 189.7883,
-         height = 70,
+         height = 85,
          units  = "mm",
          dpi    = 72,
          device = "svg")
@@ -208,7 +208,7 @@ informacion_detencion.fn <- function(
                            savePath,"/Proceso justo",
                            "/informacion_detencion.svg"),
          width = 189.7883,
-         height = 175,
+         height = 85,
          units  = "mm",
          dpi    = 72,
          device = "svg")
@@ -308,7 +308,7 @@ claridad_actores.fn <- function(
                            savePath,"/Proceso justo",
                            "/claridad_actores.svg"),
          width = 189.7883,
-         height = 175,
+         height = 85,
          units  = "mm",
          dpi    = 72,
          device = "svg")
@@ -365,7 +365,7 @@ defensa_oportuna.fn <- function(
                                         group_var == "No" ~ 2,
                                         T ~ NA_real_))
   
-  colors4plot <- twoCOLORS
+  colors4plot <- twoColors
   
   names(colors4plot) <- c("Sí",
                           "No")
@@ -456,7 +456,7 @@ tipo_defensa.fn <- function(
                                         group_var == "Abogado privado" ~ 2,
                                         T ~ NA_real_))
   
-  colors4plot <- twoCOLORS
+  colors4plot <- twoColors
   
   names(colors4plot) <- c("Abogado público",
                           "Abogado privado")
@@ -551,7 +551,7 @@ tribunal_transparente.fn <- function(
   
   
   # Defining colors4plot
-  colors4plot <- twoCOLORS
+  colors4plot <- twoColors
   
   names(colors4plot) <- c("video", "publico")
   
@@ -639,7 +639,7 @@ tribunal_imparcial.fn <- function(
   
   
   # Defining colors4plot
-  colors4plot <- twoCOLORS
+  colors4plot <- twoColors
   
   names(colors4plot) <- c("culpable", "juez")
   
@@ -782,6 +782,10 @@ tiempo_condena.fn <- function(
     filter(sentenciado == 1) %>%
     ungroup() %>%
     mutate(
+      P5_10  = case_when(
+        P5_10 > 7 ~ NA_real_,
+        T ~ as.numeric(P5_10)
+      ),
       rapida =
         case_when(
           P5_10 == 1  | P5_10 == 2 | P5_10 == 3 | P5_10 == 4 ~ 1,
@@ -829,7 +833,7 @@ tiempo_condena.fn <- function(
         T ~ NA_real_)
     )
   
-  colors4plot <- rep(mainCOLOR,4)
+  colors4plot <- rep(mainColor,4)
   plot <- barsChart.fn(data.df                    = data2plot,
                        groupVar                   = F,   
                        categories_grouping_var    = labels,
@@ -844,7 +848,7 @@ tiempo_condena.fn <- function(
                            savePath,"/Proceso justo",
                            "/tiempo_sentencia.svg"),
          width = 189.7883,
-         height = 100,
+         height = 85,
          units  = "mm",
          dpi    = 72,
          device = "svg")

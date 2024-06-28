@@ -64,7 +64,7 @@ pp_proporcion.fn <- function(
         T ~ NA_real_)
     )
   
-  colors4plot <- rep(mainCOLOR,2)
+  colors4plot <- rep(mainColor,2)
   plot <- barsChart.fn(data.df                    = data2plot,
                        groupVar                   = F,   
                        categories_grouping_var    = labels,
@@ -76,7 +76,7 @@ pp_proporcion.fn <- function(
          filename = paste0(path2SP,
                            "/National/Visualization",
                            "/Output/Debido proceso/",
-                           savePath,"/Prision preventiva",
+                           savePath,"/Prisión preventiva",
                            "/pp_proporcion.svg"),
          width = 189.7883,
          height = 85,
@@ -145,11 +145,11 @@ pp_tiempo_total.fn <- function(
       figure = paste0(round(value2plot,0), "%"),
       order_var = case_when(
         labels == "Más de 2 años" ~ 1,
-        labels == "Menos, o hasta, 2 años" ~ 2,
+        labels == "Menos de 2 años" ~ 2,
         T ~ NA_real_)
     )
   
-  colors4plot <- c("Menos, o hasta, 2 años" =mainCOLOR,
+  colors4plot <- c("Menos de 2 años" = "#009AA9",
                    "Más de 2 años" ="#ef4b4b")
   
   plot <- barsChart.fn(data.df                    = data2plot,
@@ -163,7 +163,7 @@ pp_tiempo_total.fn <- function(
          filename = paste0(path2SP,
                            "/National/Visualization",
                            "/Output/Debido proceso/",
-                           savePath,"/Prision preventiva",
+                           savePath,"/Prisión preventiva",
                            "/pp_tiempo_total.svg"),
          width = 189.7883,
          height = 85,
@@ -248,7 +248,7 @@ pp_tiempo.fn <- function(
          filename = paste0(path2SP,
                            "/National/Visualization",
                            "/Output/Debido proceso/",
-                           savePath,"/Prision preventiva",
+                           savePath,"/Prisión preventiva",
                            "/pp_tiempo.svg"),
          width = 189.7883,
          height = 100,
@@ -294,7 +294,7 @@ pp_tipo.fn <- function(
   
   colors4plot <- c("Prisión Preventiva \nOficiosa" = "#2a2a9A",
                    "Prisión Preventiva \nJustificada" = "#a90099",
-                   "Proceso en libertad" ="#43a9a7")
+                   "Proceso en libertad" = "#3273ff")
   
   plot <- barsChart.fn(data.df                    = data2plot,
                        groupVar                   = F,  
@@ -307,9 +307,9 @@ pp_tipo.fn <- function(
          file   = paste0(path2SP,
                          "/National/Visualization",
                          "/Output/Debido proceso/",
-                         savePath,"/Prision preventiva",
+                         savePath,"/Prisión preventiva",
                          "/pp_tipo.svg"), 
-         width  = 175, 
+         width  = 189.7883, 
          height = 85,
          units  = "mm",
          dpi    = 72,
@@ -319,3 +319,171 @@ pp_tipo.fn <- function(
   
   
 }
+
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##
+## Prisión preventiva oficiosa: acceso a defensa                                                    ----
+##
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+ppo_defensa.fn <- function(
+    
+  data.df = master_data.df
+  
+) {
+  
+  data_subset.df <- data.df %>%
+    filter(tipo_prision_preventiva == "Prisión Preventiva Oficiosa") %>%
+    select(defensa_juez = P5_1, defensa_mp = P4_1_05) %>%
+    mutate(
+      defensa_juez =
+        case_when(
+          defensa_juez == 1 ~ "Abogado juez",
+          defensa_juez == 2 ~ "NO abogado juez"
+        ),
+      defensa_mp = 
+        case_when(
+          defensa_mp == 1 ~ "Abogado MP",
+          defensa_mp == 2 ~ "NO abogado MP"
+        ),
+      counter = 1
+    ) %>%
+    group_by(defensa_juez, defensa_mp) %>%
+    summarise(
+      frequency = sum(counter , na.rm = T)
+    ) %>%
+    ungroup() %>% 
+    drop_na()
+  
+  data2plot <- data_subset.df %>%
+    mutate(
+      value2plot = frequency/sum(frequency),
+      value2plot = value2plot*100,
+      figure = paste0(round(value2plot, 0), "%"),
+      labels = 
+        case_when(
+          defensa_juez %in% "Abogado juez" & defensa_mp %in% "Abogado MP" ~ "Defensa en el ministerio público<br>y en el juzgado",
+          defensa_juez %in% "Abogado juez" & defensa_mp %in% "NO abogado MP" ~ "Defensa solo en <br>el juzgado",
+          defensa_juez %in% "NO abogado juez" & defensa_mp %in% "Abogado MP" ~ "Defensa solo en el <br>ministerio público",
+          defensa_juez %in% "NO abogado juez" & defensa_mp %in% "NO abogado MP" ~ "Sin defensa en ninguna de <br>las dos instancias"
+        ),
+      order_var = -row_number()
+    )
+  
+  colors4plot <- rep(mainColor, 4)
+  plot <- barsChart.fn(data.df                    = data2plot,
+                       groupVar                   = F,  
+                       categories_grouping_var    = labels,
+                       colors4plot                = colors4plot, 
+                       order                      = T,
+                       orientation                = "horizontal")
+  
+  ggsave(plot   = plot,
+         file   = paste0(path2SP,
+                         "/National/Visualization",
+                         "/Output/Debido proceso/",
+                         savePath,"/Prisión preventiva",
+                         "/ppo_defensa.svg"), 
+         width  = 189.7883, 
+         height = 85,
+         units  = "mm",
+         dpi    = 72,
+         device = "svg")
+  
+  return(data2plot)
+  
+}
+
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##
+## Sentencias                                                  ----
+##
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+sentencias.fn <- function(
+    
+  data.df = master_data.df
+  
+){
+  
+  data_subset.df <- master_data.df %>% 
+    filter(sentenciado == 1) %>%
+    filter(Anio_arresto > 2017) %>%
+    mutate(
+      P5_4_A = as.numeric(P5_4_A),
+      P5_4_M = as.numeric(P5_4_M),
+      P5_4_A = case_when(
+        P5_4_A >= 97 ~ NA_real_,
+        T ~ P5_4_A),
+      P5_4_M = case_when(
+        P5_4_M >= 97 ~ NA_real_,
+        T ~ P5_4_M),
+      P5_4_M = P5_4_M/12,
+      tiempo_sentencia = P5_4_A+P5_4_M
+    ) %>%
+    mutate(
+      counter = 1,
+      tiempo_sentencia_cat = 
+        case_when(
+          tiempo_sentencia >= 0 & tiempo_sentencia < 4.99 ~ "De 0 a 5 años",
+          tiempo_sentencia >= 4.99 & tiempo_sentencia < 9.99 ~ "De 5 a 10 años",
+          tiempo_sentencia >= 9.99 & tiempo_sentencia < 14.99 ~ "De 10 a 15 años",
+          tiempo_sentencia >= 14.99 & tiempo_sentencia < 19.99 ~ "De 15 a 20 años",
+          tiempo_sentencia >= 19.99 & tiempo_sentencia < 24.99 ~ "De 20 a 25 años",
+          tiempo_sentencia >= 24.99 & tiempo_sentencia < 29.99 ~ "De 25 a 30 años",
+          tiempo_sentencia >= 29.99 ~ "Más de 30 años"
+        ),
+      n_obs = if_else(!is.na(tiempo_sentencia), sum(counter, na.rm = T), NA_real_)
+    ) %>%
+    ungroup() %>%
+    group_by(tiempo_sentencia_cat) %>%
+    summarize(
+      value2plot = sum(counter, na.rm = T),
+    ) %>% 
+    drop_na() %>%
+    mutate(
+      n_obs = sum(value2plot),
+      value2plot = value2plot/n_obs
+    )
+  
+  data2plot <- data_subset.df %>%
+    mutate(
+      value2plot = value2plot*100,
+      labels = tiempo_sentencia_cat,
+      figure = paste0(round(value2plot,0), "%"),
+      order_var = 
+        case_when(
+          labels == "De 0 a 5 años" ~ 1,
+          labels == "De 5 a 10 años" ~ 2,
+          labels == "De 10 a 15 años" ~ 3,
+          labels == "De 15 a 20 años" ~ 4,
+          labels == "De 20 a 25 años" ~ 5,
+          labels == "De 25 a 30 años" ~ 6,
+          labels == "Más de 30 años" ~ 7
+        )
+    )
+  colors4plot <- c(rep(mainColor,7))
+  
+  plot <- barsChart.fn(data.df                    = data2plot,
+                       groupVar                   = F,   
+                       categories_grouping_var    = labels,
+                       colors4plot                = colors4plot, 
+                       order                      = T,
+                       orientation                = "vertical")
+  
+  ggsave(plot = plot, 
+         filename = paste0(path2SP,
+                           "/National/Visualization",
+                           "/Output/Debido proceso/",
+                           savePath,"/Prisión preventiva",
+                           "/sentencias.svg"),
+         width = 189.7883,
+         height = 85,
+         units  = "mm",
+         dpi    = 72,
+         device = "svg")
+  
+  return(data2plot)
+  
+}
+

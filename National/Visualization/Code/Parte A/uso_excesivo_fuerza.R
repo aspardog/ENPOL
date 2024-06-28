@@ -65,7 +65,7 @@ uso_fuerza_tiempo.fn <- function(
   
   
   # Defining colors4plot
-  colors4plot <- mainCOLOR
+  colors4plot <- mainColor
   names(colors4plot) <- "uso_excesivo"
   
   # Saving data points
@@ -153,7 +153,7 @@ controles_tipo.fn <- function(
         labels =="control_cooperativo" ~ "Controles <br>cooperativos",
         T ~ NA_character_)
     )
-  colors4plot <- rep(mainCOLOR,5)
+  colors4plot <- rep(mainColor,5)
   
   plot <- barsChart.fn(data.df                    = data2plot,
                        groupVar                   = F,   
@@ -226,7 +226,7 @@ uso_fuerza_corporacion.fn <- function(
           
         )
     )
-  colors4plot <- rep(mainCOLOR,7)
+  colors4plot <- rep(mainColor,7)
   plot <- barsChart.fn(data.df                    = data2plot,
                        groupVar                   = F,   
                        categories_grouping_var    = categories,

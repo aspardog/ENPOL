@@ -57,7 +57,7 @@ tortura_tiempo.fn <- function(
   
   
   # Defining colors4plot
-  colors4plot <- mainCOLOR
+  colors4plot <- mainColor
   names(colors4plot) <- "tortura"
   
   # Saving data points
@@ -260,7 +260,7 @@ tortura_tipo.fn <- function(
         )
     )
   
-  colors4plot <- twoCOLORS
+  colors4plot <- twoColors
   
   names(colors4plot) <- c("Traslado",
                           "MP")
@@ -391,7 +391,7 @@ tortura_psicologica.fn <- function(
         if_else(year == "Traslado", NA_character_, labels)
     )
   
-  colors4plot <- twoCOLORS
+  colors4plot <- twoColors
   latestYear <- "MP"
   
   names(colors4plot) <- c("Traslado",
@@ -534,7 +534,7 @@ tortura_fisica.fn <- function(
         if_else(year == "Traslado", NA_character_, labels)
     )
   
-  colors4plot <- twoCOLORS
+  colors4plot <- twoColors
   latestYear <- "MP"
   
   names(colors4plot) <- c("Traslado",
