@@ -218,6 +218,8 @@ indicador_map.fn <- function(
                      wrapping = T)
   
   mexico_map <- mapa %>%
+    mutate(ESTADO = case_when(ESTADO == "Distrito Federal" ~ "Ciudad de México",
+                              T ~ ESTADO)) %>%
     left_join(Estados, by = "ESTADO") %>%
     mutate(value2plot = round(indice*100, 0)) %>%
     mutate(
