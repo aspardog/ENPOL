@@ -34,6 +34,7 @@ source("Code/Parte A/corrupcion.R")
 source("Code/Parte A/tortura.R")
 source("Code/Parte A/detenciones.R")
 source("Code/Parte A/prision_preventiva.R")
+source("Code/Parte A/indiceDP.R")
 
 # Loading plotting functions from GitHub
 source("https://raw.githubusercontent.com/ctoruno/WJP-Data-Viz/main/loading.R")
@@ -413,8 +414,52 @@ for (i in Estados) {
                          "/PP.xlsx")
   )
   print("Prisión Preventiva finalizado")
+  print("Generando Indicador Debido Proceso")
   
+  #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  ####
+  #### Indice de criterios minimos                                                                  ----
+  ####
+  #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   
+  dir.create(paste0(
+    path2SP,
+    "/National/Visualization",
+    "/Output/Debido proceso/",
+    savePath,"/Indicador DP")
+  )
+  
+  indicador_general        <- indicador_general.fn()
+  indicador_logit_positivo <- indicador_logit_positivo.fn()
+  indicador_logit_negativo <- indicador_logit_negativo.fn()
+  indicador_map            <- indicador_map.fn()
+  indicador_proceso_justo  <- indicador_proceso_justo.fn()
+  indicador_uso_fuerza     <- indicador_uso_fuerza.fn()
+  indicador_tortura        <- indicador_tortura.fn()
+  
+  indicador_list <- list(
+    
+    'Indicador general'        = indicador_general,
+    'Indicador logit positivo' = indicador_logit_positivo,
+    'Indicador logit negativo' = indicador_logit_negativo,
+    'Indicador mapa'           = indicador_map,
+    'Indicador proceso justo'  = indicador_proceso_justo,
+    'Indicador uso fuerza'     = indicador_uso_fuerza,
+    'Indicador tortura'        = indicador_tortura
+    
+
+  )
+  
+  openxlsx::write.xlsx(x = indicador_list,
+                       file = paste0(
+                         path2SP,
+                         "/National/Visualization",
+                         "/Output/Debido proceso/",
+                         savePath,"/Indicador DP",
+                         "/Indicador DP.xlsx")
+  )
+  
+  print("Indicador Debido Proceso finalizado")
   
   print("CAPÍTULO 2: ESTRATEGIAS DE INVESTIGACIÓN")
   ### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
