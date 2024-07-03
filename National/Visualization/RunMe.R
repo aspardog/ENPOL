@@ -39,7 +39,7 @@ source("Code/Parte A/indiceDP.R")
 
 # source("Code/Parte B/conclusion_proceso.R")
 # source("Code/Parte B/delincuencia_prolifica_emergente.R")
-# source("Code/Parte B/delitos_alto_impacto.R")
+source("Code/Parte B/delitos_alto_impacto.R")
 # source("Code/Parte B/delitos_relevantes_victimas.R")
 source("Code/Parte B/detenciones.R")
 # source("Code/Parte B/distribucion_competencia.R")
@@ -521,7 +521,7 @@ for (i in Estados) {
                          "/Indicador DP.xlsx")
   )
   
-  print("Indicador Debido Proceso finalizado")
+  print("Delitos Víctimas finalizado")
   
   
   
