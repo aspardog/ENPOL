@@ -493,7 +493,7 @@ for (i in Estados) {
    dir.create(paste0(
      path2SP,
      "/National/Visualization",
-     "/Output/Debido proceso/",
+     "/Output/Politica criminal/",
      savePath,"/Delitos victimas")
    )
   
@@ -516,7 +516,7 @@ for (i in Estados) {
                        file = paste0(
                          path2SP,
                          "/National/Visualization",
-                         "/Output/Debido proceso/",
+                         "/Output/Politica criminal/",
                          savePath,"/Indicador DP",
                          "/Indicador DP.xlsx")
   )
