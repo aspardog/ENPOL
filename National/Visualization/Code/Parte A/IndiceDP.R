@@ -284,7 +284,7 @@ indicador_map.fn <- function(
          dpi = 72,
          device = "svg")
   
-  return(mexico_map)
+  # return(mexico_map)
 }
 
 
