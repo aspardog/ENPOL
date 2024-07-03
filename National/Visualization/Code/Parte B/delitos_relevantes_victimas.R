@@ -114,7 +114,7 @@ delitos_ENPOL.fn <- function(
          file   = paste0(
            path2SP,
            "/National/Visualization",
-           "/Output/Debido proceso/",
+           "/Output/Politica criminal/",
            savePath,"/Delitos victimas",
            "/Figure1_1.svg"),
          width  = 100, 
@@ -207,7 +207,7 @@ delitos_ENVIPE.fn <- function( ){
          file   = paste0(
            path2SP,
            "/National/Visualization",
-           "/Output/Debido proceso/",
+           "/Output/Politica criminal/",
            savePath,"/Delitos victimas",
            "/Figure1_2.svg"), 
          width  = 100, 
@@ -420,7 +420,7 @@ prevalentes_ENVIPE.fn <- function(
              file   = paste0(
                path2SP,
                "/National/Visualization",
-               "/Output/Debido proceso/",
+               "/Output/Politica criminal/",
                savePath,"/Delitos victimas",
                "/Figure1_3.svg"), 
              width  = 189.7883, 
@@ -552,7 +552,7 @@ homicidios_ENPOL_ENVIPE.fn <- function(
              file   = paste0(
                path2SP,
                "/National/Visualization",
-               "/Output/Debido proceso/",
+               "/Output/Politica criminal/",
                savePath,"/Delitos victimas",
                "/Figure1_4.svg"), 
              width  = 189.7883, 
