@@ -103,6 +103,8 @@ ggsave(plot   = plot,
        device = "svg")
 
 
+
+
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
 ## 3.2.7.	Proporción de personas presionadas para usar el procedimiento abreviado, de acuerdo 
