@@ -37,7 +37,7 @@ indicador_general.fn <- function(
   
   plot <- BarSimpleChartViz(shade_xminvalue = 6, 
                             shade_xmaxvalue = 10, 
-                            x_labels = etiquetas);plot
+                            x_labels = etiquetas)
   
   
   ggsave(plot = plot, 
@@ -320,7 +320,7 @@ indicador_map.fn <- function(
     plot_layout(ncol = 3, nrow = 3, widths = c(1, 3.25,0.4), heights = c(1,.2,0.25), design = layout)
   plot(viz)
   
-  ggsave(plot = plot, 
+  ggsave(plot = viz, 
          filename = paste0(
            path2SP,
            "/National/Visualization",
@@ -355,7 +355,9 @@ indicador_proceso_justo.fn <- function(
   
   etiquetas <- data2plot$labelx
   
-  plot <- BarSimpleChartViz(shade_xminvalue = NA, shade_xmaxvalue = NA, x_labels = etiquetas); plot
+  plot <- BarSimpleChartViz(shade_xminvalue = NA, shade_xmaxvalue = NA, x_labels = etiquetas)
+  
+  
   ggsave(plot = plot, 
          filename = paste0(
            path2SP,
@@ -364,7 +366,7 @@ indicador_proceso_justo.fn <- function(
            savePath,"/Indicador DP",
            "/indicador_PJ.svg"), 
          width  = 200, 
-         height = 80,
+         height = 70,
          units  = "mm",
          dpi    = 72,
          device = "svg")
@@ -391,7 +393,7 @@ indicador_uso_fuerza.fn <- function(
   
   etiquetas <- data2plot$labelx
   
-  plot <- BarSimpleChartViz(shade_xminvalue = NA, shade_xmaxvalue = NA, x_labels = etiquetas); plot
+  plot <- BarSimpleChartViz(shade_xminvalue = NA, shade_xmaxvalue = NA, x_labels = etiquetas)
   
   ggsave(plot = plot, 
          filename = paste0(
@@ -401,7 +403,7 @@ indicador_uso_fuerza.fn <- function(
            savePath,"/Indicador DP",
            "/indicador_UEF.svg"), 
          width  = 200, 
-         height = 80,
+         height = 70,
          units  = "mm",
          dpi    = 72,
          device = "svg")
@@ -428,7 +430,7 @@ indicador_tortura.fn <- function(
   
   etiquetas <- data2plot$labelx
   
-  plot <- BarSimpleChartViz(shade_xminvalue = NA, shade_xmaxvalue = NA, x_labels = etiquetas); plot
+  plot <- BarSimpleChartViz(shade_xminvalue = NA, shade_xmaxvalue = NA, x_labels = etiquetas)
   
   ggsave(plot = plot, 
          filename = paste0(
@@ -438,7 +440,7 @@ indicador_tortura.fn <- function(
            savePath,"/Indicador DP",
            "/indicador_PDH.svg"), 
          width  = 200, 
-         height = 80,
+         height = 70,
          units  = "mm",
          dpi    = 72,
          device = "svg")
