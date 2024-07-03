@@ -41,7 +41,7 @@ source("Code/Parte A/indiceDP.R")
 # source("Code/Parte B/delincuencia_prolifica_emergente.R")
 # source("Code/Parte B/delitos_alto_impacto.R")
 # source("Code/Parte B/delitos_relevantes_victimas.R")
-# source("Code/Parte B/detenciones.R")
+source("Code/Parte B/detenciones.R")
 # source("Code/Parte B/distribucion_competencia.R")
 # source("Code/Parte B/entrevistas_interrogatorios.R")
 # source("Code/Parte B/estudio_FGR.R")
@@ -482,20 +482,48 @@ for (i in Estados) {
   ###
   ### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   
-  print("Generando proceso justo")
+  print("Estrategias Delitos Relevantes")
   
   #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  #### <- 
+  ####  
   #### Estrategias de atención                                                                              ----
   ####
   #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   
-  # dir.create(paste0(
-  #   path2SP,
-  #   "/National/Visualization",
-  #   "/Output/Debido proceso/",
-  #   savePath,"/Proceso justo")
-  # )
+   dir.create(paste0(
+     path2SP,
+     "/National/Visualization",
+     "/Output/Debido proceso/",
+     savePath,"/Delitos victimas")
+   )
+  
+  delitos_ENPOL             <- delitos_ENPOL.fn()
+  delitos_ENVIPE            <- delitos_ENVIPE.fn()
+  prevalentes_ENVIPE        <- prevalentes_ENVIPE.fn()
+  homicidios_ENPOL_ENVIPE   <- homicidios_ENPOL_ENVIPE.fn()
+  
+  indicador_list <- list(
+    
+    'Delitos ENPOL'              = delitos_ENPOL,
+    'Delitos ENVIPE'             = delitos_ENVIPE,
+    'Delitos prevalentes ENVIPE' = prevalentes_ENVIPE,
+    'Homicidios ENPOL ENVIPE'    = homicidios_ENPOL_ENVIPE
+    
+    
+  )
+  
+  openxlsx::write.xlsx(x = indicador_list,
+                       file = paste0(
+                         path2SP,
+                         "/National/Visualization",
+                         "/Output/Debido proceso/",
+                         savePath,"/Indicador DP",
+                         "/Indicador DP.xlsx")
+  )
+  
+  print("Indicador Debido Proceso finalizado")
+  
+  
   
 }
 
