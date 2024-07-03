@@ -97,7 +97,7 @@ plot <- data2plot %>%
 ggsave(plot   = plot,
        file   = paste0(path2SP,"National/Report/prueba/Capitulo 2/charts_and_images/conclusion_proceso/Figure3_1.svg"), 
        width  = 189.7883, 
-       height = 85,
+       height = 77.5,
        units  = "mm",
        dpi    = 72,
        device = "svg")
@@ -182,7 +182,7 @@ plt <- ggplot(data2plot,
 ggsave(plot   = plt,
        file   = paste0(path2SP,"National/Report/prueba/Capitulo 2/charts_and_images/conclusion_proceso/Figure3_2.svg"), 
        width  = 189.7883, 
-       height = 85,
+       height = 77.5,
        units  = "mm",
        dpi    = 72,
        device = "svg")
