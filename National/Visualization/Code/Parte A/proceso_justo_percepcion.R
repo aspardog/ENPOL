@@ -61,7 +61,7 @@ proceso_justo.fn <- function(
       labels = proceso_justo
     )
   
-  colors4plot <-  c("#ef4b4b", "#2a2a9A")
+  colors4plot <-  c("#ef4b4b", "#009AA9")
   
   plot <- barsChart.fn(data.df                    = data2plot,
                        groupVar                   = F,   
@@ -77,7 +77,7 @@ proceso_justo.fn <- function(
                            savePath,"/Percepcion proceso justo",
                            "/proceso_justo.svg"),
          width = 189.7883,
-         height = 85,
+         height = 75,
          units  = "mm",
          dpi    = 72,
          device = "svg")
@@ -148,7 +148,7 @@ percepcion_indicadores.fn <- function(
   injusto.df <- data2table %>%
     filter(proceso_justo == "Proceso injusto")
   
-  colors4plot <-  c("#2a2a9A","#ef4b4b")
+  colors4plot <-  c("#009AA9","#ef4b4b")
   names(colors4plot) <- c("Proceso justo",
                           "Proceso injusto")
   
@@ -261,7 +261,7 @@ procedimiento.fn <- function(
                            savePath,"/Percepcion proceso justo",
                            "/procedimiento_abreviado.svg"),
          width = 189.7883,
-         height = 85,
+         height = 75,
          units  = "mm",
          dpi    = 72,
          device = "svg")
@@ -318,7 +318,7 @@ percepcion_procedimiento.fn <- function(
         T ~ NA_real_)
     )
   
-  colors4plot <-  c("#2a2a9A","#ef4b4b")
+  colors4plot <-  c("#009AA9","#ef4b4b")
   
   plot <- barsChart.fn(data.df                    = data2plot,
                        groupVar                   = F,   
@@ -334,7 +334,7 @@ percepcion_procedimiento.fn <- function(
                            savePath,"/Percepcion proceso justo",
                            "/percepcion_procedimiento_abreviado.svg"),
          width = 189.7883,
-         height = 85,
+         height = 75,
          units  = "mm",
          dpi    = 72,
          device = "svg")
@@ -402,7 +402,7 @@ culpabilidad.fn <- function(
                            savePath,"/Percepcion proceso justo",
                            "/auto_culpabilidad.svg"),
          width = 189.7883,
-         height = 85,
+         height = 75,
          units  = "mm",
          dpi    = 72,
          device = "svg")
@@ -458,7 +458,7 @@ percepcion_culpabilidad.fn <- function(
         T ~ NA_real_)
     )
   
-  colors4plot <-  c("#2a2a9A","#ef4b4b")
+  colors4plot <-  c("#009AA9","#ef4b4b")
   plot <- barsChart.fn(data.df                    = data2plot,
                        groupVar                   = F,   
                        categories_grouping_var    = labels,
@@ -473,7 +473,7 @@ percepcion_culpabilidad.fn <- function(
                            savePath,"/Percepcion proceso justo",
                            "/percepcion_culpabilidad.svg"),
          width = 189.7883,
-         height = 85,
+         height = 75,
          units  = "mm",
          dpi    = 72,
          device = "svg")
@@ -542,7 +542,7 @@ escucha.fn <- function(
                            savePath,"/Percepcion proceso justo",
                            "/escucha.svg"),
          width = 189.7883,
-         height = 85,
+         height = 75,
          units  = "mm",
          dpi    = 72,
          device = "svg")
@@ -598,7 +598,7 @@ percepcion_escucha.fn <- function(
         T ~ NA_real_)
     )
   
-  colors4plot <-  c("#ef4b4b", "#2a2a9A")
+  colors4plot <-  c("#ef4b4b", "#009AA9")
   plot <- barsChart.fn(data.df                    = data2plot,
                        groupVar                   = F,   
                        categories_grouping_var    = labels,
@@ -613,7 +613,7 @@ percepcion_escucha.fn <- function(
                            savePath,"/Percepcion proceso justo",
                            "/percepcion_escucha.svg"),
          width = 189.7883,
-         height = 85,
+         height = 75,
          units  = "mm",
          dpi    = 72,
          device = "svg")
