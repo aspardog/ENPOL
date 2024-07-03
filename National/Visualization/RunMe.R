@@ -36,6 +36,20 @@ source("Code/Parte A/detenciones.R")
 source("Code/Parte A/prision_preventiva.R")
 source("Code/Parte A/indiceDP.R")
 
+
+# source("Code/Parte B/conclusion_proceso.R")
+# source("Code/Parte B/delincuencia_prolifica_emergente.R")
+# source("Code/Parte B/delitos_alto_impacto.R")
+# source("Code/Parte B/delitos_relevantes_victimas.R")
+# source("Code/Parte B/detenciones.R")
+# source("Code/Parte B/distribucion_competencia.R")
+# source("Code/Parte B/entrevistas_interrogatorios.R")
+# source("Code/Parte B/estudio_FGR.R")
+# source("Code/Parte B/inspecciones.R")
+# source("Code/Parte B/pruebas.R")
+# source("Code/Parte B/señalamientos.R")
+
+
 # Loading plotting functions from GitHub
 source("https://raw.githubusercontent.com/ctoruno/WJP-Data-Viz/main/loading.R")
 loadVIZ(set = "ENPOL")
