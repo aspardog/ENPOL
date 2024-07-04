@@ -486,7 +486,7 @@ for (i in Estados) {
   
   #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   ####  
-  #### Estrategias de atención                                                                              ----
+  #### Estrategias de atención a Delitos Relevantes                                                                              ----
   ####
   #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   
@@ -517,13 +517,50 @@ for (i in Estados) {
                          path2SP,
                          "/National/Visualization",
                          "/Output/Politica criminal/",
-                         savePath,"/Indicador DP",
-                         "/Indicador DP.xlsx")
+                         savePath,"/Delitos victimas",
+                         "/Delitos victimas.xlsx")
   )
   
   print("Delitos Víctimas finalizado")
   
+  print("Atención a los delitos de alto impacto")
   
+  #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  ####  
+  #### Atención a los delitos de alto impacto                                                                             ----
+  ####
+  #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  
+  dir.create(paste0(
+    path2SP,
+    "/National/Visualization",
+    "/Output/Politica criminal/",
+    savePath,"/Delitos alto impacto")
+  )
+  
+  control_alto_impacto           <- control_alto_impacto.fn()
+  detencion_alto_impacto         <- detencion_alto_impacto.fn()
+  terminacion_alto_impacto       <- terminacion_alto_impacto.fn()
+  
+  indicador_list <- list(
+    
+    'Control alto impacto'     = control_alto_impacto,
+    'Detención alto impacto'   = detencion_alto_impacto,
+    'Terminación alto impacto' = terminacion_alto_impacto
+    
+    
+  )
+  
+  openxlsx::write.xlsx(x = indicador_list,
+                       file = paste0(
+                         path2SP,
+                         "/National/Visualization",
+                         "/Output/Politica criminal/",
+                         savePath,"/Delitos alto impacto",
+                         "/Delitos alto impacto.xlsx")
+  )
+  
+  print("Atención a los delitos de alto impacto finalizado")
   
 }
 
