@@ -37,17 +37,17 @@ source("Code/Parte A/prision_preventiva.R")
 source("Code/Parte A/indiceDP.R")
 
 
-# source("Code/Parte B/conclusion_proceso.R")
-# source("Code/Parte B/delincuencia_prolifica_emergente.R")
+source("Code/Parte B/conclusion_proceso.R")
+source("Code/Parte B/delincuencia_prolifica_emergente.R")
 source("Code/Parte B/delitos_alto_impacto.R")
-# source("Code/Parte B/delitos_relevantes_victimas.R")
+source("Code/Parte B/delitos_relevantes_victimas.R")
 source("Code/Parte B/detenciones.R")
-# source("Code/Parte B/distribucion_competencia.R")
-# source("Code/Parte B/entrevistas_interrogatorios.R")
-# source("Code/Parte B/estudio_FGR.R")
-# source("Code/Parte B/inspecciones.R")
-# source("Code/Parte B/pruebas.R")
-# source("Code/Parte B/señalamientos.R")
+source("Code/Parte B/distribucion_competencia.R")
+source("Code/Parte B/entrevistas_interrogatorios.R")
+source("Code/Parte B/estudio_FGR.R")
+source("Code/Parte B/inspecciones.R")
+source("Code/Parte B/pruebas.R")
+source("Code/Parte B/señalamientos.R")
 
 
 # Loading plotting functions from GitHub
@@ -561,6 +561,367 @@ for (i in Estados) {
   )
   
   print("Atención a los delitos de alto impacto finalizado")
+  
+  print("Delincuencia prolífica y emergente ")
+  #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  ####  
+  #### Atención a fenómenos criminales: delincuencia prolífica y emergente                                                                      ----
+  ####
+  #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  
+  dir.create(paste0(
+    path2SP,
+    "/National/Visualization",
+    "/Output/Politica criminal/",
+    savePath,"/Delincuencia prolifica")
+  )
+  
+  reincidentes         <- reincidentes.fn()
+  delito_reincidencia  <- delito_reincidencia.fn()
+  varios_delitos       <- varios_delitos.fn()
+  delito_unico         <- delito_unico.fn()
+  
+  indicador_list <- list(
+    
+    'Reincidentes y profesionalización'    = reincidentes,
+    'Tipo delitos reincidencia'            = delito_reincidencia,
+    'Varios delitos'                       = varios_delitos,
+    'Delitos únicos'                       = delito_unico,
+    
+    
+  )
+  
+  openxlsx::write.xlsx(x = indicador_list,
+                       file = paste0(
+                         path2SP,
+                         "/National/Visualization",
+                         "/Output/Politica criminal/",
+                         savePath,"/Delincuencia prolifica",
+                         "/Delincuencia prolifica.xlsx")
+  )
+  
+  print("Delincuencia prolífica y emergente  finalizado")
+  
+  
+  print("Distribución de competencias ")
+  #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  ####  
+  #### Distribución de competencias                                                                     ----
+  ####
+  #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  
+  dir.create(paste0(
+    path2SP,
+    "/National/Visualization",
+    "/Output/Politica criminal/",
+    savePath,"/Distribucion competencias")
+  )
+  
+  delitos_fuero         <- delitos_fuero.fn()
+  delitos_federales     <- delitos_federales.fn()
+  detenciones_federales <- detenciones_federales.fn()
+  detenciones_estatales <- detenciones_estatales.fn()
+  
+  indicador_list <- list(
+    
+    'Delitos por fuero'    = delitos_fuero
+    
+    
+  )
+  
+  openxlsx::write.xlsx(x = indicador_list,
+                       file = paste0(
+                         path2SP,
+                         "/National/Visualization",
+                         "/Output/Politica criminal/",
+                         savePath,"/Distribucion competencias",
+                         "/Distribucion competencias.xlsx")
+  )
+  
+  print("Distribución de competencias finalizado") 
+  
+  
+  print("Estudio FGR")
+  #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  ####  
+  #### Distribución de competencias                                                                     ----
+  ####
+  #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  
+  dir.create(paste0(
+    path2SP,
+    "/National/Visualization",
+    "/Output/Politica criminal/",
+    savePath,"/Estudio FGR")
+  )
+  
+  detenciones_FGR         <- detenciones_FGR.fn()
+  detencion_GN_PF         <- detencion_GN_PF.fn()
+  federales_sentenciados  <- federales_sentenciados.fn()
+  conclusion_federales    <- conclusion_federales.fn()
+  
+  indicador_list <- list(
+    
+    'Detenciones FGR'                    = detenciones_FGR,
+    'Detenciones GN/PF y Ministerial'    = detencion_GN_PF,
+    'Delitos federales entenciados'      = federales_sentenciados,
+    'Conlusión delitos federales'        = conclusion_federales
+    
+    
+  )
+  
+  openxlsx::write.xlsx(x = indicador_list,
+                       file = paste0(
+                         path2SP,
+                         "/National/Visualization",
+                         "/Output/Politica criminal/",
+                         savePath,"/Estudio FGR",
+                         "/Estudio FGR.xlsx")
+  )
+  
+  print("Estudio FGR finalizado") 
+  
+  print("Detenciones")
+  #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  ####  
+  #### Estrategias de investigación del delito: Detenciones                                                                     ----
+  ####
+  #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  
+  dir.create(paste0(
+    path2SP,
+    "/National/Visualization",
+    "/Output/Politica criminal/",
+    savePath,"/Detenciones")
+  )
+  
+  detenciones_temporal      <- detenciones_temporal.fn()
+  detenciones_estado        <- detenciones_estado.fn()
+  detencion_proceso_tiempo  <- detencion_proceso_tiempo.fn()
+  
+  indicador_list <- list(
+    
+    'Detenciones en el tiempo'  = detenciones_temporal,
+    'Detenciones por estado'    = detenciones_estado,
+    'Detenciones por fuero'     = delitos_fuero
+    
+    
+    
+  )
+  
+  openxlsx::write.xlsx(x = indicador_list,
+                       file = paste0(
+                         path2SP,
+                         "/National/Visualization",
+                         "/Output/Politica criminal/",
+                         savePath,"/Detenciones",
+                         "/Detenciones.xlsx")
+  )
+  
+  print("Detenciones finalizado") 
+  
+  
+  print("Inspecciones")
+  #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  ####  
+  #### Estrategias de investigación del delito: Inspecciones                                                                     ----
+  ####
+  #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  
+  dir.create(paste0(
+    path2SP,
+    "/National/Visualization",
+    "/Output/Politica criminal/",
+    savePath,"/Inspecciones")
+  )
+  
+  detenciones_temporal      <- detenciones_temporal.fn()
+  detenciones_estado        <- detenciones_estado.fn()
+  detencion_proceso_tiempo  <- detencion_proceso_tiempo.fn()
+  
+  indicador_list <- list(
+    
+    'Detenciones en el tiempo'  = detenciones_temporal,
+    'Detenciones por estado'    = detenciones_estado,
+    'Detenciones por fuero'     = delitos_fuero
+    
+    
+    
+  )
+  
+  openxlsx::write.xlsx(x = indicador_list,
+                       file = paste0(
+                         path2SP,
+                         "/National/Visualization",
+                         "/Output/Politica criminal/",
+                         savePath,"/Inspecciones",
+                         "/Inspecciones.xlsx")
+  )
+  
+  print("Inspecciones finalizado") 
+  
+  
+  print("Señalamientos y reconocimiento de personas")
+  #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  ####  
+  #### Estrategias de investigación del delito: eñalamientos y reconocimiento de personas                                                                     ----
+  ####
+  #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  
+  dir.create(paste0(
+    path2SP,
+    "/National/Visualization",
+    "/Output/Politica criminal/",
+    savePath,"/Señalamientos")
+  )
+  
+  señalados                  <- señalados.fn()
+  señalamientos_condiciones  <- señalamientos_condiciones.fn()
+  
+  indicador_list <- list(
+    
+    'Señalados'  = señalados,
+    'Señalados condiciones'    = señalamientos_condiciones
+    
+    
+    
+  )
+  
+  openxlsx::write.xlsx(x = indicador_list,
+                       file = paste0(
+                         path2SP,
+                         "/National/Visualization",
+                         "/Output/Politica criminal/",
+                         savePath,"/Señalamientos",
+                         "/Señalamientos.xlsx")
+  )
+  
+  print("Señalamientos y reconocimiento de personas finalizado") 
+  
+  print("Entrevistas")
+  #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  ####  
+  #### Estrategias de investigación del delito: Entrevistas                                                                    ----
+  ####
+  #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  
+  dir.create(paste0(
+    path2SP,
+    "/National/Visualization",
+    "/Output/Politica criminal/",
+    savePath,"/Entrevistas")
+  )
+  
+  interrogatorio_MP                 <- interrogatorio_MP.fn()
+  interrogatorio_comportamiento     <- interrogatorio_comportamiento.fn()
+  tortura_detencion_MP              <- tortura_detencion_MP.fn()
+  tortura_inocencia                 <- tortura_inocencia.fn()
+  tortura_culpabilidad              <- tortura_culpabilidad.fn()
+  
+  indicador_list <- list(
+    
+    'Interrogatorio en MP'             = interrogatorio_MP,
+    'Interrogatorio Comportamiento'    = interrogatorio_comportamiento,
+    'Tortura detencion MP'             = tortura_detencion_MP,
+    'Tortura condicion inocencia'      = tortura_inocencia,
+    'Tortura condicion culpabilidad'   = tortura_culpabilidad
+    
+    
+    
+    
+  )
+  
+  openxlsx::write.xlsx(x = indicador_list,
+                       file = paste0(
+                         path2SP,
+                         "/National/Visualization",
+                         "/Output/Politica criminal/",
+                         savePath,"/Entrevistas",
+                         "/Entrevistas.xlsx")
+  )
+  
+  print("Entrevistas finalizado") 
+  
+  
+  print("Pruebas")
+  #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  ####  
+  #### Estrategias de persecución penal: Pruebas                                                                    ----
+  ####
+  #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  
+  dir.create(paste0(
+    path2SP,
+    "/National/Visualization",
+    "/Output/Politica criminal/",
+    savePath,"/Pruebas")
+  )
+  
+  pruebas_pp                 <- pruebas_pp.fn()
+  pruebas_conclusion     <- pruebas_conclusion.fn()
+  
+  indicador_list <- list(
+    
+    'Pruebas por tipo Prision Preventiva'             = pruebas_pp,
+    'Pruebas por conclusión'    = pruebas_conclusion
+    
+    
+    
+    
+  )
+  
+  openxlsx::write.xlsx(x = indicador_list,
+                       file = paste0(
+                         path2SP,
+                         "/National/Visualization",
+                         "/Output/Politica criminal/",
+                         savePath,"/Pruebas",
+                         "/Pruebas.xlsx")
+  )
+  
+  print("Pruebas finalizado") 
+  
+  
+  print("Formas de concluir los procesos")
+  #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  ####  
+  #### Formas de concluir los procesos                                                                   ----
+  ####
+  #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  
+  dir.create(paste0(
+    path2SP,
+    "/National/Visualization",
+    "/Output/Politica criminal/",
+    savePath,"/Conclusion")
+  )
+  
+  conclusion                 <- conclusion.fn()
+  conclusion_presion         <- conclusion_presion.fn()
+  conclusion_tiempo_proceso  <- conclusion_tiempo_proceso.fn()
+  
+  indicador_list <- list(
+    
+    'Conclusion tipo'            = conclusion,
+    'Conclusion presion'         = conclusion_presion,
+    'Conclusion tiempo proceso'  = conclusion_tiempo_proceso
+    
+    
+    
+    
+  )
+  
+  openxlsx::write.xlsx(x = indicador_list,
+                       file = paste0(
+                         path2SP,
+                         "/National/Visualization",
+                         "/Output/Politica criminal/",
+                         savePath,"/Conclusion",
+                         "/Conclusion.xlsx")
+  )
+  
+  print("Formas de concluir los procesos finalizado") 
+  
   
 }
 
