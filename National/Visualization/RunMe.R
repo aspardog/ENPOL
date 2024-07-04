@@ -586,7 +586,7 @@ for (i in Estados) {
     'Reincidentes y profesionalización'    = reincidentes,
     'Tipo delitos reincidencia'            = delito_reincidencia,
     'Varios delitos'                       = varios_delitos,
-    'Delitos únicos'                       = delito_unico,
+    'Delitos únicos'                       = delito_unico
     
     
   )
@@ -644,7 +644,7 @@ for (i in Estados) {
   print("Estudio FGR")
   #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   ####  
-  #### Distribución de competencias                                                                     ----
+  #### Estudio FGR                                                                     ----
   ####
   #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   
@@ -857,13 +857,13 @@ for (i in Estados) {
     savePath,"/Pruebas")
   )
   
-  pruebas_pp                 <- pruebas_pp.fn()
+  pruebas_pp             <- pruebas_pp.fn()
   pruebas_conclusion     <- pruebas_conclusion.fn()
   
   indicador_list <- list(
     
-    'Pruebas por tipo Prision Preventiva'             = pruebas_pp,
-    'Pruebas por conclusión'    = pruebas_conclusion
+    'Pruebas por tipo Prision Preventiva'  = pruebas_pp,
+    'Pruebas por conclusión'               = pruebas_conclusion
     
     
     
