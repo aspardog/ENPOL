@@ -20,9 +20,9 @@
 
 # Required Packages, Fonts, ggplot theme, color palettes, comparison countries and other general routines are
 # loaded from the following script:
-source("Code/Settings.R")
-
-load(paste0(path2SP,"/National/Data_cleaning/Output/Main_database.RData")) 
+# source("Code/Settings.R")
+# 
+# load(paste0(path2SP,"/National/Data_cleaning/Output/Main_database.RData")) 
 
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -31,7 +31,13 @@ load(paste0(path2SP,"/National/Data_cleaning/Output/Main_database.RData"))
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-Main_database_2008 <- Main_database %>% 
+pruebas_pp.fn <- function(
+    
+  datas.df = master_data.df
+  
+  ) {
+
+Main_database_2008 <- datas.df %>% 
   filter(Anio_arresto >= 2008,
          NSJP == 1) %>% 
   mutate( prueba_confesion = case_when(P5_15_01 == 1 ~ 1,
@@ -133,12 +139,17 @@ plot <- ggplot(data2plot,
 
 
 ggsave(plot   = plot,
-       file   = paste0(path2SP,"National/Report/prueba/Capitulo 2/charts_and_images/pruebas/Figure3_1.svg"), 
+       file   = paste0(path2SP,"/National/Visualization",
+                       "/Output/Politica criminal/",
+                       savePath,"/Pruebas/Figure3_1.svg"), 
        width  = 189.7883, 
        height = 80,
        units  = "mm",
        dpi    = 72,
        device = "svg")
+
+return(data2plot)
+}
 
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -148,7 +159,13 @@ ggsave(plot   = plot,
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
-Main_database_2008 <- Main_database %>% 
+pruebas_conclusion.fn <- function(
+    
+  data.df = master_data.df
+  
+  ){
+
+Main_database_2008 <- data.df %>% 
   filter(Anio_arresto >= 2008,
          NSJP == 1) %>% 
   mutate( prueba_confesion = case_when(P5_15_01 == 1 ~ 1,
@@ -253,10 +270,15 @@ plot <- ggplot(data2plot,
 
 
 ggsave(plot   = plot,
-       file   = paste0(path2SP,"National/Report/prueba/Capitulo 2/charts_and_images/pruebas/Figure3_2.svg"), 
+       file   = paste0(path2SP,"/National/Visualization",
+                       "/Output/Politica criminal/",
+                       savePath,"/Pruebas/Figure3_2.svg"), 
        width  = 189.7883, 
        height = 80,
        units  = "mm",
        dpi    = 72,
        device = "svg")
+
+return(data2plot)
+}
 
