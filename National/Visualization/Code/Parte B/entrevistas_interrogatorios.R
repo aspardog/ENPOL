@@ -20,9 +20,9 @@
 
 # Required Packages, Fonts, ggplot theme, color palettes, comparison countries and other general routines are
 # loaded from the following script:
-source("Code/Settings.R")
-
-load(paste0(path2SP,"/National/Data_cleaning/Output/Main_database.RData")) 
+# source("Code/Settings.R")
+# 
+# load(paste0(path2SP,"/National/Data_cleaning/Output/Main_database.RData")) 
 
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -31,7 +31,13 @@ load(paste0(path2SP,"/National/Data_cleaning/Output/Main_database.RData"))
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-df <- Main_database %>% 
+interrogatorio_MP.fn <- function(
+    
+  data.df = master_data.df
+  
+  ){
+
+df <- data.df %>% 
   filter(Anio_arresto >= 2008,
          NSJP == 1) %>% 
   select(P3_16, 
@@ -99,13 +105,18 @@ plt <- ggplot(data2plot,
 
 
 ggsave(plot   = plt,
-       file   = paste0(path2SP,"National/Report/prueba/Capitulo 2/charts_and_images/entrevistas_interrogatorios/Figure3_1.svg"), 
+       file   = paste0(path2SP,"/National/Visualization",
+                       "/Output/Politica criminal/",
+                       savePath,"/Entrevistas/Figure3_1.svg"), 
        width  = 189.7883, 
        height = 65,
        units  = "mm",
        dpi    = 72,
        device = "svg")
 
+return(data2plot)
+
+}
 
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -114,7 +125,14 @@ ggsave(plot   = plt,
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-df <- Main_database %>%
+interrogatorio_comportamiento.fn <- function(
+    
+  data.df = master_data.df
+  
+){
+
+
+df <- data.df %>%
               filter(Anio_arresto >= 2008,
                      NSJP == 1) %>% 
               mutate(Comp_interrogatorio_1 = case_when(P4_3A_1 == "1" ~ 1,
@@ -200,13 +218,17 @@ plt <- ggplot(data2plot,
   coord_flip(); plt
 
 ggsave(plot   = plt,
-       file   = paste0(path2SP,"National/Report/prueba/Capitulo 2/charts_and_images/entrevistas_interrogatorios/Figure3_2.svg"), 
+       file   = paste0(path2SP,"/National/Visualization",
+                       "/Output/Politica criminal/",
+                       savePath,"/Entrevistas/Figure3_2.svg"), 
        width  = 94.89, 
        height = 80,
        units  = "mm",
        dpi    = 72,
        device = "svg")
 
+return(data2plot)
+}
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -214,7 +236,14 @@ ggsave(plot   = plt,
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-Main_database_2008 <- Main_database %>% 
+tortura_detencion_MP.fn <- function(
+    
+  data.df = master_data.df
+  
+){
+
+
+Main_database_2008 <- data.df %>% 
   filter(Anio_arresto >= 2008,
          NSJP == 1) %>% 
   mutate(tipo_detencion = case_when(flagrancia == 1  ~ "Flagrancia",
@@ -279,12 +308,19 @@ plot <- ggplot(data2plot,
     axis.title.x       = element_blank()); plot
 
 ggsave(plot   = plot,
-       file   = paste0(path2SP,"National/Report/prueba/Capitulo 2/charts_and_images/entrevistas_interrogatorios/Figure3_3.svg"), 
+       file   = paste0(path2SP,"/National/Visualization",
+                       "/Output/Politica criminal/",
+                       savePath,"/Entrevistas/Figure3_3.svg"), 
        width  = 189.7883, 
        height = 80,
        units  = "mm",
        dpi    = 72,
        device = "svg")
+
+
+return(data2plot)
+}
+
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -292,8 +328,14 @@ ggsave(plot   = plot,
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+tortura_inocencia.fn <- function(
+    
+  data.df = master_data.df
+  
+){
 
-Main_database_2008 <- Main_database %>% 
+
+Main_database_2008 <- data.df %>% 
   filter(Anio_arresto >= 2008,
          NSJP == 1) %>% 
   mutate(declaro_culpable = case_when(culpabilidad == 1 ~ "Se reconoce como culpable", 
@@ -355,12 +397,17 @@ plot <- ggplot(data2plot,
 
 
 ggsave(plot   = plot,
-       file   = paste0(path2SP,"National/Report/prueba/Capitulo 2/charts_and_images/entrevistas_interrogatorios/Figure3_4.svg"), 
+       file   = paste0(path2SP,"/National/Visualization",
+                       "/Output/Politica criminal/",
+                       savePath,"/Entrevistas/Figure3_4.svg"), 
        width  = 189.7883, 
        height = 80,
        units  = "mm",
        dpi    = 72,
        device = "svg")
+
+return(data2plot)
+}
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -370,7 +417,13 @@ ggsave(plot   = plot,
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
-Main_database_2008 <- Main_database %>% 
+tortura_culpabilidad.fn <- function(
+    
+  data.df = master_data.df
+  
+){
+
+Main_database_2008 <- data.df %>% 
   filter(Anio_arresto >= 2008,
          NSJP == 1) %>% 
   mutate(tortura_mp = case_when(tortura_mp == 1 ~ "Tortura en el Minsterio Público", 
@@ -432,9 +485,16 @@ plot <- ggplot(data2plot,
     axis.title.x       = element_blank()); plot
 
 ggsave(plot   = plot,
-       file   = paste0(path2SP,"National/Report/prueba/Capitulo 2/charts_and_images/entrevistas_interrogatorios/Figure3_5.svg"), 
+       file   = paste0(path2SP,"/National/Visualization",
+                       "/Output/Politica criminal/",
+                       savePath,"/Entrevistas/Figure3_5.svg"), 
        width  = 94.89, 
        height = 80,
        units  = "mm",
        dpi    = 72,
        device = "svg")
+
+return(data2plot)
+
+}
+
