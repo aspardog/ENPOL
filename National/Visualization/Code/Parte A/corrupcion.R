@@ -43,7 +43,8 @@ corrupcion_tiempo.fn <- function(
                                           T ~ NA_real_),
             corrupcion_general = case_when(detencion_corrupcion == 1 | mp_corrupcion == 1  | juzgado_corrupcion == 1 ~ 1,
                                            detencion_corrupcion == 0 & mp_corrupcion == 0  & juzgado_corrupcion == 0 ~ 0,
-                                           T~ NA_real_),) %>%
+                                           T~ NA_real_)
+            ) %>%
     pivot_longer(cols = c(detencion_corrupcion, mp_corrupcion, juzgado_corrupcion), 
                  names_to = "group_var", values_to = "value2plot"
     ) %>%

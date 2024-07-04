@@ -320,7 +320,7 @@ indicador_proceso_justo.fn <- function(
            savePath,"/Indicador DP",
            "/indicador_PJ.svg"), 
          width  = 200, 
-         height = 65,
+         height = 60,
          units  = "mm",
          dpi    = 72,
          device = "svg")
@@ -360,7 +360,7 @@ indicador_uso_fuerza.fn <- function(
            savePath,"/Indicador DP",
            "/indicador_UEF.svg"), 
          width  = 200, 
-         height = 65,
+         height = 60,
          units  = "mm",
          dpi    = 72,
          device = "svg")
@@ -400,7 +400,7 @@ indicador_tortura.fn <- function(
            savePath,"/Indicador DP",
            "/indicador_PDH.svg"), 
          width  = 200, 
-         height = 65,
+         height = 60,
          units  = "mm",
          dpi    = 72,
          device = "svg")
