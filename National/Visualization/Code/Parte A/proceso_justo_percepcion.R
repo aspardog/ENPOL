@@ -77,7 +77,7 @@ proceso_justo.fn <- function(
                            savePath,"/Percepcion proceso justo",
                            "/proceso_justo.svg"),
          width = 189.7883,
-         height = 75,
+         height = 85,
          units  = "mm",
          dpi    = 72,
          device = "svg")
@@ -261,7 +261,7 @@ procedimiento.fn <- function(
                            savePath,"/Percepcion proceso justo",
                            "/procedimiento_abreviado.svg"),
          width = 189.7883,
-         height = 75,
+         height = 85,
          units  = "mm",
          dpi    = 72,
          device = "svg")
@@ -334,7 +334,7 @@ percepcion_procedimiento.fn <- function(
                            savePath,"/Percepcion proceso justo",
                            "/percepcion_procedimiento_abreviado.svg"),
          width = 189.7883,
-         height = 75,
+         height = 85,
          units  = "mm",
          dpi    = 72,
          device = "svg")
@@ -402,7 +402,7 @@ culpabilidad.fn <- function(
                            savePath,"/Percepcion proceso justo",
                            "/auto_culpabilidad.svg"),
          width = 189.7883,
-         height = 75,
+         height = 85,
          units  = "mm",
          dpi    = 72,
          device = "svg")
@@ -473,7 +473,7 @@ percepcion_culpabilidad.fn <- function(
                            savePath,"/Percepcion proceso justo",
                            "/percepcion_culpabilidad.svg"),
          width = 189.7883,
-         height = 75,
+         height = 85,
          units  = "mm",
          dpi    = 72,
          device = "svg")
@@ -542,7 +542,7 @@ escucha.fn <- function(
                            savePath,"/Percepcion proceso justo",
                            "/escucha.svg"),
          width = 189.7883,
-         height = 75,
+         height = 85,
          units  = "mm",
          dpi    = 72,
          device = "svg")
@@ -613,7 +613,7 @@ percepcion_escucha.fn <- function(
                            savePath,"/Percepcion proceso justo",
                            "/percepcion_escucha.svg"),
          width = 189.7883,
-         height = 75,
+         height = 85,
          units  = "mm",
          dpi    = 72,
          device = "svg")
