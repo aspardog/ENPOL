@@ -583,7 +583,7 @@ for (i in Estados) {
   
   indicador_list <- list(
     
-    'Reincidentes y profesionalización'    = reincidentes,
+    'Reincidencia'                         = reincidentes,
     'Tipo delitos reincidencia'            = delito_reincidencia,
     'Varios delitos'                       = varios_delitos,
     'Delitos únicos'                       = delito_unico
@@ -624,7 +624,7 @@ for (i in Estados) {
   
   indicador_list <- list(
     
-    'Delitos por fuero'    = delitos_fuero
+    'Delitos_fuero'    = delitos_fuero
     
     
   )
@@ -662,10 +662,10 @@ for (i in Estados) {
   
   indicador_list <- list(
     
-    'Detenciones FGR'                    = detenciones_FGR,
-    'Detenciones GN/PF y Ministerial'    = detencion_GN_PF,
-    'Delitos federales entenciados'      = federales_sentenciados,
-    'Conlusión delitos federales'        = conclusion_federales
+    'Detenciones FGR'          = detenciones_FGR,
+    'Det_GN/PF_Ministerial'    = detencion_GN_PF,
+    'Delitos_fed_senten'       = federales_sentenciados,
+    'Conlusión_del_fed'        = conclusion_federales
     
     
   )
@@ -701,9 +701,9 @@ for (i in Estados) {
   
   indicador_list <- list(
     
-    'Detenciones en el tiempo'  = detenciones_temporal,
-    'Detenciones por estado'    = detenciones_estado,
-    'Detenciones por fuero'     = delitos_fuero
+    'Detenciones tiempo'  = detenciones_temporal,
+    'Detenciones estado'    = detenciones_estado,
+    'Detenciones fuero'     = delitos_fuero
     
     
     
@@ -735,15 +735,13 @@ for (i in Estados) {
     savePath,"/Inspecciones")
   )
   
-  detenciones_temporal      <- detenciones_temporal.fn()
-  detenciones_estado        <- detenciones_estado.fn()
-  detencion_proceso_tiempo  <- detencion_proceso_tiempo.fn()
+  inspecciones_comportamiento <- inspecciones_comportamiento.fn ()
+  inspecciones_objeto         <- inspecciones_objeto.fn ()
   
   indicador_list <- list(
     
-    'Detenciones en el tiempo'  = detenciones_temporal,
-    'Detenciones por estado'    = detenciones_estado,
-    'Detenciones por fuero'     = delitos_fuero
+    'inspecciones_comportamiento'  = inspecciones_comportamiento,
+    'inspecciones_objeto'          = inspecciones_objeto
     
     
     
@@ -820,11 +818,11 @@ for (i in Estados) {
   
   indicador_list <- list(
     
-    'Interrogatorio en MP'             = interrogatorio_MP,
-    'Interrogatorio Comportamiento'    = interrogatorio_comportamiento,
-    'Tortura detencion MP'             = tortura_detencion_MP,
-    'Tortura condicion inocencia'      = tortura_inocencia,
-    'Tortura condicion culpabilidad'   = tortura_culpabilidad
+    'Interen MP'             = interrogatorio_MP,
+    'Inter Comport'          = interrogatorio_comportamiento,
+    'Tortura det MP'         = tortura_detencion_MP,
+    'Tortura inocencia'      = tortura_inocencia,
+    'Tortura culpabilidad'   = tortura_culpabilidad
     
     
     
@@ -862,8 +860,8 @@ for (i in Estados) {
   
   indicador_list <- list(
     
-    'Pruebas por tipo Prision Preventiva'  = pruebas_pp,
-    'Pruebas por conclusión'               = pruebas_conclusion
+    'Pruebas PP'  = pruebas_pp,
+    'Pruebas conclusión'               = pruebas_conclusion
     
     
     
@@ -904,7 +902,7 @@ for (i in Estados) {
     
     'Conclusion tipo'            = conclusion,
     'Conclusion presion'         = conclusion_presion,
-    'Conclusion tiempo proceso'  = conclusion_tiempo_proceso
+    'Conclusion proceso'  = conclusion_tiempo_proceso
     
     
     
