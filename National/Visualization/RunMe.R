@@ -50,6 +50,8 @@ source("Code/Parte B/pruebas.R")
 source("Code/Parte B/señalamientos.R")
 
 
+source("Code/Parte C/trato_diferenciado.R")
+
 # Loading plotting functions from GitHub
 source("https://raw.githubusercontent.com/ctoruno/WJP-Data-Viz/main/loading.R")
 loadVIZ(set = "ENPOL")
@@ -919,6 +921,33 @@ for (i in Estados) {
   )
   
   print("Formas de concluir los procesos finalizado") 
+  
+  print("CAPÍTULO 3: TRATO DIFERENCIADO")
+  
+  ### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  ###
+  ### Capítulo 3: Trato diferenciado                                                              ----
+  ###
+  ### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  
+  #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  ####  
+  #### Formas de concluir los procesos                                                                   ----
+  ####
+  #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  
+  dir.create(paste0(
+    path2SP,
+    "/National/Visualization",
+    "/Output/Trato diferenciado/",
+    savePath, "/")
+  )
+  
+  descripcion           <- descripcion.fn()
+  trato_diferenciado    <- trato_diferenciado.fn()
+
+  
+  print("TRATO DIFERENCIADO") 
   
   
 }

@@ -49,6 +49,48 @@ data_subset.df <- master_data.df %>%
         as.numeric(P5_6) == 1 ~ 0,
         as.numeric(P5_6) == 2 ~ 1,
         T ~ NA_real_
+      ),
+    Educacion_inferior =
+      case_when(
+        Educacion_superior == 0 ~ "Cuenta con título de educación universitaria",
+        Educacion_superior == 1 ~ "No cuenta con título de educación universitario",
+        T ~ NA_character_
+      ),
+    Color_piel_oscuro       =
+      case_when(
+        Color_piel_claro      == 0 ~ "Color de piel claro",
+        Color_piel_claro      == 1 ~ "Color de piel oscuro",
+        T ~ NA_character_
+      ),
+    LGBTQ                 = 
+      case_when(
+        LGBTQ                 == 1 ~ "Pertenece a la comunidad LGBTQ",
+        LGBTQ                 == 0 ~ "No pertenece a la comunidad LGBTQ",
+        T ~ NA_character_
+      ),
+    Etnia                 =
+      case_when(
+        Etnia                 == 1 ~ "Afromexicano o indígena",
+        Etnia                 == 0 ~ "No se identifica con ninguna etnia",
+        T ~ NA_character_
+      ),
+    Edad_menor30          =
+      case_when(
+        Edad_menor30          == 1 ~ "Menor a 30 años",
+        Edad_menor30          == 0 ~ "Mayor o igual a 30 años",
+        T ~ NA_character_
+      ),
+    vulnerabilidad_economica  =
+      case_when(
+        vulnerabilidad_economica == 1 ~ "Vulnerable economicamente",
+        vulnerabilidad_economica == 0 ~ "No vulnerable economicamente",
+        T ~ NA_character_
+      ),
+    discapacidad      =
+      case_when(
+        discapacidad == 1 ~ "Reporta algún tipo de discapacidad",
+        discapacidad == 0 ~ "No presenta discapacidad",
+        T ~ NA_character_
       )
   ) %>%
   group_by(Sexo) %>%
@@ -100,7 +142,17 @@ data2plot <- data_subset.df%>%
   ) %>%
   rename(values = mean) %>%
   mutate(
-    figure = paste0(round(values*100,0), "%")
+    figure = paste0(round(values*100,0), "%"),
+    order_values =
+      case_when(
+        category == "indicator_general"       ~ 1,
+        category == "corrupcion_general"      ~ 3,
+        category == "uso_excesivo"            ~ 2,
+        category == "tortura_generalizada"    ~ 4,
+        category == "det_ninguna"             ~ 5,
+        category == "procedimiento_abreviado" ~ 7,
+        category == "PPO"                     ~ 6
+      )
   )
   
 # Applying plotting function
@@ -113,12 +165,14 @@ chart <- errorDotsChart(
   labels      = "labels",
   group       = "Sexo",
   category    = "category",
+  custom_order = F,
+  order_values = order_values,
   figures     = figure,
   values      = values,
   lower       = lower,
   upper       = upper, 
   colors4plot = colors4plot
-  )
+  );chart
 
 ggsave(plot = chart, 
        filename = paste0(

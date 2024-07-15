@@ -51,15 +51,12 @@ Main_database_2008 <- datas.df %>%
                                            as.numeric(P5_35_02) == 1 | as.numeric(P5_35_03) == 1 |
                                              as.numeric(P5_35_04) == 1 |as.numeric(P5_35_05) == 1 |
                                              as.numeric(P5_35_06) == 1 ~ 1,
-                                           P5_15_02 == 0  | P5_15_03 == 0 |
-                                             P5_15_04 == 0| P5_15_05 == 0 | 
-                                             P5_15_06 == 0~ 0,
-                                           as.numeric(P5_35_02) == 2 | as.numeric(P5_35_03) == 2 |
-                                             as.numeric(P5_35_04) == 2 |as.numeric(P5_35_05) == 2 |
+                                           (P5_15_02 == 0 | P5_15_02 == 3) & (P5_15_03 == 0 | P5_15_03 == 3)  &
+                                             P5_15_04 == 0 & (P5_15_05 == 0 | P5_15_05 == 3) == 0 & 
+                                             P5_15_06 == 0 ~ 0,
+                                           (as.numeric(P5_35_02) == 2 | as.numeric(P5_35_02) == 3) & (as.numeric(P5_35_03) == 2 | as.numeric(P5_35_03) == 3) &
+                                             as.numeric(P5_35_04) == 2 & (as.numeric(P5_35_05) == 2 | as.numeric(P5_35_05) == 3) &
                                              as.numeric(P5_35_06) == 2 ~ 0,
-                                           as.numeric(P5_35_02) == 3 | as.numeric(P5_35_03) == 3 |
-                                             as.numeric(P5_35_04) == 3 |as.numeric(P5_35_05) == 3 |
-                                             as.numeric(P5_35_06) == 3 ~ 0,
                                            T ~ NA_real_),
           prueba_fisicas = case_when(P5_15_07 == 1  | P5_15_08 == 1 |
                                        P5_15_09 == 1| P5_15_10 == 1 | 
@@ -67,13 +64,12 @@ Main_database_2008 <- datas.df %>%
                                      as.numeric(P5_35_07) == 1 | as.numeric(P5_35_08) == 1 |
                                        as.numeric(P5_35_09) == 1 |as.numeric(P5_35_10) == 1 |
                                        as.numeric(P5_35_11) == 1 ~ 1,
-                                     P5_15_07 == 0  | P5_15_08 == 0 |
-                                       P5_15_09 == 0| P5_15_10 == 0 | 
-                                       P5_15_11 == 0~ 0,
-                                     as.numeric(P5_35_07) == 2 | as.numeric(P5_35_08) == 2 |
-                                       as.numeric(P5_35_09) == 2 |as.numeric(P5_35_10) == 2 |
+                                     P5_15_07 == 0  & P5_15_08 == 0 &
+                                       P5_15_09 == 0 & P5_15_10 == 0 &
+                                       P5_15_11 == 0 ~ 0,
+                                     as.numeric(P5_35_07) == 2 & as.numeric(P5_35_08) == 2 &
+                                       (as.numeric(P5_35_09) == 2 | as.numeric(P5_35_09) == 3 ) & as.numeric(P5_35_10) == 2 &
                                        as.numeric(P5_35_11) == 2 ~ 0,
-                                     as.numeric(P5_35_09) == 3  ~ 0,
                                      T ~ NA_real_),
           tipo_prueba = case_when(prueba_confesion     == 1 ~ "Confesión", 
                                  prueba_declaraciones == 1 ~ "Declaraciones",

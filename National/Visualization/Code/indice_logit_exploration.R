@@ -66,12 +66,12 @@ logit_dataBase.fn <- function(data = Main_database,
     filter(NSJP == 1) %>%
     filter(Delito_unico == 1) %>%
     mutate(
-      # Educacion_superior = 
-      #   case_when(
-      #     Educacion_superior == 1 ~ "Cuenta con título de educación universitaria",
-      #     Educacion_superior == 0 ~ "No cuenta con título de educación universitario",
-      #     T ~ NA_character_
-      #   ),
+      Educacion_superior =
+        case_when(
+          Educacion_superior == 1 ~ "Cuenta con título de educación universitaria",
+          Educacion_superior == 0 ~ "No cuenta con título de educación universitario",
+          T ~ NA_character_
+        ),
       Color_piel_claro       =
         case_when(
           Color_piel_claro      == 1 ~ "Color de piel claro",
