@@ -65,7 +65,7 @@ delitos_ENPOL.fn <- function(
                                                     T ~ NA_character_)) 
   
   data2plot <- Main_database1 %>%
-    filter(Anio_arresto >= 2018, !is.na(Delito_unico_ungrouped_categ)) %>%
+    filter(Anio_arresto >= 2018, !is.na(Delito_unico_ungrouped_categ), sentenciado == 1) %>%
     group_by(Delito_unico_ungrouped_categ) %>%
     summarise(n = n()) %>%
     mutate(value2plot =  100 * n / sum(n),
@@ -500,6 +500,12 @@ homicidios_ENPOL_ENVIPE.fn <- function(
                                             T~ NA)) %>% 
         filter(group_var != "Brecha")
       
+      data2plot1 <- data2plot %>%
+        filter(group_var == "Detenidos")
+      
+      data2plot2 <- data2plot %>%
+        filter(group_var == "Homicidios")
+
       colors4plot <- twoColors
       
       plt <- ggplot(data2plot, 
@@ -508,17 +514,30 @@ homicidios_ENPOL_ENVIPE.fn <- function(
                         label = labels,
                         group = group_var,
                         color = group_var)) +
-        geom_point(size = 2,
+        geom_point(data = data2plot1, 
+                   aes(x     = Anio,
+                       y     = value2plot,
+                       label = labels,
+                       group = group_var,
+                       color = group_var),
+                   size = 2,
                    show.legend = F) +
-        geom_line(size  = 1,
+        geom_line(data = data2plot1, 
+                  aes(x     = Anio,
+                      y     = value2plot,
+                      label = labels,
+                      group = group_var,
+                      color = group_var),
+                  size  = 1,
                   show.legend = F) +
-        geom_text_repel(aes(x     = Anio,
-                            y     = value2plot_Brecha,
-                            label = labels,
-                            group = group_var,
-                            color = group_var),
-                        size        = 3.514598,
-                        show.legend = F,) +
+        geom_col(data = data2plot2, 
+                    aes(x     = Anio,
+                        y     = value2plot,
+                        label = labels,
+                        group = group_var,
+                        fill = group_var,
+                        color = group_var),
+                 show.legend = F) +
         geom_text_repel(
           size        = 3.514598,
           show.legend = F,

@@ -356,21 +356,21 @@ conclusion_federales.fn <- function(
         drop_na() %>% 
         summarise(Frequency = n(), .groups = 'drop') %>% 
         group_by(juicio_abreviado) %>% 
-        mutate(values = juicio_abreviado,
+        mutate(values = fuero,
                value2plot = Frequency / sum(Frequency) * 100,
                figure = paste0(round(value2plot, 0), "%"),
-               labels = str_wrap(juicio_abreviado, width = 20))
+               labels = str_wrap(fuero, width = 20))
       
       
-      colors4plot <- c("Sólo común" = "#2a2a9A",
-                       "Sólo federal" = "#a90099")
+      colors4plot <- c("Juicio" = "#2a2a9A",
+                       "Procedimiento abreviado" = "#a90099")
       
       
       plot <- ggplot(data2plot,
                      aes(
                        x     = values, 
                        y     = value2plot,
-                       fill  = fuero,
+                       fill  = juicio_abreviado,
                        label = paste0(figure)
                      )) +
         geom_bar(stat = "identity",
