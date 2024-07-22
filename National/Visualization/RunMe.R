@@ -26,7 +26,6 @@
 
 # Required Packages, Fonts, ggplot theme, color palettes, comparison countries and other general routines are
 # loaded from the following script:
-source("Code/settings.R")
 source("Code/Parte A/proceso_justo.R")
 source("Code/Parte A/proceso_justo_percepcion.R")
 source("Code/Parte A/uso_excesivo_fuerza.R")
