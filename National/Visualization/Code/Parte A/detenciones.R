@@ -113,6 +113,21 @@ tiempo_traslado.fn <- function(
                       sum(counter, na.rm = T), NA_real_)
     ) %>%
     ungroup() %>%
+    mutate(
+      Tiempo_traslado =
+        case_when(
+          Tiempo_traslado %in% c("Hasta 30 minutos", 
+                                 "Más de 30 minutos hasta 1 hora",
+                                 "Más de 1 hora hasta 2 horas",
+                                 "Más de 2 horas hasta 4 horas") ~ "Menos de 4 horas",
+          Tiempo_traslado %in% c("Más de 4 horas hasta 6 horas",
+                                 "Más de 6 horas hasta 24 horas") ~ "Más de 4 horas hasta 24 horas",
+          Tiempo_traslado %in% c("Más de 24 horas hasta 48 horas") ~ "Más de 24 horas hasta 48 horas",
+          Tiempo_traslado %in% c("Más de 48 horas hasta 72 horas",
+                                 "Más de 72 horas") ~ "Más de 48 horas",
+          T ~ NA_character_
+        )
+    ) %>%
     group_by(Tiempo_traslado) %>%
     summarise(
       value2plot = sum(counter, na.rm = T),
@@ -135,10 +150,25 @@ tiempo_traslado.fn <- function(
       value2plot = value2plot,
       labels = category,
       figure = paste0(round(value2plot,0), "%"),
-      order_var = row_number()
+      order_var = 
+        case_when(
+          Tiempo_traslado %in% c("Menos de 2 horas", "Menos de 4 horas") ~ 1,
+          Tiempo_traslado %in% c("Más de 2 horas hasta 4 horas", "Más de 4 horas hasta 24 horas", "Más de 4 horas") ~ 2,
+          Tiempo_traslado %in% c("Más de 4 horas hasta 6 horas", "Más de 24 horas hasta 48 horas") ~ 3,
+          Tiempo_traslado %in% c("Más de 6 horas hasta 24 horas", "Más de 48 horas") ~ 4,
+          Tiempo_traslado %in% c("Más de 24 horas hasta 48 horas") ~ 5,
+          Tiempo_traslado %in% c("Más de 48 horas hasta 72 horas") ~ 6,
+          Tiempo_traslado %in% c("Más de 72 horas") ~ 7,
+          T ~ NA_real_
+        )
     )
   
-  colors4plot <- c("#009AA9", rep("#99D7DD",6), "#FA4D57", "#99D7DD")
+  colors4plot <- c("#2a2a9A", 
+                   rep("#2a2a9A", 3))
+  names(colors4plot) <- c("Menos de 4 horas",
+                          "Más de 4 horas hasta 24 horas",
+                          "Más de 24 horas hasta 48 horas",
+                          "Más de 48 horas")
   
   plot <- barsChart.fn(data.df                    = data2plot,
                        groupVar                   = F,   
@@ -178,17 +208,31 @@ tiempos_traslado.fn <- function(
   
   data_subset.df <- data.df %>%
     filter(Anio_arresto > 2014)  %>%
-    group_by(Anio_arresto) %>%
     mutate(
       counter = 1,
-      n_obs = if_else(!is.na(Tiempo_traslado), 
-                      sum(counter, na.rm = T), NA_real_)
+      Tiempo_traslado =
+        case_when(
+          Tiempo_traslado %in% c("Hasta 30 minutos", 
+                                 "Más de 30 minutos hasta 1 hora",
+                                 "Más de 1 hora hasta 2 horas",
+                                 "Más de 2 horas hasta 4 horas") ~ "Menos de 4 horas",
+          Tiempo_traslado %in% c("Más de 4 horas hasta 6 horas",
+                                 "Más de 6 horas hasta 24 horas") ~ "Más de 4 horas hasta 24 horas",
+          Tiempo_traslado %in% c("Más de 24 horas hasta 48 horas") ~ "Más de 24 horas hasta 48 horas",
+          Tiempo_traslado %in% c("Más de 48 horas hasta 72 horas",
+                                 "Más de 72 horas") ~ "Más de 48 horas",
+          T ~ NA_character_
+        )
     ) %>%
-    ungroup() %>%
     group_by(Anio_arresto, Tiempo_traslado) %>%
     summarise(
-      value2plot = sum(counter, na.rm = T)/n_obs,
-      n_obs = n_obs
+      value2plot = sum(counter, na.rm = T)
+    ) %>%
+    ungroup() %>%
+    drop_na() %>%
+    group_by(Anio_arresto) %>%
+    mutate(
+      value2plot = value2plot/sum(value2plot)
     ) %>%
     ungroup() %>%
     drop_na() %>%
@@ -199,9 +243,9 @@ tiempos_traslado.fn <- function(
                           "%"),
            category = Tiempo_traslado,
            year = as.numeric(Anio_arresto)) %>%
-    mutate(label = if_else(category == "Hasta 30 minutos" | category == "Más de 6 horas hasta 24 horas", 
-                           label, NA_character_)) %>%
-    filter(category %in% c("Hasta 30 minutos", "Más de 6 horas hasta 24 horas"))
+    mutate(label = if_else(category == "Menos de 4 horas" | category == "Más de 4 horas", 
+                           label, NA_character_)) 
+  
   
   
   # Pulling minimum and maximum available year
@@ -216,8 +260,9 @@ tiempos_traslado.fn <- function(
   
   
   # Defining colors4plot
-  colors4plot <- c("Hasta 30 minutos" = "#009AA9",
-                   "Más de 6 horas hasta 24 horas" = "#FA4D57"
+  colors4plot <- c(
+    "#009AA9",
+    "#FA4D57"
   )
   
   # Saving data points
