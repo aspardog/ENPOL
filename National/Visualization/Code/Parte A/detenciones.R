@@ -447,6 +447,8 @@ mapa_tiempo_traslado.fn <- function(
     return(filtered_data)
   })
   
+  promedio_nacional <- mean(result_df$value2plot)
+  
   Estados <- result_df %>%
     rename(ESTADO = Estado_arresto) %>%
     mutate(
@@ -457,7 +459,12 @@ mapa_tiempo_traslado.fn <- function(
           ESTADO == "Veracruz de Ignacio de la Llave" ~ "Veracruz",
           ESTADO == "México" ~ "Estado de México",
           T ~ ESTADO
-        ))
+        )) %>%
+    add_row(Tiempo_traslado = "",
+            ESTADO          = "ANacional",
+            TT              = 0,
+            value2plot      = promedio_nacional,
+            max             = promedio_nacional)
   
   
   
@@ -467,6 +474,12 @@ mapa_tiempo_traslado.fn <- function(
       `%` = round(value2plot*100, 0)
     ) %>%
     arrange(ESTADO) %>%
+    mutate(
+      ESTADO = 
+        case_when(
+          ESTADO == "ANacional" ~ "Nacional",
+          T ~ ESTADO
+        )) %>%
     select(
       Estado = ESTADO, ` `, `%`, Tiempo_traslado
     ) %>%
@@ -483,6 +496,7 @@ mapa_tiempo_traslado.fn <- function(
     width(j = " ", width = 0.5, unit = "mm") %>%
     width(j = "%", width = 0.75,   unit = "mm") %>%
     
+    bg(i = ~ Tiempo_traslado == "" & `%` >= 10 & `%` < 25, j = ' ', bg = "#99D7DD", part = "body") %>%
     bg(i = ~ Tiempo_traslado == "Hasta 30 minutos" & `%` >= 10 & `%` < 25, j = ' ', bg = "#99D7DD", part = "body") %>%
     bg(i = ~ Tiempo_traslado == "Hasta 30 minutos" & `%` >= 25 & `%` < 40, j = ' ', bg = "#33AEBA", part = "body") %>%
     bg(i = ~ Tiempo_traslado == "Hasta 30 minutos" & `%` >= 40, j = ' ', bg = "#00759D", part = "body") %>%
@@ -681,6 +695,8 @@ mapa_lugar_traslado.fn <- function(
     return(filtered_data)
   })
   
+  promedio_nacional <- mean(result_df$value2plot)
+  
   Estados <- result_df %>%
     rename(ESTADO = Estado_arresto) %>%
     mutate(
@@ -691,7 +707,12 @@ mapa_lugar_traslado.fn <- function(
           ESTADO == "Veracruz de Ignacio de la Llave" ~ "Veracruz",
           ESTADO == "México" ~ "Estado de México",
           T ~ ESTADO
-        ))
+        )) %>%
+    add_row(Primer_lugar_traslado = "",
+            ESTADO          = "ANacional",
+            PT              = 0,
+            value2plot      = promedio_nacional,
+            max             = promedio_nacional)
   
   
   quintiles <- round(quantile(round((Estados$value2plot *100), 0), probs = seq(0, 1, by = 0.2)),0)
@@ -702,8 +723,14 @@ mapa_lugar_traslado.fn <- function(
       `%` = round(value2plot*100, 0)
     ) %>%
     arrange(ESTADO) %>%
+    mutate(
+      ESTADO = 
+        case_when(
+          ESTADO == "ANacional" ~ "Nacional",
+          T ~ ESTADO
+        )) %>%
     select(
-      Estado = ESTADO, ` `, `%`, Primer_lugar_traslado
+      Estado = ESTADO, ` `, `%`
     ) %>%
     flextable() %>%
     theme_zebra(
@@ -718,9 +745,9 @@ mapa_lugar_traslado.fn <- function(
     width(j = " ", width = 0.5, unit = "mm") %>%
     width(j = "%", width = 0.75,   unit = "mm") %>%
     
-    bg(i = ~ Primer_lugar_traslado == "Agencia del Ministerio Público" & `%` >= 30 & `%` < 50, j = ' ', bg = "#99D7DD", part = "body") %>%
-    bg(i = ~ Primer_lugar_traslado == "Agencia del Ministerio Público" & `%` >= 50 & `%` < 70, j = ' ', bg = "#33AEBA", part = "body") %>%
-    bg(i = ~ Primer_lugar_traslado == "Agencia del Ministerio Público" & `%` >= 70, j = ' ', bg = "#00759D", part = "body") %>%
+    bg(i = ~  `%` >= 30 & `%` < 50, j = ' ', bg = "#99D7DD", part = "body") %>%
+    bg(i = ~  `%` >= 50 & `%` < 70, j = ' ', bg = "#33AEBA", part = "body") %>%
+    bg(i = ~  `%` >= 70, j = ' ', bg = "#00759D", part = "body") %>%
     
     align(j     = 2, 
           align = "center", 
