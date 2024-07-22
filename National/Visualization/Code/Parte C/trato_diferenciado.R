@@ -108,8 +108,47 @@ descripcion.fn <- function(
           "Main", "Second")
       )
     
-    colors4plot <- c("Main"   = "#2a2a9A", 
-                     "Second" = "#a90099")
+    if(group_var %in% "Sexo"){
+      
+      colors4plot <- c("Femenino"   = "#2a2a9A", 
+                       "Masculino"  = "#a90099")
+      
+    } else if(group_var %in% "Educacion_inferior"){
+      
+      colors4plot <- c("No cuenta con título de educación universitaria"   = "#2a2a9A", 
+                       "Cuenta con título de educación universitaria"      = "#a90099")
+      
+    } else if(group_var %in% "Color de piel oscuro"){
+      
+      colors4plot <- c("Color de piel oscuro" = "#2a2a9A",
+                       "Color de piel claro"  = "#a90099")
+      
+    } else if(group_var %in% "LGBTQ") {
+      
+      colors4plot <- c("Pertenece a la comunidad LGBTQ"     = "#2a2a9A",
+                       "No pertenece a la comunidad LGBTQ"  = "#a90099")
+      
+    } else if(group_var %in% "Etnia"){
+      
+      colors4plot <- c("Afromexicano o indígena" = "#2a2a9A",
+                       "No se identifica con ninguna etnia" = "#a90099")
+      
+    } else if (group_var %in% "Edad_menor30") {
+      
+      colors4plot <- c("Menor a 30 años" = "#2a2a9A",
+                       "Mayor o igual a 30 años" = "#a90099")
+      
+    } else if (group_var %in% "Vulnerabilidad_economica") {
+      
+      colors4plot <- c("Vulnerable económicamente" = "#2a2a9A",
+                       "No vulnerable económicamente" = "#a90099")
+      
+    } else {
+      
+      colors4plot <- c("Reporta algún tipo de discapacidad" = "#2a2a9A",
+                       "No presenta discapacidad" = "#a90099")
+      
+    } 
     
     # Create the bar chart
     plot <- barsChart.fn(

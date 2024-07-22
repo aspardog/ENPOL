@@ -24,6 +24,8 @@
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+source("Code/settings.R")
+
 # Required Packages, Fonts, ggplot theme, color palettes, comparison countries and other general routines are
 # loaded from the following script:
 source("Code/Parte A/proceso_justo.R")
