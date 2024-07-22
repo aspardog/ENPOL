@@ -355,7 +355,7 @@ conclusion_federales.fn <- function(
         group_by(juicio_abreviado, fuero) %>%
         drop_na() %>% 
         summarise(Frequency = n(), .groups = 'drop') %>% 
-        group_by(juicio_abreviado) %>% 
+        group_by(fuero) %>% 
         mutate(values = fuero,
                value2plot = Frequency / sum(Frequency) * 100,
                figure = paste0(round(value2plot, 0), "%"),
