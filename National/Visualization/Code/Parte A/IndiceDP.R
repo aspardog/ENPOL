@@ -158,7 +158,16 @@ indicador_map.fn <- function(
           ESTADO == "México" ~ "Estado de México",
           ESTADO == "Distrito Federal" ~ "Ciudad de México",
           TRUE ~ ESTADO
-        ))
+        )) 
+  
+  promedio_nacional <- mean(result_df$value2plot)
+  
+  Estados <-  Estados %>% 
+              add_row(Primer_lugar_traslado = "",
+               ESTADO          = "ANacional",
+              PT              = 0,
+              value2plot      = promedio_nacional,
+              max             = promedio_nacional)
   
   quintiles <- round(quantile(round((Estados$indice * 100), 0), probs = seq(0, 1, by = 0.2)), 0)
   
