@@ -85,6 +85,7 @@ reincidentes.fn <- function(
                          "No reincidentes" = "#a90099", 
                          "Distinto delito" = "#3273ff")
         
+        selected <- c("No reincidentes")
         
         plot <- data2plot %>% 
           ggplot(aes(
@@ -103,7 +104,19 @@ reincidentes.fn <- function(
                      color    = "white",
                      family   = "Lato Full",
                      fontface = "bold", 
-                     size = 4) +
+                     size = 4, 
+                     data = data2plot %>% ungroup() %>%
+                       filter(!values %in% selected)) +
+          geom_text( x= 3.5,
+                     aes(y    = value2plot -35, 
+                         label = figure), 
+                     #position = "stack",
+                     color    = "white",
+                     family   = "Lato Full",
+                     fontface = "bold", 
+                     size = 4, 
+                     data = data2plot %>% ungroup() %>%
+                       filter(values %in% selected)) +
           scale_fill_manual(values =  colors4plot)+
           theme_void() +
           theme(
@@ -232,9 +245,12 @@ delito_reincidencia.fn <- function(
               axis.title.y=element_blank(),
               axis.ticks.y=element_blank(),
               axis.title.x=element_blank(),
-              axis.text.y=element_text(family = "Lato Medium",
-                                       size = 3.514598*.pt,
-                                       color = "Black", hjust = 0),
+              axis.text.y=element_text(family   = "Lato Full",
+                                       face     = "bold",
+                                       size     = 3.514598*.pt,
+                                       color    = "#524F4C",
+                                       margin   = margin(0, 10, 0, 0),
+                                       hjust = 0),
               legend.title = element_blank())+
         coord_flip()
       
@@ -286,6 +302,8 @@ varios_delitos.fn <- function(
         labels = str_wrap(values, width = 20),
         ymin = c(0, head(value2plot, -1)))
     
+    selected <- c("Sólo un delito")
+    
     
     plot <- data2plot %>% 
       ggplot(aes(
@@ -304,7 +322,19 @@ varios_delitos.fn <- function(
                  color    = "white",
                  family   = "Lato Full",
                  fontface = "bold", 
-                 size = 4.514598) +
+                 size = 4.514598, 
+                 data = data2plot %>% ungroup() %>%
+                   filter(!values %in% selected)) +
+      geom_text( x= 3.5,
+                 aes(y    = value2plot-40 , 
+                     label = paste0(figure)), 
+                 # position = "stack",
+                 color    = "white",
+                 family   = "Lato Full",
+                 fontface = "bold", 
+                 size = 4.514598, 
+                 data = data2plot %>% ungroup() %>%
+                   filter(values %in% selected)) +
       scale_fill_manual(values =  c("#2a2a9A","#a90099"))+
       theme_void() +
       theme(
@@ -426,9 +456,12 @@ delito_unico.fn <- function(
               axis.title.y=element_blank(),
               axis.ticks.y=element_blank(),
               axis.title.x=element_blank(),
-              axis.text.y=element_text(family = "Lato Medium",
-                                       size = 3.514598*.pt,
-                                       color = "Black", hjust = 0),
+              axis.text.y=element_text(family   = "Lato Full",
+                                       face     = "bold",
+                                       size     = 3.514598*.pt,
+                                       color    = "#524F4C",
+                                       margin   = margin(0, 10, 0, 0),
+                                       hjust = 0),
               legend.title = element_blank())+
         coord_flip()
       
