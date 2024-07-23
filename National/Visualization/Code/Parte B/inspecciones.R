@@ -92,13 +92,11 @@ inspecciones_comportamiento.fn <- function(
             panel.grid.major.y = element_blank(),
             panel.background = element_blank(),
             panel.grid.minor = element_blank(),
-            legend.text = element_text(family = "Lato Bold"),
+            legend.text = element_text(family = "Lato Medium"),
             axis.title.y=element_blank(),
             axis.ticks.y=element_blank(),
             axis.title.x=element_blank(),
-            axis.text.y=element_text(family = "Lato Medium",
-                                     size = 3.514598*.pt,
-                                     color = "Black", hjust = 0),
+            axis.text.y=element_text(hjust = 0, size = 10),
             legend.title = element_blank())+
       coord_flip(); plt
     
@@ -189,7 +187,7 @@ inspecciones_objeto.fn <- function(
             panel.grid.major.x = element_line(color = "#D0D1D3"),
             axis.title.y       = element_blank(),
             axis.title.x       = element_blank(),
-            axis.text.y        = element_text(hjust = 1, size = 10),
+            axis.text.y        = element_text(hjust = 0, size = 10),
             plot.title = element_text(face = "bold", size = 12)); plt
     
     ggsave(plot   = plt,
