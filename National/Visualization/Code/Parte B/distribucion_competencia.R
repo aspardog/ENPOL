@@ -122,6 +122,14 @@ delitos_federales.fn <- function(
             T ~ ESTADO
           ))
     
+    promedio_nacional <- mean(Estados$Percentage)
+    
+    Estados <- Estados %>%
+               ungroup() %>% 
+                add_row(
+                        ESTADO          = "ANacional",
+                        Percentage      = promedio_nacional)
+    
     quintiles <- quantile(round(Estados$Percentage, 0), probs = seq(0, 1, by = 0.2))
     
     
@@ -140,6 +148,12 @@ delitos_federales.fn <- function(
         `%` = round(Percentage, 0)
       ) %>%
       arrange(ESTADO) %>%
+      mutate(
+        ESTADO = 
+          case_when(
+            ESTADO == "ANacional" ~ "Promedio Nacional",
+            T ~ ESTADO
+          )) %>% 
       select(
         Estado = ESTADO, ` `, `%`
       ) %>%
@@ -364,6 +378,13 @@ detenciones_federales.fn <- function(
       
       quintiles <- round(quantile(round(Estados$gap, 0), probs = seq(0, 1, by = 0.2)),0)
       
+      promedio_nacional <- mean(Estados$gap)
+      
+      Estados <- Estados %>%
+        ungroup() %>% 
+        add_row(
+          ESTADO          = "ANacional",
+          gap      = promedio_nacional)
       
       mapa <- st_read(paste0(path2SP,"/National/Exploration/Input/shp/México_Estados.shp")) %>%
         mutate( ESTADO = 
@@ -380,6 +401,12 @@ detenciones_federales.fn <- function(
           `%` = round(gap, 0)
         ) %>%
         arrange(ESTADO) %>%
+        mutate(
+          ESTADO = 
+            case_when(
+              ESTADO == "ANacional" ~ "Promedio Nacional",
+              T ~ ESTADO
+            )) %>% 
         select(
           Estado = ESTADO, ` `, `%`
         ) %>%
@@ -614,7 +641,14 @@ detenciones_estatales.fn <- function(
     
     quintiles <- round(quantile(round(Estados$gap, 0), probs = seq(0, 1, by = 0.2)),0)
     
-    
+    promedio_nacional <- mean(Estados$gap)
+
+    Estados <- Estados %>%
+      ungroup() %>% 
+      add_row(
+        ESTADO          = "ANacional",
+        gap      = promedio_nacional)
+        
     mapa <- st_read(paste0(path2SP,"/National/Exploration/Input/shp/México_Estados.shp")) %>%
       mutate( ESTADO = 
                 case_when(
@@ -630,6 +664,12 @@ detenciones_estatales.fn <- function(
         `%` = round(gap, 0)
       ) %>%
       arrange(ESTADO) %>%
+      mutate(
+        ESTADO = 
+          case_when(
+            ESTADO == "ANacional" ~ "Promedio Nacional",
+            T ~ ESTADO
+          )) %>% 
       select(
         Estado = ESTADO, ` `, `%`
       ) %>%
