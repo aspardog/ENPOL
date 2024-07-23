@@ -119,9 +119,12 @@ control_alto_impacto.fn <- function(
               axis.title.y=element_blank(),
               axis.ticks.y=element_blank(),
               axis.title.x=element_blank(),
-              axis.text.y=element_text(family = "Lato Medium",
-                                       size = 3.514598*.pt,
-                                       color = "Black", hjust = 0),
+              axis.text.y=element_text(family   = "Lato Full",
+                                       face     = "bold",
+                                       size     = 3.514598*.pt,
+                                       color    = "#524F4C",
+                                       margin   = margin(0, 10, 0, 0),
+                                       hjust = 0),
               legend.title = element_blank());p
       
       
@@ -247,10 +250,14 @@ detencion_alto_impacto.fn <- function(
           panel.grid.major.x = element_line(color = "#D0D1D3"),       
           axis.title.y       = element_blank(),
           axis.title.x       = element_blank(),
+          axis.text.y=element_text(family   = "Lato Full",
+                                   face     = "bold",
+                                   size     = 3.514598*.pt,
+                                   color    = "#524F4C",
+                                   margin   = margin(0, 10, 0, 0),
+                                   hjust = 0),
           legend.position      = "none",
-          legend.title = element_blank())
-      
-      plot
+          legend.title = element_blank());plot
       
       
       ggsave(plot   = plot,
@@ -364,6 +371,12 @@ terminacion_alto_impacto.fn <- function(
           panel.grid.major.x = element_line(color = "#D0D1D3"),       
           axis.title.y       = element_blank(),
           axis.title.x       = element_blank(),
+          axis.text.y=element_text(family   = "Lato Full",
+                                   face     = "bold",
+                                   size     = 3.514598*.pt,
+                                   color    = "#524F4C",
+                                   margin   = margin(0, 10, 0, 0),
+                                   hjust = 0),
           legend.position      = "none",
           legend.title = element_blank())
       
