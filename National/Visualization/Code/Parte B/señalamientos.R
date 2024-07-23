@@ -57,6 +57,7 @@ señalados.fn <- function(
         labels = str_wrap(values, width = 20),
         ymin = c(0, head(value2plot, -1)))
     
+    selected <- c("señalado")
     
     plot <- data2plot %>% 
       ggplot(aes(
@@ -69,13 +70,25 @@ señalados.fn <- function(
       coord_polar(theta="y") + 
       xlim(c(2, 4)) +
       geom_text( x= 3.5,
-                 aes(y    = value2plot-4 , 
+                 aes(y    = value2plot -15, 
                      label = figure), 
                  # position = "stack",
                  color    = "white",
                  family   = "Lato Full",
                  fontface = "bold", 
-                 size = 4.514598) +
+                 size = 4.514598, 
+                 data = data2plot %>% ungroup() %>%
+                   filter(!values %in% selected)) +
+      geom_text( x= 3.5,
+                 aes(y    = value2plot-15 , 
+                     label = figure), 
+                 # position = "stack",
+                 color    = "white",
+                 family   = "Lato Full",
+                 fontface = "bold", 
+                 size = 4.514598, 
+                 data = data2plot %>% ungroup() %>%
+                   filter(values %in% selected)) +
       scale_fill_manual(values =  c("#2a2a94","#a90099"))+
       theme_void() +
       theme(
@@ -89,7 +102,7 @@ señalados.fn <- function(
         panel.grid.major.x = element_line(color = "#D0D1D3"),       
         axis.title.y       = element_blank(),
         axis.title.x       = element_blank(),
-        legend.position = "none"); plot
+        legend.position = "none");plot
     
     ggsave(plot   = plot,
            file   = paste0(path2SP,"/National/Visualization",
