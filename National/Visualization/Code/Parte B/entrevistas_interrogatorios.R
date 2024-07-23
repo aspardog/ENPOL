@@ -305,7 +305,10 @@ plot <- ggplot(data2plot,
     panel.grid.major.y = element_blank(),
     panel.grid.major.x = element_line(color = "#D0D1D3"),       
     axis.title.y       = element_blank(),
-    axis.title.x       = element_blank()); plot
+    axis.title.x       = element_blank(),
+    axis.text.y=element_text(family = "Lato Medium",
+                             size = 3.514598*.pt,
+                             color = "Black", hjust = 0)); plot
 
 ggsave(plot   = plot,
        file   = paste0(path2SP,"/National/Visualization",
