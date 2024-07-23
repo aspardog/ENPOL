@@ -141,7 +141,7 @@ detencion_GN_PF.fn <- function(
                Corporacion_grupos == "Policía Federal" ) %>% 
       mutate(tipo_detencion = case_when(flagrancia  == 1 ~ "Flagrancia",
                                         orden_det   == 1 ~ "Orden de detención",
-                                        inspeccion  == 1 ~ "Inspeccion",
+                                        inspeccion  == 1 ~ "Inspección",
                                         det_ninguna == 1 ~ "Irregulares",
                                         T ~ NA_character_),
              Corporacion_grupos = case_when(Corporacion_grupos == "Policía Federal Ministerial" ~ "Policía Federal Ministerial",
@@ -305,7 +305,12 @@ federales_sentenciados.fn <- function(
               panel.grid.major.x = element_line(color = "#D0D1D3"),
               axis.title.y       = element_blank(),
               axis.title.x       = element_blank(),
-              axis.text.y        = element_text(hjust = 1, size = 10))+
+              axis.text.y=element_text(family   = "Lato Full",
+                                       face     = "bold",
+                                       size     = 3.514598*.pt,
+                                       color    = "#524F4C",
+                                       margin   = margin(0, 10, 0, 0),
+                                       hjust = 0))+
         coord_flip()
       
       plt
