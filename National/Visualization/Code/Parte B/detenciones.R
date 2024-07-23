@@ -208,6 +208,12 @@ detenciones_estado.fn <- function(
           panel.grid.major.x = element_line(color = "#D0D1D3"),       
           axis.title.y       = element_blank(),
           axis.title.x       = element_blank(),
+          axis.text.y=element_text(family   = "Lato Full",
+                                   face     = "bold",
+                                   size     = 3.514598*.pt,
+                                   color    = "#524F4C",
+                                   margin   = margin(0, 10, 0, 0),
+                                   hjust = 0),
           legend.position      = "none",
           legend.title = element_blank())
       
@@ -315,6 +321,12 @@ detencion_proceso_tiempo.fn <- function(
         panel.grid.major.x = element_line(color = "#D0D1D3"),       
         axis.title.y       = element_blank(),
         axis.title.x       = element_blank(),
+        axis.text.y=element_text(family   = "Lato Full",
+                                 face     = "bold",
+                                 size     = 3.514598*.pt,
+                                 color    = "#524F4C",
+                                 margin   = margin(0, 10, 0, 0),
+                                 hjust = 0),
         legend.position      = "none",
         legend.title = element_blank())
     
