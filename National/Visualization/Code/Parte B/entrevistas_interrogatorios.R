@@ -429,35 +429,39 @@ tortura_culpabilidad.fn <- function(
 Main_database_2008 <- data.df %>% 
   filter(Anio_arresto >= 2008,
          NSJP == 1) %>% 
-  mutate(tortura_mp = case_when(tortura_mp == 1 ~ "Tortura en el Minsterio Público", 
-                                tortura_mp == 0 ~ "No tortura en el Minsterio Público",
+  mutate(tortura_mp = case_when(tortura_mp == 1 ~ "Tortura en el\nMinisterio Público", 
+                                tortura_mp == 0 ~ "No tortura en\nel Ministerio Público",
                                       T ~ NA_character_), 
-         declaro_culpable = case_when(culpabilidad == 1 ~ "Se reconoce como culpable", 
+         identifica_culpable = case_when(culpabilidad == 1 ~ "Se reconoce como culpable", 
                                       culpabilidad == 0 ~ "No se reconoce como culpable",
-                                      T ~ NA_character_))
+                                      T ~ NA_character_),
+         declaro_culpable = case_when(
+           P4_6_4 == 1 ~ 1, 
+           T ~ 0)
+         )
 
 data2plot <- Main_database_2008 %>%
-  select(tortura_mp, declaro_culpable) %>% 
-  group_by(tortura_mp, declaro_culpable) %>%
+  select(tortura_mp, identifica_culpable, declaro_culpable) %>% 
+  group_by(tortura_mp, identifica_culpable) %>%
   drop_na() %>% 
-  summarise(Frequency = n(), .groups = 'drop') %>% 
-  group_by(declaro_culpable) %>% 
-  rename(values = tortura_mp, 
-         category = declaro_culpable) %>% 
-  mutate(value2plot = Frequency / sum(Frequency) * 100,
+  summarise(Percentage = mean(declaro_culpable, na.rm = T)) %>% 
+  group_by(identifica_culpable) %>% 
+  rename(category = identifica_culpable, 
+         values = tortura_mp) %>% 
+  mutate(value2plot = Percentage * 100,
          figure = paste0(round(value2plot, 0), "%"),
-         labels = str_wrap(values, width = 20), 
-         category = str_wrap(category, width = 20)) 
+         labels = str_wrap(category, width = 20), 
+         category = str_wrap(values, width = 20)) 
 
 
-colors4plot <- c("No se reconoce como\nculpable"  = "#2a2a94",
-                 "Se reconoce como\nculpable"     = "#a90099")
+colors4plot <- c("Tortura en el\nMinisterio Público"  = "#2a2a94",
+                 "No tortura en\nel Ministerio Público"     = "#a90099")
 
 plot <- ggplot(data2plot,
                aes(
                  x     = labels, 
                  y     = value2plot,
-                 fill  = category,
+                 fill  = values,
                  label = figure
                )) +
   geom_bar(stat = "identity",
