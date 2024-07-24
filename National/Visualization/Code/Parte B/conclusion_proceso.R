@@ -78,7 +78,7 @@ plot <- data2plot %>%
       y = (ymin + ymax) / 2, 
       label = figure
     ), 
-    x = 3.35,
+    x = 3.4,
     color = "white",
     family = "Lato Full",
     fontface = "bold", 
