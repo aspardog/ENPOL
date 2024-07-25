@@ -41,8 +41,8 @@ descripcion.fn <- function(
         TRUE ~ NA_character_
       ),
       Color_piel_oscuro = case_when(
-        Color_piel_claro == 0 ~ "Color de piel claro",
-        Color_piel_claro == 1 ~ "Color de piel oscuro",
+        Color_piel_claro == 1 ~ "Color de piel claro",
+        Color_piel_claro == 0 ~ "Color de piel oscuro",
         TRUE ~ NA_character_
       ),
       LGBTQ = case_when(
@@ -118,7 +118,7 @@ descripcion.fn <- function(
       colors4plot <- c("No cuenta con título de educación universitaria"   = "#2a2a9A", 
                        "Cuenta con título de educación universitaria"      = "#a90099")
       
-    } else if(group_var %in% "Color de piel oscuro"){
+    } else if(group_var %in% "Color_piel_oscuro"){
       
       colors4plot <- c("Color de piel oscuro" = "#2a2a9A",
                        "Color de piel claro"  = "#a90099")
