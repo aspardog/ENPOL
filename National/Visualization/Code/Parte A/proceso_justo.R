@@ -340,7 +340,8 @@ defensa_oportuna.fn <- function(
                                 P5_1    == 1 ~ "Sí",
                                 P4_1_05 == 2 ~ "No",
                                 P5_1    == 2 ~ "No",
-                                T~ NA_character_))
+                                T~ NA_character_)
+            )
   
   
   data2plot <- data_subset.df %>%
@@ -363,7 +364,8 @@ defensa_oportuna.fn <- function(
                                  T~NA_real_),
            order_value_bars = case_when(group_var == "Sí" ~ 1,
                                         group_var == "No" ~ 2,
-                                        T ~ NA_real_))
+                                        T ~ NA_real_)) %>%
+    filter(momento == "Defensa en Ministerio Público")
   
   colors4plot <- twoColors
   
@@ -374,7 +376,7 @@ defensa_oportuna.fn <- function(
     data.df                    = data2plot,
     categories_grouping_var    = data2plot$group_var,
     colors4plot                = colors4plot,
-    nbars = 2, 
+    nbars = 0, 
     orientation = "horizontal",
     percentage = F
   ) +
@@ -601,7 +603,14 @@ tribunal_imparcial.fn <- function(
   
   data_subset.df <- data.df %>%
     filter(Anio_arresto > 2014)  %>%
+    filter(sentenciado == 1) %>%
     mutate(
+      procedimiento =
+        case_when(
+          as.numeric(P5_6) == 1 ~ "Juicio",
+          as.numeric(P5_6) == 2 ~ "Procedimiento abreviado",
+          T ~ NA_character_
+        ),
       culpable_antes =
         case_when(
           P5_25 == 2 ~ 1,
@@ -609,8 +618,9 @@ tribunal_imparcial.fn <- function(
         ),
       juez_diferente =
         case_when(
-          P5_14 == 1 ~ 1,
-          P5_14 == 2 ~ 0
+          P5_14 == 1 & procedimiento != "Procedimiento abreviado" ~ 1,
+          P5_14 == 2 & procedimiento != "Procedimiento abreviado" ~ 0,
+          T ~ NA_real_
         ),
       counter = 1
     ) %>%
