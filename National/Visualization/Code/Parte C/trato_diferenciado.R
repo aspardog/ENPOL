@@ -271,14 +271,14 @@ trato_diferenciado.fn <- function(){
       group_by(.data[[group_var]]) %>%
       summarise(
         across(
-          c(indicator_general, corrupcion_general, uso_excesivo, tortura_generalizada, 
+          c(corrupcion_general, uso_excesivo, tortura_generalizada, 
             det_ninguna, procedimiento_abreviado, PPO),
           mean, 
           na.rm = TRUE,
           .names = "{col}_mean"
         ),
         across(
-          c(indicator_general, corrupcion_general, uso_excesivo, tortura_generalizada, 
+          c(corrupcion_general, uso_excesivo, tortura_generalizada, 
             det_ninguna, procedimiento_abreviado, PPO),
           sd, 
           na.rm = TRUE,
@@ -302,7 +302,6 @@ trato_diferenciado.fn <- function(){
       mutate(
         n_obs = as.numeric(n_obs),
         labels = case_when(
-          category == "indicator_general" ~ "Índice de criterios mínimos",
           category == "corrupcion_general" ~ "Uso de corrupción",
           category == "uso_excesivo" ~ "Uso excesivo de la fuerza",
           category == "tortura_generalizada" ~ "Tortura generalizada",
@@ -317,7 +316,6 @@ trato_diferenciado.fn <- function(){
       mutate(
         figure = paste0(round(values * 100, 0), "%"),
         order_values = case_when(
-          category == "indicator_general" ~ 1,
           category == "corrupcion_general" ~ 3,
           category == "uso_excesivo" ~ 2,
           category == "tortura_generalizada" ~ 4,
