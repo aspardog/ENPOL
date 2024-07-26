@@ -222,7 +222,7 @@ data_subset.df <- data.df %>%
   filter(Anio_arresto >= 2008,
          NSJP == 1) %>% 
   mutate(juicio_abreviado = case_when(P5_6  == 1 ~ "Juicio",
-                                      P5_6   == 2 ~ "Procedimeinto abreviado",
+                                      P5_6   == 2 ~ "Procedimiento abreviado",
                                       T ~ NA_character_),
          tiempo_dictar_sentencia = case_when(P5_10 == 1 ~ "Hasta seis meses",
                                              P5_10 == 2 ~ "Hasta seis meses",
