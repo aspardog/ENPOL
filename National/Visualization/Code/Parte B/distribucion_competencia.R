@@ -41,7 +41,10 @@ delitos_fuero.fn <- function(
              value2plot = values * 100,
              figure = paste0(round(value2plot, 0), "%"),
              labels = str_wrap(Value, width = 30),
-             order_var = rank(Value)) 
+             order_var = rank(Value), 
+             labels = case_when(labels == "Algunos delitos de fuero común\ny algunos de fuero federal" ~ "Ambos fueros",
+                                labels == "Sólo común" ~ "Sólo fuero común",
+                                labels == "Sólo federal" ~ "Sólo fuero federal ")) 
     
     fill_colors = c("#3273ff", "#a90099", "#2a2a9A")
     
