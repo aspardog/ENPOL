@@ -77,38 +77,64 @@ delitos_ENPOL.fn <- function(
     arrange(value2plot) %>%
     mutate(Delito = factor(Delito, levels = Delito))
   
-  colors4plot <- rep(mainColor, 26)
+  colors4plot <- c("Robo de casa habitación"                 = "#3273ff",
+                     "Robo de vehículo"                        = "#a90099" ,
+                     "Robo a negocio"                          = "#3273ff" ,
+                     "Robo en transporte público"              = "#43a9a7" ,
+                     "Robo a transeunte en vía\npública"        = "#43a9a7" ,
+                     "Robo de autopartes"                      = "#a90099" ,
+                     "Robo en forma distinta a las\nanteriores" = "#2c6d4f" ,
+                     "Posesión ilegal de drogas"               = "#2a2a94" ,
+                     "Comercio ilegal de drogas"               = "#2a2a94" ,
+                     "Lesiones"                                = "#00B67F" ,
+                     "Homicidio culposo"                       = "#2a2a94" ,
+                     "Homicidio doloso"                        = "#2a2a94" ,
+                     "Portación ilegal de armas"               = "#2a2a94" ,
+                     "Incumplimiento de 
+                   obligaciones\nde asistencia familiar"                   = "#2a2a94" ,
+                     "Violencia familiar"                      = "#2a2a94" ,
+                     "Daño a la propiedad"                     = "#EB7589" ,
+                     "Secuestro o secuestro expres"            = "#EB2D66" ,
+                     "Violación sexual"                        = "#2a2a94" ,
+                     "Fraude"                                  = "#CC7BEB" ,
+                     "Delincuencia organizada"                 = "#2a2a94" ,
+                     "Otros delitos sexuales"                  = "#A83700" ,
+                     "Exotorsión"                              = "#EB492D" ,
+                     "Privación de la libertad"                = "#EB2D66" ,
+                     "Abuso de confianza"                      = "#2a2a94" ,
+                     "Amenazas"                                = "#2a2a94" ,
+                     "Otro"                                    = "#942933" )
   
   
   plt <- ggplot(data2plot, 
                 aes(x     = Delito,
                     y     = value2plot,
                     label = labels,
-                    group = group_var,
-                    color = Delito)) +
-    geom_bar(stat = "identity", fill = colors4plot, color = colors4plot,
-             show.legend = F, width = 0.9) +
+                    group = Delito,
+                    color = Delito,
+                    fill  = Delito)) +  # Añadido fill para asegurar coincidencia
+    geom_bar(stat = "identity", show.legend = F, width = 0.9, color = "white") +
     scale_fill_manual(values = colors4plot) +
-    geom_text(aes(y    = value2plot + 5 ),
+    geom_text(aes(y    = value2plot + 2 ),
               color    = "#4a4a49",
               family   = "Lato Full",
               fontface = "bold") +
     labs(y = "% of respondents") +
-    scale_y_continuous(limits = c(0, 50),
-                       breaks = seq(0,100,20),
-                       labels = paste0(seq(0,100,20), "%"),
+    scale_y_continuous(limits = c(0, 20),
+                       breaks = seq(0, 100, 10),
+                       labels = paste0(seq(0, 100, 10), "%"),
                        position = "right") +
-    scale_x_discrete( ) +
-    expand_limits(y = c(0, 25))+
+    scale_x_discrete() +
+    expand_limits(y = c(0, 25)) +
     WJP_theme() +
     theme(panel.grid.major.y = element_blank(),
           panel.grid.major.x = element_line(color = "#D0D1D3"),
           axis.title.y       = element_blank(),
           axis.title.x       = element_blank(),
-          axis.text.y        = element_text(hjust = 1, size = 10))+
-    coord_flip()
+          axis.text.y        = element_text(hjust = 1, size = 10)) +
+    coord_flip(); plt
   
-  plt
+
   
   ggsave(plot   = plt,
          file   = paste0(
@@ -117,11 +143,12 @@ delitos_ENPOL.fn <- function(
            "/Output/Politica criminal/",
            savePath,"/Delitos victimas",
            "/Figure1_1.svg"),
-         width  = 100, 
-         height = 225,
+         width  = 180, 
+         height = 180,
          units  = "mm",
          dpi    = 72,
-         device = "svg")
+         device = "svg") 
+  
   
   return(data2plot)
   
@@ -153,7 +180,7 @@ delitos_ENVIPE.fn <- function( ){
                                    Delito_envipe == "del_11" ~ "Lesiones", 
                                    Delito_envipe == "del_12" ~ "Secuestro", 
                                    Delito_envipe == "del_13" ~ "Otros delitos sexuales", 
-                                   Delito_envipe == "del_14" ~ "Violación sexual ", 
+                                   Delito_envipe == "del_14" ~ "Violación sexual", 
                                    Delito_envipe == "del_15" ~ "Otro"))
 
 
@@ -170,37 +197,53 @@ delitos_ENVIPE.fn <- function( ){
     arrange(value2plot) %>%
     mutate(Delito = factor(Delito, levels = Delito))
   
-  colors4plot <- rep(mainColor, 15)
+  colors4plot <- c(
+                   "Robo de vehículo"                        = "#a90099" ,
+                   "Robo de autopartes"                      = "#a90099" ,
+                   "Pinta de barda u otro tipo de\nvandalismo"   = "#EB7589" ,
+                   "Secuestro"                 = "#EB2D66" ,
+                   "Entraron sin permiso y robó o\nintentó robar algo"   = "#3273ff",
+                   "Robo en la calle o en el\ntransporte público"        = "#43a9a7" ,
+                   "Otro tipo de robo"                                    = "#2c6d4f" ,
+                   "Violación sexual"                        = "#2a2a94" ,
+                   "Fraude al consumidor"                    = "#CC7BEB" ,
+                   "Fraude bancario"                         = "#CC7BEB" ,
+                   "Otros delitos sexuales"                  = "#A83700" ,
+                   "Extorsión"                              = "#EB492D" ,
+                   "Amenazas"                                = "#2a2a94" ,
+                   "Otro"                                    = "#942933",
+                   "Lesiones"                                = "#00B67F",
+                   "Otros delitos sexuales"                  = "#A83700"  )
   
   plt <- ggplot(data2plot, 
                 aes(x     = Delito,
                     y     = value2plot,
                     label = labels,
-                    group = group_var,
-                    color = Delito)) +
-    geom_bar(stat = "identity", fill = colors4plot, color = colors4plot,
-             show.legend = F, width = 0.9) +
+                    group = Delito,
+                    color = Delito,
+                    fill  = Delito)) +  # Añadido fill para asegurar coincidencia
+    geom_bar(stat = "identity", show.legend = F, width = 0.9, color = "white") +
     scale_fill_manual(values = colors4plot) +
-    geom_text(aes(y    = value2plot + 5  ),
+    geom_text(aes(y    = value2plot + 2 ),
               color    = "#4a4a49",
               family   = "Lato Full",
               fontface = "bold") +
     labs(y = "% of respondents") +
-    scale_y_continuous(limits = c(0, 50),
-                       breaks = seq(0,100,20),
-                       labels = paste0(seq(0,100,20), "%"),
+    scale_y_continuous(limits = c(0, 20),
+                       breaks = seq(0, 100, 10),
+                       labels = paste0(seq(0, 100, 10), "%"),
                        position = "right") +
-    scale_x_discrete( ) +
-    expand_limits(y = c(0, 25))+
+    scale_x_discrete() +
+    expand_limits(y = c(0, 25)) +
     WJP_theme() +
     theme(panel.grid.major.y = element_blank(),
           panel.grid.major.x = element_line(color = "#D0D1D3"),
           axis.title.y       = element_blank(),
           axis.title.x       = element_blank(),
-          axis.text.y        = element_text(hjust = 1, size = 10))+
-    coord_flip()
+          axis.text.y        = element_text(hjust = 1, size = 10)) +
+    coord_flip(); plt
   
-  plt
+
   
   
   ggsave(plot   = plt,
@@ -210,7 +253,7 @@ delitos_ENVIPE.fn <- function( ){
            "/Output/Politica criminal/",
            savePath,"/Delitos victimas",
            "/Figure1_2.svg"), 
-         width  = 100, 
+         width  = 180, 
          height = 225,
          units  = "mm",
          dpi    = 72,
@@ -647,7 +690,6 @@ data2plot <- data2plot %>%
     category == "Incumplimiento de obligaciones de asistencia familiar" ~  24,
     category == "Abuso de confianza"                           ~  25),
     category = str_wrap(category, width = 30))
-
 
 colors4plot <- c("#2a2a9A", "#a90099")
 
