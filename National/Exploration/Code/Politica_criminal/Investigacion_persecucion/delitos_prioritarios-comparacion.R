@@ -104,8 +104,8 @@ data2plot <- data2plot %>%
                                           Delito == "Fraude"                                    ~  "Fraude",
                                           Delito == "Otro tipo de robo"                            ~  "Otro tipo de robo",
                                           Delito == "Robo en forma distinta a las anteriores"      ~  "Otro tipo de robo",
-                                          Delito == "Robo de vehículo"                             ~  "Robo de vehículo",
-                                          Delito == "Robo de autopartes"                             ~  "Robo de vehículo",
+                                          Delito == "Robo de vehículo"                             ~  "Robo de vehículo o autopartes",
+                                          Delito == "Robo de autopartes"                             ~  "Robo de vehículo o autopartes",
                                           Delito == "Lesiones"                                     ~  "Lesiones",
                                           Delito == "Violación sexual"                             ~  "Violación sexual",
                                           Delito == "Secuestro"                                    ~  "Secuestro",
@@ -127,7 +127,7 @@ data2plot <- data2plot %>%
           category == "Extorsión"                                   ~  4,
           category == "Fraude"                                       ~  5,
           category == "Otro tipo de robo"                            ~  8,
-          category == "Robo de vehículo"                             ~  0,
+          category == "Robo de vehículo o autopartes"                 ~  0,
           category == "Lesiones"                                     ~  10,
           category == "Violación sexual"                             ~  11,
           category == "Secuestro"                                    ~  12,
@@ -171,7 +171,13 @@ plot <- ggplot(data2plot,
     panel.grid.major.y = element_blank(),
     panel.grid.major.x = element_line(color = "#D0D1D3"),       
     axis.title.y       = element_blank(),
-    axis.title.x       = element_blank());plot
+    axis.title.x       = element_blank(),
+    axis.text.y=element_text(family   = "Lato Full",
+                             face     = "bold",
+                             size     = 3.514598*.pt,
+                             color    = "#524F4C",
+                             margin   = margin(0, 10, 0, 0),
+                             hjust = 0));plot
 
 
 library(ggbump)
