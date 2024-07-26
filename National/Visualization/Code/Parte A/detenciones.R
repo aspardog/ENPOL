@@ -508,6 +508,7 @@ mapa_tiempo_traslado.fn <- function(
           ESTADO == "Michoacán de Ocampo"  ~ "Michoacán",
           ESTADO == "Veracruz de Ignacio de la Llave" ~ "Veracruz",
           ESTADO == "México" ~ "Estado de México",
+          ESTADO == "Distrito Federal" ~ "Ciudad de México",
           T ~ ESTADO
         ))
   
@@ -676,7 +677,7 @@ mapa_tiempo_traslado.fn <- function(
   
   viz <- wrap_elements(tpanel) + p + wrap_elements(leyend) +
     plot_layout(ncol = 3, nrow = 3, widths = c(1, 3.25,0.4), heights = c(1,.2,0.25), design = layout)
-  # plot(viz) 
+  plot(viz) 
   
   
   ggsave(plot = viz, 
@@ -742,9 +743,20 @@ mapa_lugar_traslado.fn <- function(
           ESTADO == "Michoacán de Ocampo"  ~ "Michoacán",
           ESTADO == "Veracruz de Ignacio de la Llave" ~ "Veracruz",
           ESTADO == "México" ~ "Estado de México",
+          ESTADO == "Distrito Federal" ~ "Ciudad de México",
           T ~ ESTADO
         ))
   
+  promedio_nacional <- mean(Estados$value2plot)
+  
+  Estados <- Estados %>%
+    ungroup() %>% 
+    add_row(
+      Primer_lugar_traslado = "",  
+      PT              = 0,    
+      ESTADO          = "ANacional",
+      value2plot      = promedio_nacional,
+      max             = 0)
   
   quintiles <- round(quantile(round((Estados$value2plot *100), 0), probs = seq(0, 1, by = 0.2)),0)
   
@@ -754,8 +766,14 @@ mapa_lugar_traslado.fn <- function(
       `%` = round(value2plot*100, 0)
     ) %>%
     arrange(ESTADO) %>%
+    mutate(
+      ESTADO = 
+        case_when(
+          ESTADO == "ANacional" ~ "Promedio Nacional",
+          T ~ ESTADO
+        )) %>% 
     select(
-      Estado = ESTADO, ` `, `%`, Primer_lugar_traslado
+      Estado = ESTADO, ` `, `%`
     ) %>%
     flextable() %>%
     theme_zebra(
@@ -770,9 +788,9 @@ mapa_lugar_traslado.fn <- function(
     width(j = " ", width = 0.5, unit = "mm") %>%
     width(j = "%", width = 0.75,   unit = "mm") %>%
     
-    bg(i = ~ Primer_lugar_traslado == "Agencia del Ministerio Público" & `%` >= 30 & `%` < 50, j = ' ', bg = "#99D7DD", part = "body") %>%
-    bg(i = ~ Primer_lugar_traslado == "Agencia del Ministerio Público" & `%` >= 50 & `%` < 70, j = ' ', bg = "#33AEBA", part = "body") %>%
-    bg(i = ~ Primer_lugar_traslado == "Agencia del Ministerio Público" & `%` >= 70, j = ' ', bg = "#00759D", part = "body") %>%
+    bg(i = ~ `%` >= 30 & `%` < 50, j = ' ', bg = "#99D7DD", part = "body") %>%
+    bg(i = ~ `%` >= 50 & `%` < 70, j = ' ', bg = "#33AEBA", part = "body") %>%
+    bg(i = ~ `%` >= 70, j = ' ', bg = "#00759D", part = "body") %>%
     
     align(j     = 2, 
           align = "center", 
