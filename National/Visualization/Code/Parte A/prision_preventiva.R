@@ -64,13 +64,16 @@ pp_proporcion.fn <- function(
         T ~ NA_real_)
     )
   
-  colors4plot <- rep(mainColor,2)
+  
+  colors4plot <- c("En prisión preventiva" = "#2a2a9A",
+                   "En libertad" ="#a90099")
+  
   plot <- barsChart.fn(data.df                    = data2plot,
                        groupVar                   = F,   
                        categories_grouping_var    = labels,
                        colors4plot                = colors4plot, 
                        order                      = T,
-                       orientation                = "horizontal")
+                       orientation                = "horizontal"); plot
   
   ggsave(plot = plot, 
          filename = paste0(path2SP,
