@@ -66,6 +66,7 @@ mapa <- st_read(paste0(path2SP,"/National/Visualization/Input/shp/México_Estado
     ESTADO = 
       case_when(
         ESTADO == "México" ~ "Estado de México",
+        ESTADO == "Distrito Federal" ~ "Ciudad de México",
         T ~ ESTADO
       )
   )
