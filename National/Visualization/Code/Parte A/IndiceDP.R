@@ -160,14 +160,12 @@ indicador_map.fn <- function(
           TRUE ~ ESTADO
         )) 
   
-  promedio_nacional <- mean(result_df$value2plot)
+  promedio_nacional <- mean(Estados$indice)
   
   Estados <-  Estados %>% 
-              add_row(Primer_lugar_traslado = "",
+              add_row(
                ESTADO          = "ANacional",
-              PT              = 0,
-              value2plot      = promedio_nacional,
-              max             = promedio_nacional)
+              indice      = promedio_nacional)
   
   quintiles <- round(quantile(round((Estados$indice * 100), 0), probs = seq(0, 1, by = 0.2)), 0)
   
@@ -177,6 +175,12 @@ indicador_map.fn <- function(
       `%` = round(indice * 100, 0)
     ) %>%
     arrange(ESTADO) %>%
+    mutate(
+      ESTADO = 
+        case_when(
+          ESTADO == "ANacional" ~ "Promedio Nacional",
+          T ~ ESTADO
+        )) %>% 
     select(
       Estado = ESTADO, ` `, `%`
     ) %>%
