@@ -41,8 +41,8 @@ descripcion.fn <- function(
         TRUE ~ NA_character_
       ),
       Color_piel_oscuro = case_when(
-        Color_piel_claro == 1 ~ "Color de piel claro",
-        Color_piel_claro == 0 ~ "Color de piel oscuro",
+        Color_piel_oscuro == 0 ~ "Color de piel claro",
+        Color_piel_oscuro == 1 ~ "Color de piel oscuro",
         TRUE ~ NA_character_
       ),
       LGBTQ = case_when(
@@ -231,8 +231,8 @@ trato_diferenciado.fn <- function(){
         TRUE ~ NA_character_
       ),
       Color_piel_oscuro = case_when(
-        Color_piel_claro == 0 ~ "Color de piel claro",
-        Color_piel_claro == 1 ~ "Color de piel oscuro",
+        Color_piel_oscuro == 0 ~ "Color de piel claro",
+        Color_piel_oscuro == 1 ~ "Color de piel oscuro",
         TRUE ~ NA_character_
       ),
       LGBTQ = case_when(
