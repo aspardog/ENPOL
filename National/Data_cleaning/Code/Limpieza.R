@@ -4800,6 +4800,9 @@ Main_database %<>%
     Color_piel_claro = case_when(Color_piel_promedio >= 9  ~ 1,
                                  Color_piel_promedio < 9 ~ 0,
                                  T ~ NA),
+    Color_piel_oscuro = case_when(Color_piel_promedio >= 6  ~ 1,
+                                 Color_piel_promedio < 6 ~ 0,
+                                 T ~ NA),
     
     # Educación obligatoria (Bachillerato y homologos 15 de educación)
     
@@ -4849,13 +4852,13 @@ Main_database %<>%
                                  Ingreso == "> 11 mil" ~ 0,
                                  T ~ NA
                                  ),
-    vulnerabilidad_economica = case_when(P2_14_1 == "1" |
-                                           P2_14_3 == "1" |
-                                           P2_14_6 == "1" ~ 0,
-                                           P2_14_1 == "2" &
-                                           P2_14_3 == "2" &
-                                           P2_14_6 == "2" ~ 1,
-                                           T ~ NA_real_),
+    vulnerabilidad_economica = case_when(P2_14_1 == "2" |
+                                         P2_14_3 == "2" |
+                                         P2_14_6 == "2" ~ 1,
+                                         P2_14_1 == "1" &
+                                         P2_14_3 == "1" &
+                                         P2_14_6 == "1" ~ 0,
+                                         T ~ NA_real_),
     discapacidad = case_when(P1_31_1 == "1"|
                              P1_31_2 == "1"|
                              P1_31_3 == "1"|
@@ -5473,9 +5476,9 @@ old_enpol <- left_join(old_enpol1, old_enpol2, by = "id_per") %>%
     sentenciado = case_when(sentenciado == 2 ~ 1,
                             sentenciado == 1 ~ 0,
                             sentenciado == 3 ~ NA_real_),
-    vulnerabilidad_economica = case_when(p2_18_1 == 1 | p2_18_3 == 1 | p2_18_6 == 1 ~ 0,
-                                         p2_18_1 == 2 & p2_18_3 == 2 & p2_18_6 == 2 ~ 1,
-                                         T ~ NA_real_),
+    vulnerabilidad_economica = case_when(p2_18_1 == 1 & p2_18_3 == 1 & p2_18_6 == 1 ~ 0,
+                                          p2_18_1 == 2 | p2_18_3 == 2 |  p2_18_6 == 2 ~ 1,
+                                          T ~ NA_real_),
     Estado_arresto = case_when(p3_4 == 01 ~ "Aguascalientes",
                                p3_4 == 02 ~ "Baja California" ,
                                p3_4 == 03 ~ "Baja California Sur",
