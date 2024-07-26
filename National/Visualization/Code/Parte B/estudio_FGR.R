@@ -364,7 +364,9 @@ conclusion_federales.fn <- function(
         mutate(values = fuero,
                value2plot = Frequency / sum(Frequency) * 100,
                figure = paste0(round(value2plot, 0), "%"),
-               labels = str_wrap(fuero, width = 20))
+               labels = str_wrap(fuero, width = 20),
+               values = case_when(values == "Sólo común" ~ "Sólo fuero común",
+                                  values == "Sólo federal" ~ "Sólo fuero federal"))
       
       
       colors4plot <- c("Juicio" = "#2a2a9A",
