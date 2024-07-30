@@ -172,7 +172,7 @@ delito_reincidencia.fn <- function(
                                                P9_2_04 == "1" | P9_2_05 == "1" | P9_2_06 == "1" |
                                                P9_2_07 == "1" ~ "Robos",
                                              Delito_gr_2_drogas == 1 &
-                                               P9_2_08 == "1" | P9_2_09 == "1"  ~ "Posesión o Comercio\n de Drogas",
+                                               P9_2_08 == "1" | P9_2_09 == "1"  ~ "Posesión o comercio\n de drogas",
                                              Delito_gr_3_del_org == 1 &
                                                P9_2_20 == "1"   ~ "Mismo delito-organizada",
                                              Delito_gr_4_lesiones &
@@ -188,7 +188,7 @@ delito_reincidencia.fn <- function(
                                              Delito_gr_9_secuestro &
                                                P9_2_17 == "1" | P9_2_23 == "1" ~ "Secuestro",
                                              Delito_gr_10_sexuales &
-                                               P9_2_18 == "1" | P9_2_21 == "1" ~ "Delitos Sexuales",
+                                               P9_2_18 == "1" | P9_2_21 == "1" ~ "Delitos sexuales",
                                              Delito_gr_11_extorsion &
                                                P9_2_22 == "1"~ "Mismo delito-extorsion",
                                              Delito_gr_12_fraude &
