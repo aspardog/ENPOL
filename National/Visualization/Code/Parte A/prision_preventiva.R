@@ -337,7 +337,7 @@ ppo_defensa.fn <- function(
   
   data_subset.df <- data.df %>%
     filter(tipo_prision_preventiva == "Prisión Preventiva Oficiosa") %>%
-    select(defensa_juez = P5_1, defensa_mp = P4_1_05) %>%
+    select(defensa_juez = P5_2_5, defensa_mp = P4_1_05) %>%
     mutate(
       defensa_juez =
         case_when(
