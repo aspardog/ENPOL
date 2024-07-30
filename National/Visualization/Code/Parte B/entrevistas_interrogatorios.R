@@ -341,8 +341,8 @@ tortura_inocencia.fn <- function(
 Main_database_2008 <- data.df %>% 
   filter(Anio_arresto >= 2008,
          NSJP == 1) %>% 
-  mutate(declaro_culpable = case_when(culpabilidad == 1 ~ "Se reconoce como culpable", 
-                                      culpabilidad == 0 ~ "No se reconoce como culpable",
+  mutate(declaro_culpable = case_when(culpabilidad == 1 ~ "Se auto identifica como culpable", 
+                                      culpabilidad == 0 ~ "Se auto identifica como inocente",
                                       T ~ NA_character_))
 
 data2plot <- Main_database_2008 %>%
@@ -432,8 +432,8 @@ Main_database_2008 <- data.df %>%
   mutate(tortura_mp = case_when(tortura_mp == 1 ~ "Tortura en el\nMinisterio Público", 
                                 tortura_mp == 0 ~ "No tortura en\nel Ministerio Público",
                                       T ~ NA_character_), 
-         identifica_culpable = case_when(culpabilidad == 1 ~ "Se reconoce como culpable", 
-                                      culpabilidad == 0 ~ "No se reconoce como culpable",
+         identifica_culpable = case_when(culpabilidad == 1 ~ "Se auto identifica como culpable", 
+                                      culpabilidad == 0 ~ "Se auto identifica como inocente",
                                       T ~ NA_character_),
          declaro_culpable = case_when(
            P4_6_4 == 1 ~ 1, 
@@ -454,31 +454,30 @@ data2plot <- Main_database_2008 %>%
          category = str_wrap(values, width = 20)) 
 
 
-colors4plot <- c("Tortura en el\nMinisterio Público"  = "#2a2a94",
-                 "No tortura en\nel Ministerio Público"     = "#a90099")
+colors4plot <- c("Tortura en el\nMinisterio Público"        = "#FA4D57",
+                 "No tortura en el\nMinisterio Público"     = "#009AA9")
 
 plot <- ggplot(data2plot,
                aes(
                  x     = labels, 
                  y     = value2plot,
-                 fill  = values,
+                 fill  = category,
                  label = figure
                )) +
   geom_bar(stat = "identity",
            show.legend = FALSE, width = 0.9, position = "dodge")+
-  geom_text(aes(y    = value2plot+ 10), 
+  geom_text(aes(y    = value2plot + 10), 
             position = position_dodge(width = 0.5),
             color    = "black",
             family   = "Lato Full",
             fontface = "bold", 
             size = 3.514598)  +
-  coord_flip()+
   geom_vline(xintercept = 5.5, linetype = "dashed", color = "black") +
   scale_fill_manual(values = colors4plot) +
   scale_y_continuous(limits = c(0, 105),
                      breaks = seq(0,100,20),
                      labels = paste0(seq(0,100,20), "%"),
-                     position = "right") +
+                     position = "left") +
   theme(
     panel.background   = element_blank(),
     plot.background    = element_blank(),

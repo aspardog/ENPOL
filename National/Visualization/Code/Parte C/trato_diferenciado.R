@@ -36,8 +36,8 @@ descripcion.fn <- function(
   data_subset.df <- master_data.df %>%
     mutate(
       Educacion_inferior = case_when(
-        Educacion_superior == 0 ~ "Cuenta con título de educación universitaria",
-        Educacion_superior == 1 ~ "No cuenta con título de educación universitaria",
+        Educacion_superior == 1 ~ "Cuenta con título de educación universitaria",
+        Educacion_superior == 0 ~ "No cuenta con título de educación universitaria",
         TRUE ~ NA_character_
       ),
       Color_piel_oscuro = case_when(
@@ -327,7 +327,7 @@ trato_diferenciado.fn <- function(){
           category == "tortura_generalizada" ~ 4,
           category == "det_ninguna" ~ 5,
           category == "procedimiento_abreviado" ~ 7,
-          category == "PPO" ~ 6
+          category == "ppo" ~ 6
         )
       ) %>%
       mutate(
