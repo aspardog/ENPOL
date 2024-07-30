@@ -259,27 +259,34 @@ trato_diferenciado.fn <- function(){
         discapacidad == 1 ~ "Reporta algún tipo de discapacidad",
         discapacidad == 0 ~ "No presenta discapacidad",
         TRUE ~ NA_character_
-      )
+      ),
+      ppo = 
+        case_when(
+          tipo_prision_preventiva %in% c("Prisión Preventiva Oficiosa") ~ 1,
+          tipo_prision_preventiva %in% c("Prisión Preventiva Justificada",
+                                         "Proceso en libertad") ~ 0
+        )
     )
   
   # Loop over the grouping variables
   for (group_var in grouping_vars) {
     
     data2plot <- data_subset.df %>%
-      group_by(.data[[group_var]]) %>%
+      rename(group_var = all_of(group_var)) %>%
+      group_by(group_var) %>%
       mutate(nobs = n()) %>%
-      group_by(.data[[group_var]]) %>%
+      group_by(group_var) %>%
       summarise(
         across(
           c(corrupcion_general, uso_excesivo, tortura_generalizada, 
-            det_ninguna, procedimiento_abreviado, PPO),
+            det_ninguna, procedimiento_abreviado, ppo),
           mean, 
           na.rm = TRUE,
           .names = "{col}_mean"
         ),
         across(
           c(corrupcion_general, uso_excesivo, tortura_generalizada, 
-            det_ninguna, procedimiento_abreviado, PPO),
+            det_ninguna, procedimiento_abreviado, ppo),
           sd, 
           na.rm = TRUE,
           .names = "{col}_sd"
@@ -288,14 +295,13 @@ trato_diferenciado.fn <- function(){
         n_obs = as.character(n_obs)
       ) %>%
       drop_na() %>%
-      pivot_longer(!c(.data[[group_var]], n_obs),
+      pivot_longer(!c(group_var, n_obs),
                    names_to = c("category", "stat"),
                    names_pattern = "(.*)_(.*)",
                    values_to = "value") %>%
-      pivot_wider(c(category, .data[[group_var]], n_obs),
+      pivot_wider(c(category, group_var, n_obs),
                   names_from = stat,
-                  values_from = value) %>%
-      rename(group_var = .data[[group_var]])
+                  values_from = value) 
     
     # Data transformation for plotting
     data2plot <- data2plot %>%
@@ -307,7 +313,7 @@ trato_diferenciado.fn <- function(){
           category == "tortura_generalizada" ~ "Tortura generalizada",
           category == "det_ninguna" ~ "Detenciones irregulares",
           category == "procedimiento_abreviado" ~ "Uso de procedimiento abreviado",
-          category == "PPO" ~ "Uso de prisión preventiva oficiosa"
+          category == "ppo" ~ "Uso de prisión preventiva oficiosa"
         ),
         lower = mean - qt(1 - alpha / 2, (n() - 1)) * sd / sqrt(n_obs),
         upper = mean + qt(1 - alpha / 2, (n() - 1)) * sd / sqrt(n_obs)

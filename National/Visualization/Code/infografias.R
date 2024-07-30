@@ -73,28 +73,28 @@ data_subset.df <- master_data.df %>%
       ),
     claridad_mp =
       case_when(
-        P5_17_3 == 1 | P5_17_3 == 2~ 1,
-        P5_17_3 == 3 | P5_17_3 == 4 ~ 0
+        P5_17_3 == 1 | P5_17_3 == 2 | P5_37_3 == 1 | P5_37_3 == 2 ~ 1,
+        P5_17_3 == 3 | P5_17_3 == 4 | P5_37_3 == 3 | P5_37_3 == 4 ~ 0
       ),
     claridad_juez =
       case_when(
-        P5_17_2 == 1 | P5_17_2 == 2~ 1,
-        P5_17_2 == 3 | P5_17_2 == 4 ~ 0
+        P5_17_2 == 1 | P5_17_2 == 2 | P5_37_2 == 1 | P5_37_2 == 2 ~ 1,
+        P5_17_2 == 3 | P5_17_2 == 4 | P5_37_2 == 3 | P5_37_2 == 4 ~ 0
       ),
     claridad_defensor =
       case_when(
-        P5_17_1 == 1 | P5_17_1 == 2~ 1,
-        P5_17_1 == 3 | P5_17_1 == 4 ~ 0
+        P5_17_1 == 1 | P5_17_1 == 2 | P5_37_1 == 1 | P5_37_1 == 2 ~ 1,
+        P5_17_1 == 3 | P5_17_1 == 4 | P5_37_1 == 3 | P5_37_1 == 4 ~ 0
       ),
     claridad_defendido =
       case_when(
-        P5_17_4 == 1 | P5_17_4 == 2~ 1,
-        P5_17_4 == 3 | P5_17_4 == 4 ~ 0
+        P5_17_4 == 1 | P5_17_4 == 2 | P5_37_4 == 1 | P5_37_4 == 2 ~ 1,
+        P5_17_4 == 3 | P5_17_4 == 4 | P5_37_4 == 3 | P5_37_4 == 4 ~ 0
       ),
     podia_escuchar = 
       case_when(
-        P5_20_4 == 1 ~ 1,
-        P5_20_4 == 2 ~ 0
+        P5_20_4 == 1 | P5_40_4 == 1 ~ 1,
+        P5_20_4 == 2 | P5_40_4 == 2 ~ 0
       ),
     Tiempo_traslado =
       case_when(
@@ -529,3 +529,40 @@ data_subset.df <- master_data.df %>%
                                nsmall = 0),
                         "%")
   ) 
+
+
+
+
+
+data_subset.df <- master_data.df %>%
+  mutate(
+    asesoria_abogado =
+      case_when(
+        P4_1_05 == 1 ~ 1,
+        P4_1_05 == 2 ~ 0
+      ),
+    
+    abogado_antes =
+      case_when(
+        P5_1 == 1 ~ 1,
+        P5_1 == 2 ~ 0
+      ),
+    abogado_inicial = 
+      case_when(
+        P5_2_5 == 1 ~ 1,
+        P5_2_5 == 2 ~ 0
+      ),
+    abogado_publico =
+      case_when(
+        abogado_publico == 1 ~ 1,
+        abogado_publico == 0 ~ 0
+      )
+  ) %>%
+  filter(abogado_antes == 1) %>%
+  mutate(counter = 1) %>%
+  group_by(abogado_publico) %>%
+  summarise(counter = sum(counter, na.rm = T)) %>%
+  drop_na() %>%
+  mutate(
+    final_value = counter/sum(counter)
+  )

@@ -22,7 +22,7 @@ p_load(char = c(
   "haven", "readxl", "writexl", "openxlsx",
   
   # Utilities
-  "margins", "quarto", "kableExtra", "WJPr", "sandwich",
+  "margins", "quarto", "kableExtra", "WJPr", "sandwich", "rdbnomics",
   
   # Good 'ol Tidyverse
   "tidyverse",
