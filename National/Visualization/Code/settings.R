@@ -142,7 +142,7 @@ sixColors      <- c("#2a2a9A", "#a90099", "#3273ff", "#EFA700", "#00B67F", "#A68
 logit_dataBase.fn <- function(data = Main_database,
                               selectables = c("Sexo", 
                                               "Educacion_superior", 
-                                              "Color_piel_claro", 
+                                              "Color_piel_oscuro", 
                                               "LGBTQ", 
                                               "Etnia", 
                                               # "Edad_menor30", 
@@ -162,10 +162,10 @@ logit_dataBase.fn <- function(data = Main_database,
           Educacion_superior == 0 ~ "No cuenta con título de educación universitario",
           T ~ NA_character_
         ),
-      Color_piel_claro       =
+      Color_piel_oscuro       =
         case_when(
-          Color_piel_claro      == 1 ~ "Color de piel claro",
-          Color_piel_claro      == 0 ~ "Color de piel oscuro",
+          Color_piel_oscuro      == 1 ~ "Color de piel oscuro",
+          Color_piel_oscuro      == 0 ~ "Color de piel claro",
           T ~ NA_character_
         ),
       LGBTQ                 = 
@@ -218,10 +218,10 @@ logit_dataBase.fn <- function(data = Main_database,
           Sexo %in% "Femenino",
           "ZFemenino", Sexo
         ),
-      Color_piel_claro       =
+      Color_piel_oscuro       =
         if_else(
-          Color_piel_claro %in% "Color de piel claro",
-          "ZColor de piel claro", Color_piel_claro
+          Color_piel_oscuro %in% "Color de piel oscuro",
+          "ZColor de piel oscuro", Color_piel_oscuro
         ),
       LGBTQ                 =
         if_else(
@@ -249,7 +249,7 @@ logit_dataBase.fn <- function(data = Main_database,
           "ZReporta algún tipo de discapacidad", discapacidad
         ),
     ) %>%
-    arrange(Sexo, Color_piel_claro, LGBTQ, Etnia,  Educacion_superior,
+    arrange(Sexo, Color_piel_oscuro, LGBTQ, Etnia,  Educacion_superior,
             Delito_unico_categ, Estado_arresto, vulnerabilidad_economica, discapacidad)
   
   formula <- selectables %>%
@@ -283,7 +283,7 @@ logit_dataBase.fn <- function(data = Main_database,
   ) %>%
     filter(factor %in% c("SexoZFemenino", 
                          "LGBTQZPertenece a la comunidad LGBTQ", 
-                         "Color_piel_claroZColor de piel claro", 
+                         "Color_piel_oscuroZColor de piel oscuro", 
                          "EtniaZAfromexicano o indígena",
                          "Edad_menor30ZMenor a 30 años", 
                          "vulnerabilidad_economicaZVulnerable economicamente", 
@@ -295,7 +295,7 @@ logit_dataBase.fn <- function(data = Main_database,
                           "LGBTQZPertenece a la comunidad LGBTQ"                     = "Perteneciente a \ncomunidad LGBTQ",
                           "EtniaZAfromexicano o indígena"                            = "Afromexicano/a o \nindígena",
                           # "Edad_menor30ZMenor a 30 años"                             = "Menor a 30 años",
-                          "Color_piel_claroZColor de piel claro"                     = "Color de piel \nclaro",
+                          "Color_piel_oscuroZColor de piel oscuro"                     = "Color de piel \noscuro",
                           "vulnerabilidad_economicaZVulnerable economicamente"       = "Vulnerable \neconómicamente",
                           "discapacidadZReporta algún tipo de discapacidad"          = "Persona con \ndiscapacidad",
                           "Educacion_superiorZCuenta con título de educación universitaria" = "Con educación \nuniveristaria"
@@ -309,7 +309,7 @@ logit_dataBase.fn <- function(data = Main_database,
                # factor == "Menor a 30 años"                        ~ 3,
                factor == "Con educación \nuniveristaria"          ~ 3,
                factor == "Afromexicano/a o \nindígena"            ~ 4,
-               factor == "Color de piel \nclaro"                  ~ 5,
+               factor == "Color de piel \noscuro"                  ~ 5,
                factor == "Vulnerable \neconómicamente"            ~ 6,
                factor == "Persona con \ndiscapacidad"             ~ 7,
              ),
