@@ -434,8 +434,8 @@ percepcion_culpabilidad.fn <- function(
         ),
       culpabilidad = 
         case_when(
-          as.numeric(P3_1) == 1 | as.numeric(P3_1) == 2 ~ "Autorreconocimiento como culpable",
-          as.numeric(P3_1) == 3 | as.numeric(P3_1) == 4 ~ "Autorreconocimiento como inocente",
+          as.numeric(P3_1) == 1 | as.numeric(P3_1) == 2 ~ "Autoidentificación como culpable",
+          as.numeric(P3_1) == 3 | as.numeric(P3_1) == 4 ~ "Autoidentificación como inocente",
           T ~ NA_character_
         ),
       counter = 1
