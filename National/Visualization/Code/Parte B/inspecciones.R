@@ -157,7 +157,7 @@ inspecciones_objeto.fn <- function(
       filter(encontro_sinsembrar == 1, 
              Frequency >= 10) %>% 
       mutate(order = rank(-value2plot, ties.method = "first"),
-             values = case_when( values == "armas" ~ "Posesión ilegal de armas", 
+             values = case_when( values == "armas" ~ "Portación ilegal de armas", 
                                  values == "drogas" ~ "Posesión y comercio \n de drogas",
                                  values == "otro" ~ "Otro delito distinto",
                                  values == "org" ~ "Delincuencia organizada",
