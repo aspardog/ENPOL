@@ -78,47 +78,53 @@ Main_database_2008 <- datas.df %>%
                                  T ~ NA_character_))
 
 
-
 data2plot <- Main_database_2008 %>%
-  select(tipo_prision_preventiva, tipo_prueba) %>% 
+  select(tipo_prision_preventiva, prueba_confesion, prueba_declaraciones, prueba_fisicas) %>% 
+  pivot_longer(cols = c(prueba_confesion, prueba_declaraciones, prueba_fisicas), names_to = "tipo_prueba", values_to = "value2plot") %>%
   group_by(tipo_prision_preventiva, tipo_prueba) %>%
+  summarise(value2plot = mean(value2plot, na.rm = T)) %>%
   drop_na() %>% 
-  summarise(Frequency = n(), .groups = 'drop') %>% 
-  group_by(tipo_prision_preventiva) %>% 
   rename(values = tipo_prueba, 
          category = tipo_prision_preventiva) %>% 
-  mutate(value2plot = Frequency / sum(Frequency) * 100,
-         figure = paste0(round(value2plot, 0), "%"),
+  mutate(figure = paste0(round(value2plot*100, 0), "%"),
+         category = str_wrap(category, width = 20),
          labels = str_wrap(values, width = 20), 
-         category = str_wrap(category, width = 20)) 
+         ) %>%
+  mutate(
+    labels = 
+      case_when(
+        labels == "prueba_confesion" ~ "Confesiones",
+        labels == "prueba_declaraciones" ~ "Declaraciones",
+        labels == "prueba_fisicas" ~ "Físicas"
+      )
+  )
 
 
-colors4plot <- c("Confesión"     = "#2a2a94",
-                 "Física"        = "#a90099",
-                 "Declaraciones" = "#3273ff",
-                 "Ninguna"       = "#fa4d57")
+colors4plot <- c("Proceso en libertad"     = "#2a2a94",
+                 "Prisión Preventiva\nOficiosa"        = "#a90099",
+                 "Prisión Preventiva\nJustificada" = "#3273ff")
 
 
 plot <- ggplot(data2plot,
                aes(
-                 x     = category, 
+                 x     = labels, 
                  y     = value2plot,
-                 fill  = values,
+                 fill  = category,
                  label = figure
                )) +
   geom_bar(stat = "identity",
-           show.legend = FALSE, width = 0.9, position = "stack")+
-  geom_text(aes(y    = value2plot), 
-            position = position_stack(vjust = 0.5),
-            color    = "white",
+           show.legend = FALSE, width = 0.9, position = "dodge")+
+  geom_text(aes(y    = value2plot + 0.05), 
+            position = position_dodge(width = 0.9),
+            color    = "black",
             family   = "Lato Full",
             fontface = "bold", 
             size = 3.514598)  +
   coord_flip()+
   geom_vline(xintercept = 5.5, linetype = "dashed", color = "black") +
   scale_fill_manual(values = colors4plot) +
-  scale_y_continuous(limits = c(0, 105),
-                     breaks = seq(0,100,20),
+  scale_y_continuous(limits = c(0, 1),
+                     breaks = seq(0,1,0.20),
                      labels = paste0(seq(0,100,20), "%"),
                      position = "right") +
   theme(
@@ -211,45 +217,42 @@ Main_database_2008 <- data.df %>%
 
 
 data2plot <- Main_database_2008 %>%
-  select(juicio_abreviado, tipo_prueba) %>% 
+  select(juicio_abreviado, prueba_confesion, prueba_declaraciones, prueba_fisicas) %>% 
+  pivot_longer(cols = c(prueba_confesion, prueba_declaraciones, prueba_fisicas), names_to = "tipo_prueba", values_to = "value2plot") %>%
   group_by(juicio_abreviado, tipo_prueba) %>%
+  summarise(value2plot = mean(value2plot, na.rm = T)) %>%
   drop_na() %>% 
-  summarise(Frequency = n(), .groups = 'drop') %>% 
-  group_by(juicio_abreviado) %>% 
   rename(values = tipo_prueba, 
          category = juicio_abreviado) %>% 
-  mutate(value2plot = Frequency / sum(Frequency) * 100,
-         figure = paste0(round(value2plot, 0), "%"),
-         labels = str_wrap(values, width = 20), 
-         category = str_wrap(category, width = 20)) 
+  mutate(figure = paste0(round(value2plot*100, 0), "%"),
+         labels = str_wrap(category, width = 20),
+         category = str_wrap(values, width = 20)) 
 
 
-colors4plot <- c("Confesión"     = "#2a2a94",
-                 "Física"        = "#a90099",
-                 "Declaraciones" = "#3273ff",
-                 "Ninguna"       = "#fa4d57")
+colors4plot <- c("Juicio"     = "#2a2a94",
+                 "Procedimiento\nabreviado o juicio\nsumario"        = "#a90099")
 
 
 plot <- ggplot(data2plot,
                aes(
                  x     = category, 
                  y     = value2plot,
-                 fill  = values,
+                 fill  = labels,
                  label = figure
                )) +
   geom_bar(stat = "identity",
-           show.legend = FALSE, width = 0.9, position = "stack")+
-  geom_text(aes(y    = value2plot), 
-            position = position_stack(vjust = 0.5),
-            color    = "white",
+           show.legend = FALSE, width = 0.9, position = "dodge")+
+  geom_text(aes(y    = value2plot + 0.05), 
+            position = position_dodge(width = 0.9),
+            color    = "black",
             family   = "Lato Full",
             fontface = "bold", 
             size = 3.514598)  +
   coord_flip()+
   geom_vline(xintercept = 5.5, linetype = "dashed", color = "black") +
   scale_fill_manual(values = colors4plot) +
-  scale_y_continuous(limits = c(0, 105),
-                     breaks = seq(0,100,20),
+  scale_y_continuous(limits = c(0, 1),
+                     breaks = seq(0,1,0.20),
                      labels = paste0(seq(0,100,20), "%"),
                      position = "right") +
   theme(

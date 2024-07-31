@@ -453,8 +453,8 @@ percepcion_culpabilidad.fn <- function(
       labels = culpabilidad,
       figure = paste0(round(value2plot,0), "%"),
       order_var = case_when(
-        labels == "Autorreconocimiento como culpable" ~ 2,
-        labels == "Autorreconocimiento como inocente" ~ 1,
+        labels == "Autoidentificación como culpable" ~ 1,
+        labels == "Autoidentificación como inocente" ~ 2,
         T ~ NA_real_)
     )
   
