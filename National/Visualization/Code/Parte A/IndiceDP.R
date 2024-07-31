@@ -160,7 +160,11 @@ indicador_map.fn <- function(
           TRUE ~ ESTADO
         )) 
   
-  promedio_nacional <- mean(Estados$indice)
+  promedio_nacional <- data.df %>%
+    ungroup() %>%
+    summarise(indice = mean(indicator_general, na.rm = T)) %>%
+    drop_na() %>%
+    pull(indice)
   
   Estados <-  Estados %>% 
               add_row(
@@ -208,7 +212,8 @@ indicador_map.fn <- function(
     flextable::style(pr_t = fp_text(font.size = 12, color = "#524F4C", font.family = "Lato Full"), part = "header") %>%
     flextable::style(pr_t = fp_text(font.size = 10, color = "#524F4C", font.family = "Lato Full"), part = "body") %>%
     italic(italic = TRUE, part = "header") %>%
-    surround(j = 2, border.top = fp_border("white"), border.bottom = fp_border("white"), part = "body")
+    surround(j = 2, border.top = fp_border("white"), border.bottom = fp_border("white"), part = "body") %>%
+    bold(i = ~ Estado == "Promedio Nacional", bold = TRUE, part = "body")
   
   tpanel <- gen_grob(table, fit = "auto", scaling = "min", just = c("left", "top"), wrapping = T)
   

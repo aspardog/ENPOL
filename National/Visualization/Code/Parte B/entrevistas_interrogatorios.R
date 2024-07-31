@@ -341,8 +341,8 @@ tortura_inocencia.fn <- function(
 Main_database_2008 <- data.df %>% 
   filter(Anio_arresto >= 2008,
          NSJP == 1) %>% 
-  mutate(declaro_culpable = case_when(culpabilidad == 1 ~ "Se auto identifica como culpable", 
-                                      culpabilidad == 0 ~ "Se auto identifica como inocente",
+  mutate(declaro_culpable = case_when(culpabilidad == 1 ~ "Se autoidentifica como culpable", 
+                                      culpabilidad == 0 ~ "Se autoidentifica como inocente",
                                       T ~ NA_character_))
 
 data2plot <- Main_database_2008 %>%
@@ -432,8 +432,8 @@ Main_database_2008 <- data.df %>%
   mutate(tortura_mp = case_when(tortura_mp == 1 ~ "Tortura en el\nMinisterio Público", 
                                 tortura_mp == 0 ~ "No tortura en\nel Ministerio Público",
                                       T ~ NA_character_), 
-         identifica_culpable = case_when(culpabilidad == 1 ~ "Se auto identifica como culpable", 
-                                      culpabilidad == 0 ~ "Se auto identifica como inocente",
+         identifica_culpable = case_when(culpabilidad == 1 ~ "Se autoidentifica como culpable", 
+                                      culpabilidad == 0 ~ "Se autoidentifica como inocente",
                                       T ~ NA_character_),
          declaro_culpable = case_when(
            P4_6_4 == 1 ~ 1, 

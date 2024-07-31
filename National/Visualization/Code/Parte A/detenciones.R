@@ -481,6 +481,26 @@ mapa_tiempo_traslado.fn <- function(
     filtered_data <- data.df %>%
       filter(Estado_arresto == .x) %>%
       mutate(
+        Tiempo_traslado =
+          case_when(
+            Tiempo_traslado %in% c("Hasta 30 minutos", 
+                                   "Más de 30 minutos hasta 1 hora",
+                                   "Más de 1 hora hasta 2 horas",
+                                   "Más de 2 horas hasta 4 horas") ~ "Menos de 4 horas",
+            Tiempo_traslado %in% c("Más de 4 horas hasta 6 horas",
+                                   "Más de 6 horas hasta 24 horas") ~ "Más de 4 horas hasta 24 horas",
+            Tiempo_traslado %in% c("Más de 24 horas hasta 48 horas") ~ "Más de 24 horas hasta 48 horas",
+            Tiempo_traslado %in% c("Más de 48 horas hasta 72 horas",
+                                   "Más de 72 horas") ~ "Más de 48 horas",
+            T ~ NA_character_
+          ),
+        Tiempo_traslado = 
+          case_when(
+            Tiempo_traslado %in% c("Menos de 4 horas") ~ "Menos de 4 horas",
+            Tiempo_traslado %in% c("Más de 4 horas hasta 24 horas", 
+                                   "Más de 24 horas hasta 48 horas",
+                                   "Más de 48 horas") ~ "Más de 4 horas"
+          ),
         counter = 1
       ) %>%
       group_by(Tiempo_traslado, Estado_arresto) %>%
@@ -490,16 +510,13 @@ mapa_tiempo_traslado.fn <- function(
       mutate(
         value2plot = TT / sum(TT)
       ) %>%
-      filter(Tiempo_traslado == c("Hasta 30 minutos", "Más de 6 horas hasta 24 horas")) %>%
-      mutate(
-        max = max(value2plot)
-      ) %>%
-      filter(value2plot == max)
+      filter(Tiempo_traslado == c("Menos de 4 horas"))
     
     return(filtered_data)
   })
   
   Estados <- result_df %>%
+    select(!Tiempo_traslado) %>%
     rename(ESTADO = Estado_arresto) %>%
     mutate(
       ESTADO = 
@@ -512,7 +529,49 @@ mapa_tiempo_traslado.fn <- function(
           T ~ ESTADO
         ))
   
+  promedio_nacional <- data.df %>%
+    mutate(
+      Tiempo_traslado =
+        case_when(
+          Tiempo_traslado %in% c("Hasta 30 minutos", 
+                                 "Más de 30 minutos hasta 1 hora",
+                                 "Más de 1 hora hasta 2 horas",
+                                 "Más de 2 horas hasta 4 horas") ~ "Menos de 4 horas",
+          Tiempo_traslado %in% c("Más de 4 horas hasta 6 horas",
+                                 "Más de 6 horas hasta 24 horas") ~ "Más de 4 horas hasta 24 horas",
+          Tiempo_traslado %in% c("Más de 24 horas hasta 48 horas") ~ "Más de 24 horas hasta 48 horas",
+          Tiempo_traslado %in% c("Más de 48 horas hasta 72 horas",
+                                 "Más de 72 horas") ~ "Más de 48 horas",
+          T ~ NA_character_
+        ),
+      Tiempo_traslado = 
+        case_when(
+          Tiempo_traslado %in% c("Menos de 4 horas") ~ "Menos de 4 horas",
+          Tiempo_traslado %in% c("Más de 4 horas hasta 24 horas", 
+                                 "Más de 24 horas hasta 48 horas",
+                                 "Más de 48 horas") ~ "Más de 4 horas"
+        ),
+      counter = 1
+    ) %>%
+    group_by(Tiempo_traslado) %>%
+    summarise(TT = sum(counter, na.rm = TRUE)) %>%
+    ungroup() %>%
+    drop_na() %>%
+    mutate(
+      value2plot = TT / sum(TT)
+    ) %>%
+    filter(Tiempo_traslado == c("Menos de 4 horas")) %>%
+    pull(value2plot)
   
+  Estados <- Estados %>%
+    ungroup() %>% 
+    add_row(
+      TT              = 0,    
+      ESTADO          = "ANacional",
+      value2plot      = promedio_nacional
+      )
+  
+  quintiles <- round(quantile(round((Estados$value2plot *100), 0), probs = seq(0, 1, by = 0.2)),0)
   
   table.df <- Estados %>%
     mutate(
@@ -520,8 +579,14 @@ mapa_tiempo_traslado.fn <- function(
       `%` = round(value2plot*100, 0)
     ) %>%
     arrange(ESTADO) %>%
+    mutate(
+      ESTADO = 
+        case_when(
+          ESTADO == "ANacional" ~ "Promedio Nacional",
+          T ~ ESTADO
+        )) %>%
     select(
-      Estado = ESTADO, ` `, `%`, Tiempo_traslado
+      Estado = ESTADO, ` `, `%`
     ) %>%
     flextable() %>%
     theme_zebra(
@@ -529,20 +594,18 @@ mapa_tiempo_traslado.fn <- function(
       odd_body   = "#e2e0df"
     ) %>%
     
-    padding(j = 1, padding.right = 30) %>%
+    padding(j = 2, padding.right = 30) %>%
     padding(j = 1, padding.left  = 10) %>%
     padding(j = 3, padding.left  = 10) %>%
     
     width(j = " ", width = 0.5, unit = "mm") %>%
     width(j = "%", width = 0.75,   unit = "mm") %>%
     
-    bg(i = ~ Tiempo_traslado == "Hasta 30 minutos" & `%` >= 10 & `%` < 25, j = ' ', bg = "#99D7DD", part = "body") %>%
-    bg(i = ~ Tiempo_traslado == "Hasta 30 minutos" & `%` >= 25 & `%` < 40, j = ' ', bg = "#33AEBA", part = "body") %>%
-    bg(i = ~ Tiempo_traslado == "Hasta 30 minutos" & `%` >= 40, j = ' ', bg = "#00759D", part = "body") %>%
-    bg(i = ~ Tiempo_traslado == "Más de 6 horas hasta 24 horas" & `%` >= 10 & `%` < 20, j = ' ', bg = "#FFCBD0", part = "body") %>%
-    bg(i = ~ Tiempo_traslado == "Más de 6 horas hasta 24 horas" & `%` >= 20 & `%` < 25, j = ' ', bg = "#FF7E8A", part = "body") %>%
-    bg(i = ~ Tiempo_traslado == "Más de 6 horas hasta 24 horas" & `%` >= 25 & `%` <= 30, j = ' ', bg = "#F4475C", part = "body") %>%
-    
+    bg(i = ~  `%` >= 40 & `%` < 53, j = ' ', bg = "#99D7DD", part = "body") %>%
+    bg(i = ~  `%` >= 53 & `%` < 60, j = ' ', bg = "#33AEBA", part = "body") %>%
+    bg(i = ~  `%` >= 60 & `%` < 65, j = ' ', bg = "#0087A3", part = "body") %>%
+    bg(i = ~  `%` >= 65 & `%` < 72, j = ' ', bg = "#00617F", part = "body") %>%
+    bg(i = ~  `%` >= 72 & `%` < 90, j = ' ', bg = "#004E70", part = "body") %>%
     
     align(j     = 2, 
           align = "center", 
@@ -563,7 +626,8 @@ mapa_tiempo_traslado.fn <- function(
              border.top    = fp_border("white"),
              border.bottom = fp_border("white"),
              part = "body"
-    )
+    ) %>%
+    bold(i = ~ Estado == "Promedio Nacional", bold = TRUE, part = "body")
   
   
   tpanel <- gen_grob(table.df, 
@@ -577,13 +641,11 @@ mapa_tiempo_traslado.fn <- function(
     mutate(
       value2plot = round(value2plot*100, 0),
       color_group = case_when(
-        Tiempo_traslado == "Hasta 30 minutos" & value2plot >= 10 & value2plot < 25 ~ "T1",
-        Tiempo_traslado == "Hasta 30 minutos" & value2plot >= 25 & value2plot < 40 ~ "T2",
-        Tiempo_traslado == "Hasta 30 minutos" & value2plot >= 40 ~ "T3",
-        Tiempo_traslado == "Más de 6 horas hasta 24 horas" & value2plot >= 10 & value2plot < 20 ~ "T4",
-        Tiempo_traslado == "Más de 6 horas hasta 24 horas" & value2plot >= 20 & value2plot < 25 ~ "T5",
-        Tiempo_traslado == "Más de 6 horas hasta 24 horas" & value2plot >= 25 & value2plot <= 30 ~ "T6"
-        
+        value2plot >= 40 & value2plot < 53 ~ "T1",
+        value2plot >= 53 & value2plot < 60 ~ "T2",
+        value2plot >= 60 & value2plot < 65 ~ "T3",
+        value2plot >= 65 & value2plot < 72 ~ "T4",
+        value2plot >= 72 & value2plot < 90 ~ "T5",
       ),
       color_group = as.factor(color_group)
     )
@@ -591,10 +653,9 @@ mapa_tiempo_traslado.fn <- function(
   
   cat_palette <- c("T1"   = "#99D7DD",
                    "T2"  =  "#33AEBA",
-                   "T3"  =  "#00759D",
-                   "T4"  =  "#FFCBD0",
-                   "T5"  =  "#FF7E8A",
-                   "T6" =   "#F4475C")
+                   "T3"  =  "#0087A3",
+                   "T4"  =  "#00617F",
+                   "T5"  =  "#004E70")
   
   
   # Drawing plot
@@ -623,12 +684,11 @@ mapa_tiempo_traslado.fn <- function(
     ) 
   
  
-  categories <- c("[10%-25%]",
-                  "(25%-40%]",
-                  "(40%-45%]",
-                  "(10%-20%]",
-                  "(20%-25%]", 
-                  "(25%-30%]")
+  categories <- c("[41%-53%]",
+                  "(53%-60%]",
+                  "(60%-65%]",
+                  "(65%-72%]",
+                  "(72%-88%]")
   
   leyend <- data.frame(
     Values = categories,
@@ -636,13 +696,12 @@ mapa_tiempo_traslado.fn <- function(
   leyend <- flextable(leyend)  %>% 
     width(j = "Blank", width = 0.5, unit = "mm") %>% 
     set_header_labels(Values = "Escala", Blank = " ") %>% 
-    bg(i = ~ Values == "[10%-25%]", j = "Blank", bg = "#99D7DD", part = "body") %>%
-    bg(i = ~ Values == "(25%-40%]", j = "Blank", bg = "#33AEBA", part = "body") %>%
-    bg(i = ~ Values == "(40%-45%]", j = "Blank", bg = "#00759D", part = "body") %>%
-    bg(i = ~ Values == "(10%-20%]", j = "Blank", bg = "#FFCBD0", part = "body") %>%
-    bg(i = ~ Values == "(20%-25%]", j = "Blank", bg = "#FF7E8A", part = "body") %>%  
-    bg(i = ~ Values == "(25%-30%]", j = "Blank", bg = "#F4475C", part = "body") %>%
-    
+    bg(i = ~ Values == "[41%-53%]", j = "Blank", bg = "#99D7DD", part = "body") %>%
+    bg(i = ~ Values == "(53%-60%]", j = "Blank", bg = "#33AEBA", part = "body") %>%
+    bg(i = ~ Values == "(60%-65%]", j = "Blank", bg = "#0087A3", part = "body") %>%
+    bg(i = ~ Values == "(65%-72%]", j = "Blank", bg = "#00617F", part = "body") %>%
+    bg(i = ~ Values == "(72%-88%]", j = "Blank", bg = "#004E70", part = "body") %>%  
+
     
     align(j     = 2, 
           align = "center", 
@@ -663,7 +722,7 @@ mapa_tiempo_traslado.fn <- function(
              border.top    = fp_border("white"),
              border.bottom = fp_border("white"),
              part = "body"
-    )
+    ) 
   
   
   leyend <- gen_grob(leyend, 
@@ -686,8 +745,8 @@ mapa_tiempo_traslado.fn <- function(
                            "/Output/Debido proceso/",
                            savePath,"/Detenciones",
                            "/tiempo_traslado_mapa.svg"),
-         width = 335,
-         height = 255,
+         width = 189.7883,
+         height = 175,
          units  = "mm",
          dpi    = 72,
          device = "svg")
@@ -747,7 +806,21 @@ mapa_lugar_traslado.fn <- function(
           T ~ ESTADO
         ))
   
-  promedio_nacional <- mean(Estados$value2plot)
+  promedio_nacional <- data.df %>%
+    mutate(
+      counter = 1
+    ) %>%
+    ungroup() %>%
+    group_by(Primer_lugar_traslado) %>%
+    summarise(PT = sum(counter, na.rm = TRUE)) %>%
+    ungroup() %>%
+    drop_na() %>%
+    mutate(
+      value2plot = PT / sum(PT)
+    ) %>%
+    filter(Primer_lugar_traslado %in% "Agencia del Ministerio Público") %>%
+    pull(value2plot)
+    
   
   Estados <- Estados %>%
     ungroup() %>% 
@@ -781,7 +854,7 @@ mapa_lugar_traslado.fn <- function(
       odd_body   = "#e2e0df"
     ) %>%
     
-    padding(j = 1, padding.right = 30) %>%
+    padding(j = 2, padding.right = 30) %>%
     padding(j = 1, padding.left  = 10) %>%
     padding(j = 3, padding.left  = 10) %>%
     
@@ -811,7 +884,8 @@ mapa_lugar_traslado.fn <- function(
              border.top    = fp_border("white"),
              border.bottom = fp_border("white"),
              part = "body"
-    )
+    ) %>%
+    bold(i = ~ Estado == "Promedio Nacional", bold = TRUE, part = "body")
   
   
   tpanel <- gen_grob(table, 
@@ -934,8 +1008,8 @@ mapa_lugar_traslado.fn <- function(
                            "/Output/Debido proceso/",
                            savePath,"/Detenciones",
                            "/lugar_traslado_mapa.svg"),
-         width = 400,
-         height = 315,
+         width = 189.7883,
+         height = 175,
          units  = "mm",
          dpi    = 72,
          device = "svg")

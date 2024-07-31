@@ -359,8 +359,8 @@ culpabilidad.fn <- function(
       counter = 1,
       culpabilidad = 
         case_when(
-          as.numeric(P3_1) == 1 | as.numeric(P3_1) == 2 ~ "Autorreconocimiento como culpable",
-          as.numeric(P3_1) == 3 | as.numeric(P3_1) == 4 ~ "Autorreconocimiento como inocente",
+          as.numeric(P3_1) == 1 | as.numeric(P3_1) == 2 ~ "Autoidentificación como culpable",
+          as.numeric(P3_1) == 3 | as.numeric(P3_1) == 4 ~ "Autoidentificación como inocente",
           T ~ NA_character_
         )
       ) %>%
@@ -378,8 +378,8 @@ culpabilidad.fn <- function(
       value2plot = value2plot*100,
       figure = paste0(round(value2plot, 0), "%"),
       order_var = case_when(
-        culpabilidad == "Autorreconocimiento como culpable" ~ 1,
-        culpabilidad =="Autorreconocimiento como inocente" ~ 2,
+        culpabilidad == "Autoidentificación como culpable" ~ 1,
+        culpabilidad =="Autoidentificación como inocente" ~ 2,
         T ~ NA_real_)
     ) %>%
     rename(

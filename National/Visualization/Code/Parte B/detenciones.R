@@ -146,8 +146,16 @@ detenciones_estado.fn <- function(
       data2plot <- data_subset.df %>%
         select(Estado_arresto, tipo_detencion) %>% 
         group_by(Estado_arresto, tipo_detencion) %>%
-        drop_na() %>% 
         summarise(Frequency = n(), .groups = 'drop') %>% 
+        drop_na() %>% 
+        ungroup() %>%
+        rbind(data_subset.df %>%
+                ungroup() %>%
+                group_by(tipo_detencion) %>%
+                summarise(Frequency = n(), .groups = 'drop',
+                          Estado_arresto = "APromedio nacional")%>%
+                drop_na()
+        )  %>%
         group_by(Estado_arresto) %>% 
         rename( values = Estado_arresto ) %>%
         arrange(desc(values)) %>%
@@ -166,7 +174,11 @@ detenciones_estado.fn <- function(
                                   T ~ values)) %>%
         ungroup() %>% 
         group_by(tipo_detencion) %>%
-        mutate(order = row_number()) 
+        mutate(order = row_number()) %>%
+        mutate(
+          values = 
+            if_else(values %in% "APromedio nacional", "Promedio nacional", values)
+        )
       
       
       colors4plot <- c("D)Flagrancia" = "#2a2a94" ,

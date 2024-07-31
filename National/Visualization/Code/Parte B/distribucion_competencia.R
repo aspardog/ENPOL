@@ -44,7 +44,12 @@ delitos_fuero.fn <- function(
              order_var = rank(Value), 
              labels = case_when(labels == "Algunos delitos de fuero común\ny algunos de fuero federal" ~ "Ambos fueros",
                                 labels == "Sólo común" ~ "Sólo fuero común",
-                                labels == "Sólo federal" ~ "Sólo fuero federal ")) 
+                                labels == "Sólo federal" ~ "Sólo fuero federal ")) %>%
+      mutate(
+        figure = if_else(Value %in% "Algunos delitos de fuero común y algunos de fuero federal", 
+                         "3%", 
+                         figure)
+      )
     
     fill_colors = c("#3273ff", "#a90099", "#2a2a9A")
     
@@ -125,7 +130,14 @@ delitos_federales.fn <- function(
             T ~ ESTADO
           ))
     
-    promedio_nacional <- mean(Estados$Percentage)
+    promedio_nacional <- data.df %>% 
+      select(fuero) %>% 
+      group_by(fuero) %>%
+      summarise(Frequency = n(), .groups = 'drop') %>% 
+      mutate(Percentage = Frequency / sum(Frequency) * 100) %>% 
+      filter (fuero  == "Sólo federal") %>% 
+      drop_na() %>%
+      pull(Percentage)
     
     Estados <- Estados %>%
                ungroup() %>% 
@@ -200,7 +212,8 @@ delitos_federales.fn <- function(
                border.top    = fp_border("white"),
                border.bottom = fp_border("white"),
                part = "body"
-      )
+      ) %>%
+      bold(i = ~ Estado == "Promedio Nacional", bold = TRUE, part = "body")
     
     tpanel <- gen_grob(table, 
                        fit      = "auto",
@@ -381,22 +394,23 @@ detenciones_federales.fn <- function(
       
       quintiles <- round(quantile(round(Estados$gap, 0), probs = seq(0, 1, by = 0.2)),0)
       
-      promedio_nacional <- mean(Estados$gap)
+      promedio_nacional <- Main_database_2008 %>% 
+        select(corporacion_fuero) %>% 
+        group_by(corporacion_fuero) %>%
+        summarise(Frequency = n(), .groups = 'drop') %>% 
+        filter (corporacion_fuero  != "Operativo Conjunto", 
+                corporacion_fuero != "Otra") %>% 
+        mutate(Percentage = Frequency / sum(Frequency) * 100) %>% 
+        select(-Frequency) %>% 
+        pivot_wider(names_from = corporacion_fuero, values_from = Percentage) %>% 
+        mutate(gap = round(`Corporación Federal`),0)%>% 
+        pull(gap)
       
       Estados <- Estados %>%
         ungroup() %>% 
         add_row(
           ESTADO          = "ANacional",
           gap      = promedio_nacional)
-      
-      mapa <- st_read(paste0(path2SP,"/National/Exploration/Input/shp/México_Estados.shp")) %>%
-        mutate( ESTADO = 
-                  case_when(
-                    ESTADO == "México" ~ "Estado de México",
-                    ESTADO == "Distrito Federal" ~ "Ciudad de México",
-                    T ~ ESTADO
-                  )
-        )
       
       table <- Estados %>%
         mutate(
@@ -455,7 +469,8 @@ detenciones_federales.fn <- function(
                  border.top    = fp_border("white"),
                  border.bottom = fp_border("white"),
                  part = "body"
-        )
+        ) %>%
+        bold(i = ~ Estado == "Promedio Nacional", bold = TRUE, part = "body")
       
       tpanel <- gen_grob(table, 
                          fit      = "auto",
@@ -476,7 +491,7 @@ detenciones_federales.fn <- function(
             value2plot > 61 & value2plot <= 86 ~ "61%-86%",
           ),
           color_group = as.factor(color_group)
-        )
+        ) 
       
       cat_palette <- c(
         "21%-41%"  = "#FF7E8A",
@@ -644,23 +659,24 @@ detenciones_estatales.fn <- function(
     
     quintiles <- round(quantile(round(Estados$gap, 0), probs = seq(0, 1, by = 0.2)),0)
     
-    promedio_nacional <- mean(Estados$gap)
-
+    promedio_nacional <- Main_database_2008 %>% 
+      select(corporacion_fuero) %>% 
+      group_by(corporacion_fuero) %>%
+      summarise(Frequency = n(), .groups = 'drop') %>% 
+      filter (corporacion_fuero  != "Operativo Conjunto", 
+              corporacion_fuero != "Otra") %>% 
+      mutate(Percentage = Frequency / sum(Frequency) * 100) %>% 
+      select(-Frequency) %>% 
+      pivot_wider(names_from = corporacion_fuero, values_from = Percentage) %>% 
+      mutate(gap = round(`Corporación Local` - `Corporación Federal`),0)%>% 
+      pull(gap)
+    
     Estados <- Estados %>%
       ungroup() %>% 
       add_row(
         ESTADO          = "ANacional",
         gap      = promedio_nacional)
         
-    mapa <- st_read(paste0(path2SP,"/National/Exploration/Input/shp/México_Estados.shp")) %>%
-      mutate( ESTADO = 
-                case_when(
-                  ESTADO == "México" ~ "Estado de México",
-                  ESTADO == "Distrito Federal" ~ "Ciudad de México",
-                  T ~ ESTADO
-                )
-      )
-    
     table <- Estados %>%
       mutate(
         ` ` = "",
@@ -716,7 +732,8 @@ detenciones_estatales.fn <- function(
                border.top    = fp_border("white"),
                border.bottom = fp_border("white"),
                part = "body"
-      )
+      ) %>%
+      bold(i = ~ Estado == "Promedio Nacional", bold = TRUE, part = "body")
     
     tpanel <- gen_grob(table, 
                        fit      = "auto",

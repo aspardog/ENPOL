@@ -426,10 +426,10 @@ tipo_defensa.fn <- function(
     mutate( P4_1_05 = as.numeric(P4_1_05),
             P5_1 = as.numeric(P5_1),
             P5_4_A = as.numeric(P5_4_A),
-            defensa_momento = case_when(P4_1_05 == 1 & P5_1 == 1 ~ "Defensa en Ministerio Público y con Juez",
-                                        P4_1_05 == 2 & P5_1 == 2 ~ "Sin defensa en Ministerio Público ni con Juez",
-                                        P4_1_05 == 2 & P5_1 == 1 ~ "Defensa sólo con Juez",
-                                        P4_1_05 == 1 & P5_1 == 2 ~ "Defensa sólo en Ministerio Público",
+            defensa_momento = case_when(P4_1_05 == 1 & P5_1 == 1 ~ "Con defensa en MP y con asesoría previa a la audiencia inicial",
+                                        P4_1_05 == 2 & P5_1 == 2 ~ "Sin defensa en MP y sin asesoría previa a la audiencia inicial",
+                                        P4_1_05 == 2 & P5_1 == 1 ~ "Sin defensa en MP y con asesoría previa a la audiencia inicial",
+                                        P4_1_05 == 1 & P5_1 == 2 ~ "Con defensa en MP y sin asesoría previa a la audiencia inicial",
                                         T~ NA_character_))
   
   data2plot <- data_subset.df %>%
@@ -443,10 +443,10 @@ tipo_defensa.fn <- function(
                                  abogado_publico == "0" ~ "Abogado privado",
                                  T ~ NA_character_),
            value2plot = mean_value,
-           labels = case_when(category == "Defensa en Ministerio Público y con Juez"      ~ "Defensa en <br>Ministerio Público <br>y con Juez",
-                              category == "Sin defensa en Ministerio Público ni con Juez" ~ "Sin defensa en <br>Ministerio Público <br>ni con Juez",
-                              category ==  "Defensa sólo con Juez"                        ~ "Defensa sólo con Juez",
-                              category == "Defensa sólo en Ministerio Público"            ~ "Defensa sólo en <br>Ministerio Público",
+           labels = case_when(category == "Con defensa en MP y con asesoría previa a la audiencia inicial"      ~ "Con defensa en MP <br>y con asesoría previa a <br>la audiencia inicial",
+                              category == "Sin defensa en MP y sin asesoría previa a la audiencia inicial"      ~ "Sin defensa en MP <br>y sin asesoría previa a <br>la audiencia inicial",
+                              category ==  "Sin defensa en MP y con asesoría previa a la audiencia inicial"                        ~ "Sin defensa en MP <br>y con asesoría previa a <br>la audiencia inicial",
+                              category == "Con defensa en MP y sin asesoría previa a la audiencia inicial"            ~ "Con defensa en MP <br>y sin asesoría previa a <br>la audiencia inicial",
                               T~NA_character_),
            figure = round(mean_value, 0),
            order_var = case_when(category == "Defensa en Ministerio Público y con Juez"      ~ 3,
@@ -581,7 +581,7 @@ tribunal_transparente.fn <- function(
                            savePath,"/Proceso justo",
                            "/tribunal_transparente.svg"),
          width = 189.7883,
-         height = 50,
+         height = 85,
          units  = "mm",
          dpi    = 72,
          device = "svg")
@@ -677,7 +677,7 @@ tribunal_imparcial.fn <- function(
                            savePath,"/Proceso justo",
                            "/tribunal_imparcial.svg"),
          width = 189.7883,
-         height = 50,
+         height = 85,
          units  = "mm",
          dpi    = 72,
          device = "svg")
@@ -767,7 +767,7 @@ tribunal_presente.fn <- function(
                            savePath,"/Proceso justo",
                            "/tribunal_presente.svg"),
          width = 189.7883,
-         height = 50,
+         height = 85,
          units  = "mm",
          dpi    = 72,
          device = "svg")

@@ -37,7 +37,7 @@ descripcion.fn <- function(
     mutate(
       Educacion_inferior = case_when(
         Educacion_superior == 1 ~ "Cuenta con título de educación universitaria",
-        Educacion_superior == 0 ~ "No cuenta con título de educación universitaria",
+        Educacion_superior == 0 ~ "Sin título de educación universitaria",
         TRUE ~ NA_character_
       ),
       Color_piel_oscuro = case_when(
@@ -97,11 +97,16 @@ descripcion.fn <- function(
       ungroup() %>%
       arrange(-value2plot) %>%
       mutate(
-        order_var = row_number()
+        order_var = if_else(
+          labels %in% c("Femenino", "Sin título de educación universitaria",
+                        "Color de piel oscuro", "Pertenece a la comunidad LGBTQ",
+                        "Afromexicano o indígena", "Menor a 30 años", 
+                        "Vulnerable económicamente", "Reporta algún tipo de discapacidad"),
+          2, 1)
       ) %>%
       mutate(
         categories = if_else(
-          labels %in% c("Femenino", "No cuenta con título de educación universitaria",
+          labels %in% c("Femenino", "Sin título de educación universitaria",
                            "Color de piel oscuro", "Pertenece a la comunidad LGBTQ",
                            "Afromexicano o indígena", "Menor a 30 años", 
                            "Vulnerable económicamente", "Reporta algún tipo de discapacidad"),
@@ -115,7 +120,7 @@ descripcion.fn <- function(
       
     } else if(group_var %in% "Educacion_inferior"){
       
-      colors4plot <- c("No cuenta con título de educación universitaria"   = "#2a2a9A", 
+      colors4plot <- c("Sin título de educación universitaria"   = "#2a2a9A", 
                        "Cuenta con título de educación universitaria"      = "#a90099")
       
     } else if(group_var %in% "Color_piel_oscuro"){
@@ -158,7 +163,7 @@ descripcion.fn <- function(
       colors4plot = colors4plot, 
       order = TRUE,
       orientation = "horizontal"
-    )  
+    );plot
     
     # Save the plot
     ggsave(plot = plot, 
