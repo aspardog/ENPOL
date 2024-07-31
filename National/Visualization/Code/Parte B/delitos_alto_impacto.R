@@ -78,7 +78,7 @@ control_alto_impacto.fn <- function(
         mutate(
           Delito_unico_categ = case_when(
             Delito_unico_categ == "drogas" ~ "Posesión o comercio\n de drogas", 
-            Delito_unico_categ == "armas" ~ "Posesión ilegal\n de armas", 
+            Delito_unico_categ == "armas" ~ "Portación ilegal\n de armas", 
             Delito_unico_categ == "hom_dol" ~ "Homicido doloso",
             Delito_unico_categ == "secuestro" ~ "Secuestro",
             Delito_unico_categ == "extorsion" ~ "Extorsion",
@@ -193,7 +193,7 @@ detencion_alto_impacto.fn <- function(
                                   labels == "hom_dol" ~ "Homicido doloso",
                                   labels == "secuestro" ~ "Secuestro",
                                   labels == "extorsion" ~ "Extorsión",
-                                  labels == "armas" ~ "Posesión ilegal\n de armas",
+                                  labels == "armas" ~ "Portación ilegal\n de armas",
                                   labels == "robo-autopartes" ~ "Robo de\n autopartes",
                                   labels == "robo-vehiculo" ~ "Robo de\n vehículos",
                                   labels == "extorsion" ~ "Extorsión",
@@ -329,7 +329,7 @@ terminacion_alto_impacto.fn <- function(
                values = case_when(labels == "drogas"    ~ "Posesión o comercio\n de drogas", 
                                   labels == "hom_dol"   ~ "Homicido doloso",
                                   labels == "secuestro" ~ "Secuestro",
-                                  labels == "armas"     ~ "Posesión ilegal\n de armas",
+                                  labels == "armas"     ~ "Portación ilegal\n de armas",
                                   labels == "extorsion" ~ "Extorsión",
                                   labels == "robo-autopartes" ~ "Robo de\n autopartes",
                                   labels == "robo-vehiculo" ~ "Robo de\n vehículos",
