@@ -4111,7 +4111,7 @@ Main_database %<>%
       T ~ NA_character_),
     culpabilidad = case_when(
       P3_1 == "1" | P3_1 == "2"  ~ 1,
-      P3_1 == "3" | P3_1 == "4" | P3_1 == "5" ~ 0,
+      P3_1 == "3" | P3_1 == "4"  ~ 0,
       T ~ NA),
     
     #Variable of self culpability recognition

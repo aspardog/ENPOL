@@ -359,10 +359,10 @@ tortura_psicologica.fn <- function(
         ),
       labels =
         case_when(
-          labels == "¿Le amenazaron con levantarle cargos falsos?" ~ "Amenazas con levantarle <br> **cargos falsos**",
-          labels =="¿Le amenazaron con matarlo(a)?"~ "Amenazas con **matarlo**",
-          labels =="¿Le amenazaron con hacerle daño a usted?" ~ "Amenazas con **hacerle** <br>**daño**",
-          labels =="¿Le amenazaron con hacerle daño a su familia?"~ "Amenazas con **hacerle daño** <br> **a su familia**",
+          labels == "¿Le amenazaron con levantarle cargos falsos?" ~ "Lo amenazaron con  <br> **levantarle cargos falsos**",
+          labels =="¿Le amenazaron con matarlo(a)?"~ "Lo amenazaron con **matarlo**",
+          labels =="¿Le amenazaron con hacerle daño a usted?" ~ "Lo amenazaron con <br> **hacerle** **daño**",
+          labels =="¿Le amenazaron con hacerle daño a su familia?"~ "Lo amenazaron con <br> **hacerle daño** <br>  **a su familia**",
           labels =="¿Le presionaron para denunciar a alguien?"~ "Lo **presionaron** para <br> **denunciar a alguien**",
           labels =="¿Le incomunicaron o aislaron?"~ "Lo **incomunicaron** o <br> **aislaron**",
           labels =="¿Le pasearon en un automóvil dando vueltas por <br>las calles?" ~ "Lo **pasearon** en un <br>automóvil <br> **dando vueltas** por <br> las calles",
@@ -402,7 +402,7 @@ tortura_psicologica.fn <- function(
                             target_var    = "value2plot",     
                             label_var     = "labels", 
                             order_var     = "order_var",
-                            colors        = colors4plot)
+                            colors        = colors4plot);chart
   
   ggsave(plot = chart, 
          filename = paste0(path2SP,
@@ -498,20 +498,20 @@ tortura_fisica.fn <- function(
         ),
       labels =
         case_when(
-          labels == "¿Ataron su cuerpo; ataron alguna parte <br>de su cuerpo a un objeto?" ~ "**Ataron su cuerpo** o <br>alguna parte a un <br>un objeto",
+          labels == "¿Ataron su cuerpo; ataron alguna parte <br>de su cuerpo a un objeto?" ~ "Le **ataron su cuerpo** o <br>alguna parte a un <br>un objeto",
           labels =="¿Le impidieron respirar asfixiándolo, <br>ahorcándolo?"~ "**Le impidieron respirar**<br> asfixiándolo o <br>ahorcándolo",
           labels =="¿Le impidieron respirar o metiendo su <br>cabeza en agua o vaciándole agua en <br>la cara?" ~ "**Le impidieron respirar** <br> metiendo su cabeza en agua",
           labels =="¿Le patearon o golpearon con las manos?"~ "Le **patearon** <br>o **golpearon**",
           labels =="¿Le golpearon con objetos?"~ "Le **golpearon** <br>con objetos",
           labels =="¿Le quemaron (con objetos calientes, <br>fuego u otra sustancia)?"~ "Le **quemaron**",
           labels =="¿Le dieron descargas eléctricas?" ~ "Le dieron **descargas** <br> **eléctricas**",
-          labels =="¿Aplastaron su cuerpo o alguna parte de <br>él con algún objeto o con el cuerpo de <br>otra persona?"~ "**Aplastaron su cuerpo** con <br> algún objeto",
+          labels =="¿Aplastaron su cuerpo o alguna parte de <br>él con algún objeto o con el cuerpo de <br>otra persona?"~ "Le **aplastaron su cuerpo** <br> con algún objeto",
           labels == "¿Le hirieron con algún cuchillo, navaja <br>u otro objeto afilado?"~ "**Le hirieron** con algún <br>**objeto afilado**",
           labels =="¿Le encajaron agujas en dedos u otra <br>parte del cuerpo?"~ "**Le encajaron agujas** en alguna <br>parte del cuerpo",
           labels =="¿Le hirieron por el disparo de un arma <br>de fuego?"~ "Le **dispararon**",
           labels =="¿Le agredieron mediante acoso sexual, <br>manoseo, exhibicionismo o intento de <br>violación?"~ "Le agredieron mediante **manoseo**, <br>**intento de violación** o <br>**exhibicionismo**",
           labels =="¿Le lastimaron sus órganos sexuales?"~ "**Lastimaron** sus **organos <br>sexuales**",
-          labels == "¿Fue obligado mediante violencia física <br>o amenaza a tener una actividad sexual <br>no deseada?"~ "**Obligado** con violencia <br>a tener una **actividad** <br>**sexual**",
+          labels == "¿Fue obligado mediante violencia física <br>o amenaza a tener una actividad sexual <br>no deseada?"~ "Lo **obligaron** con violencia <br>a tener una **actividad** <br>**sexual**",
           T ~ NA_character_
         ),
       order_value_bars = 
@@ -545,7 +545,7 @@ tortura_fisica.fn <- function(
                             target_var    = "value2plot",     
                             label_var     = "labels", 
                             order_var     = "order_var",
-                            colors        = colors4plot)
+                            colors        = colors4plot);chart
   
   ggsave(plot = chart, 
          filename = paste0(path2SP,

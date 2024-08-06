@@ -158,8 +158,8 @@ logit_dataBase.fn <- function(data = Main_database,
     mutate(
       Educacion_superior = 
         case_when(
-          Educacion_superior == 1 ~ "Cuenta con título de educación universitaria",
-          Educacion_superior == 0 ~ "No cuenta con título de educación universitario",
+          Educacion_superior == 0 ~ "Cuenta con título de educación universitaria",
+          Educacion_superior == 1 ~ "No cuenta con título de educación universitario",
           T ~ NA_character_
         ),
       Color_piel_oscuro       =
@@ -298,7 +298,7 @@ logit_dataBase.fn <- function(data = Main_database,
                           "Color_piel_oscuroZColor de piel oscuro"                     = "Color de piel \noscuro",
                           "vulnerabilidad_economicaZVulnerable economicamente"       = "Vulnerable \neconómicamente",
                           "discapacidadZReporta algún tipo de discapacidad"          = "Persona con \ndiscapacidad",
-                          "Educacion_superiorZCuenta con título de educación universitaria" = "Con educación \nuniveristaria"
+                          "Educacion_superiorZCuenta con título de educación universitaria" = "Sin educación \nuniveristaria"
   )
   
   data2table <- margEff %>%
@@ -307,7 +307,7 @@ logit_dataBase.fn <- function(data = Main_database,
                factor == "Mujer"                                  ~ 1,
                factor == "Perteneciente a \ncomunidad LGBTQ"      ~ 2,
                # factor == "Menor a 30 años"                        ~ 3,
-               factor == "Con educación \nuniveristaria"          ~ 3,
+               factor == "Sin educación \nuniveristaria"          ~ 3,
                factor == "Afromexicano/a o \nindígena"            ~ 4,
                factor == "Color de piel \noscuro"                  ~ 5,
                factor == "Vulnerable \neconómicamente"            ~ 6,
