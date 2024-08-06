@@ -4800,8 +4800,8 @@ Main_database %<>%
     Color_piel_claro = case_when(Color_piel_promedio >= 9  ~ 1,
                                  Color_piel_promedio < 9 ~ 0,
                                  T ~ NA),
-    Color_piel_oscuro = case_when(Color_piel_promedio >= 6  ~ 1,
-                                 Color_piel_promedio < 6 ~ 0,
+    Color_piel_oscuro = case_when(Color_piel_promedio <= 6  ~ 1,
+                                 Color_piel_promedio > 6 ~ 0,
                                  T ~ NA),
     
     # Educación obligatoria (Bachillerato y homologos 15 de educación)
@@ -4988,8 +4988,10 @@ Main_database %<>%
          
          #Abogado defensor público (de oficio) o privado
          
-       abogado_publico = case_when(P5_21_1 == 1 | P5_41_1 == 1 ~ 0,
-                                   P5_21_2 == 1 | P5_41_2 == 1 ~ 1,
+       abogado_publico = case_when(P5_21_1 == 1 & P5_21_2 == 0 ~ 0,
+                                   P5_41_1 == 1 & P5_41_2 == 0 ~ 0,
+                                   P5_21_2 == 1 & P5_21_1 == 0 ~ 1,
+                                   P5_41_2 == 1 & P5_41_1 == 0 ~ 1,
                                    T ~ NA_real_)) %>%
   
   mutate(
