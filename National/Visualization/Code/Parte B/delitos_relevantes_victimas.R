@@ -875,7 +875,7 @@ homicidios_ENPOL_ENVIPE.fn <- function(
                Octubre = case_when(Anio==2021 ~ 0,    T ~ Octubre),
                Noviembre = case_when(Anio==2021 ~ 0,  T ~ Noviembre),
                Diciembre = case_when(Anio==2021 ~ 0,  T ~ Diciembre)) %>%
-        filter(Anio>=2017 & Anio<= 2021) %>%
+        filter(Anio>=2018 & Anio<= 2021) %>%
         mutate(Incidencia = Enero+Febrero+Marzo+Abril+Mayo+Junio+Julio+Agosto+Septiembre+Octubre+Noviembre+Diciembre) %>%
         mutate(Delito=case_when(`Subtipo de delito`== "Homicidio doloso" ~ "Homicidio doloso, SESNSP",
                                 T ~ "Otro")) %>% 
@@ -889,7 +889,7 @@ homicidios_ENPOL_ENVIPE.fn <- function(
       
       
       enpol_3 <- Main_database %>% 
-        filter(Anio_arresto>=2017 & Anio_arresto<= 2021 )  %>%
+        filter(Anio_arresto>=2018 & Anio_arresto<= 2021 )  %>%
         select(Anio_arresto,Delito_gr_1_robos,Delito_gr_2_drogas,Delito_gr_3_del_org,Delito_gr_4_lesiones,Delito_gr_5_hom_cul,
                Delito_gr_6_hom_dol,Delito_gr_7_armas,Delito_gr_8_viol_fam,Delito_gr_9_secuestro,Delito_gr_10_sexuales,
                Delito_gr_11_extorsion,Delito_gr_12_fraude,Delito_gr_13_amenazas,Delito_gr_14_otro,Delito_gr_15_ns_nr,FAC_PER)  %>% 
@@ -1003,4 +1003,165 @@ homicidios_ENPOL_ENVIPE.fn <- function(
       
       return(data2plot)
 
+}
+
+
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##
+## 5. Robo de vehuculos ENPOl SESNSP                                                            ----
+##
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+robo_vehiculos_ENPOL_ENVIPE.fn <- function(
+    
+){
+  
+  snsp <- read.csv(paste0(path2SP,"/National/Exploration/Input/IDEFC_NM_abr24.csv"),check.names = F)
+  
+  inegi <- read_xlsx(paste0(path2SP,"/National/Exploration/Input/INEGI_homicidios.xlsx"))
+  
+  
+  snsp_2<- snsp %>%
+    mutate(Agosto = case_when(Anio==2021 ~ 0,     T ~ Agosto),
+           Septiembre = case_when(Anio==2021 ~ 0, T ~ Septiembre),
+           Octubre = case_when(Anio==2021 ~ 0,    T ~ Octubre),
+           Noviembre = case_when(Anio==2021 ~ 0,  T ~ Noviembre),
+           Diciembre = case_when(Anio==2021 ~ 0,  T ~ Diciembre)) %>%
+    filter(Anio>=2018 & Anio<= 2021) %>%
+    mutate(Incidencia = Enero+Febrero+Marzo+Abril+Mayo+Junio+Julio+Agosto+Septiembre+Octubre+Noviembre+Diciembre) %>%
+    mutate(Delito=case_when(`Subtipo de delito`== "Robo de veh\xedculo automotor" ~ "Robo de vehiculo, SESNSP",
+                            T ~ "Otro")) %>% 
+    group_by(Delito,Anio) %>%
+    summarize(Incidencia = sum(Incidencia)) %>%
+    mutate(Anio=as.character(Anio),
+           value2plot =  Incidencia,
+           labels = paste0(round(value2plot,0)),
+           group_var =  "Robo_de_vehiculo_SESNSP") %>%
+    filter(Delito!="Otro")
+  
+  
+  enpol_3 <- Main_database %>% 
+    filter(Anio_arresto>=2018 & Anio_arresto<= 2021 )  %>%
+    select(Anio_arresto, Del_Robo_vehiculo, Del_Robo_casa_hab, Del_Robo_negocio, Del_Robo_transporte_pub, Del_Robo_transeunte,
+           Del_Robo_autopartes, Del_Robo_otros, Del_Posesion_drogas, Del_Comercio_drogas, Del_Lesiones, Del_Hom_culposo,
+           Del_Hom_doloso, Del_Portacion_armas, Del_Incum_asis_fam, Del_Violencia_fam, Del_Danio_prop, Del_Secuestro,
+           Del_Violacion_sexual, Del_Fraude, Del_Delincuencia_org, Del_Otros_sexuales, Del_Extorsion, Del_Privacion_de_libertad,
+           Del_Abuso_de_conf, Del_Amenazas, Del_Otros, Del_No_sabe, Del_No_responde,FAC_PER)  %>% 
+    mutate(across(c( Del_Robo_vehiculo, Del_Robo_casa_hab, Del_Robo_negocio, Del_Robo_transporte_pub, Del_Robo_transeunte,
+                     Del_Robo_autopartes, Del_Robo_otros, Del_Posesion_drogas, Del_Comercio_drogas, Del_Lesiones, Del_Hom_culposo,
+                     Del_Hom_doloso, Del_Portacion_armas, Del_Incum_asis_fam, Del_Violencia_fam, Del_Danio_prop, Del_Secuestro,
+                     Del_Violacion_sexual, Del_Fraude, Del_Delincuencia_org, Del_Otros_sexuales, Del_Extorsion, Del_Privacion_de_libertad,
+                     Del_Abuso_de_conf, Del_Amenazas, Del_Otros, Del_No_sabe, Del_No_responde), ~as.numeric(.))) %>%
+    pivot_longer(cols = c( Del_Robo_vehiculo, Del_Robo_casa_hab, Del_Robo_negocio, Del_Robo_transporte_pub, Del_Robo_transeunte,
+                           Del_Robo_autopartes, Del_Robo_otros, Del_Posesion_drogas, Del_Comercio_drogas, Del_Lesiones, Del_Hom_culposo,
+                           Del_Hom_doloso, Del_Portacion_armas, Del_Incum_asis_fam, Del_Violencia_fam, Del_Danio_prop, Del_Secuestro,
+                           Del_Violacion_sexual, Del_Fraude, Del_Delincuencia_org, Del_Otros_sexuales, Del_Extorsion, Del_Privacion_de_libertad,
+                           Del_Abuso_de_conf, Del_Amenazas, Del_Otros, Del_No_sabe, Del_No_responde), 
+                 names_to = "Tipo_de_delito", values_to = "Detenidos") %>%
+    mutate(Detenidos = Detenidos*as.numeric(FAC_PER),
+           Delito = case_when(Tipo_de_delito == "Del_Robo_vehiculo" ~ "Robo de vehiculo, ENPOL",
+                              T ~ "Otro")) %>%
+    group_by(Anio_arresto,Delito) %>%
+    summarize(Detenidos = sum(Detenidos, na.rm = T)) %>%
+    mutate(value2plot = Detenidos ,
+           labels = paste0(round(value2plot,0)),
+           group_var =  "Detenidos_ENPOL") %>%
+    filter(Delito!="Otro") %>%
+    rename(Anio = Anio_arresto)
+  
+  
+  data2plot <- bind_rows(snsp_2,enpol_3) %>%
+    ungroup() %>%
+    select(Anio, value2plot, labels, group_var) %>%
+    pivot_wider(names_from = "group_var" , id_cols = "Anio", values_from = c("value2plot","labels"))%>% 
+    mutate(value2plot_Brecha = value2plot_Robo_de_vehiculo_SESNSP - value2plot_Detenidos_ENPOL,
+           labels_Brecha = paste0(round(value2plot_Brecha,0))) %>%
+    pivot_longer(cols = c("value2plot_Robo_de_vehiculo_SESNSP", "value2plot_Detenidos_ENPOL", "labels_Robo_de_vehiculo_SESNSP", "labels_Detenidos_ENPOL", "labels_Brecha"), 
+                 names_to = c(".value", "group_var"), names_sep = "_") %>%
+    mutate(value2plot_Brecha = case_when(group_var=="Brecha" ~ value2plot_Brecha,
+                                        T~ NA)) %>% 
+    filter(group_var != "Brecha")
+  
+  data2plot1 <- data2plot %>%
+    filter(group_var == "Detenidos")
+  
+  data2plot2 <- data2plot %>%
+    filter(group_var == "Robo")
+  
+  colors4plot <- twoColors
+  
+  plt <- ggplot(data2plot, 
+                aes(x     = Anio,
+                    y     = value2plot,
+                    label = labels,
+                    group = group_var,
+                    color = group_var)) +
+    geom_point(data = data2plot1, 
+               aes(x     = Anio,
+                   y     = value2plot,
+                   label = labels,
+                   group = group_var,
+                   color = group_var),
+               size = 2,
+               show.legend = F) +
+    geom_line(data = data2plot1, 
+              aes(x     = Anio,
+                  y     = value2plot,
+                  label = labels,
+                  group = group_var,
+                  color = group_var),
+              size  = 1,
+              show.legend = F) +
+    geom_col(data = data2plot2, 
+             aes(x     = Anio,
+                 y     = value2plot,
+                 label = labels,
+                 group = group_var,
+                 fill = group_var,
+                 color = group_var),
+             show.legend = F) +
+    geom_text_repel(
+      size        = 3.514598,
+      show.legend = F,
+      min.segment.length = 1000,
+      seed               = 50,
+      box.padding        = 0.9,
+      point.padding      = 0.5,
+      direction          = "y",
+      force              = 9,
+      force_pull         = 1) +
+    scale_y_continuous(limits = c(0, 105),
+                       expand = c(0,0),
+                       breaks = seq(0,100,20),
+                       labels = paste0(seq(0,100,20), "%")) %>%
+    scale_color_manual(values = colors4plot) +
+    WJP_theme() +
+    expand_limits(y = c(0, 100))+
+    theme(panel.grid.major.x = element_blank(),
+          panel.grid.major.y = element_line(colour = "#d1cfd1"),
+          axis.title.x       = element_blank(),
+          axis.title.y       = element_blank(),
+          axis.line.x        = element_line(color = "#d1cfd1"),
+          axis.ticks.x       = element_line(color = "#d1cfd1", linetype = "solid"),
+          axis.text.y        = element_blank(),  
+          axis.ticks.y       = element_blank(),  
+          axis.line.y        = element_blank())
+  plt
+  
+  
+  ggsave(plot   = plt,
+         file   = paste0(
+           path2SP,
+           "/National/Visualization",
+           "/Output/Politica criminal/",
+           savePath,"/Delitos victimas",
+           "/Figure1_4.svg"), 
+         width  = 189.7883, 
+         height = 85,
+         units  = "mm",
+         dpi    = 72,
+         device = "svg")
+  
+  return(data2plot)
+  
 }
