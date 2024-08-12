@@ -178,14 +178,22 @@ master_data.df <- Main_database_completa %>%
         Primer_lugar_traslado == "Instalación de la policía" ~ 1,
         T ~ 0 
       ),
-    tiempo_30m =
+    tiempo_4h =
       case_when(
-        Tiempo_traslado == "Hasta 30 minutos" ~ 1,
-        T ~ 0 
+        Tiempo_traslado %in% c("Hasta 30 minutos", 
+                                 "Más de 30 minutos hasta 1 hora",
+                                 "Más de 1 hora hasta 2 horas",
+                                 "Más de 2 horas hasta 4 horas") ~ 1,
+        T ~ 0
+        
       ),
-    tiempo_6h =
+    tiempo_mas_4h =
       case_when(
-        Tiempo_traslado == "Más de 6 horas hasta 24 horas" ~ 1,
+        Tiempo_traslado %in% c("Más de 4 horas hasta 6 horas",
+                               "Más de 6 horas hasta 24 horas",
+                               "Más de 24 horas hasta 48 horas",
+                               "Más de 48 horas hasta 72 horas",
+                               "Más de 72 horas") ~ 1,
         T ~ 0 
       ),
     uso_excesivo =
@@ -204,7 +212,27 @@ master_data.df <- Main_database_completa %>%
         tipo_prision_preventiva == "Prisión Preventiva Oficiosa" ~ 1,
         tipo_prision_preventiva == "Prisión Preventiva Justificada" | tipo_prision_preventiva == "Proceso en libertad" ~ 0,
         T ~ NA_real_
-      )
+      ),
+    detenciones_FGR_flagrancia  = case_when(flagrancia  == 1 & 
+                                Corporacion_grupos == "Policía Federal Ministerial" ~ 1,
+                                            flagrancia  == 0 & 
+                                Corporacion_grupos == "Policía Federal Ministerial" ~ 0,
+                                 T ~ NA_real_),
+    detenciones_FGR_orden_det  = case_when(orden_det  == 1 & 
+                                Corporacion_grupos == "Policía Federal Ministerial" ~ 1,
+                                            orden_det  == 0 & 
+                                Corporacion_grupos == "Policía Federal Ministerial" ~ 0,
+                                 T ~ NA_real_),
+    detenciones_FGR_inspeccion  = case_when(inspeccion  == 1 & 
+                                Corporacion_grupos == "Policía Federal Ministerial" ~ 1,
+                                            inspeccion  == 0 & 
+                                Corporacion_grupos == "Policía Federal Ministerial" ~ 0,
+                                 T ~ NA_real_),
+    detenciones_FGR_det_ninguna  = case_when(det_ninguna  == 1 & 
+                                Corporacion_grupos == "Policía Federal Ministerial" ~ 1,
+                                            det_ninguna  == 0 & 
+                                Corporacion_grupos == "Policía Federal Ministerial" ~ 0,
+                                 T ~ NA_real_)
   )
 
 # Loading data
@@ -234,8 +262,8 @@ mainVar <- c("explicacion_mp",
              "det_ninguna", 
              "primer_mp", 
              "primer_policia", 
-             "tiempo_30m", 
-             "tiempo_6h")
+             "tiempo_4h", 
+             "tiempo_mas_4h")
 
 Paralalel_trends.pl <- paralel_trends.fn(
     mainVar = mainVar
@@ -271,14 +299,18 @@ mainVar <- c("explicacion_detencion",
              "det_ninguna", 
              "primer_mp", 
              "primer_policia", 
-             "tiempo_30m", 
-             "tiempo_6h",
+             "tiempo_4h", 
+             "tiempo_mas_4h",
              "uso_excesivo",
              "tortura_generalizada",
              "proceso_justo",
              "presion_mp",
              "presion_juez",
-             "prision_p_oficiosa")
+             "prision_p_oficiosa",
+             "detenciones_FGR_flagrancia",
+             "detenciones_FGR_orden_det",
+             "detenciones_FGR_inspeccion",
+             "detenciones_FGR_det_ninguna")
 
 # Efectos heterogeneos
 
@@ -924,47 +956,47 @@ Het_effects.pl$det_ninguna
 ::: panel-tabset
 <br>
 
-### 30 minutos
+### Hasta 4 horas
 
 ::: panel-tabset
 #### Años de sentencia
 
 ```{r a28, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
-time_effects.pl$tiempo_30m
+time_effects.pl$tiempo_4h
 ```
 
 #### Tendencias paralelas
 
 ```{r b28, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
-Paralalel_trends.pl$tiempo_30m
+Paralalel_trends.pl$tiempo_4h
 ```
 
 #### Heterogeneidad
 
 ```{r c28, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
-Het_effects.pl$tiempo_30m
+Het_effects.pl$tiempo_4h
 ```
 :::
 
-### 6 a 24 horas
+### Más de 4 horas
 
 ::: panel-tabset
 #### Años de sentencia
 
 ```{r a29, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
-time_effects.pl$tiempo_6h
+time_effects.pl$tiempo_mas_4h
 ```
 
 #### Tendencias paralelas
 
 ```{r b29, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
-Paralalel_trends.pl$tiempo_6h
+Paralalel_trends.pl$tiempo_mas_4h
 ```
 
 #### Heterogeneidad
 
 ```{r c29, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
-Het_effects.pl$tiempo_6h
+Het_effects.pl$tiempo_mas_4h
 ```
 :::
 :::
@@ -1053,11 +1085,11 @@ Het_effects.pl$proceso_justo
 
 </details>
 
-<br>
-<br>
-<br>
+<br> <br> <br>
 
-# PRUEBAS
+# CAPÍTULO 2: POLÍTICA CRIMINAL
+
+## Pruebas
 
 <details>
 
@@ -1076,6 +1108,96 @@ time_effects.pl$prision_p_oficiosa
 
 ```{r c33, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
 Het_effects.pl$prision_p_oficiosa
+```
+:::
+
+</details>
+
+## Detenciones FGR
+
+<details>
+
+<summary>Detenciones irregulares</summary>
+
+<br>
+
+::: panel-tabset
+#### Años de sentencia
+
+```{r a34, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
+time_effects.pl$detenciones_FGR_det_ninguna
+```
+
+#### Heterogeneidad
+
+```{r c34, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
+Het_effects.pl$detenciones_FGR_det_ninguna
+```
+:::
+
+</details>
+
+<details>
+
+<summary>Flagrancia</summary>
+
+<br>
+
+::: panel-tabset
+#### Años de sentencia
+
+```{r a35, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
+time_effects.pl$detenciones_FGR_flagrancia
+```
+
+#### Heterogeneidad
+
+```{r c35, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
+Het_effects.pl$detenciones_FGR_flagrancia
+```
+:::
+
+</details>
+
+<details>
+
+<summary>Inspección</summary>
+
+<br>
+
+::: panel-tabset
+#### Años de sentencia
+
+```{r a36, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
+time_effects.pl$detenciones_FGR_inspeccion
+```
+
+#### Heterogeneidad
+
+```{r c36, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
+Het_effects.pl$detenciones_FGR_inspeccion
+```
+:::
+
+</details>
+
+<details>
+
+<summary>Orden de detención</summary>
+
+<br>
+
+::: panel-tabset
+#### Años de sentencia
+
+```{r a37, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 5}
+time_effects.pl$detenciones_FGR_orden_det
+```
+
+#### Heterogeneidad
+
+```{r c37, include=TRUE, warning=FALSE, echo=FALSE, fig.height= 8.5}
+Het_effects.pl$detenciones_FGR_orden_det
 ```
 :::
 

@@ -330,7 +330,6 @@ defensa_oportuna.fn <- function(
   data_subset.df <- master_data.df %>%
     mutate( P4_1_05 = as.numeric(P4_1_05),
             P5_1 = as.numeric(P5_1),
-            P5_4_A = as.numeric(P5_4_A),
             momento = case_when(P4_1_05 == 1 ~ "Defensa en Ministerio Público",
                                 P5_1    == 1 ~ "Defensa con Juez",
                                 P4_1_05 == 2 ~ "Defensa en Ministerio Público",
@@ -341,14 +340,25 @@ defensa_oportuna.fn <- function(
                                 P4_1_05 == 2 ~ "No",
                                 P5_1    == 2 ~ "No",
                                 T~ NA_character_)
-            )
+            )%>% 
+    mutate(
+      P5_4_A = as.numeric(P5_4_A),
+      P5_4_M = as.numeric(P5_4_M),
+      P5_4_A = case_when(
+        P5_4_A >= 97 ~ NA_real_,
+        T ~ P5_4_A),
+      P5_4_M = case_when(
+        P5_4_M >= 97 ~ NA_real_,
+        T ~ P5_4_M),
+      P5_4_M = P5_4_M/12,
+      tiempo_sentencia = P5_4_A+P5_4_M)
   
   
   data2plot <- data_subset.df %>%
-    drop_na(momento, defensa, P5_4_A) %>%
+    drop_na(momento, defensa, tiempo_sentencia) %>%
     mutate(counter = 1) %>%
     group_by(momento, defensa) %>%
-    summarise(mean_value = mean(P5_4_A, na.rm = TRUE),
+    summarise(mean_value = mean(tiempo_sentencia, na.rm = TRUE),
               n_obs = sum(counter, na.rm = TRUE)) %>%
     mutate(category = momento,
            group_var = case_when(defensa == "Sí" ~ "Sí",
@@ -364,8 +374,8 @@ defensa_oportuna.fn <- function(
                                  T~NA_real_),
            order_value_bars = case_when(group_var == "Sí" ~ 1,
                                         group_var == "No" ~ 2,
-                                        T ~ NA_real_)) %>%
-    filter(momento == "Defensa en Ministerio Público")
+                                        T ~ NA_real_)) 
+    # filter(momento == "Defensa en Ministerio Público")
   
   colors4plot <- twoColors
   
@@ -425,18 +435,28 @@ tipo_defensa.fn <- function(
            NSJP == 1) %>%
     mutate( P4_1_05 = as.numeric(P4_1_05),
             P5_1 = as.numeric(P5_1),
-            P5_4_A = as.numeric(P5_4_A),
             defensa_momento = case_when(P4_1_05 == 1 & P5_1 == 1 ~ "Con defensa en MP y con asesoría previa a la audiencia inicial",
                                         P4_1_05 == 2 & P5_1 == 2 ~ "Sin defensa en MP y sin asesoría previa a la audiencia inicial",
                                         P4_1_05 == 2 & P5_1 == 1 ~ "Sin defensa en MP y con asesoría previa a la audiencia inicial",
                                         P4_1_05 == 1 & P5_1 == 2 ~ "Con defensa en MP y sin asesoría previa a la audiencia inicial",
-                                        T~ NA_character_))
+                                        T~ NA_character_)) %>% 
+    mutate(
+      P5_4_A = as.numeric(P5_4_A),
+      P5_4_M = as.numeric(P5_4_M),
+      P5_4_A = case_when(
+        P5_4_A >= 97 ~ NA_real_,
+        T ~ P5_4_A),
+      P5_4_M = case_when(
+        P5_4_M >= 97 ~ NA_real_,
+        T ~ P5_4_M),
+      P5_4_M = P5_4_M/12,
+      tiempo_sentencia = P5_4_A+P5_4_M)
   
   data2plot <- data_subset.df %>%
-    drop_na(defensa_momento, abogado_publico, P5_4_A) %>%
+    drop_na(defensa_momento, abogado_publico, tiempo_sentencia) %>%
     mutate(counter = 1) %>%
     group_by(defensa_momento, abogado_publico) %>%
-    summarise(mean_value = mean(P5_4_A, na.rm = TRUE),
+    summarise(mean_value = mean(tiempo_sentencia, na.rm = TRUE),
               n_obs = sum(counter, na.rm = TRUE)) %>%
     mutate(category = defensa_momento,
            group_var = case_when(abogado_publico == "1" ~ "Abogado público",
