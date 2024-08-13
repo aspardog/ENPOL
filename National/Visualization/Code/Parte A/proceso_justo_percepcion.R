@@ -621,3 +621,196 @@ percepcion_escucha.fn <- function(
   
 }
 
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##
+## 8. Percepcion resumen                                              ----
+##
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+percepcion_resumen.fn <- function(
+    
+  data.df = master_data.df
+  
+) {
+  
+  data_subset.df <- data.df %>%
+    filter(sentenciado == 1) %>%
+    mutate(
+      proceso_justo = 
+        case_when(
+          as.numeric(P5_26A) == 1 ~ 1,
+          as.numeric(P5_26A) == 0 ~ 0,
+          T ~ NA_real_
+        ),
+      escucha = 
+        case_when(
+          as.numeric(escuchado_x_juez) == 1 ~ "Se sintió <br>escuchado",
+          as.numeric(escuchado_x_juez) == 0 ~ "No se sintió <br>escuchado",
+          T ~ NA_character_
+        ),
+      counter = 1,
+      culpabilidad = 
+        case_when(
+          as.numeric(P3_1) == 1 | as.numeric(P3_1) == 2 ~ "Autoidentificación <br>como culpable",
+          as.numeric(P3_1) == 3 | as.numeric(P3_1) == 4 ~ "Autoidentificación <br>como inocente",
+          T ~ NA_character_
+        ),
+      procedimiento =
+        case_when(
+          as.numeric(P5_6) == 1 ~ "Juicio",
+          as.numeric(P5_6) == 2 ~ "Procedimiento <br>abreviado",
+          T ~ NA_character_
+        )
+    )
+  
+  
+  vars <- c("escucha", "culpabilidad", "procedimiento")
+  
+  final_data <- map_dfr(vars, function(var) {
+    
+    data_subset.df %>%
+      rename(category = all_of(var)) %>%
+      group_by(category) %>%
+      summarise(
+        value2plot = mean(proceso_justo, na.rm = TRUE)
+      ) %>%
+      drop_na() %>%
+      mutate(
+        group = as.character(var),
+        figure = paste0(round(value2plot*100, 0), "%")
+      )
+    
+  })
+  
+  data2plot <- final_data %>%
+    mutate(
+      group = 
+        case_when(
+          group == "escucha"       ~ "Sentimiento de <br>escucha",
+          group == "culpabilidad"  ~ "Autoidentificación <br>de culpabilidad",
+          group == "procedimiento" ~ "Forma de conclusión <br>del proceso"
+        ),
+      
+      group = factor(group, levels = c("Forma de conclusión <br>del proceso", 
+                                       "Sentimiento de <br>escucha", 
+                                       "Autoidentificación <br>de culpabilidad")),
+      order_values =
+        case_when(
+          category %in% c("Autoidentificación <br>como culpable",
+                          "Se sintió <br>escuchado",
+                          "Procedimiento <br>abreviado") ~ 1,
+          T ~ 2
+        ),
+      category = fct_reorder(category, order_values)
+    )
+  
+  group_labels <- c("Sentimiento de <br>escucha" = "Sentimiento de \nescucha",
+                    "Autoidentificación <br>de culpabilidad" = "Autoidentificación de \nculpabilidad",
+                    "Forma de conclusión <br>del proceso" = "Forma de conclusión \ndel proceso")
+  
+  plot <- ggplot(
+    data2plot,
+    aes(x = value2plot * 100,
+        y =  category
+    )
+  )+
+    geom_segment(
+      aes(xend = 0, yend = category)
+    ) +
+    geom_point(
+      size = 4,
+      color = "#009AA9"
+    ) +
+    #facet_grid(group ~ ., scales = "free_y", space = "free") +
+    facet_grid(rows = vars(group), scales = "free_y", switch = "y", space = "free_y", labeller = labeller(group = group_labels)) +
+    scale_x_continuous(limits = c(0, 100),
+                       breaks = seq(0, 100, 20),
+                       labels = paste0(seq(0, 100, 20), "%"),
+                       position = "top") +
+    WJP_theme() +
+    xlab("") +
+    ylab("") +
+    geom_text(aes(x    = value2plot * 100 + 5,
+                  label = figure), 
+              position = position_dodge(width = 0.9),
+              color    = "black",
+              family   = "Lato Full",
+              fontface = "bold", 
+              size = 3.514598)  + 
+    theme(
+      panel.spacing = unit(1, "lines"), # Espacio entre facetas
+      panel.background   = element_blank(),
+      plot.background    = element_blank(),
+      panel.grid.major   = element_line(size     = 0.25,
+                                        colour   = "#5e5c5a",
+                                        linetype = "dashed"),
+      panel.grid.minor   = element_blank(),
+      panel.grid.major.y = element_blank(),
+      panel.grid.major.x = element_line(color = "#D0D1D3")
+    ) +
+    theme(
+      axis.title.y       = element_blank(),
+      axis.title.x       = element_blank(),
+      axis.ticks         = element_blank(),
+      axis.text.y        = element_markdown(family   = "Lato Full",
+                                            face     = "bold",
+                                            size     = 3.514598*.pt,
+                                            color    = "#524F4C",
+                                            margin   = margin(0, 10, 0, 0),
+                                            hjust = 0.5, vjust = 0), 
+      plot.caption = element_markdown(family   = "Lato Full",
+                                      face     = "plain",
+                                      size     = 3.514598*.pt,
+                                      color    = "#524F4C", 
+                                      vjust    = 0, 
+                                      hjust    = 0, 
+                                      margin = margin(20, 0, 0, 0)),
+      axis.text.x        = element_markdown(family   = "Lato Full",
+                                            face     = "bold",
+                                            size     = 3.514598*.pt,
+                                            color    = "#524F4C",
+      ),
+      plot.title          = element_text(family   = "Lato Full",
+                                         face     = "bold",
+                                         size     = 3.514598*.pt,
+                                         color    = "black",
+                                         margin   = margin(0, 0, 10, 0),
+                                         hjust    = 0), 
+      plot.subtitle      = element_text(family   = "Lato Full",
+                                        face     = "plain",
+                                        size     = 3.514598*.pt,
+                                        color    = "black",
+                                        margin   = margin(2.5, 0, 20, 0),
+                                        hjust    = 0),
+      legend.text        =  element_markdown(family   = "Lato Full",
+                                             face     = "plain",
+                                             size     = 3.514598*.pt,
+                                             color    = "#524F4C"),
+      legend.title       = element_markdown(family   = "Lato Full",
+                                            face     = "plain",
+                                            size     = 3.514598*.pt,
+                                            color    = "#524F4C"),
+      strip.placement = "outside",
+      strip.text = element_text(
+        family   = "Lato Full",
+        face     = "bold",
+        size     = 3.514598*.pt,
+        color    = "black", 
+        hjust = 0.5,
+        margin = margin(0, 10, 0, 0)
+      )
+    );plot
+  
+  ggsave(plot = plot, 
+         filename = paste0(path2SP,
+                           "/National/Visualization",
+                           "/Output/Debido proceso/",
+                           savePath,"/Percepcion proceso justo",
+                           "/percepcion_resumen.svg"),
+         width = 189.7883,
+         height = 210,
+         units  = "mm",
+         dpi    = 72,
+         device = "svg")
+  
+}

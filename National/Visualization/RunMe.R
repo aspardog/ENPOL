@@ -228,7 +228,7 @@ for (i in Estados) {
   percepcion_culpabilidad <- percepcion_culpabilidad.fn()
   escucha <- escucha.fn()
   percepcion_escucha <- percepcion_escucha.fn()
-  
+  percepcion_resumen.fn <- percepcion_resumen.fn()
   proceso_percepcion_lista <- list('Percepcion proceso'       = proceso_justo, 
                                    'Percepcion indicadores'   = percepcion_indicadores,
                                    'Tipo procedimiento'       = procedimiento,
