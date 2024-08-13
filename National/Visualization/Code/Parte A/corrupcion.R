@@ -244,7 +244,15 @@ corrupcion_elementos.fn <- function(
           axis.title.x       = element_blank(),
           axis.text.y        = element_text(hjust = 1, size = 10),
           plot.title = element_text(face = "bold", size = 12),
-          strip.placement = "outside")
+          strip.placement = "outside", 
+          strip.text = element_text(
+            family   = "Lato Full",
+            face     = "bold",
+            size     = 3.514598*.pt,
+            color    = "#524F4C",
+            margin   = margin(0, 10, 0, 0),
+            hjust = 1
+          ))
   
   ggsave(plot = plot, 
          filename = paste0(path2SP,
