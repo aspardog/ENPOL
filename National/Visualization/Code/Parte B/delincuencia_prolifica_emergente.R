@@ -213,7 +213,7 @@ delito_reincidencia.fn <- function(
         filter(value2plot >= 1,
                Delito != "Distinto delito")
       
-      colors4plot <- rep("#2a2a9A", 7)
+      colors4plot <- rep("#2a2a9A", 6)
       
       
       plt <- ggplot(data2plot, 
