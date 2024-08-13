@@ -101,7 +101,7 @@ for (i in Estados) {
     Estados <- "National"
     
     master_data.df <- Main_database %>% 
-      filter(Anio_arresto >= as.numeric(2008)) %>% 
+      filter(Anio_arresto >= as.numeric(2015)) %>% 
       filter(NSJP == 1) 
     
     savePath <- "Nacional"
@@ -503,6 +503,7 @@ for (i in Estados) {
   
   delitos_ENPOL             <- delitos_ENPOL.fn()
   delitos_ENVIPE            <- delitos_ENVIPE.fn()
+  prevalentes_ENVIPE_nueva  <- prevalentes_ENVIPE_nueva.fn()
   prevalentes_ENVIPE        <- prevalentes_ENVIPE.fn()
   homicidios_ENPOL_ENVIPE   <- homicidios_ENPOL_ENVIPE.fn()
   
@@ -510,6 +511,7 @@ for (i in Estados) {
     
     'Delitos ENPOL'              = delitos_ENPOL,
     'Delitos ENVIPE'             = delitos_ENVIPE,
+    'Delitos ENVIPE Nueva'       = prevalentes_ENVIPE_nueva,
     'Delitos prevalentes ENVIPE' = prevalentes_ENVIPE,
     'Homicidios ENPOL ENVIPE'    = homicidios_ENPOL_ENVIPE
     
