@@ -162,10 +162,11 @@ señalamientos_condiciones.fn <- function(
                              values == "responsable_señalado" ~ "Resultó identificado como responsable por el testigo"),
           figure = paste0(round(value2plot, 0), "%"),
           labels = str_wrap(labels, width = 20),
-          order_var = rank(value2plot))
+          order_var = rank(value2plot)) %>%
+        filter(values == "parecido_señalado" | values == "responsable_señalado")
       
       
-      colors4plot <- rep("#2a2a94", 4)
+      colors4plot <- rep("#2a2a94", 2)
       
       
       plt <- ggplot(data2plot, 

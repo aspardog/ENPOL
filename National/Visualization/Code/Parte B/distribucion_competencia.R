@@ -30,9 +30,20 @@ delitos_fuero.fn <- function(
   ){
 
 
-    data2plot <- data.df %>%
+    data2plot <- data.df %>% 
+      mutate(corporacion_fuero = case_when(Corporacion_grupos == "Ejército o Marina" ~ "Corporación Federal", 
+                                           Corporacion_grupos == "Guardia Nacional" ~ "Corporación Federal",
+                                           Corporacion_grupos == "Policía Federal" ~ "Corporación Federal",
+                                           Corporacion_grupos == "Policía Federal Ministerial" ~ "Corporación Federal",
+                                           Corporacion_grupos == "Policía Estatal Ministerial o Judicial" ~ "Corporación Local",
+                                           Corporacion_grupos == "Operativo Conjunto" ~ "Operativo Conjunto",
+                                           Corporacion_grupos == "Policía Estatal" ~ "Corporación Local", 
+                                           Corporacion_grupos == "Policía Municipal" ~ "Corporación Local",
+                                           Corporacion_grupos == "Otra" ~ "Otra", 
+                                           T ~ NA_character_)) %>%
+      filter(corporacion_fuero=="Corporación Federal") %>%
       select(fuero) %>% 
-      rename(Value =fuero) %>% 
+      rename(Value = fuero) %>% 
       drop_na() %>% 
       group_by(Value) %>%
       summarise(Frequency = n()) %>% 
@@ -85,7 +96,7 @@ delitos_fuero.fn <- function(
     ggsave(plot   = plt,
            file   = paste0(path2SP,"/National/Visualization",
                            "/Output/Politica criminal/",
-                           savePath,"/Distribucion competencias/Figure3_1.svg"), 
+                           savePath,"/Distribucion competencias/Figure2_1_2a.svg"), 
            width  = 189.7883, 
            height = 85,
            units  = "mm",
@@ -94,6 +105,109 @@ delitos_fuero.fn <- function(
     
     return(data2plot)
 
+}
+
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##
+## B.2.1.2. Proporción de delitos federales respecto del total de delitos registrados por estado (gráfica)                                                       ----
+##
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+delitos_federales_bar.fn <- function(
+    
+  data.df = master_data.df  
+  
+){
+  
+  
+  data_subset.df <- data.df %>% 
+    filter(Anio_arresto >= 2015,
+           NSJP == 1, 
+           corpo) %>% 
+    mutate(tipo_detencion = case_when(flagrancia  == 1 ~ "Flagrancia",
+                                      orden_det   == 1 ~ "Orden de detención",
+                                      inspeccion  == 1 ~ "Inspeccion",
+                                      det_ninguna == 1 ~ "Irregulares",
+                                      T ~ NA_character_))
+  
+  data2table <- data_subset.df %>%
+    select(Anio_arresto, tipo_detencion) %>% 
+    group_by(Anio_arresto, tipo_detencion) %>%
+    drop_na() %>% 
+    summarise(Frequency = n(), .groups = 'drop') %>% 
+    group_by(Anio_arresto) %>% 
+    mutate(values = Anio_arresto,
+           value2plot = Frequency / sum(Frequency) * 100,
+           figure = paste0(round(value2plot, 0), "%"),
+           labels = figure,
+           group_var = tipo_detencion)
+  
+  
+  
+  colors4plot <- c("Flagrancia" = "#2a2a94",
+                   "Orden de detención" = "#a90099",
+                   "Inspeccion" = "#3273ff",
+                   "Irregulares" = "#FA4D57")
+  
+  # Creating ggplot
+  plt <- ggplot(data2table, 
+                aes(x     = Anio_arresto,
+                    y     = value2plot,
+                    label = labels,
+                    group = group_var,
+                    color = group_var)) +
+    geom_point(size = 2,
+               show.legend = F
+    ) +
+    geom_line(size  = 1,
+              show.legend = F
+    ) +
+    geom_text_repel(family      = "Lato Full",
+                    fontface    = "bold",
+                    size        = 3.514598,
+                    show.legend = F,
+                    
+                    # Additional options from ggrepel package:
+                    min.segment.length = 1000,
+                    seed               = 42,
+                    box.padding        = 0.5,
+                    direction          = "y",
+                    force              = 5,
+                    force_pull         = 1) +
+    scale_y_continuous(limits = c(0, 105),
+                       expand = c(0,0),
+                       breaks = seq(0,100,20),
+                       labels = paste0(seq(0,100,20), "%"))+ #%>%
+    scale_color_manual(values = colors4plot) +
+    WJP_theme() +
+    theme(panel.grid.major.x = element_blank(),
+          panel.grid.major.y = element_line(colour = "#d1cfd1"),
+          axis.title.x       = element_blank(),
+          axis.title.y       = element_blank(),
+          axis.line.x        = element_line(color    = "#d1cfd1"),
+          axis.ticks.x       = element_line(color    = "#d1cfd1",
+                                            linetype = "solid"),
+          legend.position      = "bottom"
+    )
+  
+  
+  plt
+  
+  
+  ggsave(plot   = plt,
+         file   = paste0(path2SP,"/National/Visualization",
+                         "/Output/Politica criminal/",
+                         savePath,"/Estudio FGR/Figure2_1.svg"), 
+         width  = 189.7883, 
+         height = 80,
+         units  = "mm",
+         dpi    = 72,
+         device = "svg")
+  
+  
+  return(data2table)
+  
 }
 
 

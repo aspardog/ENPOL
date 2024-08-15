@@ -38,13 +38,17 @@ inspecciones_comportamiento.fn <- function(
   ){
 
     data_subset.df <- data.df %>% 
-      filter(Anio_arresto >= 2008,
+      filter(Anio_arresto >= 2015,
              NSJP == 1) %>% 
       select(P3_12_1, 
              P3_12_2,
              P3_12_3,
              P3_12_4,
-             P3_12_5) 
+             P3_12_5) %>%
+      mutate(encontro_sin_sembrar = case_when(P3_12_3 == 1 & P3_12_4 == 0 ~ 1,
+                                              P3_12_3 == 1 & P3_12_4 == 1 ~ 0,
+                                              P3_12_3 == 0 ~ 0,
+                                              T ~ NA_real_))
     
     data2plot <- data_subset.df %>%
       pivot_longer(everything(), names_to = "Column", values_to = "Percentage") %>% 
@@ -56,15 +60,17 @@ inspecciones_comportamiento.fn <- function(
       mutate(
         labels = case_when(values == "P3_12_1" ~ "Lo desvistió", 
                            values == "P3_12_2" ~ "Le dijo qué objeto buscaba",
-                           values == "P3_12_3" ~ "Encontró el objeto ilegal",
+                           values == "P3_12_3" ~ "Encontró el objeto ilegal que buscaba u otro",
                            values == "P3_12_4" ~ "Le sembró algún objeto",
-                           values == "P3_12_5" ~ "Videograbó la inspección",),
+                           values == "P3_12_5" ~ "Videograbó la inspección",
+                           values == "encontro_sin_sembrar" ~ "Encontró un objeto sin que este fuera sembrado",),
         figure = paste0(round(value2plot, 0), "%"),
         labels = str_wrap(labels, width = 20),
-        order_var = rank(value2plot))
+        order_var = rank(value2plot)) %>%
+      filter(values == "P3_12_3"  | values == "P3_12_4" | values == "encontro_sin_sembrar")
     
     
-    colors4plot <- rep("#2a2a94", 5)
+    colors4plot <- rep("#2a2a94", 3)
     
     
     plt <- ggplot(data2plot, 
@@ -134,7 +140,7 @@ inspecciones_objeto.fn <- function(
   ) {
 
     data_subset.df <- data.df %>% 
-      filter(Anio_arresto >= 2008,
+      filter(Anio_arresto >= 2015,
              NSJP == 1) %>% 
       mutate(encontro_sinsembrar = case_when(P3_12_3  == 1 & P3_12_4  == 0 ~ 1,
                                              P3_12_3  == 1 & P3_12_4  == 1 ~ 0,
