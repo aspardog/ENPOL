@@ -797,7 +797,7 @@ percepcion_resumen.fn <- function(
         size     = 3.514598*.pt,
         color    = "black", 
         hjust = 0.5,
-        margin = margin(0, 10, 0, 0)
+        margin = margin(0, 0, 0, 0)
       )
     );plot
   
@@ -808,7 +808,7 @@ percepcion_resumen.fn <- function(
                            savePath,"/Percepcion proceso justo",
                            "/percepcion_resumen.svg"),
          width = 189.7883,
-         height = 210,
+         height = 189.7883,
          units  = "mm",
          dpi    = 72,
          device = "svg")
