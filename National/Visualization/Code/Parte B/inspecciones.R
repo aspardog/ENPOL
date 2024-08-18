@@ -81,7 +81,7 @@ inspecciones_comportamiento.fn <- function(
       geom_bar(stat = "identity", fill = colors4plot, color = colors4plot,
                show.legend = F, width = 0.9) +
       scale_fill_manual(values = colors4plot) +
-      geom_text(aes(y    = value2plot + 5 ),
+      geom_text(aes(y    = value2plot + 10 ),
                 color    = "#4a4a49",
                 family   = "Lato Full",
                 fontface = "bold") +
