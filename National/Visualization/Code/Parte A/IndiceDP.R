@@ -35,7 +35,7 @@ indicador_general.fn <- function(
   
   etiquetas <- data2plot$labelx
   
-  plot <- BarSimpleChartViz(data = data2plot, 
+  plot <- BarSimpleChartVizGrl(data = data2plot, 
                             shade_xminvalue = 6, 
                             shade_xmaxvalue = 10, 
                             x_labels = etiquetas)
@@ -325,8 +325,8 @@ indicador_proceso_justo.fn <- function(
   etiquetas <- data2plot$labelx
   
   plot <- BarSimpleChartViz(data = data2plot, 
-                            shade_xminvalue = NA, 
-                            shade_xmaxvalue = NA, 
+                            shade_xminvalue = 0, 
+                            shade_xmaxvalue = 0, 
                             x_labels = etiquetas)
   
   
@@ -366,8 +366,8 @@ indicador_uso_fuerza.fn <- function(
   etiquetas <- data2plot$labelx
   
   plot <- BarSimpleChartViz(data = data2plot, 
-                            shade_xminvalue = NA, 
-                            shade_xmaxvalue = NA, 
+                            shade_xminvalue = 0, 
+                            shade_xmaxvalue = 0, 
                             x_labels = etiquetas)
   
   ggsave(plot = plot, 
@@ -406,8 +406,8 @@ indicador_tortura.fn <- function(
   etiquetas <- data2plot$labelx
   
   plot <- BarSimpleChartViz(data = data2plot, 
-                            shade_xminvalue = NA, 
-                            shade_xmaxvalue = NA, 
+                            shade_xminvalue = 0, 
+                            shade_xmaxvalue = 0, 
                             x_labels = etiquetas)
   
   ggsave(plot = plot, 
