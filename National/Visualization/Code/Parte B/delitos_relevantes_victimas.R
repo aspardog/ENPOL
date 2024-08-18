@@ -1145,7 +1145,8 @@ homicidios_ENPOL_ENVIPE.fn <- function(
         pivot_longer(cols = c("value2plot_Homicidios_SNSP", "value2plot_Detenidos_ENPOL", "labels_Homicidios_SNSP", "labels_Detenidos_ENPOL", "labels_Brecha"), 
                      names_to = c(".value", "group_var"), names_sep = "_") %>%
         mutate(value2plot_Brecha= case_when(group_var=="Brecha" ~ value2plot_Brecha,
-                                            T~ NA)) %>% 
+                                            T~ NA),
+               labels = comma(as.numeric(labels))) %>% 
         filter(group_var != "Brecha")
       
       data2plot1 <- data2plot %>%
@@ -1192,16 +1193,24 @@ homicidios_ENPOL_ENVIPE.fn <- function(
                   vjust = -0.4,  # Adjust vertical position
                   size = 3.5,  # Adjust text size
                   show.legend = FALSE) +
-        geom_text_repel(
-          size = 3.514598,
-          show.legend = FALSE,
-          min.segment.length = 1000,
-          seed = 40,
-          box.padding = 0.9,
-          point.padding = 0.5,
-          direction = "y",
-          force = 9,
-          force_pull = 1) +
+        geom_text(data = data2plot1,  # Add this to display labels on columns
+                  aes(x = Anio,
+                      y = value2plot,
+                      label = labels,
+                      group = group_var),
+                  vjust = -0.4,  # Adjust vertical position
+                  size = 3.5,  # Adjust text size
+                  show.legend = FALSE) +
+        # geom_text_repel(
+        #   size = 3.514598,
+        #   show.legend = FALSE,
+        #   min.segment.length = 1000,
+        #   seed = 13,
+        #   box.padding = 0.9,
+        #   point.padding = 0.5,
+        #   direction = "y",
+        #   force = 9,
+        #   force_pull = 1) +
         scale_y_continuous(limits = c(0, 105),
                            expand = c(0,0),
                            breaks = seq(0,100,20),
@@ -1231,7 +1240,7 @@ homicidios_ENPOL_ENVIPE.fn <- function(
                savePath,"/Delitos victimas",
                "/Figure1_4.svg"), 
              width  = 189.7883, 
-             height = 85,
+             height = 65,
              units  = "mm",
              dpi    = 72,
              device = "svg")
@@ -1314,7 +1323,8 @@ robo_vehiculos_ENPOL_ENVIPE.fn <- function(
     pivot_longer(cols = c("value2plot_Robo_de_vehiculo_SESNSP", "value2plot_Detenidos_ENPOL", "labels_Robo_de_vehiculo_SESNSP", "labels_Detenidos_ENPOL", "labels_Brecha"), 
                  names_to = c(".value", "group_var"), names_sep = "_") %>%
     mutate(value2plot_Brecha = case_when(group_var=="Brecha" ~ value2plot_Brecha,
-                                        T~ NA)) %>% 
+                                        T~ NA),
+           labels = comma(as.numeric(labels))) %>% 
     filter(group_var != "Brecha")
   
   data2plot1 <- data2plot %>%
@@ -1331,6 +1341,14 @@ robo_vehiculos_ENPOL_ENVIPE.fn <- function(
                     label = labels,
                     group = group_var,
                     color = group_var)) +
+    geom_col(data = data2plot2, 
+             aes(x     = Anio,
+                 y     = value2plot,
+                 label = labels,
+                 group = group_var,
+                 fill = group_var,
+                 color = group_var),
+             show.legend = F) +
     geom_point(data = data2plot1, 
                aes(x     = Anio,
                    y     = value2plot,
@@ -1347,31 +1365,24 @@ robo_vehiculos_ENPOL_ENVIPE.fn <- function(
                   color = group_var),
               size  = 1,
               show.legend = F) +
-    geom_col(data = data2plot2, 
-             aes(x     = Anio,
-                 y     = value2plot,
-                 label = labels,
-                 group = group_var,
-                 fill = group_var,
-                 color = group_var),
-             show.legend = F) +
     geom_text_repel(
       size        = 3.514598,
       show.legend = F,
-      min.segment.length = 1000,
-      seed               = 50,
-      box.padding        = 0.9,
+      seed        = 13, 
+      min.segment.length = 10000,
+      box.padding        = 1,
       point.padding      = 0.5,
       direction          = "y",
-      force              = 9,
-      force_pull         = 1) +
+      force              = 1,
+      force_pull         = 4) +
     scale_y_continuous(limits = c(0, 105),
                        expand = c(0,0),
                        breaks = seq(0,100,20),
                        labels = paste0(seq(0,100,20), "%")) %>%
     scale_color_manual(values = colors4plot) +
+    scale_fill_manual(values = "#a90099") +
     WJP_theme() +
-    expand_limits(y = c(0, 100))+
+    expand_limits(y = c(250000, 100))+
     theme(panel.grid.major.x = element_blank(),
           panel.grid.major.y = element_line(colour = "#d1cfd1"),
           axis.title.x       = element_blank(),
@@ -1380,9 +1391,8 @@ robo_vehiculos_ENPOL_ENVIPE.fn <- function(
           axis.ticks.x       = element_line(color = "#d1cfd1", linetype = "solid"),
           axis.text.y        = element_blank(),  
           axis.ticks.y       = element_blank(),  
-          axis.line.y        = element_blank())
+          axis.line.y        = element_blank()); plt
   plt
-  
   
   ggsave(plot   = plt,
          file   = paste0(
@@ -1390,13 +1400,15 @@ robo_vehiculos_ENPOL_ENVIPE.fn <- function(
            "/National/Visualization",
            "/Output/Politica criminal/",
            savePath,"/Delitos victimas",
-           "/Figure1_4.svg"), 
+           "/Figure1_5.svg"), 
          width  = 189.7883, 
-         height = 85,
+         height = 65,
          units  = "mm",
          dpi    = 72,
          device = "svg")
+
   
   return(data2plot)
   
 }
+
