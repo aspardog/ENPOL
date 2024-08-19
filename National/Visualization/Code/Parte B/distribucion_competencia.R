@@ -107,6 +107,265 @@ delitos_fuero.fn <- function(
 
 }
 
+
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##
+## Proporción de detenciones realizadas por corporaciones federales sólo de los delitos del fuero común por estado ----
+##
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+delitos_comun_porfederales_mapa.fn <- function(
+    
+  data.df= master_data.df
+  
+){
+  
+  
+  # Brecha entre el porcentaje de detenciones por tipo de fuero ------------------------------
+  
+  data.df <-  data.df %>% 
+    mutate(corporacion_fuero = case_when(Corporacion_grupos == "Ejército o Marina" ~ "Corporación Federal", 
+                                         Corporacion_grupos == "Guardia Nacional" ~ "Corporación Federal",
+                                         Corporacion_grupos == "Policía Federal" ~ "Corporación Federal",
+                                         Corporacion_grupos == "Policía Federal Ministerial" ~ "Corporación Federal",
+                                         Corporacion_grupos == "Policía Estatal Ministerial o Judicial" ~ "Corporación Local",
+                                         Corporacion_grupos == "Operativo Conjunto" ~ "Operativo Conjunto",
+                                         Corporacion_grupos == "Policía Estatal" ~ "Corporación Local", 
+                                         Corporacion_grupos == "Policía Municipal" ~ "Corporación Local",
+                                         Corporacion_grupos == "Otra" ~ "Otra", 
+                                         T ~ NA_character_)) %>% 
+    filter(corporacion_fuero == "Corporación Federal")
+  
+  
+  
+  Estados <- data.df %>% 
+    select(Estado_arresto, fuero) %>% 
+    group_by(Estado_arresto, fuero) %>%
+    summarise(Frequency = n(), .groups = 'drop') %>% 
+    group_by(Estado_arresto) %>% 
+    mutate(Percentage = Frequency / sum(Frequency) * 100) %>% 
+    select(-Frequency) %>% 
+    pivot_wider(names_from = fuero, values_from = Percentage) %>% 
+    mutate(Percentage = round(`Sólo común`),0)%>% 
+    select(Estado_arresto, Percentage) %>%
+    rename(ESTADO = Estado_arresto) %>%
+    drop_na() %>%
+    mutate(
+      ESTADO = 
+        case_when(
+          ESTADO == "Coahuila de Zaragoza" ~ "Coahuila",
+          ESTADO == "Michoacán de Ocampo"  ~ "Michoacán",
+          ESTADO == "Veracruz de Ignacio de la Llave" ~ "Veracruz",
+          ESTADO == "México" ~ "Estado de México",
+          ESTADO == "Distrito Federal" ~ "Ciudad de México",
+          T ~ ESTADO
+        ))
+  
+  promedio_nacional <- data.df %>% 
+    select(fuero) %>% 
+    group_by(fuero) %>%
+    summarise(Frequency = n(), .groups = 'drop') %>% 
+    mutate(Percentage = Frequency / sum(Frequency) * 100) %>% 
+    filter (fuero  == "Sólo común") %>% 
+    drop_na() %>%
+    pull(Percentage)
+  
+  Estados <- Estados %>%
+    ungroup() %>% 
+    add_row(
+      ESTADO          = "ANacional",
+      Percentage      = promedio_nacional)
+  
+  quintiles <- round(quantile(round(Estados$Percentage, 0), probs = seq(0, 1, by = 0.2)),0)
+  
+  
+  mapa <- st_read(paste0(path2SP,"/National/Exploration/Input/shp/México_Estados.shp")) %>%
+    mutate( ESTADO = 
+              case_when(
+                ESTADO == "México" ~ "Estado de México",
+                ESTADO == "Distrito Federal" ~ "Ciudad de México",
+                T ~ ESTADO
+              )
+    )
+  
+  table <- Estados %>%
+    mutate(
+      ` ` = "",
+      `%` = round(Percentage, 0)
+    ) %>%
+    arrange(ESTADO) %>%
+    mutate(
+      ESTADO = 
+        case_when(
+          ESTADO == "ANacional" ~ "Promedio Nacional",
+          T ~ ESTADO
+        )) %>% 
+    select(
+      Estado = ESTADO, ` `, `%`
+    ) %>%
+    flextable() %>%
+    theme_zebra(
+      odd_header = "transparent",
+      odd_body   = "#e2e0df"
+    ) %>%
+    
+    padding(j = 1, padding.right = 30) %>%
+    padding(j = 1, padding.left  = 10) %>%
+    padding(j = 3, padding.left  = 10) %>%
+    
+    width(j = " ", width = 0.5, unit = "mm") %>%
+    width(j = "%", width = 0.75,   unit = "mm") %>%
+    
+    
+    bg(i = ~ `%` >= 13   & `%` <= 34,   j = ' ',   bg = "#99D7DD", part = "body") %>%
+    bg(i = ~ `%` > 34   & `%` <= 40, j = ' ',   bg = "#33AEBA", part = "body") %>%
+    bg(i = ~ `%` > 40 & `%` <= 48, j = ' ',   bg = "#0087A3", part = "body") %>%
+    bg(i = ~ `%` > 48 & `%` <= 57,   j = ' ',   bg = "#00617F", part = "body") %>%
+    bg(i = ~ `%` > 57   & `%` <= 75,  j = ' ',    bg = "#004E70", part = "body") %>%  
+    
+    
+    align(j     = 2, 
+          align = "center", 
+          part  = "all") %>%
+    bold(bold = FALSE, 
+         part = "header") %>%
+    flextable::style(pr_t = fp_text(font.size   = 12, 
+                                    color       = "#524F4C",
+                                    font.family = "Lato Full"), 
+                     part = "header") %>%
+    flextable::style(pr_t = fp_text(font.size   = 10, 
+                                    color       = "#524F4C",
+                                    font.family = "Lato Full"), 
+                     part = "body") %>%
+    italic(italic = TRUE, 
+           part = "header") %>%
+    surround(j = 2,
+             border.top    = fp_border("white"),
+             border.bottom = fp_border("white"),
+             part = "body"
+    ) %>%
+    bold(i = ~ Estado == "Promedio Nacional", bold = TRUE, part = "body")
+  
+  tpanel <- gen_grob(table, 
+                     fit      = "auto",
+                     scaling  = "min", 
+                     just     = c("left", "top"),
+                     wrapping = T)
+  
+  mexico_map <- mapa %>%
+    left_join(Estados, by = "ESTADO") %>%
+    mutate(value2plot = round(Percentage), 0) %>%
+    mutate(
+      color_group = case_when(
+        value2plot >= 13   & value2plot <= 34   ~ "13%-34%",
+        value2plot > 34   & value2plot <= 40    ~ "34%-40%",
+        value2plot > 40 & value2plot <= 48      ~ "40%-48%",
+        value2plot > 48 & value2plot <= 57      ~ "48%-57%",
+        value2plot > 57   & value2plot <= 75    ~ "57%-75%"
+      ),
+      color_group = as.factor(color_group)
+    )
+  
+  cat_palette <- c( "13%-34%"  = "#99D7DD",
+                    "34%-40%"  = "#33AEBA",
+                    "40%-48%"  = "#0087A3",
+                    "48%-57%"  = "#00617F",
+                    "57%-75%" = "#004E70")
+  # Drawing plot
+  p <- ggplot(mexico_map, aes(label = ESTADO)) +
+    geom_sf(data  = mexico_map,
+            aes(fill = color_group),
+            color = "grey65",
+            size  = 0.5) +
+    geom_sf(data  = mexico_map,
+            fill  = NA,
+            color = "grey25") +
+    scale_fill_manual("",
+                      values   = cat_palette,
+                      na.value = "grey95",
+                      drop = F) +
+    # scale_y_continuous(limits = c(1445631, 5273487)) +
+    # scale_x_continuous(limits = c(2581570, 5967160)) +
+    theme_minimal() +
+    theme(
+      plot.background = element_blank(),
+      axis.text       = element_blank(),
+      legend.position = "none",
+      panel.grid      = element_blank(),
+      panel.border    = element_blank(),
+      plot.margin     = margin(0,0,0,0)
+    ) 
+  
+  categories <- c("[13%-34%]",
+                  "(34%-40%]",
+                  "(40%-48%]",
+                  "(48%-57%]",
+                  "(57%-75%]")
+  
+  leyend <- data.frame(
+    Values = categories,
+    Blank = "")
+  leyend <- flextable(leyend)  %>% 
+    width(j = "Blank", width = 0.5, unit = "mm") %>% 
+    set_header_labels(Values = "Escala", Blank = " ") %>% 
+    bg(i = ~ Values == "[13%-34%]", j = "Blank", bg = "#99D7DD", part = "body") %>%
+    bg(i = ~ Values == "(34%-40%]", j = "Blank", bg = "#33AEBA", part = "body") %>%
+    bg(i = ~ Values == "(40%-48%]", j = "Blank", bg = "#0087A3", part = "body") %>%
+    bg(i = ~ Values == "(48%-57%]", j = "Blank", bg = "#00617F", part = "body") %>%
+    bg(i = ~ Values == "(57%-75%]", j = "Blank", bg = "#004E70", part = "body") %>%  
+    
+    
+    align(j     = 2, 
+          align = "center", 
+          part  = "all") %>%
+    bold(bold = FALSE, 
+         part = "header") %>%
+    flextable::style(pr_t = fp_text(font.size   = 12, 
+                                    color       = "#524F4C",
+                                    font.family = "Lato Full"), 
+                     part = "header") %>%
+    flextable::style(pr_t = fp_text(font.size   = 10, 
+                                    color       = "#524F4C",
+                                    font.family = "Lato Full"), 
+                     part = "body") %>%
+    italic(italic = TRUE, 
+           part = "header") %>%
+    surround(j = c(1,2),
+             border.top    = fp_border("white"),
+             border.bottom = fp_border("white"),
+             part = "body"
+    )
+  
+  
+  leyend <- gen_grob(leyend, 
+                     fit      = "auto",
+                     scaling  = "min", 
+                     just     = c("left", "top"),
+                     wrapping = T)
+  
+  layout <- "ABB
+               A#C"
+  
+  viz <- wrap_elements(tpanel) + p + wrap_elements(leyend) +
+    plot_layout(ncol = 3, nrow = 3, widths = c(1, 3.25,0.4), heights = c(1,.2,0.25), design = layout)
+  plot(viz)
+  
+  # ggsave(plot = viz, filename = "Input/map_ejemplo.svg", width = 10, height = 10)
+  
+  
+  ggsave(plot   = viz,
+         file   = paste0(path2SP,"/National/Visualization",
+                         "/Output/Politica criminal/",
+                         savePath,"/Distribucion competencias/Figure2_1_2b.svg"), 
+         width  = 189.7883, 
+         height = 175,
+         units  = "mm",
+         dpi    = 72,
+         device = "svg")
+  
+}
+
+
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
 ## B.2.1.2. Proporción de delitos federales respecto del total de delitos registrados por estado (gráfica)                                                       ----
