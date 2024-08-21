@@ -124,7 +124,7 @@ for (i in Estados) {
     
     master_data.df <- Main_database %>% 
       filter(Estado_arresto == i) %>%
-      filter(Anio_arresto >= as.numeric(2008)) %>% 
+      filter(Anio_arresto >= as.numeric(2015)) %>% 
       filter(NSJP == 1) 
     
     savePath <- paste0("Estados/", i)
