@@ -75,14 +75,14 @@ plot <- data2plot %>%
   xlim(c(2, 4)) +
   geom_text_repel(
     aes(
-      y = (ymin + ymax) / 2, 
+      y = (ymin + ymax) / 1.95, 
       label = figure
     ), 
     x = 3.4,
     color = "white",
     family = "Lato Full",
     fontface = "bold", 
-    size = 4.514598
+    size = 4.4
   ) +
   scale_fill_manual(values = c("#a90099", "#2a2a9A", "#3273ff")) +
   theme_void() +
