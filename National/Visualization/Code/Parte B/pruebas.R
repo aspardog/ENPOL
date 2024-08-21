@@ -37,7 +37,7 @@ pruebas_pp.fn <- function(
   
   ) {
 
-Main_database_2008 <- datas.df %>% 
+Main_database_2008 <- data.df %>% 
   filter(Anio_arresto >= 2008,
          NSJP == 1) %>% 
   mutate( prueba_confesion = case_when(P5_15_01 == 1 ~ 1,
@@ -79,15 +79,14 @@ Main_database_2008 <- datas.df %>%
 
 
 data2plot <- Main_database_2008 %>%
-  select(tipo_prision_preventiva, prueba_confesion, prueba_declaraciones, prueba_fisicas) %>% 
+  select(prueba_confesion, prueba_declaraciones, prueba_fisicas) %>% 
   pivot_longer(cols = c(prueba_confesion, prueba_declaraciones, prueba_fisicas), names_to = "tipo_prueba", values_to = "value2plot") %>%
-  group_by(tipo_prision_preventiva, tipo_prueba) %>%
+  group_by(tipo_prueba) %>%
   summarise(value2plot = mean(value2plot, na.rm = T)) %>%
   drop_na() %>% 
-  rename(values = tipo_prueba, 
-         category = tipo_prision_preventiva) %>% 
+  rename(values = tipo_prueba) %>% 
   mutate(figure = paste0(round(value2plot*100, 0), "%"),
-         category = str_wrap(category, width = 20),
+         # category = str_wrap(category, width = 20),
          labels = str_wrap(values, width = 20), 
          ) %>%
   mutate(
@@ -100,16 +99,14 @@ data2plot <- Main_database_2008 %>%
   )
 
 
-colors4plot <- c("Proceso en libertad"     = "#2a2a94",
-                 "Prisión Preventiva\nOficiosa"        = "#a90099",
-                 "Prisión Preventiva\nJustificada" = "#3273ff")
+colors4plot <- rep("#2a2a94", 3)
 
 
 plot <- ggplot(data2plot,
                aes(
                  x     = labels, 
                  y     = value2plot,
-                 fill  = category,
+                fill  = labels,
                  label = figure
                )) +
   geom_bar(stat = "identity",
