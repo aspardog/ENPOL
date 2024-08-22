@@ -190,9 +190,15 @@ data_subset.df <- master_data.df %>%
          ) %>%
   select(!starts_with("nobs_"))
 
+writexl::write_xlsx(x = data_subset.df, 
+                    path = paste0(getwd(),
+                                  "/Infografias/",
+                                  "Derecho a la información, a la no autoincriminacion y a una justicia pronta.xlsx")
+                    )
+
 # Infografia 2: Defensa
 
-data_subset.df <- master_data.df %>%
+data_subset.df_1 <- master_data.df %>%
   mutate(
     asesoria_abogado =
       case_when(
@@ -318,8 +324,7 @@ data_subset.df <- master_data.df %>%
                         "%")
          ) 
 
-
-data_subset.df <- master_data.df %>%
+data_subset.df_2 <- master_data.df %>%
   mutate(
     asesoria_abogado =
       case_when(
@@ -401,7 +406,7 @@ data_subset.df <- master_data.df %>%
         P5_22_10 == 1 ~ 1,
         P5_22_10 == 2 ~ 0
       ),
-    counter = 1,
+    counter = 1
   ) %>%
   group_by(abogado_publico) %>%
   summarise(
@@ -421,13 +426,63 @@ data_subset.df <- master_data.df %>%
     elementos = mean(elementos, na.rm = T),
     apelacion = mean(apelacion, na.rm = T),
     amparo = mean(amparo, na.rm = T)
-  ) 
+  ) %>%
+  filter(!is.nan(abogado_publico)) %>%
+  mutate(
+    abogado_publico =
+      case_when(
+        abogado_publico == 1 ~ "abogado publico",
+        abogado_publico == 0 ~ "abogado privado"
+      )
+  )
 
+data_subset.df_3 <- master_data.df %>%
+  mutate(
+    asesoria_abogado =
+      case_when(
+        P4_1_05 == 1 ~ 1,
+        P4_1_05 == 2 ~ 0
+      ),
+    abogado_antes =
+      case_when(
+        P5_1 == 1 ~ 1,
+        P5_1 == 2 ~ 0
+      ),
+    abogado_inicial = 
+      case_when(
+        P5_2_5 == 1 ~ 1,
+        P5_2_5 == 2 ~ 0
+      ),
+    abogado_publico =
+      case_when(
+        abogado_publico == 1 ~ 1,
+        abogado_publico == 0 ~ 0
+      )
+  ) %>%
+  filter(abogado_antes == 1) %>%
+  mutate(counter = 1) %>%
+  group_by(abogado_publico) %>%
+  summarise(proporcion_abogado_antes = sum(counter, na.rm = T)) %>%
+  drop_na() %>%
+  mutate(
+    final_value = proporcion_abogado_antes/sum(proporcion_abogado_antes)
+  )
 
+defensa_oportuna <- list(
+  data_subset.df_1,
+  data_subset.df_2,
+  data_subset.df_3
+)
 
-# Infografia 2: Defensa
+openxlsx::write.xlsx(x = defensa_oportuna, 
+                     file = paste0(getwd(),
+                                   "/Infografias/",
+                                   "Derecho a una defensa oportua y adecuada.xlsx")
+                     )
 
-data_subset.df <- master_data.df %>%
+# Infografia 3: Justicia
+
+data_subset.df_1 <- master_data.df %>%
   mutate(
     contacto_juez =
       case_when(
@@ -530,39 +585,12 @@ data_subset.df <- master_data.df %>%
                         "%")
   ) 
 
-
-
-
-
-data_subset.df <- master_data.df %>%
-  mutate(
-    asesoria_abogado =
-      case_when(
-        P4_1_05 == 1 ~ 1,
-        P4_1_05 == 2 ~ 0
-      ),
-    
-    abogado_antes =
-      case_when(
-        P5_1 == 1 ~ 1,
-        P5_1 == 2 ~ 0
-      ),
-    abogado_inicial = 
-      case_when(
-        P5_2_5 == 1 ~ 1,
-        P5_2_5 == 2 ~ 0
-      ),
-    abogado_publico =
-      case_when(
-        abogado_publico == 1 ~ 1,
-        abogado_publico == 0 ~ 0
-      )
-  ) %>%
-  filter(abogado_antes == 1) %>%
-  mutate(counter = 1) %>%
-  group_by(abogado_publico) %>%
-  summarise(counter = sum(counter, na.rm = T)) %>%
-  drop_na() %>%
-  mutate(
-    final_value = counter/sum(counter)
+justicia <- list(
+  data_subset.df_1
   )
+
+openxlsx::write.xlsx(x = justicia, 
+                     file = paste0(getwd(),
+                                   "/Infografias/",
+                                   "Derecho a tribunal.xlsx")
+)
