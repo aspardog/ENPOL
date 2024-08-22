@@ -382,7 +382,7 @@ lugar_traslado.fn <- function(
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-lugar_traslado.fn <- function(
+lugar_traslado_nueva.fn <- function(
   
   data.df = master_data.df  
   

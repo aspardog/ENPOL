@@ -384,6 +384,7 @@ for (i in Estados) {
   detenciones_tiempo <- detenciones_tiempo.fn()
   detenciones_traslado <- tiempos_traslado.fn()
   detenciones_lugar <- lugar_traslado.fn()
+  detenciones_lugar_nueva <- lugar_traslado_nueva.fn()
   tiempo_traslado <- tiempo_traslado.fn()
   mapa_tiempo_traslado <- mapa_tiempo_traslado.fn()
   mapa_lugar_traslado <- mapa_lugar_traslado.fn()
@@ -394,7 +395,8 @@ for (i in Estados) {
     'Tiempo de traslado'          = tiempo_traslado,
     'Mapa tiempo de traslado'     = mapa_tiempo_traslado,
     'Detenciones lugar'           = detenciones_lugar,
-    'Mapa lugar de traslado'      = mapa_tiempo_traslado
+    'Mapa lugar de traslado'      = mapa_tiempo_traslado,
+    'Lugar de traslado nueva'      = detenciones_lugar_nueva
     )
   
   openxlsx::write.xlsx(x = detenciones_lista,
@@ -520,6 +522,7 @@ for (i in Estados) {
   prevalentes_ENVIPE_nueva  <- prevalentes_ENVIPE_nueva.fn()
   prevalentes_ENVIPE        <- prevalentes_ENVIPE.fn()
   homicidios_ENPOL_ENVIPE   <- homicidios_ENPOL_ENVIPE.fn()
+  robo_vehiculos_ENPOL_ENVIPE   <- robo_vehiculos_ENPOL_ENVIPE.fn()
   
   indicador_list <- list(
     
@@ -527,7 +530,8 @@ for (i in Estados) {
     'Delitos ENVIPE'             = delitos_ENVIPE,
     'Delitos ENVIPE Nueva'       = prevalentes_ENVIPE_nueva,
     'Delitos prevalentes ENVIPE' = prevalentes_ENVIPE,
-    'Homicidios ENPOL ENVIPE'    = homicidios_ENPOL_ENVIPE
+    'Homicidios ENPOL ENVIPE'    = homicidios_ENPOL_ENVIPE,
+    'Robos Vehículos ENPOL ENVIPE' = robo_vehiculos_ENPOL_ENVIPE
     
     
   )
@@ -561,12 +565,14 @@ for (i in Estados) {
   control_alto_impacto           <- control_alto_impacto.fn()
   detencion_alto_impacto         <- detencion_alto_impacto.fn()
   terminacion_alto_impacto       <- terminacion_alto_impacto.fn()
+  tipo_prueba_da                 <- tipo_prueba_da.fn()
   
   indicador_list <- list(
     
     'Control alto impacto'     = control_alto_impacto,
     'Detención alto impacto'   = detencion_alto_impacto,
-    'Terminación alto impacto' = terminacion_alto_impacto
+    'Terminación alto impacto' = terminacion_alto_impacto,
+    'Tipo prueba alto impacto' = tipo_prueba_da
     
     
   )
@@ -641,10 +647,14 @@ for (i in Estados) {
   delitos_federales     <- delitos_federales.fn()
   detenciones_federales <- detenciones_federales.fn()
   detenciones_estatales <- detenciones_estatales.fn()
+  delitos_comun_porfederales_mapa <- delitos_comun_porfederales_mapa.fn()
+  delitos_federales_bar <- delitos_federales_bar.fn()
   
   indicador_list <- list(
     
-    'Delitos_fuero'    = delitos_fuero
+    'Delitos_fuero'    = delitos_fuero,
+    'delitos_federales_bar' = delitos_federales_bar
+    
     
     
   )
@@ -877,11 +887,13 @@ for (i in Estados) {
   
   pruebas_pp             <- pruebas_pp.fn()
   pruebas_conclusion     <- pruebas_conclusion.fn()
+  pruebas_conclusion_general     <- pruebas_conclusion_general.fn()
   
   indicador_list <- list(
     
     'Pruebas PP'  = pruebas_pp,
-    'Pruebas conclusión'               = pruebas_conclusion
+    'Pruebas conclusión'  = pruebas_conclusion,
+    'Pruebas conclusión general'  = pruebas_conclusion_general
     
     
     

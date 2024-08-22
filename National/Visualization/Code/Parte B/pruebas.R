@@ -285,7 +285,7 @@ return(data2plot)
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-pruebas_conclusion.fn <- function(
+pruebas_conclusion_general.fn <- function(
     
   data.df = master_data.df
   
