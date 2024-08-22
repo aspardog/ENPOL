@@ -35,15 +35,10 @@ indicador_general.fn <- function(
   
   etiquetas <- data2plot$labelx
   
-<<<<<<< Updated upstream
-  plot <- BarSimpleChartVizGrl(data = data2plot, 
-                            shade_xminvalue = 6, 
-                            shade_xmaxvalue = 10, 
-=======
+
   plot <- BarSimpleChartViz(data = data2plot, 
                             shade_xminvalue = 0, 
                             shade_xmaxvalue = 0, 
->>>>>>> Stashed changes
                             x_labels = etiquetas)
   
   
