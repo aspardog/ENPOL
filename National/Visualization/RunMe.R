@@ -107,18 +107,32 @@ for (i in Estados) {
     savePath <- "Nacional"
     
     # Definir la ruta al directorio "nacional"
-    nacional_dir <- paste0(
+    nacional_dir_DP <- paste0(
       path2SP, "/National/Visualization", 
       "/Output/Debido proceso/", 
       savePath
     )
     
     # Listar todas las subcarpetas dentro de "nacional"
-    subdirs <- list.dirs(nacional_dir, 
+    subdirs_DP <- list.dirs(nacional_dir_DP, 
                          recursive = FALSE, full.names = TRUE)
     
     # Borrar todas las subcarpetas dentro de "nacional"
-    sapply(subdirs, unlink, recursive = TRUE)
+    sapply(subdirs_DP, unlink, recursive = TRUE)
+    
+    # Definir la ruta al directorio "nacional"
+    nacional_dir_PC <- paste0(
+      path2SP, "/National/Visualization", 
+      "/Output/Politica criminal/", 
+      savePath
+    )
+    
+    # Listar todas las subcarpetas dentro de "nacional"
+    subdirs_PC <- list.dirs(nacional_dir_PC, 
+                         recursive = FALSE, full.names = TRUE)
+    
+    # Borrar todas las subcarpetas dentro de "nacional"
+    sapply(subdirs_PC, unlink, recursive = TRUE)
     
   } else {
     
@@ -267,15 +281,11 @@ for (i in Estados) {
   controles_tipo <- controles_tipo.fn()
   uso_fuerza_tiempo <- uso_fuerza_tiempo.fn()
   uso_fuerza_corporacion <- uso_fuerza_corporacion.fn()
-  acciones_detencion <- acciones_detencion.fn()
-  uso_fuerza_delito.fn <- uso_fuerza_delito.fn()
   
   uso_fuerza_lista <- list(
     'Tipo de control'          = controles_tipo,
     'Uso fuerza tiempo'        = uso_fuerza_tiempo, 
-    'Uso fuerza corporacion'   = uso_fuerza_corporacion,
-    'Acciones detencion'       = acciones_detencion,
-    'Uso fuerza delito'        = uso_fuerza_delito
+    'Uso fuerza corporacion'   = uso_fuerza_corporacion
     
   )
   
