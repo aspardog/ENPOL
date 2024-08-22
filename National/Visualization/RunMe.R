@@ -267,11 +267,15 @@ for (i in Estados) {
   controles_tipo <- controles_tipo.fn()
   uso_fuerza_tiempo <- uso_fuerza_tiempo.fn()
   uso_fuerza_corporacion <- uso_fuerza_corporacion.fn()
+  acciones_detencion <- acciones_detencion.fn()
+  uso_fuerza_delito.fn <- uso_fuerza_delito.fn()
   
   uso_fuerza_lista <- list(
     'Tipo de control'          = controles_tipo,
     'Uso fuerza tiempo'        = uso_fuerza_tiempo, 
-    'Uso fuerza corporacion'   = uso_fuerza_corporacion
+    'Uso fuerza corporacion'   = uso_fuerza_corporacion,
+    'Acciones detencion'       = acciones_detencion,
+    'Uso fuerza delito'        = uso_fuerza_delito
     
   )
   
