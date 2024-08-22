@@ -62,7 +62,7 @@ data2plot <- df %>%
                        values == "P4_3"   ~ "Desde su detención y hasta antes de llegar a la Agencia del MP o con un Juez, fue interrogado por la policía o autoridad"),
     figure = paste0(round(value2plot, 0), "%"),
     labels = str_wrap(labels, width = 30),
-    order_var = rank(value2plot))
+    order_var = rank(-value2plot))
 
 
 colors4plot <- rep("#2a2a94", 2)
@@ -77,7 +77,7 @@ plt <- ggplot(data2plot,
            show.legend = F, width = 0.9) +
   scale_fill_manual(values = colors4plot) +
   geom_text(aes(y    = value2plot + 5 ),
-            color    = "#4a4a49",
+            color    = "#524F4C",
             family   = "Lato Full",
             fontface = "bold") +
   labs(y = "% of respondents") +
@@ -93,15 +93,24 @@ plt <- ggplot(data2plot,
         panel.grid.major.y = element_blank(),
         panel.background = element_blank(),
         panel.grid.minor = element_blank(),
-        legend.text = element_text(family = "Lato Bold"),
+        legend.text = element_text(family = "Lato Full"),
         axis.title.y=element_blank(),
         axis.ticks.y=element_blank(),
         axis.title.x=element_blank(),
-        axis.text.y=element_text(family = "Lato Medium",
-                                 size = 3.514598*.pt,
-                                 color = "Black", hjust = 0),
+        axis.text.y=element_text(family   = "Lato Full",
+                                 face     = "bold",
+                                 size     = 3.514598*.pt,
+                                 color    = "#524F4C",
+                                 margin   = margin(0, 10, 0, 0),
+                                 hjust = 0),
+        axis.text.x=element_text(family   = "Lato Full",
+                                 face     = "bold",
+                                 size     = 3.514598*.pt,
+                                 color    = "#524F4C",
+                                 margin   = margin(0, 10, 0, 0),
+                                 hjust = 0),
         legend.title = element_blank())+
-  coord_flip(); plt
+  coord_flip();plt
 
 
 ggsave(plot   = plt,
@@ -244,11 +253,9 @@ tortura_detencion_MP.fn <- function(
 
 
 Main_database_2008 <- data.df %>% 
-  filter(Anio_arresto >= 2008,
-         NSJP == 1) %>% 
-  mutate(tipo_detencion = case_when(flagrancia == 1  ~ "Flagrancia",
-                                    inspeccion == 1  ~ "Inspección",
-                                    orden_det == 1   ~ "Orden de detención",
+  mutate(tipo_detencion = case_when(flagrancia  == 1  ~ "Flagrancia",
+                                    inspeccion  == 1  ~ "Inspección",
+                                    orden_det   == 1   ~ "Orden de detención",
                                     det_ninguna == 1 ~ "Detención Irregular"))
 
 
@@ -262,40 +269,46 @@ data2plot <- Main_database_2008 %>%
   rename(values = tortura_lugar) %>% 
   mutate(value2plot = Frequency / sum(Frequency) * 100,
          figure = paste0(round(value2plot, 0), "%"),
-         labels = str_wrap(values, width = 20)) %>% 
+         labels = str_wrap(values, width = 20),
+         values = if_else(values == "Traslado y Ministerio Público",
+                          "Traslado y \nMinisterio \nPúblico", 
+                          if_else(values == "Ministerio Público",
+                                  "Ministerio \nPúblico",
+                                  values)
+                          ),
+         values = factor(values, 
+                        levels = c("Ninguno",
+                                   "Traslado",
+                                   "Ministerio \nPúblico",
+                                   "Traslado y \nMinisterio \nPúblico"))) %>% 
   rename(category = tipo_detencion)
 
-
-colors4plot <- c("Ministerio Público"            = "#2a2a94",
+colors4plot <- c("Ministerio \nPúblico"            = "#2a2a94",
                  "Traslado"                      = "#a90099",
-                 "Traslado y Ministerio Público" = "#3273ff",
+                 "Traslado y \nMinisterio \nPúblico" = "#3273ff",
                  "Ninguno"                       = "#43a9a7")
 
-
-
 plot <- ggplot(data2plot,
-               aes(
-                 x     = category, 
-                 y     = value2plot,
-                 fill  = values,
-                 label = figure
-               )) +
+               aes(x    = category,
+                   y     = value2plot,
+                   label = figure, 
+                   fill = values)) +
   geom_bar(stat = "identity",
-           show.legend = FALSE, width = 0.9, position = "dodge")+
-  geom_text(aes(y    = value2plot + 5), 
-            position = position_dodge(widt = 0.9),
+           show.legend = FALSE, width = 0.9) +
+  geom_text(aes(y    = value2plot + 5),
             color    = "#4a4a49",
             family   = "Lato Full",
-            fontface = "bold", 
-            size = 3.514598)  +
-  coord_flip()+
-  geom_vline(xintercept = 5.5, linetype = "dashed", color = "black") +
-  scale_fill_manual(values = colors4plot) +
+            fontface = "bold") +
   scale_y_continuous(limits = c(0, 105),
-                     breaks = seq(0,100,20),
-                     labels = paste0(seq(0,100,20), "%"),
+                     breaks = seq(0, 100, 20),
+                     labels = paste0(seq(0, 100, 20), "%"),
                      position = "right") +
+  scale_fill_manual(values = colors4plot) +
+  coord_flip() +
+  facet_grid(rows = vars(values), scales = "free_y", switch = "y", space = "free_y") +
+  WJP_theme() + 
   theme(
+    panel.spacing = unit(1, "lines"), # Espacio entre facetas
     panel.background   = element_blank(),
     plot.background    = element_blank(),
     panel.grid.major   = element_line(size     = 0.25,
@@ -303,23 +316,71 @@ plot <- ggplot(data2plot,
                                       linetype = "dashed"),
     panel.grid.minor   = element_blank(),
     panel.grid.major.y = element_blank(),
-    panel.grid.major.x = element_line(color = "#D0D1D3"),       
+    panel.grid.major.x = element_line(color = "#D0D1D3")
+  ) +
+  theme(
     axis.title.y       = element_blank(),
     axis.title.x       = element_blank(),
-    axis.text.y=element_text(family = "Lato Medium",
-                             size = 3.514598*.pt,
-                             color = "Black", hjust = 0)); plot
+    axis.ticks         = element_blank(),
+    axis.text.y        = element_markdown(family   = "Lato Full",
+                                          face     = "bold",
+                                          size     = 3.514598*.pt,
+                                          color    = "#524F4C",
+                                          margin   = margin(0, 10, 0, 0),
+                                          hjust = 0.5, vjust = 0), 
+    plot.caption = element_markdown(family   = "Lato Full",
+                                    face     = "plain",
+                                    size     = 3.514598*.pt,
+                                    color    = "#524F4C", 
+                                    vjust    = 0, 
+                                    hjust    = 0, 
+                                    margin = margin(20, 0, 0, 0)),
+    axis.text.x        = element_markdown(family   = "Lato Full",
+                                          face     = "bold",
+                                          size     = 3.514598*.pt,
+                                          color    = "#524F4C",
+    ),
+    plot.title          = element_text(family   = "Lato Full",
+                                       face     = "bold",
+                                       size     = 3.514598*.pt,
+                                       color    = "black",
+                                       margin   = margin(0, 0, 10, 0),
+                                       hjust    = 0), 
+    plot.subtitle      = element_text(family   = "Lato Full",
+                                      face     = "plain",
+                                      size     = 3.514598*.pt,
+                                      color    = "black",
+                                      margin   = margin(2.5, 0, 20, 0),
+                                      hjust    = 0),
+    legend.text        =  element_markdown(family   = "Lato Full",
+                                           face     = "plain",
+                                           size     = 3.514598*.pt,
+                                           color    = "#524F4C"),
+    legend.title       = element_markdown(family   = "Lato Full",
+                                          face     = "plain",
+                                          size     = 3.514598*.pt,
+                                          color    = "#524F4C"),
+    strip.placement = "outside",
+    strip.text = element_text(
+      family   = "Lato Full",
+      face     = "bold",
+      size     = 3.514598*.pt,
+      color    = "black", 
+      hjust = 0.5,
+      margin = margin(0, 0, 0, 0)
+    )
+  );plot
 
-ggsave(plot   = plot,
-       file   = paste0(path2SP,"/National/Visualization",
-                       "/Output/Politica criminal/",
-                       savePath,"/Entrevistas/Figure3_3.svg"), 
-       width  = 189.7883, 
-       height = 125,
+ggsave(plot = plot, 
+       filename = paste0(path2SP,"/National/Visualization",
+                         "/Output/Politica criminal/",
+                         savePath,"/Entrevistas/",
+                         "Figure3_3.svg"),
+       width = 189.7883,
+       height = 189.7883,
        units  = "mm",
        dpi    = 72,
        device = "svg")
-
 
 return(data2plot)
 }

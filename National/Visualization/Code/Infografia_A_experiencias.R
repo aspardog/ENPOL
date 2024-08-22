@@ -1,4 +1,5 @@
 data_subset.df <- master_data.df %>%
+  filter(Anio_arresto >= as.numeric(2018)) %>% 
   mutate(
     `1a` = indicator_general,
     `2a` = case_when(
@@ -46,8 +47,8 @@ data_subset.df <- master_data.df %>%
       P4_1_05 == 2 ~ 0
     ),
     `7.2a` = case_when(
-      P5_1 == 1 ~ 1,
-      P5_1 == 2 ~ 0
+      P5_2_5 == 1 ~ 1,
+      P5_2_5 == 2 ~ 0
     ),
     `8.1a` = case_when(
       P5_24_1 == 1 | P5_24_1 == 2 | P5_44_1 == 1 | P5_44_1 == 2 ~ 1,

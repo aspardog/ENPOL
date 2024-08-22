@@ -1,4 +1,5 @@
 data_subset.df <- master_data.df %>%
+  filter(Anio_arresto >= as.numeric(2018)) %>% 
   mutate(
     `1a` = case_when(P5_22_02 == 2 ~ 0,
                      P5_22_02 == 1 ~ 1,

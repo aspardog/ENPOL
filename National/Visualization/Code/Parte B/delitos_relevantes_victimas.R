@@ -507,7 +507,6 @@ delitos_ENVIPE.fn <- function( ){
 ## 3.2 Compración Prioridad ENPOL vs. ENVIPE                                                           ----
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-<<<<<<< Updated upstream
 # Main_database1 <- data.df  %>%
 #   mutate(Delito_prioritario_ENVIPE = case_when(Delito_unico == 1 & (P5_11_04 == 1|P5_31_04 == 1) ~ 1,
 #                                                Delito_unico == 1 & (P5_11_05 == 1|P5_31_05 == 1) ~ 1,
@@ -720,7 +719,6 @@ delitos_ENVIPE.fn <- function( ){
 #        dpi    = 72,
 #        device = "svg")
 # 
-=======
 
 prevalentes_ENVIPE_nueva.fn <- function(
     
@@ -944,8 +942,6 @@ prevalentes_ENVIPE_nueva.fn <- function(
 return(data2plot)
 
 }
-
->>>>>>> Stashed changes
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##

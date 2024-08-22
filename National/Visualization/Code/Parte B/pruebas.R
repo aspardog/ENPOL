@@ -268,7 +268,8 @@ plot <- ggplot(data2plot,
 ggsave(plot   = plot,
        file   = paste0(path2SP,"/National/Visualization",
                        "/Output/Politica criminal/",
-                       savePath,"/Pruebas/Figure3_2.svg"), 
+                       savePath,"/Pruebas/Figure3_2.svg"
+                       ), 
        width  = 189.7883, 
        height = 80,
        units  = "mm",
@@ -278,3 +279,100 @@ ggsave(plot   = plot,
 return(data2plot)
 }
 
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##
+## Pruebas general                         ----
+##
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+pruebas_conclusion.fn <- function(
+    
+  data.df = master_data.df
+  
+){
+
+  data2table <- data.df %>%
+    mutate( prueba_confesion = case_when(P5_15_01 == 1 ~ 1,
+                                         as.numeric(P5_35_01) == 1 ~ 1,
+                                         P5_15_01 == 0 ~ 0,
+                                         as.numeric(P5_35_01) == 2 ~ 0,
+                                         T ~ NA_real_),
+            prueba_declaraciones = case_when(P5_15_02 == 1  | P5_15_03 == 1 |
+                                               P5_15_04 == 1| P5_15_05 == 1 | 
+                                               P5_15_06 == 1~ 1,
+                                             as.numeric(P5_35_02) == 1 | as.numeric(P5_35_03) == 1 |
+                                               as.numeric(P5_35_04) == 1 |as.numeric(P5_35_05) == 1 |
+                                               as.numeric(P5_35_06) == 1 ~ 1,
+                                             (P5_15_02 == 0 | P5_15_02 == 3) & (P5_15_03 == 0 | P5_15_03 == 3)  &
+                                               P5_15_04 == 0 & (P5_15_05 == 0 | P5_15_05 == 3) == 0 & 
+                                               P5_15_06 == 0 ~ 0,
+                                             (as.numeric(P5_35_02) == 2 | as.numeric(P5_35_02) == 3) & (as.numeric(P5_35_03) == 2 | as.numeric(P5_35_03) == 3) &
+                                               as.numeric(P5_35_04) == 2 & (as.numeric(P5_35_05) == 2 | as.numeric(P5_35_05) == 3) &
+                                               as.numeric(P5_35_06) == 2 ~ 0,
+                                             T ~ NA_real_),
+            prueba_fisicas = case_when(P5_15_07 == 1  | P5_15_08 == 1 |
+                                         P5_15_09 == 1| P5_15_10 == 1 | 
+                                         P5_15_11 == 1~ 1,
+                                       as.numeric(P5_35_07) == 1 | as.numeric(P5_35_08) == 1 |
+                                         as.numeric(P5_35_09) == 1 |as.numeric(P5_35_10) == 1 |
+                                         as.numeric(P5_35_11) == 1 ~ 1,
+                                       P5_15_07 == 0  & P5_15_08 == 0 &
+                                         P5_15_09 == 0 & P5_15_10 == 0 &
+                                         P5_15_11 == 0 ~ 0,
+                                       as.numeric(P5_35_07) == 2 & as.numeric(P5_35_08) == 2 &
+                                         (as.numeric(P5_35_09) == 2 | as.numeric(P5_35_09) == 3 ) & as.numeric(P5_35_10) == 2 &
+                                         as.numeric(P5_35_11) == 2 ~ 0,
+                                       T ~ NA_real_),
+            tipo_prueba = case_when(prueba_confesion     == 1 ~ "Confesión", 
+                                    prueba_declaraciones == 1 ~ "Declaraciones",
+                                    prueba_fisicas       == 1 ~ "Física",
+                                    prueba_confesion     == 0 & prueba_declaraciones == 0 & prueba_fisicas == 0 ~ "Ninguna",
+                                    T ~ NA_character_))
+  
+  
+  data2plot <- data2table %>%
+    select(prueba_confesion, prueba_declaraciones, prueba_fisicas) %>% 
+    pivot_longer(cols = c(prueba_confesion, prueba_declaraciones, prueba_fisicas), names_to = "tipo_prueba", values_to = "value2plot") %>%
+    group_by(tipo_prueba) %>%
+    summarise(value2plot = mean(value2plot, na.rm = T)*100) %>%
+    drop_na() %>% 
+    rename(values = tipo_prueba) %>% 
+    mutate(figure = paste0(round(value2plot, 0), "%"),
+           labels = str_wrap(values, width = 20), 
+    ) %>%
+    mutate(
+      labels = 
+        case_when(
+          labels == "prueba_confesion" ~ "Confesiones",
+          labels == "prueba_declaraciones" ~ "Declaraciones",
+          labels == "prueba_fisicas" ~ "Físicas"
+        )
+    ) %>%
+    arrange(value2plot) %>%
+    mutate(
+      order_var = row_number()
+    )
+  
+  colors4plot <- rep(mainColor,3)
+  
+  
+  plot <- barsChart.fn(data.df                    = data2plot,
+                       groupVar                   = F,   
+                       categories_grouping_var    = labels,
+                       colors4plot                = colors4plot, 
+                       order                      = T,
+                       orientation                = "horizontal")
+  
+  ggsave(plot = plot, 
+         filename = paste0(path2SP,
+                           "/National/Visualization",
+                           "/Output/Politica criminal/",
+                           savePath,"/Pruebas/",
+                           "/Pruebas_general.svg"),
+         width = 189.7883,
+         height = 85,
+         units  = "mm",
+         dpi    = 72,
+         device = "svg")
+    
+}

@@ -372,8 +372,90 @@ acciones_detencion.fn <- function(
   
   return(data2plot)
 }
+
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
-## 4. Uso Excesivo de la fuerza: Corporación                                                      ----
+## 5. Uso Excesivo de la fuerza: Delito                                                    ----
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+uso_fuerza_delito.fn <- function(
+    
+  data.df = master_data.df
+  
+) {
+  
+  data_subset.df <- data.df %>%
+    mutate(Delito_unico_categ = case_when(Delito_unico_categ == "robos" &
+                                            Robo_autopartes == "1" ~  "robo-autopartes",
+                                          Delito_unico_categ == "robos" &
+                                            Robo_vehiculo == "1" ~  "robo-vehiculo",
+                                          T~ Delito_unico_categ )) %>%
+    mutate(
+      uso_excesivo =
+        case_when(
+          proporcionalidad_uso_fuerza == 0 ~ 1,
+          proporcionalidad_uso_fuerza == 1 ~ 0
+        ),
+      delitos_alto_impacto = 
+        case_when(
+          Delito_unico_categ == "hom_dol"         ~ "Homicidio doloso",
+          Delito_unico_categ == "secuestro"       ~ "Secuestro",
+          Delito_unico_categ == "drogas"          ~ "Posesión o comercio de drogas",
+          Delito_unico_categ == "armas"           ~ "Portación ilegal de armas",
+          Delito_unico_categ == "robo-autopartes" ~ "Robo de autopartes",
+          Delito_unico_categ == "robo-vehiculo"   ~ "Robo de vehículo",
+          Delito_unico_categ == "extorsion"       ~ "Extorsión",
+          T ~ NA_character_
+        )
+    ) %>%
+    group_by(delitos_alto_impacto) %>%
+    summarise(
+      value2plot = mean(uso_excesivo, na.rm = T)
+    ) %>%
+    drop_na() %>%
+    rename(group_var = delitos_alto_impacto) 
+  
+  
+  data2plot <- data_subset.df %>%
+    arrange(value2plot) %>%
+    mutate(
+      order_var = -row_number(),
+      value2plot = value2plot*100,
+      figure = paste0(round(value2plot, 0), "%"),
+      labels = 
+        case_when(
+          group_var == "Homicidio doloso"              ~ "Homicidio doloso",
+          group_var == "Secuestro"                     ~ "Secuestro",
+          group_var == "Posesión o comercio de drogas" ~ "Posesión o comercio \nde drogas",
+          group_var == "Portación ilegal de armas"     ~ "Portación ilegal \nde armas",
+          group_var == "Robo de autopartes"            ~ "Robo de autopartes",
+          group_var == "Robo de vehículo"              ~ "Robo de vehículo",
+          group_var == "Extorsión"                     ~ "Extorsión",
+          
+        )
+    )
+  colors4plot <- rep(mainColor,7)
+  plot <- barsChart.fn(data.df                    = data2plot,
+                       groupVar                   = F,   
+                       categories_grouping_var    = categories,
+                       colors4plot                = colors4plot, 
+                       order                      = T,
+                       orientation                = "vertical")
+  
+  ggsave(plot = plot, 
+         filename = paste0(path2SP,
+                           "/National/Visualization",
+                           "/Output/Debido proceso/",
+                           savePath,"/Uso excesivo fuerza",
+                           "/uso_excesivo_delito.svg"),
+         width = 189.7883,
+         height = 85,
+         units  = "mm",
+         dpi    = 72,
+         device = "svg")
+  
+  return(data2plot)
+  
+}
