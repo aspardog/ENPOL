@@ -382,8 +382,7 @@ delitos_federales_bar.fn <- function(
   
   data_subset.df <- data.df %>% 
     filter(Anio_arresto >= 2015,
-           NSJP == 1, 
-           corpo) %>% 
+           NSJP == 1) %>% 
     mutate(tipo_detencion = case_when(flagrancia  == 1 ~ "Flagrancia",
                                       orden_det   == 1 ~ "Orden de detención",
                                       inspeccion  == 1 ~ "Inspeccion",
