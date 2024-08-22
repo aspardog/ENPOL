@@ -24,7 +24,7 @@ snsp_2<- snsp %>%
                              T ~ Entidad)) %>% 
   group_by(Delito, Entidad) %>%
   summarize(Incidencia = sum(Incidencia),
-            )%>% 
+  )%>% 
   filter(Delito != "Otro") %>% 
   ungroup() %>%
   pivot_wider(id_cols = Entidad,names_from = Delito, values_from = Incidencia)
@@ -35,7 +35,7 @@ robos_vehi_totales <- snsp_2 %>% summarise(homicidios = sum(`Robo de vehículo, 
 
 master_data.df <- Main_database %>%
   left_join(snsp_2, by = c("Estado_arresto" = "Entidad"))
-  
+
 
 data_subset.df <- master_data.df %>%
   filter(Anio_arresto >= 2018, NSJP==1) %>%
@@ -50,17 +50,17 @@ data_subset.df <- master_data.df %>%
                                        Corporacion_grupos == "Policía Municipal" ~ "Corporación Local",
                                        Corporacion_grupos == "Otra" ~ "Otra", 
                                        T ~ NA_character_),
-           P5_4_A = as.numeric(P5_4_A),
-           P5_4_M = as.numeric(P5_4_M),
-           P5_4_A = case_when(
-             P5_4_A >= 97 ~ NA_real_,
-             T ~ P5_4_A),
-           P5_4_M = case_when(
-             P5_4_M >= 97 ~ NA_real_,
-             T ~ P5_4_M),
-           P5_4_M = P5_4_M/12,
-           tiempo_sentencia = P5_4_A+P5_4_M
-         ) %>% mutate(
+         P5_4_A = as.numeric(P5_4_A),
+         P5_4_M = as.numeric(P5_4_M),
+         P5_4_A = case_when(
+           P5_4_A >= 97 ~ NA_real_,
+           T ~ P5_4_A),
+         P5_4_M = case_when(
+           P5_4_M >= 97 ~ NA_real_,
+           T ~ P5_4_M),
+         P5_4_M = P5_4_M/12,
+         tiempo_sentencia = P5_4_A+P5_4_M
+  ) %>% mutate(
     `1a` = case_when(tipo_prision_preventiva == "Prision Preventiva Oficiosa" ~ 1,
                      tipo_prision_preventiva == "Prisión Preventiva Justificada" ~ 1,
                      tipo_prision_preventiva == "Proceso en libertad" ~ 0,
@@ -80,12 +80,12 @@ data_subset.df <- master_data.df %>%
                      P9_1 == "1" ~ 1,
                      T ~ NA_real_),
     #`5.1a` = case_when(P5_11_02 == 1  ~ 1,
-     #                  P5_11_04 == 1  ~ 1,
-      #                 P5_11_05 == 1  ~ 1,
-       #                P5_11_06 == 1  ~ 1,
-        #               P5_11_22 == 1  ~ 1,
-         #              P5_11_02 == 0 & P5_11_04 == 0 & P5_11_05 == 0 & P5_11_06 == 0 & P5_11_22 == 0  ~ 0,
-          #           T ~ NA_real_),
+    #                  P5_11_04 == 1  ~ 1,
+    #                 P5_11_05 == 1  ~ 1,
+    #                P5_11_06 == 1  ~ 1,
+    #               P5_11_22 == 1  ~ 1,
+    #              P5_11_02 == 0 & P5_11_04 == 0 & P5_11_05 == 0 & P5_11_06 == 0 & P5_11_22 == 0  ~ 0,
+    #           T ~ NA_real_),
     `6.1a` = `Homicidio doloso, SESNSP`,
     `6.2a` = case_when(P5_11_12 == 1 | P5_31_12 == 1 ~ 1,
                        P5_11_12 == 0 ~ 0,
@@ -121,28 +121,28 @@ data_subset.df <- master_data.df %>%
     `8.1a` = case_when(fuero == "Sólo federal" ~ 0,
                        fuero == "Sólo común" ~ 1,
                        fuero == "Algunos delitos de fuero común y algunos de fuero federal" ~ 0,
-                     T ~ NA_real_), # Se hace así para cuadrar con la gráfica A2.1.1, va a llevar nota
+                       T ~ NA_real_), # Se hace así para cuadrar con la gráfica A2.1.1, va a llevar nota
     `8.2a` = case_when(fuero == "Sólo federal" ~ 1,
                        fuero == "Sólo común" ~ 0,
                        fuero == "Algunos delitos de fuero común y algunos de fuero federal" ~ 0,
-                     T ~ NA_real_), # Se hace así para cuadrar con la gráfica A2.1.1, va a llevar nota
+                       T ~ NA_real_), # Se hace así para cuadrar con la gráfica A2.1.1, va a llevar nota
     #`9.1a` = case_when(fuero == "Sólo federal" & corporacion_fuero == "Corporación Federal" ~ 1,
-     #                  fuero == "Sólo federal" & corporacion_fuero == "Corporación Local" ~ 0,
-      #                 fuero == "Sólo federal" & corporacion_fuero == "Operativo Conjunto" ~ 0,
-       #                fuero == "Sólo federal" & corporacion_fuero == "Otra" ~ 0,
-        #             T ~ NA_real_),
+    #                  fuero == "Sólo federal" & corporacion_fuero == "Corporación Local" ~ 0,
+    #                 fuero == "Sólo federal" & corporacion_fuero == "Operativo Conjunto" ~ 0,
+    #                fuero == "Sólo federal" & corporacion_fuero == "Otra" ~ 0,
+    #             T ~ NA_real_),
     #`9.2a` = case_when(fuero == "Sólo común" & corporacion_fuero == "Corporación Federal" ~ 0,
-     #                  fuero == "Sólo común" & corporacion_fuero == "Corporación Local" ~ 1,
-      #                 fuero == "Sólo común" & corporacion_fuero == "Operativo Conjunto" ~ 0,
-       #                fuero == "Sólo común" & corporacion_fuero == "Otra" ~ 0,
-        #               T ~ NA_real_),
+    #                  fuero == "Sólo común" & corporacion_fuero == "Corporación Local" ~ 1,
+    #                 fuero == "Sólo común" & corporacion_fuero == "Operativo Conjunto" ~ 0,
+    #                fuero == "Sólo común" & corporacion_fuero == "Otra" ~ 0,
+    #               T ~ NA_real_),
     `9.1a` = case_when(fuero == "Sólo común" & corporacion_fuero == "Corporación Federal" ~ 1,
                        fuero == "Sólo federal" & corporacion_fuero == "Corporación Federal" ~ 0,
                        fuero == "Algunos delitos de fuero común y algunos de fuero federal" & corporacion_fuero == "Corporación Federal" ~ 0,
                        T ~ NA_real_),
     `10.1a` = case_when(flagrancia == 1 ~ 1,
                         flagrancia == 0 ~ 0,
-                      T ~ NA_real_),
+                        T ~ NA_real_),
     `10.2a` = case_when(det_ninguna == 1 ~ 1,
                         det_ninguna == 0 ~ 0,
                         T ~ NA_real_),
@@ -154,7 +154,7 @@ data_subset.df <- master_data.df %>%
                         T ~ NA_real_),
     `11.1a` = case_when(P3_16 == "1" ~ 1,
                         P3_16 == "2" ~ 0,
-                      T ~ NA_real_),
+                        T ~ NA_real_),
     `11.2a` = case_when(P4_3 == "1" ~ 1,
                         P4_3 == "2" ~ 0,
                         T ~ NA_real_),
@@ -175,7 +175,7 @@ data_subset.df <- master_data.df %>%
                         tiempo_sentencia >= 9.99 & tiempo_sentencia < 14.99 ~ 0,
                         tiempo_sentencia >= 14.99 & tiempo_sentencia < 19.99 ~ 0,
                         tiempo_sentencia >= 20  ~ 0,
-                      T ~ NA_real_),
+                        T ~ NA_real_),
     `13.2a` = case_when(tiempo_sentencia >= 0 & tiempo_sentencia < 4.99 ~ 0,
                         tiempo_sentencia >= 4.99 & tiempo_sentencia < 9.99 ~ 1,
                         tiempo_sentencia >= 9.99 & tiempo_sentencia < 14.99 ~ 0,
@@ -251,7 +251,7 @@ data_subset.df <- master_data.df %>%
   select(Estado_arresto, `1a`, `2a`, `3a`, `4a`, `6.1a`, `6.2a`, `6.3a`, `6.4a`, `7.1a`,`7.2a`,`7.3a`,`7.4a`,`7.5a`,`7.6a`,`7.7a`,
          `8.1a`, `8.2a`, `9.1a`, `10.1a`, `10.2a`, `10.3a`, `10.4a`, `11.1a`, `11.2a`, `12.1a`, `12.2a`, `12.3a`,
          `13.1a`, `13.2a`, `13.3a`, `13.4a`, `13.5a`, `14.1a`, `14.2a`, `14.3a`, `14.4a`, `15.1a`, `15.2a`, `15.3a`, `15.4a`, `15.5a`,  
-          `16.1a`, `16.2a`) 
+         `16.1a`, `16.2a`) 
 
 
 
@@ -287,60 +287,4 @@ National <- data_subset.df %>%
         .x == 1 ~ NA_real_
       )
     )
-  ) %>%
-  mutate(`6.1a` = homicidios_totales,
-         `6.3a` = robos_vehi_totales,
-         `6.2a` = det_hom_nac/homicidios_totales,
-         `6.4a` = det_rob_nac/robos_vehi_totales)
-  
-
-
-Estatal <- data_subset.df %>%
-  ungroup() %>%
-  group_by(Estado_arresto) %>%
-  summarise(
-    across(
-      ends_with("a"),
-      ~mean(.x, na.rm = T))
-  ) %>%
-  drop_na() %>%
-  rename(Estado = Estado_arresto) 
-  
-
-Estatal_numbers <- data_subset.df %>%
-  ungroup() %>%
-  group_by(Estado_arresto) %>%
-  summarise(
-    across(
-      ends_with("a"),
-      ~sum(!is.na(.x), na.rm = T)
-    )
-  ) %>%
-  drop_na() %>%
-  mutate(
-    across(
-      ends_with("a"),
-      ~case_when(
-        .x < 30 ~ 1,
-        .x >= 30 ~ 0
-      )
-    )
-  ) %>%
-  rename(Estado = Estado_arresto)
-
-final_data_experiencias <- Estatal %>% left_join(porc_hom_edo, by = "Estado") %>% left_join(porc_rob_edo, by="Estado") %>%
-  mutate(`6.2a`= detenidos_hom/`6.1a`,`6.4a`= detenidos_rob/`6.3a`) %>%
-  group_by(Estado) %>%
-  mutate(
-    across(
-      ends_with("a"),
-      list(b = ~rank(-.x)),
-      .names = "{sub('a$', 'b', .col)}"
-    )
-  ) %>% 
-  ungroup() %>%
-  bind_rows(National) %>%
-  select(-c("detenidos_rob","detenidos_hom"))
-
-writexl::write_xlsx(x = final_data_experiencias, path = paste0(path2SP,"/National/Visualization/Infografias/Estrategias_PoliticaCriminal.xlsx"))
-
+  ) 

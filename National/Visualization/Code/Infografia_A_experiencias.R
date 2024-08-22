@@ -1,4 +1,5 @@
 data_subset.df <- master_data.df %>%
+  filter(NSJP == 1) %>%
   filter(Anio_arresto >= as.numeric(2018)) %>% 
   mutate(
     `1a` = indicator_general,
