@@ -4002,9 +4002,9 @@ Main_database %<>%
       ID_PER %in% exclude_period_NSJP$ID_PER ~ NA),
     
     # Other date variables
-    
     fecha_delito = make_date(P3_8_A,P3_8_M,P3_8_D),
     fecha_arresto = make_date(P3_5_A,P3_5_M,P3_5_D),
+    fecha_arresto_mis = case_when(is.na(fecha_arresto) == T ~ 1, T ~ 0),
     fecha_sentencia = make_date(P5_5_A,P5_5_M),
     fecha_RND_fed = make_date(2019,5,27),
     fecha_RND_com = make_date(2020,4,1),
@@ -4024,6 +4024,10 @@ Main_database %<>%
   # Creating dummies for ACU, RND and PPO
   mutate(
     NSJP = case_when(
+      fecha_arresto_mis == 1 & as.numeric(P3_5_A) > 2016 ~ 1,
+      fecha_arresto_mis == 1 & as.numeric(P3_5_A) < 2008 ~ 0,
+      (make_date(2016, 6, 18) < fecha_arresto) ~ 1,
+      (make_date(2008, 6, 18) > fecha_arresto) ~ 0,
       (P5_13_1 == "1" | P5_33_1 == "1") & (P5_13_2 == "1" | P5_33_2 == "1") & (fecha_sis_NSJP_fed < fecha_arresto & fecha_sis_NSJP_com < fecha_arresto) ~ 1,
       (P5_13_1 == "1" | P5_33_1 == "1") & (P5_13_2 == "1" | P5_33_2 == "1") & (fecha_sis_NSJP_fed <= fecha_arresto & fecha_sis_NSJP_com > fecha_arresto) & P3_3 == "18" ~ 1,
       (P5_13_1 == "1" | P5_33_1 == "1") & (P5_13_2 == "1" | P5_33_2 == "1") & (fecha_sis_NSJP_fed > fecha_arresto & fecha_sis_NSJP_com <= fecha_arresto) & P3_3 == "18" ~ 1,
@@ -4032,7 +4036,6 @@ Main_database %<>%
       (P5_13_1 == "1" | P5_33_1 == "1") & (P5_13_2 == "1" | P5_33_2 == "1") & (fecha_sis_NSJP_fed >= fecha_arresto & fecha_sis_NSJP_com >= fecha_arresto) ~ 0,
       (P5_13_1 == "1" | P5_33_1 == "1") & ((P5_13_2 == "0" | is.na(P5_13_2) == TRUE) & (P5_33_2 == "0" | is.na(P5_33_2) == TRUE)) & (fecha_sis_NSJP_fed >= fecha_arresto) ~ 0,
       ((P5_13_1 == "0" | is.na(P5_13_1) == TRUE) & (P5_33_1 == "0" | is.na(P5_33_1) == TRUE)) & (P5_13_2 == "1" | P5_33_2 == "1") & (fecha_sis_NSJP_com >= fecha_arresto) ~ 0,
-      
       T ~ NA),
     RND_1 = case_when(((P5_13_1 == "0" & P5_13_2 == "1") | (P5_33_1 == "0" & P5_33_2 == "1")) & (fecha_RND_com < fecha_arresto) ~ 1,
                       ((P5_13_1 == "1" & P5_13_2 == "0") | (P5_33_1 == "1" & P5_33_2 == "0")) & (fecha_RND_fed < fecha_arresto) ~ 1,
