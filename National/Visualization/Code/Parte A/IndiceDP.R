@@ -37,9 +37,9 @@ indicador_general.fn <- function(
   
 
   plot <- BarSimpleChartViz(data = data2plot, 
-                            shade_xminvalue = 0, 
-                            shade_xmaxvalue = 0, 
-                            x_labels = etiquetas)
+                            shade_xminvalue = 5, 
+                            shade_xmaxvalue = 3, 
+                            x_labels = etiquetas)+annotate('rect', xmin=9, xmax= 11, ymin=0, ymax=100, alpha=.1, fill="#43a9a7") ; plot
   
   
   ggsave(plot = plot, 
@@ -50,7 +50,7 @@ indicador_general.fn <- function(
            savePath,"/Indicador DP",
            "/indicador_DP.svg"), 
          width  = 200, 
-         height = 80,
+         height = 65,
          units  = "mm",
          dpi    = 72,
          device = "svg")
