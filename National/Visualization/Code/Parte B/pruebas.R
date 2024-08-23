@@ -37,7 +37,7 @@ pruebas_pp.fn <- function(
   
   ) {
 
-Main_database_2008 <- data.df %>% 
+Main_database_2008 <- datas.df %>% 
   filter(Anio_arresto >= 2008,
          NSJP == 1) %>% 
   mutate( prueba_confesion = case_when(P5_15_01 == 1 ~ 1,
