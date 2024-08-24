@@ -1,4 +1,5 @@
 data_subset.df <- master_data.df %>%
+  filter(sentenciado == 1) %>%
   filter(Anio_arresto >= as.numeric(2018)) %>% 
   mutate(
     `1a` = case_when(P5_22_02 == 2 ~ 0,
@@ -114,6 +115,8 @@ Estatal_numbers <- data_subset.df %>%
   ) %>%
   rename(Estado = Estado_arresto)
 
-final_data_experiencias <- bind_rows(Estatal, National)
+final_data_experiencias <- bind_rows(Estatal, National) %>%
+  filter(Estado == "Promedio Nacional") %>%
+  pivot_longer(cols = !Estado, names_to = "category", values_to = "values") 
 
 writexl::write_xlsx(x = final_data_experiencias, path = "Output/INF_A_CRITERIOS.xlsx")

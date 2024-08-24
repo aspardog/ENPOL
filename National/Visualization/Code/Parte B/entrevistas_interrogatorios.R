@@ -283,10 +283,15 @@ data2plot <- Main_database_2008 %>%
                                    "Traslado y \nMinisterio \nPúblico"))) %>% 
   rename(category = tipo_detencion)
 
-colors4plot <- c("Ministerio \nPúblico"            = "#2a2a94",
-                 "Traslado"                      = "#a90099",
+colors4plot <- c("Ministerio \nPúblico"              = "#2a2a94",
+                 "Traslado"                          = "#a90099",
                  "Traslado y \nMinisterio \nPúblico" = "#3273ff",
-                 "Ninguno"                       = "#43a9a7")
+                 "Ninguno"                           = "#43a9a7")
+
+colors4plot <- c("Ministerio \nPúblico"              = "#F43152",
+                 "Traslado"                          = "#FF7E8A",
+                 "Traslado y \nMinisterio \nPúblico" = "#DE003F",
+                 "Ninguno"                           = "#43a9a7")
 
 plot <- ggplot(data2plot,
                aes(x    = category,
@@ -417,7 +422,14 @@ data2plot <- Main_database_2008 %>%
   mutate(value2plot = Frequency / sum(Frequency) * 100,
          figure = paste0(round(value2plot, 0), "%"),
          labels = str_wrap(values, width = 20), 
-         category = str_wrap(category, width = 20)) 
+         category = str_wrap(category, width = 20)) %>%
+  mutate(
+    values = 
+      factor(values, levels = c("Traslado y Ministerio Público", 
+                               "Ministerio Público", 
+                               "Traslado",
+                               "Ninguno"))
+  )
 
 
 colors4plot <- c("Ministerio Público"            = "#2a2a94",
@@ -425,9 +437,14 @@ colors4plot <- c("Ministerio Público"            = "#2a2a94",
                  "Traslado y Ministerio Público" = "#3273ff",
                  "Ninguno"                       = "#43a9a7")
 
+colors4plot <- c("Ministerio Público"                = "#F43152",
+                 "Traslado"                          = "#FF7E8A",
+                 "Traslado y Ministerio Público"     = "#DE003F",
+                 "Ninguno"                           = "#43a9a7")
+
 plot <- ggplot(data2plot,
                aes(
-                 x     = category, 
+                 x     = category,
                  y     = value2plot,
                  fill  = values,
                  label = figure
@@ -457,13 +474,23 @@ plot <- ggplot(data2plot,
     panel.grid.major.y = element_blank(),
     panel.grid.major.x = element_line(color = "#D0D1D3"),       
     axis.title.y       = element_blank(),
-    axis.title.x       = element_blank()); plot
+    axis.title.x       = element_blank());plot
 
 
 ggsave(plot   = plot,
        file   = paste0(path2SP,"/National/Visualization",
                        "/Output/Politica criminal/",
                        savePath,"/Entrevistas/Figure3_4.svg"), 
+       width  = 189.7883, 
+       height = 65,
+       units  = "mm",
+       dpi    = 72,
+       device = "svg")
+
+ggsave(plot   = plot,
+       file   = paste0(path2SP,"/National/Visualization",
+                       "/Output/Politica criminal/",
+                       savePath,"/Entrevistas/Figure3_4_B.svg"), 
        width  = 189.7883, 
        height = 65,
        units  = "mm",

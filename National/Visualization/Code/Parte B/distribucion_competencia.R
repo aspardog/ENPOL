@@ -140,6 +140,7 @@ delitos_comun_porfederales_mapa.fn <- function(
   
   Estados <- data.df %>% 
     select(Estado_arresto, fuero) %>% 
+    drop_na() %>% 
     group_by(Estado_arresto, fuero) %>%
     summarise(Frequency = n(), .groups = 'drop') %>% 
     group_by(Estado_arresto) %>% 
@@ -163,6 +164,7 @@ delitos_comun_porfederales_mapa.fn <- function(
   
   promedio_nacional <- data.df %>% 
     select(fuero) %>% 
+    drop_na() %>% 
     group_by(fuero) %>%
     summarise(Frequency = n(), .groups = 'drop') %>% 
     mutate(Percentage = Frequency / sum(Frequency) * 100) %>% 
@@ -221,7 +223,7 @@ delitos_comun_porfederales_mapa.fn <- function(
     bg(i = ~ `%` > 34   & `%` <= 40, j = ' ',   bg = "#33AEBA", part = "body") %>%
     bg(i = ~ `%` > 40 & `%` <= 48, j = ' ',   bg = "#0087A3", part = "body") %>%
     bg(i = ~ `%` > 48 & `%` <= 57,   j = ' ',   bg = "#00617F", part = "body") %>%
-    bg(i = ~ `%` > 57   & `%` <= 75,  j = ' ',    bg = "#004E70", part = "body") %>%  
+    bg(i = ~ `%` > 57   & `%` <= 76,  j = ' ',    bg = "#004E70", part = "body") %>%  
     
     
     align(j     = 2, 
@@ -261,7 +263,7 @@ delitos_comun_porfederales_mapa.fn <- function(
         value2plot > 34   & value2plot <= 40    ~ "34%-40%",
         value2plot > 40 & value2plot <= 48      ~ "40%-48%",
         value2plot > 48 & value2plot <= 57      ~ "48%-57%",
-        value2plot > 57   & value2plot <= 75    ~ "57%-75%"
+        value2plot > 57    ~ "57%-76%"
       ),
       color_group = as.factor(color_group)
     )
@@ -270,7 +272,7 @@ delitos_comun_porfederales_mapa.fn <- function(
                     "34%-40%"  = "#33AEBA",
                     "40%-48%"  = "#0087A3",
                     "48%-57%"  = "#00617F",
-                    "57%-75%" = "#004E70")
+                    "57%-76%" = "#004E70")
   # Drawing plot
   p <- ggplot(mexico_map, aes(label = ESTADO)) +
     geom_sf(data  = mexico_map,
@@ -300,7 +302,7 @@ delitos_comun_porfederales_mapa.fn <- function(
                   "(34%-40%]",
                   "(40%-48%]",
                   "(48%-57%]",
-                  "(57%-75%]")
+                  "(57%-76%]")
   
   leyend <- data.frame(
     Values = categories,
@@ -312,7 +314,7 @@ delitos_comun_porfederales_mapa.fn <- function(
     bg(i = ~ Values == "(34%-40%]", j = "Blank", bg = "#33AEBA", part = "body") %>%
     bg(i = ~ Values == "(40%-48%]", j = "Blank", bg = "#0087A3", part = "body") %>%
     bg(i = ~ Values == "(48%-57%]", j = "Blank", bg = "#00617F", part = "body") %>%
-    bg(i = ~ Values == "(57%-75%]", j = "Blank", bg = "#004E70", part = "body") %>%  
+    bg(i = ~ Values == "(57%-76%]", j = "Blank", bg = "#004E70", part = "body") %>%  
     
     
     align(j     = 2, 

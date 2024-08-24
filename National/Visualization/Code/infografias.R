@@ -63,13 +63,13 @@ data_subset.df <- master_data.df %>%
       ),
     explicacion_hechos =
       case_when(
-        P5_22_01 == 1 ~ 1,
-        P5_22_01 == 2 ~ 0
+        P5_22_01 == 1 | P5_42_01 == 1~ 1,
+        P5_22_01 == 2 | P5_42_01 == 2~ 0
       ),
     explicacion_proceso =
       case_when(
-        P5_22_02 == 1 ~ 1,
-        P5_22_02 == 2 ~ 0
+        P5_22_02 == 1 | P5_42_02 == 1 ~ 1,
+        P5_22_02 == 2 | P5_42_02 == 2 ~ 0
       ),
     claridad_mp =
       case_when(
@@ -129,11 +129,9 @@ data_subset.df <- master_data.df %>%
     procesados_meses_pp = ((as.numeric(P5_34_A)*12) + as.numeric(P5_34_M)),
     mas2anios_prisionpreventiva = 
       case_when(as.numeric(P5_10) == 7 ~ 1,
-                procesados_meses_pp  > 24   ~ 1,
                 as.numeric(P5_10) == 1 | as.numeric(P5_10) == 2 | 
                   as.numeric(P5_10) == 3 | as.numeric(P5_10) == 4 |
                   as.numeric(P5_10) == 5 |as.numeric(P5_10) == 6 ~ 0,
-                procesados_meses_pp  <= 24 ~ 0,
                 T ~ NA_real_),
     menos2anios_prisionpreventiva = 1-mas2anios_prisionpreventiva,
     tiempo_MP = 
@@ -459,6 +457,38 @@ data_subset.df_3 <- master_data.df %>%
         abogado_publico == 0 ~ 0
       )
   ) %>%
+  filter(abogado_inicial == 1) %>%
+  mutate(counter = 1) %>%
+  group_by(abogado_publico) %>%
+  summarise(proporcion_abogado_antes = sum(counter, na.rm = T)) %>%
+  drop_na() %>%
+  mutate(
+    final_value = proporcion_abogado_antes/sum(proporcion_abogado_antes)
+  )
+
+data_subset.df_4 <- master_data.df %>%
+  mutate(
+    asesoria_abogado =
+      case_when(
+        P4_1_05 == 1 ~ 1,
+        P4_1_05 == 2 ~ 0
+      ),
+    abogado_antes =
+      case_when(
+        P5_1 == 1 ~ 1,
+        P5_1 == 2 ~ 0
+      ),
+    abogado_inicial = 
+      case_when(
+        P5_2_5 == 1 ~ 1,
+        P5_2_5 == 2 ~ 0
+      ),
+    abogado_publico =
+      case_when(
+        abogado_publico == 1 ~ 1,
+        abogado_publico == 0 ~ 0
+      )
+  ) %>%
   filter(abogado_antes == 1) %>%
   mutate(counter = 1) %>%
   group_by(abogado_publico) %>%
@@ -468,10 +498,43 @@ data_subset.df_3 <- master_data.df %>%
     final_value = proporcion_abogado_antes/sum(proporcion_abogado_antes)
   )
 
+data_subset.df_5 <- master_data.df %>%
+  mutate(
+    asesoria_abogado =
+      case_when(
+        P4_1_05 == 1 ~ 1,
+        P4_1_05 == 2 ~ 0
+      ),
+    abogado_antes =
+      case_when(
+        P5_1 == 1 ~ 1,
+        P5_1 == 2 ~ 0
+      ),
+    abogado_inicial = 
+      case_when(
+        P5_2_5 == 1 ~ 1,
+        P5_2_5 == 2 ~ 0
+      ),
+    abogado_publico =
+      case_when(
+        abogado_publico == 1 ~ 1,
+        abogado_publico == 0 ~ 0
+      )
+  ) %>%
+  filter(asesoria_abogado == 1) %>%
+  mutate(counter = 1) %>%
+  group_by(abogado_publico) %>%
+  summarise(proporcion_abogado_asesoria = sum(counter, na.rm = T)) %>%
+  drop_na() %>%
+  mutate(
+    final_value = proporcion_abogado_asesoria/sum(proporcion_abogado_asesoria)
+  )
+
 defensa_oportuna <- list(
   data_subset.df_1,
   data_subset.df_2,
-  data_subset.df_3
+  data_subset.df_3,
+  data_subset.df_4
 )
 
 openxlsx::write.xlsx(x = defensa_oportuna, 
@@ -483,6 +546,7 @@ openxlsx::write.xlsx(x = defensa_oportuna,
 # Infografia 3: Justicia
 
 data_subset.df_1 <- master_data.df %>%
+  filter(sentenciado == 1) %>%
   mutate(
     contacto_juez =
       case_when(

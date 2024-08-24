@@ -117,17 +117,17 @@ data_subset.df <- master_data.df %>%
                                    "Zona militar") ~ 0
     ),
     `11.1a` = case_when(
-      P5_16_2 == 2 | P5_16_2 == 3| P5_16_2 == 4 ~ 0,
-      P5_16_2 == 1  ~ 1,
+      (P5_16_2 == 2 | P5_16_2 == 3| P5_16_2 == 4) | (P5_36_2 == 2 | P5_36_2 == 3| P5_36_2 == 4) ~ 0,
+      P5_16_2 == 1  | P5_36_2 == 1 ~ 1,
       T ~ NA_real_
     ),
     `11.2a` = case_when(
-      P5_19_3 == 1 ~ 1,
-      P5_19_2 == 2 ~ 0
+      P5_19_3 == 1 | P5_39_3 == 1 ~ 1,
+      P5_19_3 == 2 | P5_39_3 == 2 ~ 0
     ),
     `11.3a` = case_when(
-      as.numeric(escuchado_x_juez) == 1 ~ 1,
-      as.numeric(escuchado_x_juez) == 0 ~ 0,
+      as.numeric(P5_26) == 1 | as.numeric(P5_26) == 2 ~ 1,
+      as.numeric(P5_26) == 3 | as.numeric(P5_26) == 4 ~ 0,
       T ~ NA_real_
     ),
     `11.4a` = case_when(
@@ -135,12 +135,12 @@ data_subset.df <- master_data.df %>%
       P5_25 == 1 ~ 0
     ),
     `11.5a` = case_when(
-      P5_17_2 == 1 | P5_17_2 == 2~ 1,
-      P5_17_2 == 3 | P5_17_2 == 4 ~ 0
+      (P5_17_2 == 1 | P5_17_2 == 2) |  (P5_37_2 == 1 | P5_37_2 == 2) ~ 1,
+      (P5_17_2 == 3 | P5_17_2 == 4) |  (P5_37_2 == 3 | P5_37_2 == 4) ~ 0
     ),
     `11.6a` = case_when(
-      P5_16_5 == 1 | P5_16_5 == 2 | P5_16_5 == 3 ~ 1,
-      P5_16_5 == 4 ~ 0
+      (P5_16_5 == 1 | P5_16_5 == 3 | P5_16_5 == 2) | (P5_36_5 == 1 | P5_36_5 == 3 | P5_36_5 == 2) ~ 1,
+      P5_16_5 == 4 | P5_36_5 == 4 ~ 0
     ),
     P5_10  = case_when(
       P5_10 > 7 ~ NA_real_,
@@ -188,13 +188,13 @@ data_subset.df <- master_data.df %>%
       ),
     `13.5a` = 
       case_when(
-        proporcionalidad_uso_fuerza == 1 & Corporacion_grupos %in% "Policía Federal" ~ 1,
-        proporcionalidad_uso_fuerza == 0 & Corporacion_grupos %in% "Policía Federal" ~ 0,
+        proporcionalidad_uso_fuerza == 1 & (Corporacion_grupos %in% "Policía Federal" | Corporacion_grupos %in% c("Guardia Nacional")) ~ 1,
+        proporcionalidad_uso_fuerza == 0 & (Corporacion_grupos %in% "Policía Federal" | Corporacion_grupos %in% c("Guardia Nacional"))~ 0,
       ),
     `13.6a` = 
       case_when(
-        proporcionalidad_uso_fuerza == 1 & Corporacion_grupos %in% "Policía Federal Ministerial" ~ 1,
-        proporcionalidad_uso_fuerza == 0 & Corporacion_grupos %in% "Policía Federal Ministerial" ~ 0,
+        proporcionalidad_uso_fuerza == 1 & (Corporacion_grupos %in% c("Policía Federal Ministerial")) ~ 1,
+        proporcionalidad_uso_fuerza == 0 & (Corporacion_grupos %in% c("Policía Federal Ministerial")) ~ 0
       ),
     `13.7a` = 
       case_when(

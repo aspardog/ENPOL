@@ -32,13 +32,13 @@ b111 <- master_data.df %>%
   mutate(MP = case_when(P4_1_03 == "1" ~ 1,
                         P4_1_03 == "2" ~ 0,
                         T ~ NA_real_),
-         Juz = case_when(P5_2_1 == "1" ~ 1,
+         juz = case_when(P5_2_1 == "1" ~ 1,
                         P5_2_1 == "2" ~ 0,
                         T ~ NA_real_)) %>%
   group_by(Anio_arresto) %>%
-  summarize(CA = round(100*mean(P3_14_4, na.rm = T)),
-            MP = round(100*mean(MP, na.rm = T)),
-            Juzgado = round(100*mean(Juz, na.rm = T))
+  summarize(CA = mean(P3_14_4, na.rm = T),
+            MP = mean(MP, na.rm = T),
+            Juzgado = mean(Juz, na.rm = T)
             )
 
 # B112 (2015-2021)

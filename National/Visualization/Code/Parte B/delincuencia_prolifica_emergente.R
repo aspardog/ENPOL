@@ -210,8 +210,10 @@ delito_reincidencia.fn <- function(
         select(Delito,value2plot,labels) %>%
         arrange(value2plot) %>%
         mutate(Delito = factor(Delito, levels = Delito)) %>% 
-        filter(value2plot >= 1,
-               Delito != "Distinto delito")
+        filter(
+          value2plot >= 1,
+          Delito != "Distinto delito"
+          )
       
       colors4plot <- rep("#2a2a9A", 6)
       

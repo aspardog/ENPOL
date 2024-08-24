@@ -30,7 +30,7 @@ indicador_general.fn <- function(
 ){
   
   data2plot <- index_setUp.fn(data = data.df,
-                              main_var ="indicator_general")
+                              main_var ="indicator_general") 
   
   
   etiquetas <- data2plot$labelx
