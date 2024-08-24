@@ -161,7 +161,7 @@ tortura_RND.fn <- function(
       labels = 
         case_when(
           category == "tortura_fisica" ~ "Tortura <br>física",
-          category == "tortura_psicologica" ~ "Tortura <br>psicologica",
+          category == "tortura_psicologica" ~ "Tortura <br>psicológica",
           category == "tortura_ambas" ~ "Ambas"
         ),
       figure = paste0(value2plot, "%"),
@@ -510,7 +510,7 @@ tortura_fisica.fn <- function(
           labels =="¿Le encajaron agujas en dedos u otra <br>parte del cuerpo?"~ "**Le encajaron agujas** en alguna <br>parte del cuerpo",
           labels =="¿Le hirieron por el disparo de un arma <br>de fuego?"~ "Le **dispararon**",
           labels =="¿Le agredieron mediante acoso sexual, <br>manoseo, exhibicionismo o intento de <br>violación?"~ "Le agredieron mediante **manoseo**, <br>**intento de violación** o <br>**exhibicionismo**",
-          labels =="¿Le lastimaron sus órganos sexuales?"~ "**Lastimaron** sus **organos <br>sexuales**",
+          labels =="¿Le lastimaron sus órganos sexuales?"~ "**Lastimaron** sus **órganos <br>sexuales**",
           labels == "¿Fue obligado mediante violencia física <br>o amenaza a tener una actividad sexual <br>no deseada?"~ "Lo **obligaron** con violencia <br>a tener una **actividad** <br>**sexual**",
           T ~ NA_character_
         ),

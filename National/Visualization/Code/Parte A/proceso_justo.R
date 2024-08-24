@@ -390,7 +390,7 @@ defensa_oportuna.fn <- function(
     orientation = "horizontal",
     percentage = F
   ) +
-    labs(y = "Años de sentencia") +
+    labs(y = "Años de sentencia promedio") +
     theme(
       axis.title.y = element_markdown(
         family   = "Lato Full",

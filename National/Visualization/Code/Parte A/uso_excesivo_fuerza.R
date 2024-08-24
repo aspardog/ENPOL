@@ -196,6 +196,12 @@ uso_fuerza_corporacion.fn <- function(
         case_when(
           proporcionalidad_uso_fuerza == 0 ~ 1,
           proporcionalidad_uso_fuerza == 1 ~ 0
+        ),
+      Corporacion_grupos =
+        case_when(
+          Corporacion_grupos == "Policía Federal" ~ "Policía Federal / Guardia Nacional",
+          Corporacion_grupos == "Guardia Nacional" ~ "Policía Federal / Guardia Nacional",
+          T ~ Corporacion_grupos
         )
     ) %>%
     group_by(Corporacion_grupos) %>%
@@ -203,7 +209,7 @@ uso_fuerza_corporacion.fn <- function(
       value2plot = mean(uso_excesivo, na.rm = T)
     ) %>%
     drop_na() %>%
-    filter(Corporacion_grupos != "Guardia Nacional") %>%
+    #filter(Corporacion_grupos != "Guardia Nacional") %>%
     filter(Corporacion_grupos != "NS/NR") %>%
     filter(Corporacion_grupos != "Otra") %>%
     rename(group_var = Corporacion_grupos)
@@ -220,7 +226,7 @@ uso_fuerza_corporacion.fn <- function(
           group_var == "Operativo Conjunto" ~ "Operativo Conjunto",
           group_var == "Policía Estatal" ~ "Policía Estatal",
           group_var == "Policía Estatal Ministerial o Judicial" ~ "Policía Estatal Ministerial <br>o Judicial",
-          group_var == "Policía Federal" ~ "Policía Federal",
+          group_var == "Policía Federal / Guardia Nacional" ~ "Policía Federal / Guardia Nacional",
           group_var == "Policía Federal Ministerial" ~ "Policía Federal Ministerial",
           group_var == "Policía Municipal" ~ "Policía Municipal",
           
@@ -232,7 +238,7 @@ uso_fuerza_corporacion.fn <- function(
                        categories_grouping_var    = categories,
                        colors4plot                = colors4plot, 
                        order                      = T,
-                       orientation                = "vertical")
+                       orientation                = "vertical");plot
   
   ggsave(plot = plot, 
          filename = paste0(path2SP,
