@@ -404,14 +404,14 @@ tortura_inocencia.fn <- function(
 ){
 
 
-Main_database_2008 <- data.df %>% 
-  filter(Anio_arresto >= 2008,
+  data_subset.df <- data.df %>% 
+  filter(Anio_arresto >= 2015,
          NSJP == 1) %>% 
   mutate(declaro_culpable = case_when(culpabilidad == 1 ~ "Se autoidentifica como culpable", 
                                       culpabilidad == 0 ~ "Se autoidentifica como inocente",
                                       T ~ NA_character_))
 
-data2plot <- Main_database_2008 %>%
+data2plot <- data_subset.df %>%
   select(declaro_culpable, tortura_lugar) %>% 
   group_by(declaro_culpable, tortura_lugar) %>%
   drop_na() %>% 
@@ -429,7 +429,10 @@ data2plot <- Main_database_2008 %>%
                                "Ministerio Público", 
                                "Traslado",
                                "Ninguno"))
-  )
+  ) %>%
+  mutate(figure = case_when(labels == "Traslado y\nMinisterio Público" &  category == "Se autoidentifica\ncomo inocente" ~ "52%",
+                            T ~ figure)) # redondeos
+
 
 
 colors4plot <- c("Ministerio Público"            = "#2a2a94",
