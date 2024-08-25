@@ -27,6 +27,100 @@
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
+## 3.1.3. Porcentage de personas que se les eoncontró un objeto                                                              ----
+##
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+encontro_objeto.fn <- function(
+    
+  data.df = master_data.df
+  
+){
+  
+  data_subset.df <- data.df %>% 
+    filter(Anio_arresto >= 2015,
+           NSJP == 1) %>% 
+    mutate(objeto = case_when(P3_12_3 == 1 ~ "Encontró el objeto ilegal que buscaba u algún otro objeto ilegal", 
+                                P3_12_3 == 0 ~ "No le encontró ningún objeto",
+                                T ~ NA_character_))
+  
+  
+  data2plot <- data_subset.df %>% 
+    select(objeto) %>% 
+    group_by(objeto) %>% 
+    summarise(Frequency = n(), .groups = 'drop') %>% 
+    drop_na() %>% 
+    rename(values = objeto) %>% 
+    mutate(
+      value2plot = Frequency / sum(Frequency) * 100,
+      figure = paste0(round(value2plot, 0), "%"),
+      labels = str_wrap(values, width = 20),
+      ymin = c(0, head(value2plot, -1)),
+      ymax = value2plot + ymin)
+  
+  selected <- c("objeto")
+  
+  plot <- data2plot %>% 
+    ggplot(aes(
+      ymax=ymax, 
+      ymin=ymin, 
+      xmax=4, 
+      xmin=3, 
+      fill=values)) +
+    geom_rect( ) +
+    coord_polar(theta="y") + 
+    xlim(c(2, 4)) +
+    geom_text( x= 3.5,
+               aes(y    = value2plot -15, 
+                   label = figure), 
+               # position = "stack",
+               color    = "white",
+               family   = "Lato Full",
+               fontface = "bold", 
+               size = 4.514598, 
+               data = data2plot %>% ungroup() %>%
+                 filter(!values %in% selected)) +
+    geom_text( x= 3.5,
+               aes(y    = value2plot-15 , 
+                   label = figure), 
+               # position = "stack",
+               color    = "white",
+               family   = "Lato Full",
+               fontface = "bold", 
+               size = 4.514598, 
+               data = data2plot %>% ungroup() %>%
+                 filter(values %in% selected)) +
+    scale_fill_manual(values =  c("#2a2a94","#a90099"))+
+    theme_void() +
+    theme(
+      panel.background   = element_blank(),
+      plot.background    = element_blank(),
+      panel.grid.major   = element_line(size     = 0.25,
+                                        colour   = "#5e5c5a",
+                                        linetype = "dashed"),
+      panel.grid.minor   = element_blank(),
+      panel.grid.major.y = element_blank(),
+      panel.grid.major.x = element_line(color = "#D0D1D3"),       
+      axis.title.y       = element_blank(),
+      axis.title.x       = element_blank(),
+      legend.position = "none");plot
+  
+  ggsave(plot   = plot,
+         file   = paste0(path2SP,"/National/Visualization",
+                         "/Output/Politica criminal/",
+                         savePath,"/Inspecciones/Figure3_1_3.svg"), 
+         width  = 189.7883, 
+         height = 80,
+         units  = "mm",
+         dpi    = 72,
+         device = "svg")
+  
+  return(data2plot)
+}
+
+
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##
 ## 3.1.4.	Inspecciones y el comportamiento de las corporaciones al realizarlas                            ----
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -39,16 +133,16 @@ inspecciones_comportamiento.fn <- function(
 
     data_subset.df <- data.df %>% 
       filter(Anio_arresto >= 2015,
-             NSJP == 1) %>% 
-      select(P3_12_1, 
-             P3_12_2,
-             P3_12_3,
-             P3_12_4,
-             P3_12_5) %>%
-      mutate(encontro_sin_sembrar = case_when(P3_12_3 == 1 & P3_12_4 == 0 ~ 1,
-                                              P3_12_3 == 1 & P3_12_4 == 1 ~ 0,
-                                              P3_12_3 == 0 ~ 0,
-                                              T ~ NA_real_))
+             NSJP == 1,
+             P3_12_3 == 1) %>%
+      mutate(sembro = case_when(P3_12_4 == 1 ~ 1,
+                                P3_12_4 == 0 ~ 0,
+                                T ~ NA_real_),
+             no_sembro = case_when(P3_12_4 == 1 ~ 0,
+                                P3_12_4 == 0 ~ 1,
+                                T ~ NA_real_))  %>% 
+      select(sembro,
+             no_sembro) 
     
     data2plot <- data_subset.df %>%
       pivot_longer(everything(), names_to = "Column", values_to = "Percentage") %>% 
@@ -58,19 +152,14 @@ inspecciones_comportamiento.fn <- function(
       rename(values = Column, 
              value2plot = Percentage) %>% 
       mutate(
-        labels = case_when(values == "P3_12_1" ~ "Lo desvistió", 
-                           values == "P3_12_2" ~ "Le dijo qué objeto buscaba",
-                           values == "P3_12_3" ~ "Encontró el objeto ilegal que buscaba u otro",
-                           values == "P3_12_4" ~ "Le sembró algún objeto",
-                           values == "P3_12_5" ~ "Videograbó la inspección",
-                           values == "encontro_sin_sembrar" ~ "Encontró un objeto sin que este fuera sembrado",),
+        labels = case_when(values == "sembro" ~ "Le sembró algún objeto", 
+                           values == "no_sembro" ~ "No le sembró ningún objeto"),
         figure = paste0(round(value2plot, 0), "%"),
         labels = str_wrap(labels, width = 20),
-        order_var = rank(value2plot)) %>%
-      filter(values == "P3_12_3"  | values == "P3_12_4" | values == "encontro_sin_sembrar")
+        order_var = rank(value2plot))
     
     
-    colors4plot <- rep("#2a2a94", 3)
+    colors4plot <- rep("#2a2a94", 2)
     
     
     plt <- ggplot(data2plot, 
@@ -114,7 +203,7 @@ inspecciones_comportamiento.fn <- function(
     ggsave(plot   = plt,
            file   = paste0(path2SP,"/National/Visualization",
                            "/Output/Politica criminal/",
-                           savePath,"/Inspecciones/Figure3_1.svg"), 
+                           savePath,"/Inspecciones/Figure3_1_4.svg"), 
            width  = 189.7883, 
            height = 80,
            units  = "mm",
