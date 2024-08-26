@@ -59,7 +59,9 @@ delitos_fuero.fn <- function(
       mutate(
         figure = if_else(Value %in% "Algunos delitos de fuero común y algunos de fuero federal", 
                          "3%", 
-                         figure)
+                         figure),
+        figure = case_when(Value == "Sólo federal" ~ "51%",
+                           T ~ figure)
       )
     
     fill_colors = c("#3273ff", "#a90099", "#2a2a9A")

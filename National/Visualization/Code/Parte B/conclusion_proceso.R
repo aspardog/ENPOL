@@ -78,6 +78,7 @@ plot <- data2plot %>%
       y = (ymin + ymax) / 1.95, 
       label = figure
     ), 
+    seed= 4,
     x = 3.4,
     color = "white",
     family = "Lato Full",

@@ -66,7 +66,8 @@ reincidentes.fn <- function(
                                                 reincidencia == "No reincidentes" ~ "No reincidentes",
                                                 T ~ "Distinto delito"))
         
-        
+        #Nota: se cambian los values2plot para el gráfico, revisar código antes del 2 mutate 
+        #para ver cifras 
         
         data2plot <- Main_database_2008 %>% 
           select(reincidentes_tipo) %>% 
@@ -82,7 +83,9 @@ reincidentes.fn <- function(
           mutate(value2plot= case_when(values == "Mismo delito" ~ 18.52,
                                  T ~ value2plot ),
                  ymin= case_when(values == "No reincidentes" ~ 18.52,
-                                       T ~ ymin ))
+                                       T ~ ymin ),
+                 figure = case_when(values == "Mismo delito" ~ "10%",
+                                    T ~ figure))
           # %>%
           # arrange(desc(value2plot)) 
         
@@ -103,7 +106,7 @@ reincidentes.fn <- function(
           geom_rect( ) +
           coord_polar(theta="y") + 
           xlim(c(2, 4)) +
-          geom_text_repel( x= 3.5,
+          geom_text( x= 3.5,
                      aes(y    = value2plot -5, 
                          label = figure), 
                      #position = "stack",
@@ -176,17 +179,17 @@ delito_reincidencia.fn <- function(
                                                    P9_2_04 == "1" | P9_2_05 == "1" | P9_2_06 == "1" |
                                                    P9_2_07 == "1") ~ "Robos",
                                               (reincidencia == "reincidentes" & Delito_gr_2_drogas == 1) &
-                                                (P9_2_08 == "1" | P9_2_09 == "1")  ~ "Drogas",
+                                                (P9_2_08 == "1" | P9_2_09 == "1")  ~ "Posesión o comercio\n de drogas",
                                               reincidencia == "reincidentes" & Delito_gr_3_del_org == 1 &
-                                                P9_2_20 == "1"   ~ "Organizada",
+                                                P9_2_20 == "1"   ~ "Delincuencia\n organizada",
                                               reincidencia == "reincidentes" & Delito_gr_4_lesiones == 1 &
                                                 P9_2_10 == "1" ~ "Lesiones",
                                               reincidencia == "reincidentes" & Delito_gr_5_hom_cul== 1 &
-                                                P9_2_11 == "1"~ "Hom_culposo",
+                                                P9_2_11 == "1"~ "Homicidio\n culposo",
                                               reincidencia == "reincidentes" & Delito_gr_6_hom_dol== 1 &
-                                                P9_2_12 == "1"~ "Hom_doloso",
+                                                P9_2_12 == "1"~ "Homicidio\n doloso",
                                               reincidencia == "reincidentes" & Delito_gr_7_armas== 1 &
-                                                P9_2_13 == "1"~ "Armas",
+                                                P9_2_13 == "1"~ "Portación de Armas",
                                               reincidencia == "reincidentes" & Delito_gr_8_viol_fam == 1 &
                                                 P9_2_15 == "1"~ "Violencia familiar",
                                               (reincidencia == "reincidentes" & Delito_gr_9_secuestro== 1) &
@@ -211,7 +214,7 @@ delito_reincidencia.fn <- function(
         mutate(value2plot =  100 * n / sum(n),
                labels = paste0(round(value2plot,0),"%"),
                Delito = reincidentes_tipo,
-               Delito = str_wrap(Delito, width = 30)) %>%
+               Delito = str_wrap(Delito, width = 25)) %>%
         select(Delito,value2plot,labels) %>%
         arrange(value2plot) %>%
         mutate(Delito = factor(Delito, levels = Delito)) %>% 

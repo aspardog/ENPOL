@@ -141,7 +141,11 @@ detenciones_estado.fn <- function(
                                           inspeccion  == 1 ~ "Inspeccion",
                                           det_ninguna == 1 ~ "Irregulares",
                                           T ~ NA_character_))
-      
+      redondeo <- c("APromedio nacional",
+                    "Baja California",
+                    "Chihuahua",
+                    "Oaxaca",
+                    "Tabasco")
       
       data2plot <- data_subset.df %>%
         select(Estado_arresto, tipo_detencion) %>% 
@@ -159,7 +163,14 @@ detenciones_estado.fn <- function(
         group_by(Estado_arresto) %>% 
         rename( values = Estado_arresto ) %>%
         arrange(desc(values)) %>%
-        mutate(value2plot = Frequency / sum(Frequency) * 100,
+        mutate(value2plot = Frequency / sum(Frequency) * 100) %>% 
+        #redondeo para que sume 100 
+        mutate(
+          value2plot = case_when(tipo_detencion == "A)Inspeccion" & values %in% 
+                                   redondeo ~ (value2plot+1),
+                                 T~value2plot)
+        ) %>% 
+        mutate(
                figure = paste0(round(value2plot, 0), "%"),
                labels = str_wrap(values, width = 20),
                tipo_detencion = case_when(tipo_detencion == "Flagrancia" ~ "D)Flagrancia", 

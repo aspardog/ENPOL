@@ -230,7 +230,7 @@ ggsave(plot   = plt,
        file   = paste0(path2SP,"/National/Visualization",
                        "/Output/Politica criminal/",
                        savePath,"/Entrevistas/Figure3_2.svg"), 
-       width  = 94.89, 
+       width  = 189.7883, 
        height = 80,
        units  = "mm",
        dpi    = 72,
@@ -268,6 +268,12 @@ data2plot <- Main_database_2008 %>%
   group_by(tipo_detencion) %>% 
   rename(values = tortura_lugar) %>% 
   mutate(value2plot = Frequency / sum(Frequency) * 100,
+         value2plot = case_when(values == "Traslado y Ministerio Público" & 
+                                (tipo_detencion == "Orden de detención" |
+                                tipo_detencion == "Inspección" |
+                                tipo_detencion == "Flagrancia") ~ (value2plot-1),
+                                T ~ value2plot)) %>% 
+  mutate(
          figure = paste0(round(value2plot, 0), "%"),
          labels = str_wrap(values, width = 20),
          values = if_else(values == "Traslado y Ministerio Público",
