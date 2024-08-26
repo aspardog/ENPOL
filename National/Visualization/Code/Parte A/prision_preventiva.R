@@ -464,7 +464,10 @@ sentencias.fn <- function(
           labels == "De 25 a 30 años" ~ 6,
           labels == "Más de 30 años" ~ 7
         )
-    )
+    ) %>%
+    mutate(figure = case_when(order_var == 1 ~ "32%",
+                              T ~ figure)) # redondeos
+  
   colors4plot <- c(rep(mainColor,7))
   
   plot <- barsChart.fn(data.df                    = data2plot,

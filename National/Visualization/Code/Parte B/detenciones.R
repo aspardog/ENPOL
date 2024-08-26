@@ -178,7 +178,14 @@ detenciones_estado.fn <- function(
         mutate(
           values = 
             if_else(values %in% "APromedio nacional", "Promedio nacional", values)
-        )
+        ) %>%
+        mutate(figure = case_when(order == 6 & tipo_detencion == "B)Orden de detención" ~ "27%",
+                                  order == 13 & tipo_detencion == "D)Flagrancia" ~ "24%",
+                                  order == 14 & tipo_detencion == "C)Irregulares" ~ "28%",
+                                  order == 27 & tipo_detencion == "B)Orden de detención" ~ "22%",
+                                  order == 31 & tipo_detencion == "D)Flagrancia" ~ "42%",
+                                  order == 33 & tipo_detencion == "D)Flagrancia" ~ "35%",
+                                  T ~ figure)) # redondeos
       
       
       colors4plot <- c("D)Flagrancia" = "#2a2a94" ,

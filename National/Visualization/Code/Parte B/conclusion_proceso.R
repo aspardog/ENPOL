@@ -38,8 +38,8 @@ conclusion.fn <- function(
   
   ){
 
-Main_database_2008 <- data.df %>% 
-  filter(Anio_arresto >= 2008,
+  data_subset.df <- data.df %>% 
+  filter(Anio_arresto >= 2015,
          NSJP == 1, ) %>% 
   mutate(juicio_abreviado_presión = case_when(P5_6 == "1" ~ "Juicio", 
                                               P5_6 == "2" & P5_7 == "1" ~ "Procedimiento abreviado por presión", 
@@ -47,9 +47,8 @@ Main_database_2008 <- data.df %>%
                                               T ~ NA_character_))
 
 
-# Supongamos que Main_database_2008 ya está cargado en tu entorno
 
-data2plot <- Main_database_2008 %>% 
+data2plot <- data_subset.df %>% 
   select(juicio_abreviado_presión) %>% 
   group_by(juicio_abreviado_presión) %>% 
   summarise(Frequency = n(), .groups = 'drop') %>% 
@@ -61,7 +60,8 @@ data2plot <- Main_database_2008 %>%
     labels = str_wrap(values, width = 20),
     ymax = cumsum(value2plot),
     ymin = c(0, head(cumsum(value2plot), -1))
-  )
+  ) 
+
 
 plot <- data2plot %>% 
   ggplot(aes(
@@ -125,8 +125,8 @@ conclusion_presion.fn <- function(
   
 ){
 
-Main_database_2008 <- data.df %>% 
-  filter(Anio_arresto >= 2008,
+  data_subset.df <- data.df %>% 
+  filter(Anio_arresto >= 2015,
          NSJP == 1)  %>% 
   select(starts_with("P5_8"), -P5_8_8, -P5_8_9,abogado_publico) %>% 
   mutate(across(everything(), as.numeric),
@@ -137,7 +137,7 @@ Main_database_2008 <- data.df %>%
   select( -abogado_publico )
 
 
-data2plot <- Main_database_2008 %>%
+data2plot <- data_subset.df %>%
   select( -P5_8_1 )%>% 
   pivot_longer(everything(), names_to = "Column", values_to = "Percentage") %>% 
   drop_na() %>% 
@@ -219,7 +219,7 @@ conclusion_tiempo_proceso.fn <- function(
 ){
   
 data_subset.df <- data.df %>% 
-  filter(Anio_arresto >= 2008,
+  filter(Anio_arresto >= 2015,
          NSJP == 1) %>% 
   mutate(juicio_abreviado = case_when(P5_6  == 1 ~ "Juicio",
                                       P5_6   == 2 ~ "Procedimiento abreviado",
@@ -249,7 +249,9 @@ data2plot <- data_subset.df %>%
            tiempo_dictar_sentencia == "Más de seis meses hasta un año" ~ 2,
            tiempo_dictar_sentencia == "Más de un año hasta dos años" ~ 3,
            tiempo_dictar_sentencia == "Más de dos años" ~ 4,
-           T ~ NA_real_))
+           T ~ NA_real_)) %>%
+  mutate(figure = case_when(labels == "Procedimiento\nabreviado" &  tiempo_dictar_sentencia == "Más de dos años" ~ "4%",
+                            T ~ figure)) # redondeos
 
 
 colors4plot <- c("Más de dos años"                = "#fa4d57", 

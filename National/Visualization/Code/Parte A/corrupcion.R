@@ -251,7 +251,7 @@ corrupcion_elementos.fn <- function(
             size     = 3.514598*.pt,
             color    = "#524F4C",
             margin   = margin(0, 10, 0, 0),
-            hjust = 1
+            hjust = 0.5
           ))
   
   ggsave(plot = plot, 
