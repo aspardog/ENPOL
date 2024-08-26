@@ -176,19 +176,46 @@ detencion_alto_impacto.fn <- function(
                                           det_ninguna == 1 ~ "Irregulares",
                                           T ~ NA_character_))
       
+      Main_database_2008 <- data.df  %>% 
+        mutate(
+          `robo-autopartes` = coalesce(P5_11_06, P5_31_06),
+          `robo-vehiculo`   = coalesce(P5_11_02, P5_31_02),
+          `extorsion`       = coalesce(P5_11_22, P5_31_22),
+          `armas`           = coalesce(P5_11_13, P5_31_13),
+          `drogas`          = coalesce(P5_11_08, P5_31_08, P5_11_09, P5_31_09),
+          `secuestro`       = coalesce(P5_11_17, P5_31_17),
+          `hom_dol`         = coalesce(P5_11_12, P5_31_12)
+               ) %>% 
+        pivot_longer(cols = c(`robo-autopartes`, `robo-vehiculo`, `extorsion`, `armas`, `drogas`, `secuestro`, `hom_dol`), 
+                     names_to = "Delito", values_to = "filterValue") %>%
+        filter(filterValue == 1) %>%
+        filter(
+            Delito == "hom_dol"         |
+            Delito == "secuestro"       |
+            Delito == "drogas"          |
+            Delito == "armas"           |
+            Delito == "robo-autopartes" |
+            Delito == "robo-vehiculo"   |
+            Delito == "extorsion" ) %>%
+        mutate(tipo_detencion = case_when(flagrancia  == 1 ~ "Flagrancia",
+                                          orden_det   == 1 ~ "Orden de detención",
+                                          inspeccion  == 1 ~ "Inspeccion",
+                                          det_ninguna == 1 ~ "Irregulares",
+                                          T ~ NA_character_))
+      
       
       
       
       data2plot <- Main_database_2008 %>%
-        select(Delito_unico_categ, tipo_detencion) %>% 
-        group_by(Delito_unico_categ, tipo_detencion) %>%
+        select(Delito, tipo_detencion) %>% 
+        group_by(Delito, tipo_detencion) %>%
         drop_na() %>% 
         summarise(Frequency = n(), .groups = 'drop') %>% 
-        group_by(Delito_unico_categ) %>% 
-        mutate(values = Delito_unico_categ,
+        group_by(Delito) %>% 
+        mutate(values = Delito,
                value2plot = Frequency / sum(Frequency) * 100,
                figure = paste0(round(value2plot, 0), "%"),
-               labels = str_wrap(Delito_unico_categ, width = 20),
+               labels = str_wrap(Delito, width = 20),
                values = case_when(labels == "drogas" ~ "Posesión o comercio\n de drogas", 
                                   labels == "hom_dol" ~ "Homicido doloso",
                                   labels == "secuestro" ~ "Secuestro",

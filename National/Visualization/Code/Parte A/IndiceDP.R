@@ -38,8 +38,9 @@ indicador_general.fn <- function(
 
   plot <- BarSimpleChartViz(data = data2plot, 
                             shade_xminvalue = 5, 
-                            shade_xmaxvalue = 3, 
-                            x_labels = etiquetas)+annotate('rect', xmin=9, xmax= 11, ymin=0, ymax=100, alpha=.1, fill="#43a9a7") ; plot
+                            shade_xmaxvalue = NA_real_, 
+                            x_labels = etiquetas) +
+    annotate('rect', xmin=9, xmax= 11, ymin=0, ymax=100, alpha=.1, fill="#43a9a7") ; plot
   
   
   ggsave(plot = plot, 

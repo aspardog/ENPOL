@@ -5737,4 +5737,3 @@ Main_database_completa <- Main_database %>%
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 save(Main_database_completa, file = paste0(path2DB,"/National/Data_cleaning/Output/Main_database_completa.RData"))
-

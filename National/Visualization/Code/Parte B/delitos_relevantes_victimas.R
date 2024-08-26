@@ -29,45 +29,46 @@ delitos_ENPOL.fn <- function(
   
   ){ 
   Main_database1 <- data.df  %>%
-    mutate(Delito_prioritario_ENVIPE = case_when(Delito_unico == 1 & (P5_11_04 == 1) ~ 1,
-                                                 Delito_unico == 1 & (P5_11_05 == 1) ~ 1,
-                                                 Delito_unico == 1 & (P5_11_06 == 1) ~ 1,
-                                                 Delito_unico == 1 & (P5_11_09 == 1) ~ 1,
-                                                 Delito_unico == 1 & (P5_11_16 == 1) ~ 1,
-                                                 Delito_unico == 1 & (P5_11_22 == 1) ~ 1,
+    mutate(Delito_prioritario_ENVIPE = case_when((P5_11_04 == 1) ~ 1,
+                                                 (P5_11_05 == 1) ~ 1,
+                                                 (P5_11_06 == 1) ~ 1,
+                                                 (P5_11_09 == 1) ~ 1,
+                                                 (P5_11_16 == 1) ~ 1,
+                                                 (P5_11_22 == 1) ~ 1,
                                                  T ~ 0),
-           Delito_unico_ungrouped_categ = case_when(Delito_unico == 1 & (P5_11_01 == 1) ~ "Robo de casa habitación",
-                                                    Delito_unico == 1 & (P5_11_02 == 1) ~ "Robo de vehículo",
-                                                    Delito_unico == 1 & (P5_11_03 == 1) ~ "Robo a negocio",
-                                                    Delito_unico == 1 & (P5_11_04 == 1) ~ "Robo en transporte público",
-                                                    Delito_unico == 1 & (P5_11_05 == 1) ~ "Robo a transeunte en vía pública",
-                                                    Delito_unico == 1 & (P5_11_06 == 1) ~ "Robo de autopartes",
-                                                    Delito_unico == 1 & (P5_11_07 == 1) ~ "Robo en forma distinta a las anteriores",
-                                                    Delito_unico == 1 & (P5_11_08 == 1) ~ "Posesión ilegal de drogas",
-                                                    Delito_unico == 1 & (P5_11_09 == 1) ~ "Comercio ilegal de drogas",
-                                                    Delito_unico == 1 & (P5_11_10 == 1) ~ "Lesiones",
-                                                    Delito_unico == 1 & (P5_11_11 == 1) ~ "Homicidio culposo",
-                                                    Delito_unico == 1 & (P5_11_12 == 1) ~ "Homicidio doloso",
-                                                    Delito_unico == 1 & (P5_11_13 == 1) ~ "Portación ilegal de armas",
-                                                    Delito_unico == 1 & (P5_11_14 == 1) ~ "Incumplimiento de obligaciones de asistencia familiar",
-                                                    Delito_unico == 1 & (P5_11_15 == 1) ~ "Violencia familiar",
-                                                    Delito_unico == 1 & (P5_11_16 == 1) ~ "Daño a la propiedad",
-                                                    Delito_unico == 1 & (P5_11_17 == 1) ~ "Secuestro o secuestro expres",
-                                                    Delito_unico == 1 & (P5_11_18 == 1) ~ "Violación sexual",
-                                                    Delito_unico == 1 & (P5_11_19 == 1) ~ "Fraude",
-                                                    Delito_unico == 1 & (P5_11_20 == 1) ~ "Delincuencia organizada",
-                                                    Delito_unico == 1 & (P5_11_21 == 1) ~ "Otros delitos sexuales",
-                                                    Delito_unico == 1 & (P5_11_22 == 1) ~ "Exotorsión",
-                                                    Delito_unico == 1 & (P5_11_23 == 1) ~ "Privación de la libertad",
-                                                    Delito_unico == 1 & (P5_11_24 == 1) ~ "Abuso de confianza",
-                                                    Delito_unico == 1 & (P5_11_25 == 1) ~ "Amenazas",
-                                                    Delito_unico == 1 & (P5_11_26 == 1) ~ "Otro",
+           Delito_unico_ungrouped_categ = case_when((P5_11_01 == 1) ~ "Robo de casa habitación",
+                                                    (P5_11_02 == 1) ~ "Robo de vehículo",
+                                                    (P5_11_03 == 1) ~ "Robo a negocio",
+                                                    (P5_11_04 == 1) ~ "Robo en transporte público",
+                                                    (P5_11_05 == 1) ~ "Robo a transeunte en vía pública",
+                                                    (P5_11_06 == 1) ~ "Robo de autopartes",
+                                                    (P5_11_07 == 1) ~ "Robo en forma distinta a las anteriores",
+                                                    (P5_11_08 == 1) ~ "Posesión ilegal de drogas",
+                                                    (P5_11_09 == 1) ~ "Comercio ilegal de drogas",
+                                                    (P5_11_10 == 1) ~ "Lesiones",
+                                                    (P5_11_11 == 1) ~ "Homicidio culposo",
+                                                    (P5_11_12 == 1) ~ "Homicidio doloso",
+                                                    (P5_11_13 == 1) ~ "Portación ilegal de armas",
+                                                    (P5_11_14 == 1) ~ "Incumplimiento de obligaciones de asistencia familiar",
+                                                    (P5_11_15 == 1) ~ "Violencia familiar",
+                                                    (P5_11_16 == 1) ~ "Daño a la propiedad",
+                                                    (P5_11_17 == 1) ~ "Secuestro o secuestro expres",
+                                                    (P5_11_18 == 1) ~ "Violación sexual",
+                                                    (P5_11_19 == 1) ~ "Fraude",
+                                                    (P5_11_20 == 1) ~ "Delincuencia organizada",
+                                                    (P5_11_21 == 1) ~ "Otros delitos sexuales",
+                                                    (P5_11_22 == 1) ~ "Extorsión",
+                                                    (P5_11_23 == 1) ~ "Privación de la libertad",
+                                                    (P5_11_24 == 1) ~ "Abuso de confianza",
+                                                    (P5_11_25 == 1) ~ "Amenazas",
+                                                    (P5_11_26 == 1) ~ "Otro",
                                                     T ~ NA_character_)) 
   
   data2plot <- Main_database1 %>%
-    filter(Anio_arresto >= 2018, !is.na(Delito_unico_ungrouped_categ), sentenciado == 1) %>%
+    filter(Anio_arresto >= 2018, sentenciado == 1) %>%
     group_by(Delito_unico_ungrouped_categ) %>%
     summarise(n = n()) %>%
+    drop_na() %>%
     mutate(value2plot =  100 * n / sum(n),
            labels = paste0(round(value2plot,0),"%"),
            group_var = "Arrestos",
@@ -75,7 +76,7 @@ delitos_ENPOL.fn <- function(
            Delito = str_wrap(Delito, width = 30)) %>%
     select(Delito,value2plot,labels,group_var, n) %>%
     arrange(value2plot) %>%
-    mutate(Delito = factor(Delito, levels = Delito))
+    mutate(Delito = factor(Delito, levels = Delito)) 
   
   colors4plot <- rep(mainColor, 26)
   
