@@ -33,36 +33,36 @@ reincidentes.fn <- function(
           mutate(reincidencia = case_when(P9_1 == "1" ~ "reincidentes",
                                           P9_1 == "2" ~ "No reincidentes",
                                           T ~ NA_character_),
-                 reincidentes_tipo = case_when( reincidencia == "reincidentes" & Delito_gr_1_robos == 1 &
-                                                  P9_2_01 == "1" | P9_2_02 == "1" | P9_2_03 == "1" | 
+                 reincidentes_tipo = case_when((reincidencia == "reincidentes" & Delito_gr_1_robos == 1)&
+                                                  (P9_2_01 == "1" | P9_2_02 == "1" | P9_2_03 == "1" | 
                                                   P9_2_04 == "1" | P9_2_05 == "1" | P9_2_06 == "1" |
-                                                  P9_2_07 == "1" ~ "Mismo delito",
-                                                reincidencia == "reincidentes" & Delito_gr_2_drogas == 1 &
-                                                  P9_2_08 == "1" | P9_2_09 == "1"  ~ "Mismo delito",
+                                                  P9_2_07 == "1") ~ "Mismo delito",
+                                                (reincidencia == "reincidentes" & Delito_gr_2_drogas == 1) &
+                                                  (P9_2_08 == "1" | P9_2_09 == "1")  ~ "Mismo delito",
                                                 reincidencia == "reincidentes" & Delito_gr_3_del_org == 1 &
                                                   P9_2_20 == "1"   ~ "Mismo delito",
-                                                reincidencia == "reincidentes" & Delito_gr_4_lesiones &
-                                                  P9_2_10 == "1"~ "Mismo delito",
-                                                reincidencia == "reincidentes" & Delito_gr_5_hom_cul &
+                                                reincidencia == "reincidentes" & Delito_gr_4_lesiones == 1 &
+                                                  P9_2_10 == "1" ~ "Mismo delito",
+                                                reincidencia == "reincidentes" & Delito_gr_5_hom_cul== 1 &
                                                   P9_2_11 == "1"~ "Mismo delito",
-                                                reincidencia == "reincidentes" & Delito_gr_6_hom_dol &
+                                                reincidencia == "reincidentes" & Delito_gr_6_hom_dol== 1 &
                                                   P9_2_12 == "1"~ "Mismo delito",
-                                                reincidencia == "reincidentes" & Delito_gr_7_armas &
+                                                reincidencia == "reincidentes" & Delito_gr_7_armas== 1 &
                                                   P9_2_13 == "1"~ "Mismo delito",
-                                                reincidencia == "reincidentes" & Delito_gr_8_viol_fam &
+                                                reincidencia == "reincidentes" & Delito_gr_8_viol_fam == 1 &
                                                   P9_2_15 == "1"~ "Mismo delito",
-                                                reincidencia == "reincidentes" & Delito_gr_9_secuestro &
-                                                  P9_2_17 == "1" | P9_2_23 == "1" ~ "Mismo delito",
-                                                reincidencia == "reincidentes" & Delito_gr_10_sexuales &
-                                                  P9_2_18 == "1" | P9_2_21 == "1" ~ "Mismo delito",
-                                                reincidencia == "reincidentes" & Delito_gr_11_extorsion &
+                                                (reincidencia == "reincidentes" & Delito_gr_9_secuestro== 1) &
+                                                  (P9_2_17 == "1" | P9_2_23 == "1") ~ "Mismo delito",
+                                                (reincidencia == "reincidentes" & Delito_gr_10_sexuales== 1) &
+                                                  (P9_2_18 == "1" | P9_2_21 == "1") ~ "Mismo delito",
+                                                reincidencia == "reincidentes" & Delito_gr_11_extorsion== 1 &
                                                   P9_2_22 == "1"~ "Mismo delito",
-                                                reincidencia == "reincidentes" & Delito_gr_12_fraude &
+                                                (reincidencia == "reincidentes" & Delito_gr_12_fraude == 1) &
                                                   P9_2_19 == "1" | P9_2_24 == "1" ~ "Mismo delito",
-                                                reincidencia == "reincidentes" & Delito_gr_13_amenazas &
+                                                (reincidencia == "reincidentes" & Delito_gr_13_amenazas== 1) &
                                                   P9_2_25 == "1"~ "Mismo delito",
-                                                reincidencia == "reincidentes" & Delito_gr_14_otro &
-                                                  P9_2_14 == "1" | P9_2_16 == "1" | P9_2_26 == "1"~ "Mismo delito",
+                                                (reincidencia == "reincidentes" & Delito_gr_14_otro== 1) &
+                                                  (P9_2_14 == "1" | P9_2_16 == "1" | P9_2_26 == "1")~ "Mismo delito",
                                                 reincidencia == "No reincidentes" ~ "No reincidentes",
                                                 T ~ "Distinto delito"))
         
@@ -78,14 +78,20 @@ reincidentes.fn <- function(
             value2plot = Frequency / sum(Frequency) * 100,
             figure = paste0(round(value2plot, 0), "%"),
             labels = str_wrap(values, width = 20),
-            ymin = c(0, head(value2plot, -1)))
+            ymin = c(0, head(value2plot, -1))) %>% 
+          mutate(value2plot= case_when(values == "Mismo delito" ~ 18.52,
+                                 T ~ value2plot ),
+                 ymin= case_when(values == "No reincidentes" ~ 18.52,
+                                       T ~ ymin ))
+          # %>%
+          # arrange(desc(value2plot)) 
         
         
         colors4plot <- c("Mismo delito" = "#2a2a9A", 
                          "No reincidentes" = "#a90099", 
                          "Distinto delito" = "#3273ff")
         
-        selected <- c("No reincidentes")
+       selected <- c("No reincidentes")
         
         plot <- data2plot %>% 
           ggplot(aes(
@@ -97,8 +103,8 @@ reincidentes.fn <- function(
           geom_rect( ) +
           coord_polar(theta="y") + 
           xlim(c(2, 4)) +
-          geom_text( x= 3.5,
-                     aes(y    = value2plot -3, 
+          geom_text_repel( x= 3.5,
+                     aes(y    = value2plot -5, 
                          label = figure), 
                      #position = "stack",
                      color    = "white",
@@ -161,46 +167,45 @@ delito_reincidencia.fn <- function(
   
   
       Main_database_2008 <- data.df %>% 
-        filter(Anio_arresto >= 2008,
-               NSJP == 1) %>% 
         mutate(reincidencia = case_when(P9_1 == "1" ~ "reincidentes",
                                         P9_1 == "2" ~ "No reincidentes",
                                         T ~ NA_character_)) %>% 
         filter(reincidencia == "reincidentes") %>%
-        mutate(reincidentes_tipo = case_when(Delito_gr_1_robos == 1 &
-                                               P9_2_01 == "1" | P9_2_02 == "1" | P9_2_03 == "1" | 
-                                               P9_2_04 == "1" | P9_2_05 == "1" | P9_2_06 == "1" |
-                                               P9_2_07 == "1" ~ "Robos",
-                                             Delito_gr_2_drogas == 1 &
-                                               P9_2_08 == "1" | P9_2_09 == "1"  ~ "Posesión o comercio\n de drogas",
-                                             Delito_gr_3_del_org == 1 &
-                                               P9_2_20 == "1"   ~ "Mismo delito-organizada",
-                                             Delito_gr_4_lesiones &
-                                               P9_2_10 == "1"~ "Mismo delito-lesiones",
-                                             Delito_gr_5_hom_cul &
-                                               P9_2_11 == "1"~ "Mismo delito-hom_cul",
-                                             Delito_gr_6_hom_dol &
-                                               P9_2_12 == "1"~ "Homicidio doloso",
-                                             Delito_gr_7_armas &
-                                               P9_2_13 == "1"~ "Portación ilegal\n de armas",
-                                             Delito_gr_8_viol_fam &
-                                               P9_2_15 == "1"~ "Mismo delito-viol_fam",
-                                             Delito_gr_9_secuestro &
-                                               P9_2_17 == "1" | P9_2_23 == "1" ~ "Secuestro",
-                                             Delito_gr_10_sexuales &
-                                               P9_2_18 == "1" | P9_2_21 == "1" ~ "Delitos sexuales",
-                                             Delito_gr_11_extorsion &
-                                               P9_2_22 == "1"~ "Mismo delito-extorsion",
-                                             Delito_gr_12_fraude &
-                                               P9_2_19 == "1" | P9_2_24 == "1" ~ "Mismo delito_fraude",
-                                             Delito_gr_13_amenazas &
-                                               P9_2_25 == "1"~ "Mismo delito_amenazas",
-                                             Delito_gr_14_otro &
-                                               P9_2_14 == "1" | P9_2_16 == "1" | P9_2_26 == "1"~ "Otro",
-                                             T ~ "Distinto delito"))
+        mutate( reincidentes_tipo = case_when((reincidencia == "reincidentes" & Delito_gr_1_robos == 1)&
+                                                (P9_2_01 == "1" | P9_2_02 == "1" | P9_2_03 == "1" | 
+                                                   P9_2_04 == "1" | P9_2_05 == "1" | P9_2_06 == "1" |
+                                                   P9_2_07 == "1") ~ "Robos",
+                                              (reincidencia == "reincidentes" & Delito_gr_2_drogas == 1) &
+                                                (P9_2_08 == "1" | P9_2_09 == "1")  ~ "Drogas",
+                                              reincidencia == "reincidentes" & Delito_gr_3_del_org == 1 &
+                                                P9_2_20 == "1"   ~ "Organizada",
+                                              reincidencia == "reincidentes" & Delito_gr_4_lesiones == 1 &
+                                                P9_2_10 == "1" ~ "Lesiones",
+                                              reincidencia == "reincidentes" & Delito_gr_5_hom_cul== 1 &
+                                                P9_2_11 == "1"~ "Hom_culposo",
+                                              reincidencia == "reincidentes" & Delito_gr_6_hom_dol== 1 &
+                                                P9_2_12 == "1"~ "Hom_doloso",
+                                              reincidencia == "reincidentes" & Delito_gr_7_armas== 1 &
+                                                P9_2_13 == "1"~ "Armas",
+                                              reincidencia == "reincidentes" & Delito_gr_8_viol_fam == 1 &
+                                                P9_2_15 == "1"~ "Violencia familiar",
+                                              (reincidencia == "reincidentes" & Delito_gr_9_secuestro== 1) &
+                                                (P9_2_17 == "1" | P9_2_23 == "1") ~ "Secuestro",
+                                              (reincidencia == "reincidentes" & Delito_gr_10_sexuales== 1) &
+                                                (P9_2_18 == "1" | P9_2_21 == "1") ~ "Delitos sexuales",
+                                              reincidencia == "reincidentes" & Delito_gr_11_extorsion== 1 &
+                                                P9_2_22 == "1"~ "Extorsión",
+                                              (reincidencia == "reincidentes" & Delito_gr_12_fraude == 1) &
+                                                P9_2_19 == "1" | P9_2_24 == "1" ~ "Fraude",
+                                              (reincidencia == "reincidentes" & Delito_gr_13_amenazas== 1) &
+                                                P9_2_25 == "1"~ "Amenazas",
+                                              (reincidencia == "reincidentes" & Delito_gr_14_otro== 1) &
+                                                (P9_2_14 == "1" | P9_2_16 == "1" | P9_2_26 == "1")~ "Otro",
+                                              T ~ "Distinto delito"))
       
       
       data2plot <- Main_database_2008 %>%
+        filter(reincidentes_tipo != "Distinto delito") %>% 
         group_by(reincidentes_tipo) %>%
         summarise(n = n()) %>%
         mutate(value2plot =  100 * n / sum(n),
@@ -210,12 +215,9 @@ delito_reincidencia.fn <- function(
         select(Delito,value2plot,labels) %>%
         arrange(value2plot) %>%
         mutate(Delito = factor(Delito, levels = Delito)) %>% 
-        filter(
-          value2plot >= 1,
-          Delito != "Distinto delito"
-          )
+        filter(value2plot>= 1)
       
-      colors4plot <- rep("#2a2a9A", 6)
+      colors4plot <- rep("#2a2a9A", 9)
       
       
       plt <- ggplot(data2plot, 
