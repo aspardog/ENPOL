@@ -286,23 +286,22 @@ terminacion_alto_impacto.fn <- function(
   
   ){
   
-
-
       Main_database_2008 <- data.df %>% 
-        mutate(Delito_unico_categ = case_when(Delito_unico_categ == "robos" &
-                                                Robo_autopartes == "1" ~  "robo-autopartes",
-                                              Delito_unico_categ == "robos" &
-                                                Robo_vehiculo == "1" ~  "robo-vehiculo",
-                                              T~ Delito_unico_categ )) %>% 
-        filter(Anio_arresto >= 2008,
-               NSJP == 1, 
-               Delito_unico_categ == "hom_dol"           |
-                 Delito_unico_categ == "secuestro"       |
-                 Delito_unico_categ == "drogas"          |
-                 Delito_unico_categ == "armas"           |
-                 Delito_unico_categ == "robo-autopartes" |
-                 Delito_unico_categ == "robo-vehiculo"   |
-                 Delito_unico_categ == "extorsion") %>% 
+        mutate(
+          Delito_unico_categ = 
+                 case_when(
+                   Delito_unico_categ == "robos" & Robo_autopartes == "1" ~  "robo-autopartes",
+                   Delito_unico_categ == "robos" & Robo_vehiculo == "1" ~  "robo-vehiculo",
+                   T ~ Delito_unico_categ )) %>% 
+        filter(
+          Delito_unico_categ == "hom_dol"           |
+            Delito_unico_categ == "secuestro"       |
+            Delito_unico_categ == "drogas"          |
+            Delito_unico_categ == "armas"           |
+            Delito_unico_categ == "robo-autopartes" |
+            Delito_unico_categ == "robo-vehiculo"   |
+            Delito_unico_categ == "extorsion"
+          ) %>% 
         mutate(tipo_terminacion = case_when(P5_6  == 1 ~ "Jucio",
                                             P5_6  == 2 ~ "Procedimiento abreviado",
                                             T ~ NA_character_))

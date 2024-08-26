@@ -233,7 +233,7 @@ claridad_actores.fn <- function(
     mutate(
       claridad_mp =
         case_when(
-          P5_17_3 == 1 | P5_17_3 == 2~ 1,
+          P5_17_3 == 1 | P5_17_3 == 2 ~ 1,
           P5_17_3 == 3 | P5_17_3 == 4 ~ 0
         ),
       claridad_juez =
