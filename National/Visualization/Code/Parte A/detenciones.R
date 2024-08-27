@@ -390,26 +390,48 @@ lugar_traslado_nueva.fn <- function(
   
 ) {
   
-  data_subset.df <- data.df %>%
-    filter(Anio_arresto > 2014)  %>%
+  data_subset.df <- master_data.df  %>%
+    mutate(MP = case_when(P3_19 == "01" ~ 1,
+                          P3_19 == "02" ~ 0,
+                          P3_19 == "03" ~ 0,
+                          P3_19 == "04" ~ 0,
+                          P3_19 == "05" ~ 0,
+                          P3_19 == "06" ~ 0,
+                          P3_19 == "07" ~ 0,
+                          P3_19 == "08" ~ 0,
+                          P3_19 == "09" ~ 0,
+                          P3_19 == "10" ~ 0,
+                          P3_19 == "11" ~ 0,
+                          P3_19 == "12" ~ 0,
+                          P3_19 == "13" ~ 0,
+                          P3_19 == "14" ~ 0,
+                          T ~ NA_real_),
+           PO = case_when(P3_19 == "01" ~ 0,
+                          P3_19 == "02" ~ 0,
+                          P3_19 == "03" ~ 1,
+                          P3_19 == "04" ~ 0,
+                          P3_19 == "05" ~ 0,
+                          P3_19 == "06" ~ 0,
+                          P3_19 == "07" ~ 0,
+                          P3_19 == "08" ~ 0,
+                          P3_19 == "09" ~ 0,
+                          P3_19 == "10" ~ 0,
+                          P3_19 == "11" ~ 0,
+                          P3_19 == "12" ~ 0,
+                          P3_19 == "13" ~ 0,
+                          P3_19 == "14" ~ 0,
+                          T ~ NA_real_)
+    ) %>%
     group_by(Anio_arresto) %>%
-    mutate(
-      counter = 1,
-      n_obs = if_else(!is.na(Primer_lugar_traslado), sum(counter, na.rm = T), NA_real_)
-    ) %>%
-    ungroup() %>%
-    group_by(Anio_arresto, Primer_lugar_traslado) %>%
-    summarise(
-      value2plot = sum(counter, na.rm = T)/n_obs,
-      n_obs = n_obs
-    ) %>%
-    drop_na() %>%
-    distinct() %>%
+    summarize(MP = mean(MP, na.rm = T),
+              PO = mean(PO, na.rm = T)) %>% 
+    pivot_longer(cols = -c("Anio_arresto"), names_to = "cat" , values_to = "value2plot" ) %>%
     mutate(value2plot = value2plot*100,
            label = paste0(format(round(value2plot, 0),
                                  nsmall = 0),
                           "%"),
-           category = Primer_lugar_traslado,
+           category = case_when(cat == "MP" ~ "Agencia del Ministerio Público",
+                                cat == "PO" ~ "Instalación de la policía"),
            year = as.numeric(Anio_arresto)) %>%
     mutate(label = if_else(category == "Agencia del Ministerio Público" | category == "Instalación de la policía", 
                            label, NA_character_)) %>%
