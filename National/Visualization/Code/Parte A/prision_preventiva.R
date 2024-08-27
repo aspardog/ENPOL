@@ -292,7 +292,9 @@ pp_tipo.fn <- function(
                               Value == "Proceso en libertad" ~ "Proceso en libertad", 
                               T ~ NA_character_),
            n_obs = sum(Frequency, na.rm = T)) 
-  data2plot <- data2plot %>% mutate(order_var = rank(values)) 
+  data2plot <- data2plot %>% mutate(order_var = rank(values)) %>% 
+              mutate(figure= case_when(Value == "Prisión Preventiva Oficiosa" ~ "50%",
+                                       T ~ figure))
   
   
   colors4plot <- c("Prisión Preventiva \nOficiosa" = "#2a2a9A",

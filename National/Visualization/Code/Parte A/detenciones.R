@@ -160,7 +160,9 @@ tiempo_traslado.fn <- function(
           Tiempo_traslado %in% c("Más de 48 horas hasta 72 horas") ~ 6,
           Tiempo_traslado %in% c("Más de 72 horas") ~ 7,
           T ~ NA_real_
-        )
+        ),
+      figure = case_when(Tiempo_traslado == "Más de 24 horas hasta 48 horas" ~ "5%",
+                         T~ figure)
     )
   
   colors4plot <- c("#2a2a9A", 
