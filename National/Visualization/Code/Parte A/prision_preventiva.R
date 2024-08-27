@@ -104,52 +104,39 @@ pp_tiempo_total.fn <- function(
   
 ) {
   
-  data_subset.df <- master_data.df %>%
-    mutate(
-      P5_34_A = replace(P5_34_A, P5_34_A %in% c( "98", "99"), NA),
-      P5_34_M = replace(P5_34_M, P5_34_M %in% c( "98", "99"), NA),
-      P5_34_A = replace(P5_34_A, P5_34_A %in% c( "96"), 0),
-      P5_34_M = replace(P5_34_M, P5_34_M %in% c( "96"), 0),
-      P5_10 = replace(P5_10, P5_10 %in% c("8", "9"), NA)) %>% 
-    mutate(
-      procesados_meses_pp = ((as.numeric(P5_34_A)*12) + as.numeric(P5_34_M)),
-      counter = 1
-    ) %>% 
-    mutate(
-      mas2anios_prisionpreventiva = 
-        case_when(as.numeric(P5_10) == 7 ~ 1,
-                  procesados_meses_pp  > 24   ~ 1,
-                  as.numeric(P5_10) == 1 | as.numeric(P5_10) == 2 | 
-                    as.numeric(P5_10) == 3 | as.numeric(P5_10) == 4 |
-                    as.numeric(P5_10) == 5 |as.numeric(P5_10) == 6 ~ 0,
-                  procesados_meses_pp  <= 24 ~ 0,
-                  T ~ NA_real_)
-    ) %>% 
-    mutate(
-      mas2anios_prisionpreventiva = 
-        case_when(mas2anios_prisionpreventiva == 1 ~ "Más de 2 años",
-                  mas2anios_prisionpreventiva == 0 ~ "Menos de 2 años",
-                  T ~ NA_character_),) %>%
-    group_by(mas2anios_prisionpreventiva) %>%
-    summarise(
-      value2plot = sum(counter, na.rm = T)
+  data2plot <- master_data.df  %>%
+    filter(sentenciado == 1, P5_9 == "1") %>%
+    mutate(menos2 = case_when(P5_10 == "1" ~ 1,
+                            P5_10 == "2" ~ 1,
+                            P5_10 == "3" ~ 1,
+                            P5_10 == "4" ~ 1,
+                            P5_10 == "5" ~ 1,
+                            P5_10 == "6" ~ 1,
+                            P5_10 == "7" ~ 0,
+                            T ~ NA_real_),
+           mas2 = case_when(P5_10 == "1" ~ 0,
+                           P5_10 == "2" ~ 0,
+                           P5_10 == "3" ~ 0,
+                           P5_10 == "4" ~ 0,
+                           P5_10 == "5" ~ 0,
+                           P5_10 == "6" ~ 0,
+                           P5_10 == "7" ~ 1,
+                           T ~ NA_real_),
+           Stat="Nacional"
     ) %>%
-    drop_na() %>%
+    group_by(Stat) %>%
+    summarize(menos2 = mean(menos2, na.rm = T),
+              mas2 = mean(mas2, na.rm = T))  %>% 
+    pivot_longer( cols = -c("Stat"), names_to = "var", values_to = "value2plot") %>%
     mutate(
-      n_obs = sum(value2plot, na.rm = T),
-      value2plot = value2plot/n_obs
-    ) %>%
-    rename(group_var = mas2anios_prisionpreventiva)
-  
-  data2plot <- data_subset.df %>%
-    mutate(
-      value2plot = value2plot*100,
-      labels = group_var,
-      figure = paste0(round(value2plot,0), "%"),
+      labels = case_when(var == "menos2" ~ "Menos de 2 años",
+                         var == "mas2" ~ "Más de 2 años"),
+      figure = paste0(round(100*value2plot,0), "%"),
       order_var = case_when(
         labels == "Más de 2 años" ~ 1,
         labels == "Menos de 2 años" ~ 2,
-        T ~ NA_real_)
+        T ~ NA_real_),
+      group_var = labels,
     )
   
   colors4plot <- c("Menos de 2 años" = "#009AA9",
@@ -276,7 +263,9 @@ pp_tipo.fn <- function(
   
 ){
   
-  data_subset.df <- data.frame(Value = master_data.df$tipo_prision_preventiva) %>% 
+  data_subset.df <-  master_data.df %>% filter(sentenciado == 1)
+    
+  data_subset.df <- data.frame(Value = data_subset.df$tipo_prision_preventiva) %>% 
     filter(complete.cases(.))
   
   # Count the frequency of each unique value
