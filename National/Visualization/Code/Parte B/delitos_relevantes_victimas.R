@@ -1226,6 +1226,7 @@ homicidios_ENPOL_ENVIPE.fn <- function(
       
       enpol_3 <- Main_database %>% 
         filter(Anio_arresto>=2018 & Anio_arresto<= 2021 )  %>%
+        filter(NSJP == 1) %>%
         select(Anio_arresto,Delito_gr_1_robos,Delito_gr_2_drogas,Delito_gr_3_del_org,Delito_gr_4_lesiones,Delito_gr_5_hom_cul,
                Delito_gr_6_hom_dol,Delito_gr_7_armas,Delito_gr_8_viol_fam,Delito_gr_9_secuestro,Delito_gr_10_sexuales,
                Delito_gr_11_extorsion,Delito_gr_12_fraude,Delito_gr_13_amenazas,Delito_gr_14_otro,Delito_gr_15_ns_nr,FAC_PER)  %>% 
@@ -1325,7 +1326,7 @@ homicidios_ENPOL_ENVIPE.fn <- function(
                            breaks = seq(0,100,20),
                            labels = paste0(seq(0,100,20), "%")) %>% 
         scale_color_manual(values = colors4plot) +
-        scale_fill_manual(values = c( "#a90099", "#2a2a9A")) +  # Add this line to customize bar colors
+        scale_fill_manual(values = c( "#A90099", "#2a2a9A")) +  # Add this line to customize bar colors
         WJP_theme() +
         expand_limits(y = c(0, 30000))+
         theme(panel.grid.major.x = element_blank(),

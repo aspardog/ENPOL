@@ -380,9 +380,27 @@ tortura_psicologica.fn <- function(
     ) %>%
     rename(year = group_var) %>%
     mutate(
+      figure1 =
+        if_else(year == "MP", paste0(round(value2plot*100,0), "%"),  NA_character_)
+      )
+  
+  figure2.df <- data2plot %>% 
+    mutate(
+      figure2 = if_else(year == "Traslado", paste0(round(value2plot*100,0), "%"),  NA_character_)
+    ) %>%
+    drop_na(figure2) %>%
+    select(labels, figure2)
+      
+  data2plot <- data2plot %>%
+    left_join(figure2.df, by = "labels") %>%
+    mutate(
       category = labels,
       across(labels,
              ~paste0(
+               "<span style='color:#2a2a9A;font-size:3.514598mm;font-weight:bold'>", figure2, "</span>",
+               "<span> | </span>", 
+               "<span style='color:#a90099;font-size:3.514598mm;font-weight:bold'>", figure1, "</span>",
+               "<br>",
                "<span style='color:#524F4C;font-size:3.514598mm;font-weight:bold'>",
                labels,
                "</span>")
@@ -523,9 +541,27 @@ tortura_fisica.fn <- function(
     ) %>%
     rename(year = group_var) %>%
     mutate(
+      figure1 =
+        if_else(year == "MP", paste0(round(value2plot*100,0), "%"),  NA_character_)
+    )
+  
+  figure2.df <- data2plot %>% 
+    mutate(
+      figure2 = if_else(year == "Traslado", paste0(round(value2plot*100,0), "%"),  NA_character_)
+    ) %>%
+    drop_na(figure2) %>%
+    select(labels, figure2)
+  
+  data2plot <- data2plot %>%
+    left_join(figure2.df, by = "labels") %>%
+    mutate(
       category = labels,
       across(labels,
              ~paste0(
+               "<span style='color:#2a2a9A;font-size:3.514598mm;font-weight:bold'>", figure2, "</span>",
+               "<span> | </span>", 
+               "<span style='color:#a90099;font-size:3.514598mm;font-weight:bold'>", figure1, "</span>",
+               "<br>",
                "<span style='color:#524F4C;font-size:3.514598mm;font-weight:bold'>",
                labels,
                "</span>")
