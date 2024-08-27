@@ -324,58 +324,56 @@ claridad_actores.fn <- function(
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 defensa_oportuna.fn <- function(
-  data.df = master_data.df  
+    data.df = master_data.df  
 ) {
   
   data_subset.df <- master_data.df %>%
-    mutate( P4_1_05 = as.numeric(P4_1_05),
-            P5_1 = as.numeric(P5_1),
-            momento = case_when(P4_1_05 == 1 ~ "Defensa en Ministerio Público",
-                                P5_1    == 1 ~ "Defensa con Juez",
-                                P4_1_05 == 2 ~ "Defensa en Ministerio Público",
-                                P5_1    == 2 ~ "Defensa con Juez",
-                                T~ NA_character_),
-            defensa = case_when(P4_1_05 == 1 ~ "Sí",
-                                P5_1    == 1 ~ "Sí",
-                                P4_1_05 == 2 ~ "No",
-                                P5_1    == 2 ~ "No",
-                                T~ NA_character_)
-            )%>% 
+    mutate(DOJ = case_when(P5_1 == "1" ~ 1,
+                           P5_1 == "2" ~ 0,
+                           T ~ NA_real_),
+           DOMP =  case_when(P4_1_05 == "1" ~ 1,
+                             P4_1_05 == "2" ~ 0,
+                             T ~ NA_real_),
+           P5_4_A = as.numeric(P5_4_A),
+           P5_4_M = as.numeric(P5_4_M),
+           P5_4_A = case_when(
+             P5_4_A >= 97 ~ NA_real_,
+             T ~ P5_4_A),
+           P5_4_M = case_when(
+             P5_4_M >= 97 ~ NA_real_,
+             T ~ P5_4_M),
+           P5_4_M = P5_4_M/12,
+           Años = P5_4_A+P5_4_M
+    ) 
+  
+  b1151 <- data_subset.df %>%
+    group_by(DOMP) %>%
+    filter(!is.na(DOMP)) %>%
+    summarize(value2plot = mean(Años, na.rm = T)) 
+  b1152 <- data_subset.df %>%
+    group_by(DOJ) %>%
+    filter(!is.na(DOJ)) %>%
+    summarize(value2plot = mean(Años, na.rm = T))
+  data2plot <- bind_rows(b1151, b1152) %>%
     mutate(
-      P5_4_A = as.numeric(P5_4_A),
-      P5_4_M = as.numeric(P5_4_M),
-      P5_4_A = case_when(
-        P5_4_A >= 97 ~ NA_real_,
-        T ~ P5_4_A),
-      P5_4_M = case_when(
-        P5_4_M >= 97 ~ NA_real_,
-        T ~ P5_4_M),
-      P5_4_M = P5_4_M/12,
-      tiempo_sentencia = P5_4_A+P5_4_M)
+      category = case_when(DOJ == 1 ~ "Defensa con Juez",
+                           DOJ == 0 ~ "Defensa con Juez",
+                           DOMP == 1 ~ "Defensa en Ministerio Público",
+                           DOMP == 0 ~ "Defensa en Ministerio Público"),
+      group_var = case_when(DOJ == 1 ~ "Sí",
+                            DOJ == 0 ~ "No",
+                            DOMP == 1 ~ "Sí",
+                            DOMP == 0 ~ "No"),
+      labels = category,
+      figure = round(value2plot, 0),
+      order_var = case_when(category ==  "Defensa en Ministerio Público" ~ 2,
+                            category == "Defensa con Juez"               ~ 1,
+                            T~NA_real_),
+      order_value_bars = case_when(group_var == "Sí" ~ 1,
+                                   group_var == "No" ~ 2,
+                                   T ~ NA_real_)
+    )
   
-  
-  data2plot <- data_subset.df %>%
-    drop_na(momento, defensa, tiempo_sentencia) %>%
-    mutate(counter = 1) %>%
-    group_by(momento, defensa) %>%
-    summarise(mean_value = mean(tiempo_sentencia, na.rm = TRUE),
-              n_obs = sum(counter, na.rm = TRUE)) %>%
-    mutate(category = momento,
-           group_var = case_when(defensa == "Sí" ~ "Sí",
-                                 defensa == "No" ~ "No",
-                                 T ~ NA_character_),
-           value2plot = mean_value,
-           labels = case_when(category == "Defensa en Ministerio Público"      ~ "Defensa en Ministerio Público",
-                              category == "Defensa con Juez" ~ "Defensa con Juez",
-                              T~NA_character_),
-           figure = round(mean_value, 0),
-           order_var = case_when(category ==  "Defensa en Ministerio Público" ~ 2,
-                                 category == "Defensa con Juez"               ~ 1,
-                                 T~NA_real_),
-           order_value_bars = case_when(group_var == "Sí" ~ 1,
-                                        group_var == "No" ~ 2,
-                                        T ~ NA_real_)) 
-    # filter(momento == "Defensa en Ministerio Público")
   
   colors4plot <- twoColors
   
