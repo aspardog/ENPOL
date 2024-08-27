@@ -42,7 +42,7 @@ b111 <- master_data.df %>%
 
 
 # B112 (2015-2021)
-# TODO MAL
+# TODO BIEN
 
 b112 <- master_data.df %>%
   mutate(Juez = case_when(P5_17_2 == "1" | P5_37_2 == "1" ~ 1,
@@ -259,7 +259,7 @@ b212 <- master_data.df %>%
 
 
 # B213 (2015-2021)
-# TODO MAL, codigo original usa delito unico grupos
+# TODO BIEN
 
 b213 <- master_data.df %>%
   mutate(Sec = case_when(P5_11_17 == "1" | P5_31_17 == "1" ~ 1,
@@ -805,3 +805,117 @@ b533 <- master_data.df %>%
   )
 
 b53 <- bind_rows(b531,b532,b533)
+
+a111 <- master_data.df %>%
+  filter(sentenciado == 1, as.numeric(Anio_arresto) >= 2018, P5_11_98 != "1", P5_11_99 != "1" ) %>%
+  mutate(Robo_veh = case_when(P5_11_01 == "1" ~ 1,
+                              P5_11_01 == "0" ~ 0,
+                              T ~ NA_real_),
+         Robo_cas = case_when(P5_11_02 == "1" ~ 1,
+                              P5_11_02 == "0" ~ 0,
+                              T ~ NA_real_),
+         Robo_neg = case_when(P5_11_03 == "1" ~ 1,
+                              P5_11_03 == "0" ~ 0,
+                              T ~ NA_real_),
+         Robo_tpu = case_when(P5_11_04 == "1" ~ 1,
+                              P5_11_04 == "0" ~ 0,
+                              T ~ NA_real_),
+         Robo_via = case_when(P5_11_05 == "1" ~ 1,
+                              P5_11_05 == "0" ~ 0,
+                              T ~ NA_real_),
+         Robo_aut = case_when(P5_11_06 == "1" ~ 1,
+                              P5_11_06 == "0" ~ 0,
+                              T ~ NA_real_),
+         Robo_otr = case_when(P5_11_07 == "1" ~ 1,
+                              P5_11_07 == "0" ~ 0,
+                              T ~ NA_real_),
+         Pos_dro = case_when(P5_11_08 == "1" ~ 1,
+                             P5_11_08 == "0" ~ 0,
+                             T ~ NA_real_),
+         Com_dro = case_when(P5_11_09 == "1" ~ 1,
+                             P5_11_09 == "0" ~ 0,
+                             T ~ NA_real_),
+         Lesiones = case_when(P5_11_10 == "1" ~ 1,
+                              P5_11_10 == "0" ~ 0,
+                              T ~ NA_real_),
+         Hom_cul = case_when(P5_11_11 == "1" ~ 1,
+                             P5_11_11 == "0" ~ 0,
+                             T ~ NA_real_),
+         Hom_dol = case_when(P5_11_12 == "1" ~ 1,
+                             P5_11_12 == "0" ~ 0,
+                             T ~ NA_real_),
+         Armas = case_when(P5_11_13 == "1" ~ 1,
+                           P5_11_13 == "0" ~ 0,
+                           T ~ NA_real_),
+         Incum = case_when(P5_11_14 == "1" ~ 1,
+                           P5_11_14 == "0" ~ 0,
+                           T ~ NA_real_),
+         Violen = case_when(P5_11_15 == "1" ~ 1,
+                            P5_11_15 == "0" ~ 0,
+                            T ~ NA_real_),
+         Daño = case_when(P5_11_16 == "1" ~ 1,
+                          P5_11_16 == "0" ~ 0,
+                          T ~ NA_real_),
+         Secuestro = case_when(P5_11_17 == "1" ~ 1,
+                               P5_11_17 == "0" ~ 0,
+                              T ~ NA_real_),
+         Violacion = case_when(P5_11_18 == "1" ~ 1,
+                               P5_11_18 == "0" ~ 0,
+                               T ~ NA_real_),
+         Fraude = case_when(P5_11_19 == "1" ~ 1,
+                            P5_11_19 == "0" ~ 0,
+                            T ~ NA_real_),
+         Del_Org = case_when(P5_11_20 == "1" ~ 1,
+                             P5_11_20 == "0" ~ 0,
+                             T ~ NA_real_),
+         Sexuales = case_when(P5_11_21 == "1" ~ 1,
+                              P5_11_21 == "0" ~ 0,
+                              T ~ NA_real_),
+         Extorsion = case_when(P5_11_22 == "1" ~ 1,
+                               P5_11_22 == "0" ~ 0,
+                              T ~ NA_real_),
+         Priv_lib = case_when(P5_11_23 == "1" ~ 1,
+                              P5_11_23 == "0" ~ 0,
+                              T ~ NA_real_),
+         Abuso_conf = case_when(P5_11_24 == "1" ~ 1,
+                                P5_11_24 == "0" ~ 0,
+                              T ~ NA_real_),
+         Amenazas = case_when(P5_11_25 == "1" ~ 1,
+                              P5_11_25 == "0" ~ 0,
+                              T ~ NA_real_),
+         Otro = case_when(P5_11_26 == "1" ~ 1,
+                          P5_11_26 == "0" ~ 0,
+                              T ~ NA_real_),
+         Stat="Nacional") %>%
+  group_by(Stat) %>%
+  summarize(Robo_veh = sum(Robo_veh == 1),
+                             Robo_cas = sum(Robo_cas == 1),
+                             Robo_neg = sum(Robo_neg == 1),
+                             Robo_tpu = sum(Robo_tpu == 1),
+                             Robo_via = sum(Robo_via == 1),
+                             Robo_aut = sum(Robo_aut == 1),
+                             Robo_otr = sum(Robo_otr == 1),
+                             Pos_dro = sum(Pos_dro == 1),
+                             Com_dro = sum(Com_dro == 1),
+                             Lesiones = sum(Lesiones == 1),
+                             Hom_cul = sum(Hom_cul == 1),
+                             Hom_dol = sum(Hom_dol == 1),
+                             Armas = sum(Armas == 1),
+                             Incum = sum(Incum == 1),
+                             Violen = sum(Violen == 1),
+                             Daño = sum(Daño == 1),
+                             Secuestro = sum(Secuestro == 1),
+                             Violacion = sum(Violacion == 1),
+                             Fraude = sum(Fraude == 1),
+                             Del_Org = sum(Del_Org == 1),
+                             Sexuales = sum(Sexuales == 1),
+                             Extorsion = sum(Extorsion == 1),
+                             Priv_lib = sum(Priv_lib == 1),
+                             Abuso_conf = sum(Abuso_conf == 1),
+                             Amenazas = sum(Amenazas == 1),
+                             Otro = sum(Otro == 1)
+  ) %>% 
+  pivot_longer( cols = -c("Stat"), names_to = "Delito", values_to = "n") %>%
+  mutate(Porcentaje = round(100*n/sum(n))) %>% 
+  arrange(Porcentaje)
+  

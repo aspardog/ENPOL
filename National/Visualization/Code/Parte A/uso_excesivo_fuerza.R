@@ -393,11 +393,18 @@ uso_fuerza_delito.fn <- function(
 ) {
   
   data_subset.df <- data.df %>%
-    mutate(Delito_unico_categ = case_when(Delito_unico_categ == "robos" &
-                                            Robo_autopartes == "1" ~  "robo-autopartes",
-                                          Delito_unico_categ == "robos" &
-                                            Robo_vehiculo == "1" ~  "robo-vehiculo",
-                                          T~ Delito_unico_categ )) %>%
+    mutate(
+    `robo-autopartes` = coalesce(P5_11_06, P5_31_06),
+    `robo-vehiculo`   = coalesce(P5_11_01, P5_31_01),
+    `extorsion`       = coalesce(P5_11_22, P5_31_22),
+    `armas`           = coalesce(P5_11_13, P5_31_13),
+    `drogas`          = coalesce(P5_11_08, P5_31_08, P5_11_09, P5_31_09),
+    `secuestro`       = coalesce(P5_11_17, P5_31_17),
+    `hom_dol`         = coalesce(P5_11_12, P5_31_12)
+  ) %>% 
+    pivot_longer(cols = c(`robo-autopartes`, `robo-vehiculo`, `extorsion`, `armas`, `drogas`, `secuestro`, `hom_dol`), 
+                 names_to = "Delito", values_to = "filterValue") %>%
+    filter(filterValue == 1) %>%
     mutate(
       uso_excesivo =
         case_when(
@@ -406,13 +413,13 @@ uso_fuerza_delito.fn <- function(
         ),
       delitos_alto_impacto = 
         case_when(
-          Delito_unico_categ == "hom_dol"         ~ "Homicidio doloso",
-          Delito_unico_categ == "secuestro"       ~ "Secuestro",
-          Delito_unico_categ == "drogas"          ~ "Posesión o comercio de drogas",
-          Delito_unico_categ == "armas"           ~ "Portación ilegal de armas",
-          Delito_unico_categ == "robo-autopartes" ~ "Robo de autopartes",
-          Delito_unico_categ == "robo-vehiculo"   ~ "Robo de vehículo",
-          Delito_unico_categ == "extorsion"       ~ "Extorsión",
+          Delito == "hom_dol"         ~ "Homicidio doloso",
+          Delito == "secuestro"       ~ "Secuestro",
+          Delito == "drogas"          ~ "Posesión o comercio de drogas",
+          Delito == "armas"           ~ "Portación ilegal de armas",
+          Delito == "robo-autopartes" ~ "Robo de autopartes",
+          Delito == "robo-vehiculo"   ~ "Robo de vehículo",
+          Delito == "extorsion"       ~ "Extorsión",
           T ~ NA_character_
         )
     ) %>%

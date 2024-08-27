@@ -101,7 +101,7 @@ for (i in Estados) {
     Estados <- "National"
     
     master_data.df <- Main_database %>% 
-      filter(Anio_arresto >= as.numeric(2015)) %>% 
+      filter(Anio_arresto >= as.numeric(2018)) %>% 
       filter(NSJP == 1) 
     
     savePath <- "Nacional"

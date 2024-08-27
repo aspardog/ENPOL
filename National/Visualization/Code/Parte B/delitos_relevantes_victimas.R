@@ -28,48 +28,160 @@ delitos_ENPOL.fn <- function(
   data.df = master_data.df  
   
   ){ 
+  
+  vars <- c(
+    "Robo de casa habitación",
+    "Robo de vehículo",
+    "Robo a negocio",
+    "Robo en transporte público",
+    "Robo a transeúnte en vía pública",
+    "Robo de autopartes",
+    "Otras formas de robo",
+    "Posesión ilegal de drogas",
+    "Comercio ilegal de drogas",
+    "Lesiones",
+    "Homicidio culposo",
+    "Homicidio doloso",
+    "Portación ilegal de armas",
+    "Incumplimiento de obligaciones de asistencia familiar",
+    "Violencia familiar",
+    "Daño a la propiedad",
+    "Secuestro o secuestro express",
+    "Violación sexual",
+    "Fraude",
+    "Delincuencia organizada",
+    "Otros delitos sexuales",
+    "Extorsión",
+    "Privación de la libertad",
+    "Abuso de confianza",
+    "Amenazas",
+    "Otro"
+  )
+  
   Main_database1 <- data.df  %>%
-    mutate(Delito_prioritario_ENVIPE = case_when((P5_11_04 == 1) ~ 1,
-                                                 (P5_11_05 == 1) ~ 1,
-                                                 (P5_11_06 == 1) ~ 1,
-                                                 (P5_11_09 == 1) ~ 1,
-                                                 (P5_11_16 == 1) ~ 1,
-                                                 (P5_11_22 == 1) ~ 1,
-                                                 T ~ 0),
-           Delito_unico_ungrouped_categ = case_when((P5_11_01 == 1) ~ "Robo de casa habitación",
-                                                    (P5_11_02 == 1) ~ "Robo de vehículo",
-                                                    (P5_11_03 == 1) ~ "Robo a negocio",
-                                                    (P5_11_04 == 1) ~ "Robo en transporte público",
-                                                    (P5_11_05 == 1) ~ "Robo a transeunte en vía pública",
-                                                    (P5_11_06 == 1) ~ "Robo de autopartes",
-                                                    (P5_11_07 == 1) ~ "Robo en forma distinta a las anteriores",
-                                                    (P5_11_08 == 1) ~ "Posesión ilegal de drogas",
-                                                    (P5_11_09 == 1) ~ "Comercio ilegal de drogas",
-                                                    (P5_11_10 == 1) ~ "Lesiones",
-                                                    (P5_11_11 == 1) ~ "Homicidio culposo",
-                                                    (P5_11_12 == 1) ~ "Homicidio doloso",
-                                                    (P5_11_13 == 1) ~ "Portación ilegal de armas",
-                                                    (P5_11_14 == 1) ~ "Incumplimiento de obligaciones de asistencia familiar",
-                                                    (P5_11_15 == 1) ~ "Violencia familiar",
-                                                    (P5_11_16 == 1) ~ "Daño a la propiedad",
-                                                    (P5_11_17 == 1) ~ "Secuestro o secuestro expres",
-                                                    (P5_11_18 == 1) ~ "Violación sexual",
-                                                    (P5_11_19 == 1) ~ "Fraude",
-                                                    (P5_11_20 == 1) ~ "Delincuencia organizada",
-                                                    (P5_11_21 == 1) ~ "Otros delitos sexuales",
-                                                    (P5_11_22 == 1) ~ "Extorsión",
-                                                    (P5_11_23 == 1) ~ "Privación de la libertad",
-                                                    (P5_11_24 == 1) ~ "Abuso de confianza",
-                                                    (P5_11_25 == 1) ~ "Amenazas",
-                                                    (P5_11_26 == 1) ~ "Otro",
-                                                    T ~ NA_character_)) 
+    filter(Anio_arresto >= 2018, 
+           sentenciado == 1
+           ) %>%
+    mutate(
+      `Robo de vehículo`= 
+        case_when(
+          P5_11_01 == 1 ~ 1
+        ),
+      `Robo de casa habitación`  = 
+        case_when(
+          P5_11_02 == 1 ~ 1
+          ),
+      `Robo a negocio` =
+        case_when(
+          P5_11_03 == 1 ~ 1
+        ),
+      `Robo en transporte público` =
+        case_when(
+          P5_11_04 == 1 ~ 1
+        ),
+      `Robo a transeúnte en vía pública` =
+        case_when(
+          P5_11_05 == 1 ~ 1
+        ),
+      `Robo de autopartes` =
+        case_when(
+          P5_11_06 == 1 ~ 1
+        ),
+      `Otras formas de robo` =
+        case_when(
+          P5_11_07 == 1 ~ 1
+        ),
+      `Posesión ilegal de drogas` = 
+        case_when(
+          P5_11_08 == 1 ~ 1
+        ),
+      `Comercio ilegal de drogas` =
+        case_when(
+          P5_11_09 == 1 ~ 1
+        ),
+      `Lesiones` =
+        case_when(
+          P5_11_10 == 1 ~ 1
+        ),
+      `Homicidio culposo` =
+        case_when(
+          P5_11_11 == 1 ~ 1
+        ),
+      `Homicidio doloso` =
+        case_when(
+          P5_11_12 == 1 ~ 1
+        ),
+      `Portación ilegal de armas` =
+        case_when(
+          P5_11_13 == 1 ~ 1
+        ),
+      `Incumplimiento de obligaciones de asistencia familiar` =
+        case_when(
+          P5_11_14 == 1 ~ 1
+        ),
+      `Violencia familiar` =
+        case_when(
+          P5_11_15 == 1 ~ 1
+        ),
+      `Daño a la propiedad` =
+        case_when(
+          P5_11_16 == 1 ~ 1
+        ),
+      `Secuestro o secuestro express` =
+        case_when(
+          P5_11_17 == 1 ~ 1
+        ),
+      `Violación sexual` = 
+        case_when(
+          P5_11_18 == 1 ~ 1
+        ),
+      `Fraude` = 
+        case_when(
+          P5_11_19 == 1 ~ 1
+        ),
+      `Delincuencia organizada` =
+        case_when(
+          P5_11_20 == 1 ~ 1
+        ),
+      `Otros delitos sexuales` =
+        case_when(
+          P5_11_21 == 1 ~ 1
+        ),
+      `Extorsión` =
+        case_when(
+          P5_11_22 == 1 ~ 1
+        ),
+      `Privación de la libertad` =
+        case_when(
+          P5_11_23 == 1 ~ 1
+        ),
+      `Abuso de confianza` =
+        case_when(
+          P5_11_24 == 1 ~ 1
+        ),
+      `Amenazas` =
+        case_when(
+          P5_11_25 == 1 ~ 1
+        ),
+      `Otro` =
+        case_when(
+          P5_11_26 == 1 ~ 1
+        )
+      ) %>%
+    pivot_longer(
+      cols = c(all_of(vars)), 
+      names_to = "Delito_unico_ungrouped_categ", 
+      values_to = "value2filter"
+    ) %>%
+    filter(
+      value2filter == 1
+    )
   
   data2plot <- Main_database1 %>%
-    filter(Anio_arresto >= 2018, sentenciado == 1) %>%
     group_by(Delito_unico_ungrouped_categ) %>%
     summarise(n = n()) %>%
     drop_na() %>%
-    mutate(value2plot =  100 * n / sum(n),
+    mutate(value2plot =  100 * (n / sum(n)),
            labels = paste0(round(value2plot,0),"%"),
            group_var = "Arrestos",
            Delito = Delito_unico_ungrouped_categ,

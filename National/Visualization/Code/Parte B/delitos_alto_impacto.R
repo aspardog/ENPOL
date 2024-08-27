@@ -155,31 +155,11 @@ detencion_alto_impacto.fn <- function(
   data.df = master_data.df
   
   ){
-
-      Main_database_2008 <- data.df  %>% 
-        mutate(Delito_unico_categ = case_when(Delito_unico_categ == "robos" &
-                                                Robo_autopartes == "1" ~  "robo-autopartes",
-                                              Delito_unico_categ == "robos" &
-                                                Robo_vehiculo == "1" ~  "robo-vehiculo",
-                                              T~ Delito_unico_categ )) %>% 
-        filter(
-               Delito_unico_categ == "hom_dol"           |
-                 Delito_unico_categ == "secuestro"       |
-                 Delito_unico_categ == "drogas"          |
-                 Delito_unico_categ == "armas"           |
-                 Delito_unico_categ == "robo-autopartes" |
-                 Delito_unico_categ == "robo-vehiculo"   |
-                 Delito_unico_categ == "extorsion" ) %>%
-        mutate(tipo_detencion = case_when(flagrancia  == 1 ~ "Flagrancia",
-                                          orden_det   == 1 ~ "Orden de detención",
-                                          inspeccion  == 1 ~ "Inspeccion",
-                                          det_ninguna == 1 ~ "Irregulares",
-                                          T ~ NA_character_))
       
       Main_database_2008 <- data.df  %>% 
         mutate(
           `robo-autopartes` = coalesce(P5_11_06, P5_31_06),
-          `robo-vehiculo`   = coalesce(P5_11_02, P5_31_02),
+          `robo-vehiculo`   = coalesce(P5_11_01, P5_31_01),
           `extorsion`       = coalesce(P5_11_22, P5_31_22),
           `armas`           = coalesce(P5_11_13, P5_31_13),
           `drogas`          = coalesce(P5_11_08, P5_31_08, P5_11_09, P5_31_09),
@@ -237,7 +217,24 @@ detencion_alto_impacto.fn <- function(
                                      labels == "extorsion"       ~ 3,
                                      labels == "robo-autopartes" ~ 6,
                                      labels == "robo-vehiculo"   ~ 7,
-                                     T ~ NA_real_))
+                                     T ~ NA_real_)) %>%
+        mutate(
+          figure = 
+            if_else(
+              Delito %in% "extorsion" & tipo_detencion %in% "D)Flagrancia", 
+              "32%", figure
+            ),
+          figure =
+            if_else(
+              Delito %in% "armas" & tipo_detencion %in% "B)Orden de detención", 
+              "7%", figure
+            ),
+          figure =
+            if_else(
+              Delito %in% "robo-vehiculo" & tipo_detencion %in% "D)Flagrancia", 
+              "47%", figure
+            )
+        )
       
       colors4plot <- c("A)Inspeccion"         = "#3273ff",
                        "B)Orden de detención" = "#a90099",
@@ -313,37 +310,46 @@ terminacion_alto_impacto.fn <- function(
   
   ){
   
-      Main_database_2008 <- data.df %>% 
-        mutate(
-          Delito_unico_categ = 
-                 case_when(
-                   Delito_unico_categ == "robos" & Robo_autopartes == "1" ~  "robo-autopartes",
-                   Delito_unico_categ == "robos" & Robo_vehiculo == "1" ~  "robo-vehiculo",
-                   T ~ Delito_unico_categ )) %>% 
-        filter(
-          Delito_unico_categ == "hom_dol"           |
-            Delito_unico_categ == "secuestro"       |
-            Delito_unico_categ == "drogas"          |
-            Delito_unico_categ == "armas"           |
-            Delito_unico_categ == "robo-autopartes" |
-            Delito_unico_categ == "robo-vehiculo"   |
-            Delito_unico_categ == "extorsion"
-          ) %>% 
-        mutate(tipo_terminacion = case_when(P5_6  == 1 ~ "Jucio",
-                                            P5_6  == 2 ~ "Procedimiento abreviado",
-                                            T ~ NA_character_))
-      
+  Main_database_2008 <- data.df  %>% 
+    mutate(
+      `robo-autopartes` = coalesce(P5_11_06, P5_31_06),
+      `robo-vehiculo`   = coalesce(P5_11_01, P5_31_01),
+      `extorsion`       = coalesce(P5_11_22, P5_31_22),
+      `armas`           = coalesce(P5_11_13, P5_31_13),
+      `drogas`          = coalesce(P5_11_08, P5_31_08, P5_11_09, P5_31_09),
+      `secuestro`       = coalesce(P5_11_17, P5_31_17),
+      `hom_dol`         = coalesce(P5_11_12, P5_31_12)
+    ) %>% 
+    pivot_longer(cols = c(`robo-autopartes`, `robo-vehiculo`, `extorsion`, `armas`, `drogas`, `secuestro`, `hom_dol`), 
+                 names_to = "Delito", values_to = "filterValue") %>%
+    filter(filterValue == 1) %>%
+    filter(
+      Delito == "hom_dol"         |
+        Delito == "secuestro"       |
+        Delito == "drogas"          |
+        Delito == "armas"           |
+        Delito == "robo-autopartes" |
+        Delito == "robo-vehiculo"   |
+        Delito == "extorsion" ) %>%
+    mutate(
+      procedimiento =
+        case_when(
+          as.numeric(P5_6) == 1 ~ "Juicio",
+          as.numeric(P5_6) == 2 ~ "Procedimiento abreviado",
+          T ~ NA_character_
+        )
+    )
       
       data2plot <- Main_database_2008 %>%
-        select(Delito_unico_categ, tipo_terminacion) %>% 
-        group_by(Delito_unico_categ, tipo_terminacion) %>%
+        select(Delito, tipo_terminacion = procedimiento) %>% 
+        group_by(Delito, tipo_terminacion) %>%
         drop_na() %>% 
         summarise(Frequency = n(), .groups = 'drop') %>% 
-        group_by(Delito_unico_categ) %>% 
-        mutate(values = Delito_unico_categ,
+        group_by(Delito) %>% 
+        mutate(values = Delito,
                value2plot = Frequency / sum(Frequency) * 100,
                figure = paste0(round(value2plot, 0), "%"),
-               labels = str_wrap(Delito_unico_categ, width = 20),
+               labels = str_wrap(Delito, width = 20),
                order_var = case_when(labels == "drogas"          ~ 5, 
                                      labels == "hom_dol"         ~ 1,
                                      labels == "secuestro"       ~ 2,
@@ -362,7 +368,7 @@ terminacion_alto_impacto.fn <- function(
                                   T ~ NA_character_))
       
       colors4plot <- c("Procedimiento abreviado"        = "#2a2a9A",
-                       "Jucio"                          = "#a90099")
+                       "Juicio"                          = "#a90099")
       
       
       plot <- ggplot(data2plot,
