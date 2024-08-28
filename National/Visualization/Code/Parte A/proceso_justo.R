@@ -373,8 +373,7 @@ defensa_oportuna.fn <- function(
                                    group_var == "No" ~ 2,
                                    T ~ NA_real_)
     )
-  
-  
+
   colors4plot <- twoColors
   
   names(colors4plot) <- c("Sí",

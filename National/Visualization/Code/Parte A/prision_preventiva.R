@@ -129,9 +129,10 @@ pp_tiempo_total.fn <- function(
               mas2 = mean(mas2, na.rm = T))  %>% 
     pivot_longer( cols = -c("Stat"), names_to = "var", values_to = "value2plot") %>%
     mutate(
+      value2plot = value2plot*100,
       labels = case_when(var == "menos2" ~ "Menos de 2 años",
                          var == "mas2" ~ "Más de 2 años"),
-      figure = paste0(round(100*value2plot,0), "%"),
+      figure = paste0(round(value2plot,0), "%"),
       order_var = case_when(
         labels == "Más de 2 años" ~ 1,
         labels == "Menos de 2 años" ~ 2,
@@ -263,6 +264,7 @@ pp_tipo.fn <- function(
   
 ){
   
+  
   data_subset.df <-  master_data.df %>% filter(sentenciado == 1)
     
   data_subset.df <- data.frame(Value = data_subset.df$tipo_prision_preventiva) %>% 
@@ -281,9 +283,7 @@ pp_tipo.fn <- function(
                               Value == "Proceso en libertad" ~ "Proceso en libertad", 
                               T ~ NA_character_),
            n_obs = sum(Frequency, na.rm = T)) 
-  data2plot <- data2plot %>% mutate(order_var = rank(values)) %>% 
-              mutate(figure= case_when(Value == "Prisión Preventiva Oficiosa" ~ "50%",
-                                       T ~ figure))
+  data2plot <- data2plot %>% mutate(order_var = rank(values)) 
   
   
   colors4plot <- c("Prisión Preventiva \nOficiosa" = "#2a2a9A",
