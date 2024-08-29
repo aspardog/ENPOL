@@ -140,7 +140,9 @@ detenciones_estado.fn <- function(
                                           orden_det   == 1 ~ "Orden de detención",
                                           inspeccion  == 1 ~ "Inspeccion",
                                           det_ninguna == 1 ~ "Irregulares",
-                                          T ~ NA_character_))
+                                          T ~ NA_character_), 
+               Estado_arresto = case_when(Estado_arresto == "México" ~ "Estado de México",
+                                          T ~ Estado_arresto))
       redondeo <- c("APromedio nacional",
                     "Baja California",
                     "Chihuahua",

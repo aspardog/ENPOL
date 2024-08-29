@@ -598,7 +598,7 @@ tribunal_transparente.fn <- function(
                            savePath,"/Proceso justo",
                            "/tribunal_transparente.svg"),
          width = 189.7883,
-         height = 85,
+         height = 75,
          units  = "mm",
          dpi    = 72,
          device = "svg")
@@ -694,7 +694,7 @@ tribunal_imparcial.fn <- function(
                            savePath,"/Proceso justo",
                            "/tribunal_imparcial.svg"),
          width = 189.7883,
-         height = 85,
+         height = 75,
          units  = "mm",
          dpi    = 72,
          device = "svg")
