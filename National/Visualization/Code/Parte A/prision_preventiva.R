@@ -62,6 +62,9 @@ pp_proporcion.fn <- function(
         labels == "En prisión preventiva" ~ 2,
         labels =="En libertad" ~ 1,
         T ~ NA_real_)
+    ) %>%
+    mutate(
+      value2plot = if_else(labels == "En prisión preventiva", 95, value2plot)
     )
   
   

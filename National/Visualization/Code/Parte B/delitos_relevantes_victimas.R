@@ -46,7 +46,7 @@ delitos_ENPOL.fn <- function(
     "Incumplimiento de obligaciones de asistencia familiar",
     "Violencia familiar",
     "Daño a la propiedad",
-    "Secuestro o secuestro express",
+    "Secuestro o secuestro exprés",
     "Violación sexual",
     "Fraude",
     "Delincuencia organizada",
@@ -127,7 +127,7 @@ delitos_ENPOL.fn <- function(
         case_when(
           P5_11_16 == 1 ~ 1
         ),
-      `Secuestro o secuestro express` =
+      `Secuestro o secuestro exprés` =
         case_when(
           P5_11_17 == 1 ~ 1
         ),
