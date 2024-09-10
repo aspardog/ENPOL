@@ -276,7 +276,7 @@ federales_sentenciados.fn <- function(
         mutate(Delito = factor(Delito, levels = Delito)) %>% 
         filter(value2plot >= 1)
       
-      colors4plot <- rep("#2a2a9A", 9)
+      colors4plot <- rep("#2a2a9A", length(data2plot$value2plot))
       
       
       plt <- ggplot(data2plot, 

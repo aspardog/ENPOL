@@ -156,7 +156,7 @@ data2plot <- data_subset.df %>%
     labels = str_wrap(labels, width = 20),
     order_var = rank(value2plot))
 
-colors4plot <- rep("#2a2a9A", 5)
+colors4plot <- rep("#2a2a9A", length(data2plot$value2plot))
 
 
 plt <- ggplot(data2plot, 

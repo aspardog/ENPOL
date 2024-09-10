@@ -65,7 +65,7 @@ data2plot <- df %>%
     order_var = rank(-value2plot))
 
 
-colors4plot <- rep("#2a2a94", 2)
+colors4plot <- rep("#2a2a94", length(data2plot$value2plot))
 
 
 plt <- ggplot(data2plot, 
@@ -188,7 +188,7 @@ data2plot <- df %>%
 
 
 
-colors4plot <- rep("#2a2a94", 6)
+colors4plot <- rep("#2a2a94", length(data2plot$value2plot))
 
 
 plt <- ggplot(data2plot, 

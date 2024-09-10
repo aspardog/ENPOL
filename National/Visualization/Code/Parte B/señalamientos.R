@@ -166,7 +166,7 @@ señalamientos_condiciones.fn <- function(
         filter(values == "parecido_señalado" | values == "responsable_señalado")
       
       
-      colors4plot <- rep("#2a2a94", 2)
+      colors4plot <- rep("#2a2a94", length(data2plot$value2plot))
       
       
       plt <- ggplot(data2plot, 

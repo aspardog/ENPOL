@@ -71,7 +71,7 @@ mapa <- st_read(paste0(path2SP,"/National/Visualization/Input/shp/México_Estado
       )
   )
 
-National <- T
+National <- F
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -242,7 +242,7 @@ for (i in Estados) {
   percepcion_culpabilidad <- percepcion_culpabilidad.fn()
   escucha <- escucha.fn()
   percepcion_escucha <- percepcion_escucha.fn()
-  percepcion_resumen.fn <- percepcion_resumen.fn()
+  percepcion_resumen <- percepcion_resumen.fn()
   proceso_percepcion_lista <- list('Percepcion proceso'       = proceso_justo, 
                                    'Percepcion indicadores'   = percepcion_indicadores,
                                    'Tipo procedimiento'       = procedimiento,
@@ -250,7 +250,8 @@ for (i in Estados) {
                                    'Culpabilidad'             = culpabilidad,
                                    'Percepcion culpabilidad'  = percepcion_culpabilidad,
                                    'Sentimiento de escucha'   = escucha,
-                                   'Percepcion escucha'       = percepcion_escucha
+                                   'Percepcion escucha'       = percepcion_escucha,
+                                   'Percepcion resumen'       = percepcion_resumen
                                    )
   
   openxlsx::write.xlsx(x = proceso_percepcion_lista,
@@ -464,8 +465,8 @@ for (i in Estados) {
   )
   
   indicador_general        <- indicador_general.fn()
-  indicador_logit_positivo <- indicador_logit_positivo.fn()
-  indicador_logit_negativo <- indicador_logit_negativo.fn()
+  #indicador_logit_positivo <- indicador_logit_positivo.fn()
+  #indicador_logit_negativo <- indicador_logit_negativo.fn()
   indicador_map            <- indicador_map.fn()
   indicador_proceso_justo  <- indicador_proceso_justo.fn()
   indicador_uso_fuerza     <- indicador_uso_fuerza.fn()
@@ -474,8 +475,8 @@ for (i in Estados) {
   indicador_list <- list(
     
     'Indicador general'        = indicador_general,
-    'Indicador logit positivo' = indicador_logit_positivo,
-    'Indicador logit negativo' = indicador_logit_negativo,
+    #'Indicador logit positivo' = indicador_logit_positivo,
+    #'Indicador logit negativo' = indicador_logit_negativo,
     'Indicador mapa'           = indicador_map,
     'Indicador proceso justo'  = indicador_proceso_justo,
     'Indicador uso fuerza'     = indicador_uso_fuerza,

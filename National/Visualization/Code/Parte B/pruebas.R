@@ -99,7 +99,7 @@ data2plot <- Main_database_2008 %>%
   )
 
 
-colors4plot <- rep("#2a2a94", 3)
+colors4plot <- rep("#2a2a94", length(data2plot$value2plot))
 
 
 plot <- ggplot(data2plot,

@@ -159,7 +159,7 @@ inspecciones_comportamiento.fn <- function(
         order_var = rank(value2plot))
     
     
-    colors4plot <- rep("#2a2a94", 2)
+    colors4plot <- rep("#2a2a94", length(data2plot$value2plot))
     
     
     plt <- ggplot(data2plot, 
@@ -223,90 +223,94 @@ inspecciones_comportamiento.fn <- function(
 
 
 inspecciones_objeto.fn <- function(
-  
+    
   data.df = master_data.df  
   
-  ) {
-
-    data_subset.df <- data.df %>% 
-      filter(Anio_arresto >= 2015,
-             NSJP == 1) %>% 
-      mutate(encontro_sinsembrar = case_when(P3_12_3  == 1 & P3_12_4  == 0 ~ 1,
-                                             P3_12_3  == 1 & P3_12_4  == 1 ~ 0,
-                                             P3_12_3  == 0 & P3_12_4  == 0 ~ 0,
-                                             P3_12_3  == 0 & P3_12_4  == 1 ~ 0,
-                                             P3_12_3  == 0  ~ 0,
-                                             P3_12_4  == 1 ~ 0,
-                                             T ~ NA_real_))
-    
-    
-    data2plot <- data_subset.df %>%
-      select(Delito_unico_categ, encontro_sinsembrar) %>% 
-      group_by(Delito_unico_categ, encontro_sinsembrar) %>%
-      drop_na() %>% 
-      summarise(Frequency = n(), .groups = 'drop') %>% 
-      group_by(Delito_unico_categ) %>% 
-      rename( values = Delito_unico_categ ) %>%
-      mutate(value2plot = Frequency / sum(Frequency) * 100,
-             figure = paste0(round(value2plot, 0), "%")) %>% 
-      filter(encontro_sinsembrar == 1, 
-             Frequency >= 10) %>% 
-      mutate(order = rank(-value2plot, ties.method = "first"),
-             values = case_when( values == "armas" ~ "Portación ilegal de armas", 
-                                 values == "drogas" ~ "Posesión y comercio \n de drogas",
-                                 values == "otro" ~ "Otro delito distinto",
-                                 values == "org" ~ "Delincuencia organizada",
-                                 values == "robos" ~ "Robos",
-                                 values == "secuestro" ~ "Secuestro",
-                                 values == "hom_dol" ~ "Homicidio doloso",), 
-             values = str_wrap(values, width = 20))
-    
-    colors4plot <- rep("#2a2a94", 7)
-    
-    plt <- ggplot(data2plot, 
-                  aes(x     = reorder(values, -value2plot),
-                      y     = value2plot,
-                      label = figure)) +
-      geom_bar(stat = "identity",
-               show.legend = FALSE, width = 0.9, 
-               fill  = colors4plot, ) +
-      #scale_fill_manual(values = "#2a2a94" ) +
-      geom_text(aes(y    =  value2plot + 5),
-                color    = "#4a4a49",
-                family   = "Lato Full",
-                fontface = "bold") +
-      labs(y = "% of respondents") +
-      scale_y_continuous(limits = c(0, 105),
-                         breaks = seq(0, 100, 20),
-                         labels = paste0(seq(0, 100, 20), "%"),
-                         position = "right") +
-      scale_x_discrete(limits = rev) +
-      coord_flip() +
-      WJP_theme() +
-      theme(panel.grid.major.y = element_blank(),
-            panel.grid.major.x = element_line(color = "#D0D1D3"),
-            axis.title.y       = element_blank(),
-            axis.title.x       = element_blank(),
-            axis.text.y=element_text(family   = "Lato Full",
-                                     face     = "bold",
-                                     size     = 3.514598*.pt,
-                                     color    = "#524F4C",
-                                     margin   = margin(0, 10, 0, 0),
+) {
+  
+  data_subset.df <- data.df %>% 
+    filter(Anio_arresto >= 2015,
+           NSJP == 1) %>% 
+    mutate(encontro_sinsembrar = case_when(P3_12_3  == 1 & P3_12_4  == 0 ~ 1,
+                                           P3_12_3  == 1 & P3_12_4  == 1 ~ 0,
+                                           P3_12_3  == 0 & P3_12_4  == 0 ~ 0,
+                                           P3_12_3  == 0 & P3_12_4  == 1 ~ 0,
+                                           P3_12_3  == 0  ~ 0,
+                                           P3_12_4  == 1 ~ 0,
+                                           TRUE ~ NA_real_))
+  
+  data2plot <- data_subset.df %>%
+    select(Delito_unico_categ, encontro_sinsembrar) %>% 
+    group_by(Delito_unico_categ, encontro_sinsembrar) %>%
+    drop_na() %>% 
+    summarise(Frequency = n(), .groups = 'drop') %>% 
+    group_by(Delito_unico_categ) %>% 
+    rename(values = Delito_unico_categ) %>%
+    mutate(value2plot = Frequency / sum(Frequency) * 100,
+           figure = paste0(round(value2plot, 0), "%")) %>% 
+    filter(encontro_sinsembrar == 1, 
+           Frequency >= 10) %>% 
+    mutate(order = rank(-value2plot, ties.method = "first"),
+           values = case_when( values == "armas" ~ "Portación ilegal de armas", 
+                               values == "drogas" ~ "Posesión y comercio \n de drogas",
+                               values == "otro" ~ "Otro delito distinto",
+                               values == "org" ~ "Delincuencia organizada",
+                               values == "robos" ~ "Robos",
+                               values == "secuestro" ~ "Secuestro",
+                               values == "hom_dol" ~ "Homicidio doloso"), 
+           values = str_wrap(values, width = 20))
+  
+  # Check if data2plot is empty (no rows)
+  if (nrow(data2plot) == 0) {
+    message("No data to plot. Exiting the function.")
+    return(NULL)
+  }
+  
+  colors4plot <- rep("#2a2a94", length(data2plot$value2plot))
+  
+  plt <- ggplot(data2plot, 
+                aes(x = reorder(values, -value2plot),
+                    y = value2plot,
+                    label = figure)) +
+    geom_bar(stat = "identity",
+             show.legend = FALSE, width = 0.9, 
+             fill  = colors4plot) +
+    geom_text(aes(y = value2plot + 5),
+              color = "#4a4a49",
+              family = "Lato Full",
+              fontface = "bold") +
+    labs(y = "% of respondents") +
+    scale_y_continuous(limits = c(0, 105),
+                       breaks = seq(0, 100, 20),
+                       labels = paste0(seq(0, 100, 20), "%"),
+                       position = "right") +
+    scale_x_discrete(limits = rev) +
+    coord_flip() +
+    WJP_theme() +
+    theme(panel.grid.major.y = element_blank(),
+          panel.grid.major.x = element_line(color = "#D0D1D3"),
+          axis.title.y = element_blank(),
+          axis.title.x = element_blank(),
+          axis.text.y = element_text(family = "Lato Full",
+                                     face = "bold",
+                                     size = 3.514598 * .pt,
+                                     color = "#524F4C",
+                                     margin = margin(0, 10, 0, 0),
                                      hjust = 0),
-            plot.title = element_text(face = "bold", size = 12)); plt
-    
-    ggsave(plot   = plt,
-           file   = paste0(path2SP,"/National/Visualization",
-                           "/Output/Politica criminal/",
-                           savePath,"/Inspecciones/Figure3_2.svg"), 
-           width  = 189.7883, 
-           height = 80,
-           units  = "mm",
-           dpi    = 72,
-           device = "svg")
-    
-    return(data2plot)
-
+          plot.title = element_text(face = "bold", size = 12))
+  
+  # Save the plot
+  ggsave(plot = plt,
+         file = paste0(path2SP,"/National/Visualization",
+                       "/Output/Politica criminal/",
+                       savePath,"/Inspecciones/Figure3_2.svg"), 
+         width = 189.7883, 
+         height = 80,
+         units = "mm",
+         dpi = 72,
+         device = "svg")
+  
+  return(data2plot)
 }
 
 
