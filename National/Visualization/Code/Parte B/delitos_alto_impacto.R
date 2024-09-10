@@ -483,7 +483,7 @@ tipo_prueba_da.fn <- function(){
                 Delito_unico_categ == "hom_dol"         ~ "Homicidio \ndoloso",
                 Delito_unico_categ == "secuestro"       ~ "Secuestro",
                 Delito_unico_categ == "drogas"          ~ "Posesión o \ncomercio de \ndrogas",
-                Delito_unico_categ == "armas"           ~ "Portación ilegal de \narmas",
+                Delito_unico_categ == "armas"           ~ "Portación \nilegal de \narmas",
                 Delito_unico_categ == "robo-autopartes" ~ "Robo de \nautopartes",
                 Delito_unico_categ == "robo-vehiculo"   ~ "Robo de \nvehículo",
                 Delito_unico_categ == "extorsion"       ~ "Extorsión",
@@ -513,7 +513,7 @@ tipo_prueba_da.fn <- function(){
                levels = c("Homicidio \ndoloso", 
                           "Secuestro", 
                           "Extorsión",
-                          "Portación ilegal de \narmas",
+                          "Portación \nilegal de \narmas",
                           "Posesión o \ncomercio de \ndrogas",
                           "Robo de \nautopartes",
                           "Robo de \nvehículo")
@@ -535,7 +535,7 @@ tipo_prueba_da.fn <- function(){
   group_labels <- c("Homicidio doloso" = "Homicidio \ndoloso",
                     "Secuestro" = "Secuestro",
                     "Extorsión" = "Extorsión",
-                    "Portación ilegal de armas" = "Portación ilegal \nde armas",
+                    "Portación ilegal de armas" = "Portación \nilegal \nde armas",
                     "Posesión o comercio de drogas" = "Posesión o \ncomercio de \ndrogas",
                     "Robo de autopartes" = "Robo de \nautopartes",
                     "Robo de vehículo" = "Robo de \nvehículo"

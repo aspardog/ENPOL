@@ -425,13 +425,16 @@ data_subset.df_2 <- master_data.df %>%
     apelacion = mean(apelacion, na.rm = T),
     amparo = mean(amparo, na.rm = T)
   ) %>%
-  filter(!is.nan(abogado_publico)) %>%
+  #filter(!is.nan(abogado_publico)) %>%
   mutate(
     abogado_publico =
       case_when(
         abogado_publico == 1 ~ "abogado publico",
         abogado_publico == 0 ~ "abogado privado"
       )
+  ) %>%
+  select(
+    abogado_publico, satisfaccion_MP, satisfecho_juicio
   )
 
 data_subset.df_3 <- master_data.df %>%
