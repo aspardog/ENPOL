@@ -71,7 +71,7 @@ mapa <- st_read(paste0(path2SP,"/National/Visualization/Input/shp/México_Estado
       )
   )
 
-National <- F
+National <- T
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##

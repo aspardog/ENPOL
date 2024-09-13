@@ -125,7 +125,7 @@ data_subset.df <- master_data.df %>%
       P5_19_3 == 1 | P5_39_3 == 1 ~ 1,
       P5_19_3 == 2 | P5_39_3 == 2 ~ 0
     ),
-    `11.3a` = case_when(
+    `11.6a` = case_when(
       as.numeric(P5_26) == 1 | as.numeric(P5_26) == 2 ~ 1,
       as.numeric(P5_26) == 3 | as.numeric(P5_26) == 4 ~ 0,
       T ~ NA_real_
@@ -138,7 +138,7 @@ data_subset.df <- master_data.df %>%
       (P5_17_2 == 1 | P5_17_2 == 2) |  (P5_37_2 == 1 | P5_37_2 == 2) ~ 1,
       (P5_17_2 == 3 | P5_17_2 == 4) |  (P5_37_2 == 3 | P5_37_2 == 4) ~ 0
     ),
-    `11.6a` = case_when(
+    `11.3a` = case_when(
       (P5_16_5 == 1 | P5_16_5 == 3 | P5_16_5 == 2) | (P5_36_5 == 1 | P5_36_5 == 3 | P5_36_5 == 2) ~ 1,
       P5_16_5 == 4 | P5_36_5 == 4 ~ 0
     ),
@@ -334,7 +334,15 @@ Estatal <- data_subset.df %>%
   ) 
 
 
-final_data_experiencias <- bind_rows(Estatal, National)
+final_data_experiencias <- bind_rows(Estatal, National) %>%
+  mutate(
+    across(
+      ends_with("a"),
+      ~paste0(round(.x,2)*100, "%")
+    ),
+    `15.1a` = if_else(str_detect(`15.1a`, "-"),`15.1a`, paste0("+",`15.1a`)),
+    `15.2a` = if_else(str_detect(`15.2a`, "-"),`15.2a`, paste0("+",`15.2a`))
+  )
 
 writexl::write_xlsx(x = final_data_experiencias, path = "Output/INF_A_EXPERIENCIAS.xlsx")
 
