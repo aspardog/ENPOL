@@ -175,10 +175,10 @@ detenciones_estado.fn <- function(
         mutate(
                figure = paste0(round(value2plot, 0), "%"),
                labels = str_wrap(values, width = 20),
-               tipo_detencion = case_when(tipo_detencion == "Flagrancia" ~ "D)Flagrancia", 
-                                          tipo_detencion == "Inspeccion" ~ "A)Inspeccion",
-                                          tipo_detencion == "Irregulares" ~ "C)Irregulares",
-                                          tipo_detencion == "Orden de detención" ~ "B)Orden de detención",
+               tipo_detencion = case_when(tipo_detencion == "Flagrancia"         ~ "C)Flagrancia", 
+                                          tipo_detencion == "Inspeccion"         ~ "B)Inspeccion",
+                                          tipo_detencion == "Irregulares"        ~ "A)Irregulares",
+                                          tipo_detencion == "Orden de detención" ~ "D)Orden de detención",
                                           T ~ NA_character_), 
                values = case_when(values == "Coahuila de Zaragoza"            ~ "Coahuila",
                                   values == "Michoacán de Ocampo"             ~ "Michoacán",
@@ -191,20 +191,21 @@ detenciones_estado.fn <- function(
         mutate(
           values = 
             if_else(values %in% "APromedio nacional", "Promedio nacional", values)
-        ) %>%
-        mutate(figure = case_when(order == 6 & tipo_detencion == "B)Orden de detención" ~ "27%",
-                                  order == 13 & tipo_detencion == "D)Flagrancia" ~ "24%",
-                                  order == 14 & tipo_detencion == "C)Irregulares" ~ "28%",
-                                  order == 27 & tipo_detencion == "B)Orden de detención" ~ "22%",
-                                  order == 31 & tipo_detencion == "D)Flagrancia" ~ "42%",
-                                  order == 33 & tipo_detencion == "D)Flagrancia" ~ "35%",
-                                  T ~ figure)) # redondeos
+        ) 
+      # %>%
+      # mutate(figure = case_when(order == 6 & tipo_detencion == "B)Orden de detención" ~ "27%",
+      #                             order == 13 & tipo_detencion == "D)Flagrancia" ~ "24%",
+      #                             order == 14 & tipo_detencion == "C)Irregulares" ~ "28%",
+      #                             order == 27 & tipo_detencion == "B)Orden de detención" ~ "22%",
+      #                             order == 31 & tipo_detencion == "D)Flagrancia" ~ "42%",
+      #                             order == 33 & tipo_detencion == "D)Flagrancia" ~ "35%",
+      #                             T ~ figure)) # redondeos
       
       
-      colors4plot <- c("D)Flagrancia" = "#2a2a94" ,
-                       "B)Orden de detención" = "#a90099", 
-                       "A)Inspeccion" = "#3273ff",
-                       "C)Irregulares" = "#fa4d57" )
+      colors4plot <- c("C)Flagrancia" = "#2a2a94" ,
+                       "D)Orden de detención" = "#a90099", 
+                       "B)Inspeccion" = "#3273ff",
+                       "A)Irregulares" = "#fa4d57" )
       
       
       plot <- ggplot(data2plot,

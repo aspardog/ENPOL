@@ -83,9 +83,11 @@ reincidentes.fn <- function(
           mutate(value2plot= case_when(values == "Mismo delito" ~ 18.52,
                                  T ~ value2plot ),
                  ymin= case_when(values == "No reincidentes" ~ 18.52,
-                                       T ~ ymin ),
-                 figure = case_when(values == "Mismo delito" ~ "10%",
-                                    T ~ figure))
+                                       T ~ ymin ))
+                 # ,
+                 # figure = case_when(values == "Mismo delito" ~ "10%",
+                 #                    T ~ figure)
+                 #)
           # %>%
           # arrange(desc(value2plot)) 
         
@@ -107,7 +109,7 @@ reincidentes.fn <- function(
           coord_polar(theta="y") + 
           xlim(c(2, 4)) +
           geom_text( x= 3.5,
-                     aes(y    = value2plot -5, 
+                     aes(y    = value2plot -3, 
                          label = figure), 
                      #position = "stack",
                      color    = "white",

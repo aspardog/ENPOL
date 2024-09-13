@@ -197,7 +197,7 @@ detencion_alto_impacto.fn <- function(
                figure = paste0(round(value2plot, 0), "%"),
                labels = str_wrap(Delito, width = 20),
                values = case_when(labels == "drogas" ~ "Posesión o comercio\n de drogas", 
-                                  labels == "hom_dol" ~ "Homicido doloso",
+                                  labels == "hom_dol" ~ "Homicidio doloso",
                                   labels == "secuestro" ~ "Secuestro",
                                   labels == "extorsion" ~ "Extorsión",
                                   labels == "armas" ~ "Portación ilegal\n de armas",
@@ -300,6 +300,161 @@ detencion_alto_impacto.fn <- function(
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
+## 2.1 Tipo de detención - delitos alto impacto  - presentación                                                   ----
+##
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+detencion_alto_impacto_pres.fn <- function(
+    
+  data.df = master_data.df
+  
+){
+  
+  Main_database_2008 <- data.df  %>% 
+    mutate(
+      `robo-autopartes` = coalesce(P5_11_06, P5_31_06),
+      `robo-vehiculo`   = coalesce(P5_11_01, P5_31_01),
+      `extorsion`       = coalesce(P5_11_22, P5_31_22),
+      `armas`           = coalesce(P5_11_13, P5_31_13),
+      `drogas`          = coalesce(P5_11_08, P5_31_08, P5_11_09, P5_31_09),
+      `secuestro`       = coalesce(P5_11_17, P5_31_17),
+      `hom_dol`         = coalesce(P5_11_12, P5_31_12)
+    ) %>% 
+    pivot_longer(cols = c(`robo-autopartes`, `robo-vehiculo`, `extorsion`, `armas`, `drogas`, `secuestro`, `hom_dol`), 
+                 names_to = "Delito", values_to = "filterValue") %>%
+    filter(filterValue == 1) %>%
+    filter(
+      Delito == "hom_dol"         |
+        Delito == "secuestro"       |
+        Delito == "drogas"          |
+        Delito == "armas"           |
+        Delito == "robo-autopartes" |
+        Delito == "robo-vehiculo"   |
+        Delito == "extorsion" ) %>%
+    mutate(tipo_detencion = case_when(flagrancia  == 1 ~ "Flagrancia",
+                                      orden_det   == 1 ~ "Orden de detención",
+                                      inspeccion  == 1 ~ "Inspeccion",
+                                      det_ninguna == 1 ~ "Irregulares",
+                                      T ~ NA_character_))
+  
+  
+  
+  
+  data2plot <- Main_database_2008 %>%
+    select(Delito, tipo_detencion) %>% 
+    group_by(Delito, tipo_detencion) %>%
+    drop_na() %>% 
+    summarise(Frequency = n(), .groups = 'drop') %>% 
+    group_by(Delito) %>% 
+    mutate(values = Delito,
+           value2plot = Frequency / sum(Frequency) * 100,
+           figure = paste0(round(value2plot, 0), "%"),
+           labels = str_wrap(Delito, width = 20),
+           values = case_when(labels == "drogas" ~ "Posesión o comercio\n de drogas", 
+                              labels == "hom_dol" ~ "Homicidio doloso",
+                              labels == "secuestro" ~ "Secuestro",
+                              labels == "extorsion" ~ "Extorsión",
+                              labels == "armas" ~ "Portación ilegal\n de armas",
+                              labels == "robo-autopartes" ~ "Robo de\n autopartes",
+                              labels == "robo-vehiculo" ~ "Robo de\n vehículos",
+                              labels == "extorsion" ~ "Extorsión",
+                              T ~ NA_character_),
+           tipo_detencion = case_when(tipo_detencion == "Orden de detención" ~ "D)Orden de detención",
+                                      tipo_detencion == "Flagrancia"         ~ "C)Flagrancia", 
+                                      tipo_detencion == "Inspeccion"         ~ "B)Inspeccion",
+                                      tipo_detencion == "Irregulares"        ~ "A)Irregulares",
+                                      T ~ NA_character_),
+           order_var = case_when(labels == "drogas"          ~ 5, 
+                                 labels == "hom_dol"         ~ 1,
+                                 labels == "secuestro"       ~ 2,
+                                 labels == "armas"           ~ 4,
+                                 labels == "extorsion"       ~ 3,
+                                 labels == "robo-autopartes" ~ 6,
+                                 labels == "robo-vehiculo"   ~ 7,
+                                 T ~ NA_real_)) %>%
+    mutate(
+      figure = 
+        if_else(
+          Delito %in% "extorsion" & tipo_detencion %in% "C)Flagrancia", 
+          "32%", figure
+        ),
+      figure =
+        if_else(
+          Delito %in% "armas" & tipo_detencion %in% "D)Orden de detención", 
+          "7%", figure
+        ),
+      figure =
+        if_else(
+          Delito %in% "robo-vehiculo" & tipo_detencion %in% "C)Flagrancia", 
+          "47%", figure
+        )
+    )
+  
+  colors4plot <- c("B)Inspeccion"         = "#3273ff",
+                   "D)Orden de detención" = "#a90099",
+                   "A)Irregulares"        = "#FA4D57",
+                   "C)Flagrancia"         = "#2a2a9A")
+  
+  plot <- ggplot(data2plot,
+                 aes(
+                   x     = reorder(values, -order_var), 
+                   y     = value2plot,
+                   fill  = tipo_detencion,
+                   label = paste0(figure)
+                 )) +
+    geom_bar(stat = "identity", width = 0.9, position = "stack")+
+    geom_text(aes(y    = value2plot -.1,
+                  label = paste0(figure)), 
+              position = position_stack(vjust = 0.5),
+              color    = "white",
+              family   = "Lato Full",
+              fontface = "bold", 
+              size = 3.514598)  +
+    # geom_vline(xintercept = 5.5, linetype = "dashed", color = "black") +
+    scale_fill_manual(values =  colors4plot) +
+    scale_y_continuous(limits = c(0, 105),
+                       breaks = seq(0,100,20),
+                       labels = paste0(seq(0,100,20), "%"),
+                       position = "left") +
+    coord_flip()+
+    theme(
+      panel.background   = element_blank(),
+      plot.background    = element_blank(),
+      panel.grid.major   = element_line(size     = 0.25,
+                                        colour   = "#5e5c5a",
+                                        linetype = "dashed"),
+      panel.grid.minor   = element_blank(),
+      panel.grid.major.y = element_blank(),
+      panel.grid.major.x = element_line(color = "#D0D1D3"),       
+      axis.title.y       = element_blank(),
+      axis.title.x       = element_blank(),
+      axis.text.y=element_text(family   = "Lato Full",
+                               face     = "bold",
+                               size     = 3.514598*.pt,
+                               color    = "#524F4C",
+                               margin   = margin(0, 10, 0, 0),
+                               hjust = 0),
+      legend.position      = "none",
+      legend.title = element_blank());plot
+  
+  
+  ggsave(plot   = plot,
+         file   = paste0(path2SP,"/National/Visualization",
+                         "/Output/Politica criminal/",
+                         savePath,"/Delitos alto impacto/Figure2_2.svg"), 
+         width  = 189.7883, 
+         height = 85,
+         units  = "mm",
+         dpi    = 72,
+         device = "svg")
+  
+  return(data2plot)
+  
+}
+
+
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##
 ## 3. Tipo de terminación - delitos alto impacto                                                     ----
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -359,7 +514,7 @@ terminacion_alto_impacto.fn <- function(
                                      labels == "robo-vehiculo"   ~ 7,
                                      T ~ NA_real_),
                values = case_when(labels == "drogas"    ~ "Posesión o comercio\n de drogas", 
-                                  labels == "hom_dol"   ~ "Homicido doloso",
+                                  labels == "hom_dol"   ~ "Homicidio doloso",
                                   labels == "secuestro" ~ "Secuestro",
                                   labels == "armas"     ~ "Portación ilegal\n de armas",
                                   labels == "extorsion" ~ "Extorsión",
