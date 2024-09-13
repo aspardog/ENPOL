@@ -1,4 +1,4 @@
-load(paste0(path2DB,"/National/Data_cleaning/Output/Main_database.RData")) 
+load(paste0(path2SP,"/National/Data_cleaning/Output/Main_database.RData")) 
 
 snsp <- read.csv(paste0(path2SP,"/National/Exploration/Input/IDEFC_NM_abr24.csv"),check.names = F)
 
@@ -327,7 +327,7 @@ Estatal_numbers <- data_subset.df %>%
 
 final_data_experiencias <- Estatal %>% left_join(porc_hom_edo, by = "Estado") %>% left_join(porc_rob_edo, by="Estado") %>%
   mutate(`6.2a`= detenidos_hom/`6.1a`,`6.4a`= detenidos_rob/`6.3a`) %>%
-  group_by(Estado) %>%
+  select(-c("detenidos_rob","detenidos_hom")) %>%
   mutate(
     across(
       ends_with("a"),
@@ -336,8 +336,7 @@ final_data_experiencias <- Estatal %>% left_join(porc_hom_edo, by = "Estado") %>
     )
   ) %>% 
   ungroup() %>%
-  bind_rows(National) %>%
-  select(-c("detenidos_rob","detenidos_hom"))
+  bind_rows(National)
 
 writexl::write_xlsx(x = final_data_experiencias, path = paste0(path2SP,"/National/Visualization/Infografias/Estrategias_PoliticaCriminal.xlsx"))
 
