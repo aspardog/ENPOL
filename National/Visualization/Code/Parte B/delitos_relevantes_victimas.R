@@ -1200,7 +1200,9 @@ homicidios_ENPOL_ENVIPE.fn <- function(
     
   ){
 
-      snsp <- read.csv(paste0(path2SP,"/National/Exploration/Input/IDEFC_NM_abr24.csv"),check.names = F)
+      snsp <- read.csv(paste0(path2SP,"/National/Exploration/Input/IDEFC_NM_abr24.csv"),check.names = F) 
+       snsp <-   snsp %>% 
+                 filter(Entidad == i)
       
       inegi <- read_xlsx(paste0(path2SP,"/National/Exploration/Input/INEGI_homicidios.xlsx"))
       
@@ -1226,7 +1228,8 @@ homicidios_ENPOL_ENVIPE.fn <- function(
       
       enpol_3 <- Main_database %>% 
         filter(Anio_arresto>=2018 & Anio_arresto<= 2021 )  %>%
-        filter(NSJP == 1) %>%
+        filter(NSJP == 1)  %>% 
+        filter(Estado_arresto == i ) %>%
         select(Anio_arresto,Delito_gr_1_robos,Delito_gr_2_drogas,Delito_gr_3_del_org,Delito_gr_4_lesiones,Delito_gr_5_hom_cul,
                Delito_gr_6_hom_dol,Delito_gr_7_armas,Delito_gr_8_viol_fam,Delito_gr_9_secuestro,Delito_gr_10_sexuales,
                Delito_gr_11_extorsion,Delito_gr_12_fraude,Delito_gr_13_amenazas,Delito_gr_14_otro,Delito_gr_15_ns_nr,FAC_PER)  %>% 
@@ -1328,7 +1331,7 @@ homicidios_ENPOL_ENVIPE.fn <- function(
         scale_color_manual(values = colors4plot) +
         scale_fill_manual(values = c( "#A90099", "#2a2a9A")) +  # Add this line to customize bar colors
         WJP_theme() +
-        expand_limits(y = c(0, 30000))+
+         expand_limits(y = c(0, 1500))+
         theme(panel.grid.major.x = element_blank(),
               panel.grid.major.y = element_line(colour = "#d1cfd1"),
               axis.title.x       = element_blank(),
@@ -1371,6 +1374,8 @@ robo_vehiculos_ENPOL_ENVIPE.fn <- function(
 ){
   
   snsp <- read.csv(paste0(path2SP,"/National/Exploration/Input/IDEFC_NM_abr24.csv"),check.names = F)
+   snsp <-   snsp %>% 
+     filter(Entidad == i)
   
   inegi <- read_xlsx(paste0(path2SP,"/National/Exploration/Input/INEGI_homicidios.xlsx"))
   
@@ -1396,6 +1401,7 @@ robo_vehiculos_ENPOL_ENVIPE.fn <- function(
   
   enpol_3 <- Main_database %>% 
     filter(Anio_arresto>=2018 & Anio_arresto<= 2021 )  %>%
+    filter(Estado_arresto == i ) %>%
     select(Anio_arresto, Del_Robo_vehiculo, Del_Robo_casa_hab, Del_Robo_negocio, Del_Robo_transporte_pub, Del_Robo_transeunte,
            Del_Robo_autopartes, Del_Robo_otros, Del_Posesion_drogas, Del_Comercio_drogas, Del_Lesiones, Del_Hom_culposo,
            Del_Hom_doloso, Del_Portacion_armas, Del_Incum_asis_fam, Del_Violencia_fam, Del_Danio_prop, Del_Secuestro,
@@ -1492,7 +1498,7 @@ robo_vehiculos_ENPOL_ENVIPE.fn <- function(
     scale_color_manual(values = colors4plot) +
     scale_fill_manual(values = "#a90099") +
     WJP_theme() +
-    expand_limits(y = c(250000, 100))+
+     expand_limits(y = c(4500, 100))+
     theme(panel.grid.major.x = element_blank(),
           panel.grid.major.y = element_line(colour = "#d1cfd1"),
           axis.title.x       = element_blank(),

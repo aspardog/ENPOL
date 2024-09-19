@@ -56,13 +56,13 @@ delitos_fuero.fn <- function(
              labels = case_when(labels == "Algunos delitos de fuero común\ny algunos de fuero federal" ~ "Ambos fueros",
                                 labels == "Sólo común" ~ "Sólo fuero común",
                                 labels == "Sólo federal" ~ "Sólo fuero federal ")) %>%
-      mutate(
-        figure = if_else(Value %in% "Algunos delitos de fuero común y algunos de fuero federal", 
-                         "3%", 
-                         figure),
-        figure = case_when(Value == "Sólo federal" ~ "51%",
-                           T ~ figure)
-      )
+      # mutate(
+      #   figure = if_else(Value %in% "Algunos delitos de fuero común y algunos de fuero federal", 
+      #                    "3%", 
+      #                    figure),
+      #   figure = case_when(Value == "Sólo federal" ~ "51%",
+      #                      T ~ figure)
+      # )
     
     fill_colors = c("#3273ff", "#a90099", "#2a2a9A")
     
@@ -107,6 +107,90 @@ delitos_fuero.fn <- function(
     
     return(data2plot)
 
+}
+
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##
+## 1. Delitos por tipo de fuero (barras)                                                     ----
+##
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+delitos_fuero.fn <- function(
+    
+  data.df = master_data.df
+  
+){
+  
+  
+  data2plot <- data.df %>% 
+    mutate(corporacion_fuero = case_when(Corporacion_grupos == "Ejército o Marina" ~ "Corporación Federal", 
+                                         Corporacion_grupos == "Guardia Nacional" ~ "Corporación Federal",
+                                         Corporacion_grupos == "Policía Federal" ~ "Corporación Federal",
+                                         Corporacion_grupos == "Policía Federal Ministerial" ~ "Corporación Federal",
+                                         Corporacion_grupos == "Policía Estatal Ministerial o Judicial" ~ "Corporación Local",
+                                         Corporacion_grupos == "Operativo Conjunto" ~ "Operativo Conjunto",
+                                         Corporacion_grupos == "Policía Estatal" ~ "Corporación Local", 
+                                         Corporacion_grupos == "Policía Municipal" ~ "Corporación Local",
+                                         Corporacion_grupos == "Otra" ~ "Otra", 
+                                         T ~ NA_character_)) %>%
+    select(fuero) %>% 
+    rename(Value = fuero) %>% 
+    drop_na() %>% 
+    group_by(Value) %>%
+    summarise(Frequency = n()) %>% 
+    mutate(Value = Value,
+           values = Frequency/sum(Frequency),
+           value2plot = values * 100,
+           figure = paste0(round(value2plot, 0), "%"),
+           labels = str_wrap(Value, width = 30),
+           order_var = rank(Value), 
+           labels = case_when(labels == "Algunos delitos de fuero común\ny algunos de fuero federal" ~ "Ambos fueros",
+                              labels == "Sólo común" ~ "Sólo fuero común",
+                              labels == "Sólo federal" ~ "Sólo fuero federal ")) 
+  
+  fill_colors = c("#3273ff", "#a90099", "#2a2a9A")
+  
+  plt <- data2plot %>%  
+    ggplot(aes(x     = reorder(labels, order_var),
+               y     = value2plot,
+               label = figure,
+               fill  = labels)) +
+    geom_bar(stat = "identity",
+             show.legend = FALSE, width = 0.9) +
+    scale_fill_manual(values = fill_colors) +
+    geom_text(aes(y    = value2plot + 6),
+              color    = "#4a4a49",
+              family   = "Lato Full",
+              fontface = "bold") +
+    labs(y = "% of respondents") +
+    scale_y_continuous(limits = c(0, 105),
+                       breaks = seq(0, 100, 20),
+                       labels = paste0(seq(0, 100, 20), "%"),
+                       position = "left") +
+    scale_x_discrete(limits = rev) +
+    WJP_theme() +
+    theme(panel.grid.major.y = element_blank(),
+          panel.grid.major.x = element_line(color = "#D0D1D3"),
+          axis.title.y       = element_blank(),
+          axis.title.x       = element_blank(),
+          axis.text.y        = element_text(hjust = 1, size = 10),
+          plot.title = element_text(face = "bold", size = 12))
+  
+  plt
+  
+  
+  ggsave(plot   = plt,
+         file   = paste0(path2SP,"/National/Visualization",
+                         "/Output/Politica criminal/",
+                         savePath,"/Distribucion competencias/Figure3_1.svg"), 
+         width  = 189.7883, 
+         height = 85,
+         units  = "mm",
+         dpi    = 72,
+         device = "svg")
+  
+  return(data2plot)
+  
 }
 
 

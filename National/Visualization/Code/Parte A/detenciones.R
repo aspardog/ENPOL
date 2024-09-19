@@ -1042,4 +1042,214 @@ mapa_lugar_traslado.fn <- function(
   
 }
 
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##
+## Cuadrantes por tiempo de traslado y lugar de traslado                                               ----
+##
+## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+# Define a vector containing unique values of Estado_arresto
+estados <- unique(data.df$Estado_arresto)
+
+# Use map_dfr to loop through each Estado_arresto value and combine the results into a dataframe
+result_df <- map_dfr(estados, ~{
+  # Filter the data for the current Estado_arresto value
+  filtered_data <- data.df %>%
+    filter(Estado_arresto == .x) %>%
+    mutate(
+      Tiempo_traslado =
+        case_when(
+          Tiempo_traslado %in% c("Hasta 30 minutos", 
+                                 "Más de 30 minutos hasta 1 hora",
+                                 "Más de 1 hora hasta 2 horas",
+                                 "Más de 2 horas hasta 4 horas") ~ "Menos de 4 horas",
+          Tiempo_traslado %in% c("Más de 4 horas hasta 6 horas",
+                                 "Más de 6 horas hasta 24 horas") ~ "Más de 4 horas hasta 24 horas",
+          Tiempo_traslado %in% c("Más de 24 horas hasta 48 horas") ~ "Más de 24 horas hasta 48 horas",
+          Tiempo_traslado %in% c("Más de 48 horas hasta 72 horas",
+                                 "Más de 72 horas") ~ "Más de 48 horas",
+          T ~ NA_character_
+        ),
+      Tiempo_traslado = 
+        case_when(
+          Tiempo_traslado %in% c("Menos de 4 horas") ~ "Menos de 4 horas",
+          Tiempo_traslado %in% c("Más de 4 horas hasta 24 horas", 
+                                 "Más de 24 horas hasta 48 horas",
+                                 "Más de 48 horas") ~ "Más de 4 horas"
+        ),
+      counter = 1
+    ) %>%
+    group_by(Tiempo_traslado, Estado_arresto) %>%
+    summarise(TT = sum(counter, na.rm = TRUE)) %>%
+    ungroup() %>%
+    drop_na() %>%
+    mutate(
+      value2plot = TT / sum(TT)
+    ) %>%
+    filter(Tiempo_traslado == c("Menos de 4 horas"))
+  
+  return(filtered_data)
+})
+
+Estados <- result_df %>%
+  select(!Tiempo_traslado) %>%
+  rename(ESTADO = Estado_arresto) %>%
+  mutate(
+    ESTADO = 
+      case_when(
+        ESTADO == "Coahuila de Zaragoza" ~ "Coahuila",
+        ESTADO == "Michoacán de Ocampo"  ~ "Michoacán",
+        ESTADO == "Veracruz de Ignacio de la Llave" ~ "Veracruz",
+        ESTADO == "México" ~ "Estado de México",
+        ESTADO == "Distrito Federal" ~ "Ciudad de México",
+        T ~ ESTADO
+      ))
+
+promedio_nacional <- data.df %>%
+  mutate(
+    Tiempo_traslado =
+      case_when(
+        Tiempo_traslado %in% c("Hasta 30 minutos", 
+                               "Más de 30 minutos hasta 1 hora",
+                               "Más de 1 hora hasta 2 horas",
+                               "Más de 2 horas hasta 4 horas") ~ "Menos de 4 horas",
+        Tiempo_traslado %in% c("Más de 4 horas hasta 6 horas",
+                               "Más de 6 horas hasta 24 horas") ~ "Más de 4 horas hasta 24 horas",
+        Tiempo_traslado %in% c("Más de 24 horas hasta 48 horas") ~ "Más de 24 horas hasta 48 horas",
+        Tiempo_traslado %in% c("Más de 48 horas hasta 72 horas",
+                               "Más de 72 horas") ~ "Más de 48 horas",
+        T ~ NA_character_
+      ),
+    Tiempo_traslado = 
+      case_when(
+        Tiempo_traslado %in% c("Menos de 4 horas") ~ "Menos de 4 horas",
+        Tiempo_traslado %in% c("Más de 4 horas hasta 24 horas", 
+                               "Más de 24 horas hasta 48 horas",
+                               "Más de 48 horas") ~ "Más de 4 horas"
+      ),
+    counter = 1
+  ) %>%
+  group_by(Tiempo_traslado) %>%
+  summarise(TT = sum(counter, na.rm = TRUE)) %>%
+  ungroup() %>%
+  drop_na() %>%
+  mutate(
+    value2plot = TT / sum(TT)
+  ) %>%
+  filter(Tiempo_traslado == c("Menos de 4 horas")) %>%
+  pull(value2plot)
+
+Estados_TT <- Estados %>%
+  ungroup() %>% 
+  add_row(
+    TT              = 0,    
+    ESTADO          = "ANacional",
+    value2plot      = promedio_nacional
+  ) %>% 
+  rename( value2plot_TT = value2plot )
+
+
+
+
+# Define a vector containing unique values of Estado_arresto
+estados <- unique(data.df$Estado_arresto)
+
+# Use map_dfr to loop through each Estado_arresto value and combine the results into a dataframe
+result_df <- map_dfr(estados, ~{
+  # Filter the data for the current Estado_arresto value
+  filtered_data <- data.df %>%
+    filter(Estado_arresto == .x) %>%
+    mutate(
+      counter = 1
+    ) %>%
+    group_by(Primer_lugar_traslado, Estado_arresto) %>%
+    summarise(PT = sum(counter, na.rm = TRUE)) %>%
+    ungroup() %>%
+    drop_na() %>%
+    mutate(
+      value2plot = PT / sum(PT)
+    ) %>%
+    filter(Primer_lugar_traslado == c("Agencia del Ministerio Público", "Instalación de la policía")) %>%
+    mutate(
+      max = max(value2plot)
+    ) %>%
+    filter(value2plot == max)
+  
+  return(filtered_data)
+})
+
+Estados <- result_df %>%
+  rename(ESTADO = Estado_arresto) %>%
+  mutate(
+    ESTADO = 
+      case_when(
+        ESTADO == "Coahuila de Zaragoza" ~ "Coahuila",
+        ESTADO == "Michoacán de Ocampo"  ~ "Michoacán",
+        ESTADO == "Veracruz de Ignacio de la Llave" ~ "Veracruz",
+        ESTADO == "México" ~ "Estado de México",
+        ESTADO == "Distrito Federal" ~ "Ciudad de México",
+        T ~ ESTADO
+      ))
+
+promedio_nacional <- data.df %>%
+  mutate(
+    counter = 1
+  ) %>%
+  ungroup() %>%
+  group_by(Primer_lugar_traslado) %>%
+  summarise(PT = sum(counter, na.rm = TRUE)) %>%
+  ungroup() %>%
+  drop_na() %>%
+  mutate(
+    value2plot = PT / sum(PT)
+  ) %>%
+  filter(Primer_lugar_traslado %in% "Agencia del Ministerio Público") %>%
+  pull(value2plot)
+
+
+EstadosLT <- Estados %>%
+  ungroup() %>% 
+  add_row(
+    Primer_lugar_traslado = "",  
+    PT              = 0,    
+    ESTADO          = "ANacional",
+    value2plot      = promedio_nacional,
+    max             = 0) %>% 
+  select(ESTADO, PT ,value2plot) %>% 
+  rename(value2plot_LT = value2plot)
+
+
+
+# juntamos las dos bases 
+Estados <- left_join(Estados_TT, EstadosLT, by = "ESTADO") %>% 
+  mutate(category = case_when( value2plot_TT >= 0.65 &  value2plot_LT >= 0.65 ~ "I", 
+                               value2plot_TT >= 0.65 &  value2plot_LT <= 0.65 ~ "II",
+                               value2plot_TT <= 0.65 &  value2plot_LT >= 0.65 ~ "III",
+                               value2plot_TT <= 0.65 &  value2plot_LT <= 0.65 ~ "IV",
+                               T ~ NA_character_), 
+         value2plot_TT = value2plot_TT*100, 
+         value2plot_LT = value2plot_LT*100)
+
+ggplot(Estados, aes(x = value2plot_TT, 
+                    y = value2plot_LT, 
+                    color = category)) + 
+  geom_point(size = 6) + 
+  geom_text_repel(aes(label = ESTADO), 
+                  size = 3.5,
+                  color = "black") + 
+  geom_vline(xintercept = 65, color = "#a90099", linetype = "dashed", size = 0.5) + 
+  geom_hline(yintercept = 65, color = "#a90099", linetype = "dashed", size = 0.5) + 
+  scale_color_manual(values = c("IV" = "#Fa4d57",  # Assign your custom colors here
+                                "II" = "#A68BF2", 
+                                "III" = "#A68BF2",
+                                "I" = "#009AA9")) + 
+  labs(x = "% de personas trasladadas hasta en 4 horas",
+       y = "% de personas trasladades al MP en primer lugar") +
+  WJP_theme() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        legend.position = "none")  
+
+
 

@@ -250,9 +250,10 @@ data2plot <- data_subset.df %>%
            tiempo_dictar_sentencia == "Más de seis meses hasta un año" ~ 2,
            tiempo_dictar_sentencia == "Más de un año hasta dos años" ~ 3,
            tiempo_dictar_sentencia == "Más de dos años" ~ 4,
-           T ~ NA_real_)) %>%
-  mutate(figure = case_when(labels == "Procedimiento\nabreviado" &  tiempo_dictar_sentencia == "Más de dos años" ~ "4%",
-                            T ~ figure)) # redondeos
+           T ~ NA_real_)) 
+  # %>%
+  # mutate(figure = case_when(labels == "Procedimiento\nabreviado" &  tiempo_dictar_sentencia == "Más de dos años" ~ "4%",
+  #                           T ~ figure)) # redondeos
 
 
 colors4plot <- c("Más de dos años"                = "#fa4d57", 

@@ -435,9 +435,10 @@ data2plot <- data_subset.df %>%
                                "Ministerio Público", 
                                "Traslado",
                                "Ninguno"))
-  ) %>%
-  mutate(figure = case_when(labels == "Traslado y\nMinisterio Público" &  category == "Se autoidentifica\ncomo inocente" ~ "52%",
-                            T ~ figure)) # redondeos
+  ) 
+  # %>%
+  # mutate(figure = case_when(labels == "Traslado y\nMinisterio Público" &  category == "Se autoidentifica\ncomo inocente" ~ "52%",
+  #                           T ~ figure)) # redondeos
 
 
 
