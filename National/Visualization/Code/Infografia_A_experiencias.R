@@ -2,7 +2,10 @@ data_subset.df <- master_data.df %>%
   filter(NSJP == 1) %>%
   filter(Anio_arresto >= as.numeric(2018)) %>% 
   mutate(
-    `1a` = indicator_general,
+    `1a` = case_when(
+      indicator_general == 1 ~ 1,
+      indicator_general < 1  ~ 0
+    ),
     `2a` = case_when(
       as.numeric(P5_26A) == 1 ~ 1,
       as.numeric(P5_26A) == 0 ~ 0,
@@ -330,7 +333,14 @@ Estatal <- data_subset.df %>%
       ends_with("a"),
       list(b = ~rank(-.x)),
       .names = "{sub('a$', 'b', .col)}"
-    )
+    ),
+    `4b` = rank(`4a`),
+    `9.2b` = rank(`9.2a`),
+    `16.1b` = rank(`16.1a`),
+    `15.1b` = rank(`15.1a`),
+    `15.2b` = rank(`15.2b`),
+    `14.1b` = rank(`14.1a`),
+    `14.2b` = rank(`14.1a`)
   ) 
 
 

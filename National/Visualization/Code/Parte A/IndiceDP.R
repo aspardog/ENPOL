@@ -60,6 +60,57 @@ indicador_general.fn <- function(
   
 }
 
+indicador_general_infografias.fn <- function(
+    data.df = master_data.df %>%
+      filter(Anio_arresto >= as.numeric(2018))
+){
+  # Get the unique values of the 'Estado_arresto' variable
+  estados <- unique(data.df$Estado_arresto)
+  
+  # Loop over each unique state
+  for (estado in estados) {
+    
+    # Filter the data for the current state
+    data_state <- data.df %>%
+      filter(Estado_arresto == estado)
+    
+    # Check if there is data to plot; if not, skip to the next iteration
+    if (nrow(data_state) == 0) next
+    
+    # Prepare the data for plotting using the filtered data
+    data2plot <- index_setUp.fn(data = data_state,
+                                main_var = "indicator_general")
+    
+    # Extract labels for plotting
+    etiquetas <- data2plot$labelx
+    
+    # Create the bar plot
+    plot <- BarSimpleChartViz(data = data2plot, 
+                              shade_xminvalue = NA_real_, 
+                              shade_xmaxvalue = NA_real_, 
+                              x_labels = etiquetas) 
+    
+    # Save the plot with a filename that includes the state name
+    ggsave(plot = plot, 
+           filename = paste0(
+             path2SP,
+             "/National/Visualization",
+             "/Output/Debido proceso/",
+             savePath, "/Indicador infografia/",
+             "/indicador_DP_", estado, ".svg"),  # Include the state name in the filename
+           width  = 200, 
+           height = 65,
+           units  = "mm",
+           dpi    = 72,
+           device = "svg")
+    
+    # Optionally, print a message to indicate the plot has been saved
+    message(paste("Plot saved for state:", estado))
+  }
+  
+  # Return the last processed data for checking purposes
+  return(data2plot)
+}
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
