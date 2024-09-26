@@ -182,9 +182,9 @@ señalamientos_condiciones.fn <- function(
                   family   = "Lato Full",
                   fontface = "bold") +
         labs(y = "% of respondents") +
-        scale_y_continuous(limits = c(0, 100),
-                           breaks = seq(0,100,20),
-                           labels = paste0(seq(0,100,20), "%"),
+        scale_y_continuous(limits = c(0, 105),
+                           breaks = seq(0,105,20),
+                           labels = paste0(seq(0,105,20), "%"),
                            position = "right") +
         scale_x_discrete( ) +
         WJP_theme() +

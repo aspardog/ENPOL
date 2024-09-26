@@ -1202,7 +1202,7 @@ homicidios_ENPOL_ENVIPE.fn <- function(
 
       snsp <- read.csv(paste0(path2SP,"/National/Exploration/Input/IDEFC_NM_abr24.csv"),check.names = F) 
        snsp <-   snsp %>% 
-                 filter(Entidad == i)
+                 filter(Entidad == "Ciudad de M\xe9xico")
       
       inegi <- read_xlsx(paste0(path2SP,"/National/Exploration/Input/INEGI_homicidios.xlsx"))
       
@@ -1375,7 +1375,7 @@ robo_vehiculos_ENPOL_ENVIPE.fn <- function(
   
   snsp <- read.csv(paste0(path2SP,"/National/Exploration/Input/IDEFC_NM_abr24.csv"),check.names = F)
    snsp <-   snsp %>% 
-     filter(Entidad == i)
+     filter(Entidad == "Ciudad de M\xe9xico")
   
   inegi <- read_xlsx(paste0(path2SP,"/National/Exploration/Input/INEGI_homicidios.xlsx"))
   
@@ -1498,7 +1498,7 @@ robo_vehiculos_ENPOL_ENVIPE.fn <- function(
     scale_color_manual(values = colors4plot) +
     scale_fill_manual(values = "#a90099") +
     WJP_theme() +
-     expand_limits(y = c(4500, 100))+
+     expand_limits(y = c(15500, 100))+
     theme(panel.grid.major.x = element_blank(),
           panel.grid.major.y = element_line(colour = "#d1cfd1"),
           axis.title.x       = element_blank(),
