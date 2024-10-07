@@ -309,6 +309,7 @@ National <- data_subset.df %>%
 
 
 Estatal <- data_subset.df %>%
+  drop_na(Estado_arresto) %>%
   ungroup() %>%
   group_by(Estado_arresto) %>%
   summarise(
@@ -327,7 +328,6 @@ Estatal <- data_subset.df %>%
          `11.3a`, `11.4a`, `11.5a`, `11.6a`, `12.1a`, `12.2a`, `12.3a`, `12.4a`, `13.1a`, `13.2a`, 
          `13.3a`, `13.4a`, `13.5a`, `13.6a`, `13.7a`, `14.1a`, `14.2a`, `15.1a`, `15.2a`,
          `16.1a`, `16.2a`, `17.1a`, `17.2a`) %>%
-  drop_na() %>%
   mutate(
     across(
       ends_with("a"),
@@ -340,9 +340,8 @@ Estatal <- data_subset.df %>%
     `15.1b` = rank(`15.1a`),
     `15.2b` = rank(`15.2b`),
     `14.1b` = rank(`14.1a`),
-    `14.2b` = rank(`14.1a`)
+    `14.2b` = rank(`14.1b`)
   ) 
-
 
 final_data_experiencias <- bind_rows(Estatal, National) %>%
   mutate(
