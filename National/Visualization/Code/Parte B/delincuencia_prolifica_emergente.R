@@ -80,17 +80,16 @@ reincidentes.fn <- function(
             figure = paste0(round(value2plot, 0), "%"),
             labels = str_wrap(values, width = 20),
             ymin = c(0, head(value2plot, -1))) %>% 
-          mutate(value2plot= case_when(values == "Mismo delito" ~ 18.52,
+          mutate(value2plot= case_when(values == "Distinto delito" ~ 7,
                                  T ~ value2plot ),
-                 ymin= case_when(values == "No reincidentes" ~ 18.52,
-                                       T ~ ymin ))
-                 # ,
-                 # figure = case_when(values == "Mismo delito" ~ "10%",
-                 #                    T ~ figure)
-                 #)
-          # %>%
-          # arrange(desc(value2plot)) 
-        
+                  ymin= case_when(values == "Mismo delito" ~ 7,
+                                  values == "No reincidentes" ~ 8.77,
+                                        T ~ ymin ),
+                  figure = case_when(values == "Distinto delito" ~ "7%",
+                                     T ~ figure))
+           # %>%
+           # arrange(desc(value2plot)) 
+           # 
         
         colors4plot <- c("Mismo delito" = "#2a2a9A", 
                          "No reincidentes" = "#a90099", 
@@ -109,7 +108,7 @@ reincidentes.fn <- function(
           coord_polar(theta="y") + 
           xlim(c(2, 4)) +
           geom_text( x= 3.5,
-                     aes(y    = value2plot -3, 
+                     aes(y    = value2plot -1, 
                          label = figure), 
                      #position = "stack",
                      color    = "white",
@@ -119,7 +118,7 @@ reincidentes.fn <- function(
                      data = data2plot %>% ungroup() %>%
                        filter(!values %in% selected)) +
           geom_text( x= 3.5,
-                     aes(y    = value2plot -35, 
+                     aes(y    = value2plot -30, 
                          label = figure), 
                      #position = "stack",
                      color    = "white",
