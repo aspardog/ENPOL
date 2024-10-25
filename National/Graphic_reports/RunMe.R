@@ -71,7 +71,7 @@ mapa <- st_read(paste0(path2SP,"/National/Visualization/Input/shp/México_Estado
       )
   )
 
-National <- T
+National <- F
 
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
@@ -85,12 +85,7 @@ if (National == T) {
   
 } else {
   
-  Estados <- Main_database %>%
-    select(Estado_arresto) %>%
-    distinct() %>%
-    drop_na() %>%
-    pull() %>%
-    as.character()
+  Estados <- c("Distrito Federal", "Oaxaca", "Quintana Roo")
   
 }
 
@@ -108,9 +103,9 @@ for (i in Estados) {
     
     # Definir la ruta al directorio "nacional"
     nacional_dir_DP <- paste0(
-      path2SP, "/National/Visualization", 
-      "/Output/Debido proceso/", 
-      savePath
+      path2SP, "National/Graphic_reports", 
+      "/Output/", 
+      savePath, "/Debido proceso/"
     )
     
     # Listar todas las subcarpetas dentro de "nacional"
@@ -122,9 +117,8 @@ for (i in Estados) {
     
     # Definir la ruta al directorio "nacional"
     nacional_dir_PC <- paste0(
-      path2SP, "/National/Visualization", 
-      "/Output/Politica criminal/", 
-      savePath
+      path2SP, "National/Graphic_reports", 
+      "/Output/", savePath, "/Politica Criminal/"
     )
     
     # Listar todas las subcarpetas dentro de "nacional"
@@ -139,19 +133,19 @@ for (i in Estados) {
     master_data.df <- Main_database %>% 
       filter(Estado_arresto == i) %>%
       filter(Anio_arresto >= as.numeric(2015)) %>% 
-      filter(NSJP == 1) 
+      filter(NSJP == 1) %>% 
+      filter(fuero == "Sólo común")
     
-    savePath <- paste0("Estados/", i)
+    savePath <- i
     
     # Definir la ruta al directorio "nacional"
     nacional_dir <- paste0(
-      path2SP, "/National/Visualization", 
-      "/Output/Debido proceso/", 
-      savePath
+      path2SP, "National/Graphic_reports", 
+      "/Output/", savePath, "/Debido proceso/"
     )
     
     # Listar todas las subcarpetas dentro de "nacional"
-    subdirs <- list.dirs(nacional_dir, 
+    D <- list.dirs(nacional_dir, 
                          recursive = FALSE, full.names = TRUE)
     
     # Borrar todas las subcarpetas dentro de "nacional"
@@ -159,9 +153,14 @@ for (i in Estados) {
     
     dir.create(paste0(
       path2SP,
-      "/National/Visualization",
-      "/Output/Debido proceso/",
-      savePath)
+      "/National/Graphic_reports",
+      "/Output/", savePath, "/Debido proceso/")
+    )
+    
+    dir.create(paste0(
+      path2SP,
+      "/National/Graphic_reports",
+      "/Output/", savePath, "/Politica Criminal/")
     )
   }
   
@@ -183,9 +182,8 @@ for (i in Estados) {
   
   dir.create(paste0(
     path2SP,
-    "/National/Visualization",
-    "/Output/Debido proceso/",
-    savePath,"/Proceso justo")
+    "/National/Graphic_reports",
+    "/Output/", savePath, "/Debido proceso","/Proceso justo")
   )
   
   guardar_silencio      <- guardar_silencio.fn()
@@ -211,10 +209,9 @@ for (i in Estados) {
   
   openxlsx::write.xlsx(x = proceso_justo_lista,
     file = paste0(
-    path2SP,
-    "/National/Visualization",
-    "/Output/Debido proceso/",
-    savePath,"/Proceso justo",
+      path2SP,
+      "/National/Graphic_reports",
+      "/Output/", savePath, "/Debido proceso","/Proceso justo",
     "/proceso_justo.xlsx")
   )
   
@@ -229,9 +226,8 @@ for (i in Estados) {
   
   dir.create(paste0(
     path2SP,
-    "/National/Visualization",
-    "/Output/Debido proceso/",
-    savePath,"/Percepcion proceso justo")
+    "/National/Graphic_reports",
+    "/Output/", savePath, "/Debido proceso","/Percepcion proceso justo")
   )
   
   proceso_justo <- proceso_justo.fn()
@@ -257,9 +253,8 @@ for (i in Estados) {
   openxlsx::write.xlsx(x = proceso_percepcion_lista,
                        file = paste0(
                          path2SP,
-                         "/National/Visualization",
-                         "/Output/Debido proceso/",
-                         savePath,"/Percepcion proceso justo",
+                         "/National/Graphic_reports",
+                         "/Output/", savePath, "/Debido proceso","/Percepcion proceso justo",
                          "/proceso_justo.xlsx")
   )
   
@@ -274,9 +269,8 @@ for (i in Estados) {
   
   dir.create(paste0(
     path2SP,
-    "/National/Visualization",
-    "/Output/Debido proceso/",
-    savePath,"/Uso excesivo fuerza")
+    "/National/Graphic_reports",
+    "/Output/", savePath, "/Debido proceso","/Uso excesivo fuerza")
   )
   
   controles_tipo <- controles_tipo.fn()
@@ -293,9 +287,8 @@ for (i in Estados) {
   openxlsx::write.xlsx(x = uso_fuerza_lista,
                        file = paste0(
                          path2SP,
-                         "/National/Visualization",
-                         "/Output/Debido proceso/",
-                         savePath,"/Uso excesivo fuerza",
+                         "/National/Graphic_reports",
+                         "/Output/", savePath, "/Debido proceso","/Uso excesivo fuerza",
                          "/uso_excesivo_fuerza.xlsx")
   )
   print("Uso excesivo de la fuerza finalizado")
@@ -309,9 +302,8 @@ for (i in Estados) {
   
   dir.create(paste0(
     path2SP,
-    "/National/Visualization",
-    "/Output/Debido proceso/",
-    savePath,"/Corrupción")
+    "/National/Graphic_reports",
+    "/Output/", savePath, "/Debido proceso","/Corrupción")
   )
   
   corrupcion_tiempo <- corrupcion_tiempo.fn()
@@ -324,9 +316,8 @@ for (i in Estados) {
   openxlsx::write.xlsx(x = corrupcion_lista,
                        file = paste0(
                          path2SP,
-                         "/National/Visualization",
-                         "/Output/Debido proceso/",
-                         savePath,"/Corrupción",
+                         "/National/Graphic_reports",
+                         "/Output/", savePath, "/Debido proceso","/Corrupción",
                          "/Corrupción.xlsx")
   )
   print("Corrupción finalizado")
@@ -340,9 +331,8 @@ for (i in Estados) {
   
   dir.create(paste0(
     path2SP,
-    "/National/Visualization",
-    "/Output/Debido proceso/",
-    savePath,"/Tortura")
+    "/National/Graphic_reports",
+    "/Output/", savePath, "/Debido proceso","/Tortura")
   )
   
   tortura_tiempo <- tortura_tiempo.fn()
@@ -361,9 +351,8 @@ for (i in Estados) {
   openxlsx::write.xlsx(x = tortura_lista,
                        file = paste0(
                          path2SP,
-                         "/National/Visualization",
-                         "/Output/Debido proceso/",
-                         savePath,"/Tortura",
+                         "/National/Graphic_reports",
+                         "/Output/", savePath, "/Debido proceso","/Tortura",
                          "/Tortura.xlsx")
   )
   print("Tortura finalizado")
@@ -377,9 +366,8 @@ for (i in Estados) {
   
   dir.create(paste0(
     path2SP,
-    "/National/Visualization",
-    "/Output/Debido proceso/",
-    savePath,"/Detenciones")
+    "/National/Graphic_reports",
+    "/Output/", savePath, "/Debido proceso","/Detenciones")
   )
   
   detenciones_tiempo <- detenciones_tiempo.fn()
@@ -403,9 +391,8 @@ for (i in Estados) {
   openxlsx::write.xlsx(x = detenciones_lista,
                        file = paste0(
                          path2SP,
-                         "/National/Visualization",
-                         "/Output/Debido proceso/",
-                         savePath,"/Detenciones",
+                         "/National/Graphic_reports",
+                         "/Output/", savePath, "/Debido proceso","/Detenciones",
                          "/Detenciones.xlsx")
   )
   print("Detenciones finalizado")
@@ -419,9 +406,8 @@ for (i in Estados) {
   
   dir.create(paste0(
     path2SP,
-    "/National/Visualization",
-    "/Output/Debido proceso/",
-    savePath,"/Prisión preventiva")
+    "/National/Graphic_reports",
+    "/Output/", savePath, "/Debido proceso","/Prisión preventiva")
   )
   
   pp_proporcion <- pp_proporcion.fn()
@@ -443,9 +429,8 @@ for (i in Estados) {
   openxlsx::write.xlsx(x = pp_list,
                        file = paste0(
                          path2SP,
-                         "/National/Visualization",
-                         "/Output/Debido proceso/",
-                         savePath,"/Prisión preventiva",
+                         "/National/Graphic_reports",
+                         "/Output/", savePath, "/Debido proceso","/Prisión preventiva",
                          "/PP.xlsx")
   )
   print("Prisión Preventiva finalizado")
@@ -459,9 +444,9 @@ for (i in Estados) {
   
   dir.create(paste0(
     path2SP,
-    "/National/Visualization",
-    "/Output/Debido proceso/",
-    savePath,"/Indicador DP")
+    path2SP,
+    "/National/Graphic_reports",
+    "/Output/", savePath, "/Debido proceso","/Indicador DP")
   )
   
   indicador_general        <- indicador_general.fn()
@@ -488,9 +473,8 @@ for (i in Estados) {
   openxlsx::write.xlsx(x = indicador_list,
                        file = paste0(
                          path2SP,
-                         "/National/Visualization",
-                         "/Output/Debido proceso/",
-                         savePath,"/Indicador DP",
+                         "/National/Graphic_reports",
+                         "/Output/", savePath, "/Debido proceso","/Indicador DP",
                          "/Indicador DP.xlsx")
   )
   
@@ -513,9 +497,8 @@ for (i in Estados) {
   
    dir.create(paste0(
      path2SP,
-     "/National/Visualization",
-     "/Output/Politica criminal/",
-     savePath,"/Delitos victimas")
+     "/National/Graphic_reports",
+     "/Output/", savePath, "/Politica Criminal","/Delitos victimas")
    )
   
   delitos_ENPOL             <- delitos_ENPOL.fn()
@@ -540,9 +523,8 @@ for (i in Estados) {
   openxlsx::write.xlsx(x = indicador_list,
                        file = paste0(
                          path2SP,
-                         "/National/Visualization",
-                         "/Output/Politica criminal/",
-                         savePath,"/Delitos victimas",
+                         "/National/Graphic_reports",
+                         "/Output/", savePath, "/Politica Criminal","/Delitos victimas",
                          "/Delitos victimas.xlsx")
   )
   
@@ -558,9 +540,8 @@ for (i in Estados) {
   
   dir.create(paste0(
     path2SP,
-    "/National/Visualization",
-    "/Output/Politica criminal/",
-    savePath,"/Delitos alto impacto")
+    "/National/Graphic_reports",
+    "/Output/", savePath, "/Politica Criminal","/Delitos alto impacto")
   )
   
   control_alto_impacto           <- control_alto_impacto.fn()
@@ -581,9 +562,8 @@ for (i in Estados) {
   openxlsx::write.xlsx(x = indicador_list,
                        file = paste0(
                          path2SP,
-                         "/National/Visualization",
-                         "/Output/Politica criminal/",
-                         savePath,"/Delitos alto impacto",
+                         "/National/Graphic_reports",
+                         "/Output/", savePath, "/Politica Criminal","/Delitos alto impacto",
                          "/Delitos alto impacto.xlsx")
   )
   
@@ -598,9 +578,8 @@ for (i in Estados) {
   
   dir.create(paste0(
     path2SP,
-    "/National/Visualization",
-    "/Output/Politica criminal/",
-    savePath,"/Delincuencia prolifica")
+    "/National/Graphic_reports",
+    "/Output/", savePath, "/Politica Criminal","/Delincuencia prolifica")
   )
   
   reincidentes         <- reincidentes.fn()
@@ -621,9 +600,8 @@ for (i in Estados) {
   openxlsx::write.xlsx(x = indicador_list,
                        file = paste0(
                          path2SP,
-                         "/National/Visualization",
-                         "/Output/Politica criminal/",
-                         savePath,"/Delincuencia prolifica",
+                         "/National/Graphic_reports",
+                         "/Output/", savePath, "/Politica Criminal","/Delincuencia prolifica",
                          "/Delincuencia prolifica.xlsx")
   )
   
@@ -639,9 +617,8 @@ for (i in Estados) {
   
   dir.create(paste0(
     path2SP,
-    "/National/Visualization",
-    "/Output/Politica criminal/",
-    savePath,"/Distribucion competencias")
+    "/National/Graphic_reports",
+    "/Output/", savePath, "/Politica Criminal","/Distribucion competencias")
   )
   
   delitos_fuero         <- delitos_fuero.fn()
@@ -663,9 +640,8 @@ for (i in Estados) {
   openxlsx::write.xlsx(x = indicador_list,
                        file = paste0(
                          path2SP,
-                         "/National/Visualization",
-                         "/Output/Politica criminal/",
-                         savePath,"/Distribucion competencias",
+                         "/National/Graphic_reports",
+                         "/Output/", savePath, "/Politica Criminal","/Distribucion competencias",
                          "/Distribucion competencias.xlsx")
   )
   
@@ -681,9 +657,8 @@ for (i in Estados) {
   
   dir.create(paste0(
     path2SP,
-    "/National/Visualization",
-    "/Output/Politica criminal/",
-    savePath,"/Estudio FGR")
+    "/National/Graphic_reports",
+    "/Output/", savePath, "/Politica Criminal","/Estudio FGR")
   )
   
   detenciones_FGR         <- detenciones_FGR.fn()
@@ -704,9 +679,8 @@ for (i in Estados) {
   openxlsx::write.xlsx(x = indicador_list,
                        file = paste0(
                          path2SP,
-                         "/National/Visualization",
-                         "/Output/Politica criminal/",
-                         savePath,"/Estudio FGR",
+                         "/National/Graphic_reports",
+                         "/Output/", savePath, "/Politica Criminal","/Estudio FGR",
                          "/Estudio FGR.xlsx")
   )
   
@@ -721,9 +695,8 @@ for (i in Estados) {
   
   dir.create(paste0(
     path2SP,
-    "/National/Visualization",
-    "/Output/Politica criminal/",
-    savePath,"/Detenciones")
+    "/National/Graphic_reports",
+    "/Output/", savePath, "/Politica Criminal","/Detenciones")
   )
   
   detenciones_temporal      <- detenciones_temporal.fn()
@@ -743,9 +716,8 @@ for (i in Estados) {
   openxlsx::write.xlsx(x = indicador_list,
                        file = paste0(
                          path2SP,
-                         "/National/Visualization",
-                         "/Output/Politica criminal/",
-                         savePath,"/Detenciones",
+                         "/National/Graphic_reports",
+                         "/Output/", savePath, "/Politica Criminal","/Detenciones",
                          "/Detenciones.xlsx")
   )
   
@@ -761,9 +733,8 @@ for (i in Estados) {
   
   dir.create(paste0(
     path2SP,
-    "/National/Visualization",
-    "/Output/Politica criminal/",
-    savePath,"/Inspecciones")
+    "/National/Graphic_reports",
+    "/Output/", savePath, "/Politica Criminal","/Inspecciones")
   )
   
   inspecciones_comportamiento <- inspecciones_comportamiento.fn ()
@@ -781,9 +752,8 @@ for (i in Estados) {
   openxlsx::write.xlsx(x = indicador_list,
                        file = paste0(
                          path2SP,
-                         "/National/Visualization",
-                         "/Output/Politica criminal/",
-                         savePath,"/Inspecciones",
+                         "/National/Graphic_reports",
+                         "/Output/", savePath, "/Politica Criminal","/Inspecciones",
                          "/Inspecciones.xlsx")
   )
   
@@ -799,9 +769,8 @@ for (i in Estados) {
   
   dir.create(paste0(
     path2SP,
-    "/National/Visualization",
-    "/Output/Politica criminal/",
-    savePath,"/Señalamientos")
+    "/National/Graphic_reports",
+    "/Output/", savePath, "/Politica Criminal","/Señalamientos")
   )
   
   señalados                  <- señalados.fn()
@@ -819,9 +788,8 @@ for (i in Estados) {
   openxlsx::write.xlsx(x = indicador_list,
                        file = paste0(
                          path2SP,
-                         "/National/Visualization",
-                         "/Output/Politica criminal/",
-                         savePath,"/Señalamientos",
+                         "/National/Graphic_reports",
+                         "/Output/", savePath, "/Politica Criminal","/Señalamientos",
                          "/Señalamientos.xlsx")
   )
   
@@ -836,9 +804,8 @@ for (i in Estados) {
   
   dir.create(paste0(
     path2SP,
-    "/National/Visualization",
-    "/Output/Politica criminal/",
-    savePath,"/Entrevistas")
+    "/National/Graphic_reports",
+    "/Output/", savePath, "/Politica Criminal","/Entrevistas")
   )
   
   interrogatorio_MP                 <- interrogatorio_MP.fn()
@@ -863,9 +830,8 @@ for (i in Estados) {
   openxlsx::write.xlsx(x = indicador_list,
                        file = paste0(
                          path2SP,
-                         "/National/Visualization",
-                         "/Output/Politica criminal/",
-                         savePath,"/Entrevistas",
+                         "/National/Graphic_reports",
+                         "/Output/", savePath, "/Politica Criminal","/Entrevistas",
                          "/Entrevistas.xlsx")
   )
   
@@ -881,9 +847,8 @@ for (i in Estados) {
   
   dir.create(paste0(
     path2SP,
-    "/National/Visualization",
-    "/Output/Politica criminal/",
-    savePath,"/Pruebas")
+    "/National/Graphic_reports",
+    "/Output/", savePath, "/Politica Criminal","/Pruebas")
   )
   
   pruebas_pp             <- pruebas_pp.fn()
@@ -904,9 +869,8 @@ for (i in Estados) {
   openxlsx::write.xlsx(x = indicador_list,
                        file = paste0(
                          path2SP,
-                         "/National/Visualization",
-                         "/Output/Politica criminal/",
-                         savePath,"/Pruebas",
+                         "/National/Graphic_reports",
+                         "/Output/", savePath, "/Politica Criminal","/Pruebas",
                          "/Pruebas.xlsx")
   )
   
@@ -922,9 +886,8 @@ for (i in Estados) {
   
   dir.create(paste0(
     path2SP,
-    "/National/Visualization",
-    "/Output/Politica criminal/",
-    savePath,"/Conclusion")
+    "/National/Graphic_reports",
+    "/Output/", savePath, "/Politica Criminal","/Conclusion")
   )
   
   conclusion                 <- conclusion.fn()
@@ -945,9 +908,8 @@ for (i in Estados) {
   openxlsx::write.xlsx(x = indicador_list,
                        file = paste0(
                          path2SP,
-                         "/National/Visualization",
-                         "/Output/Politica criminal/",
-                         savePath,"/Conclusion",
+                         "/National/Graphic_reports",
+                         "/Output/", savePath, "/Politica Criminal","/Conclusion",
                          "/Conclusion.xlsx")
   )
   
@@ -969,9 +931,8 @@ for (i in Estados) {
   
   dir.create(paste0(
     path2SP,
-    "/National/Visualization",
-    "/Output/Trato diferenciado/",
-    savePath, "/")
+    "/National/Graphic_reports",
+    "/Output/", savePath, "/Trato Diferenciado", "/")
   )
   
   descripcion           <- descripcion.fn()

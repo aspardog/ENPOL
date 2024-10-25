@@ -81,9 +81,8 @@ detenciones_tiempo.fn <- function(
   
   ggsave(plot = chart, 
          filename = paste0(path2SP,
-                           "/National/Visualization",
-                           "/Output/Debido proceso/",
-                           savePath,"/Detenciones",
+                           "/National/Graphic_reports",
+                           "/Output/", savePath, "/Debido proceso","/Detenciones",
                            "/detenciones_tiempo.svg"),
          width = 189.7883,
          height = 110,
@@ -181,9 +180,8 @@ tiempo_traslado.fn <- function(
   
   ggsave(plot = plot, 
          filename = paste0(path2SP,
-                           "/National/Visualization",
-                           "/Output/Debido proceso/",
-                           savePath,"/Detenciones",
+                           "/National/Graphic_reports",
+                           "/Output/", savePath, "/Debido proceso","/Detenciones",
                            "/tiempo_traslado.svg"),
          width = 189.7883,
          height = 85,
@@ -293,9 +291,8 @@ tiempos_traslado.fn <- function(
   
   ggsave(plot = chart, 
          filename = paste0(path2SP,
-                           "/National/Visualization",
-                           "/Output/Debido proceso/",
-                           savePath,"/Detenciones",
+                           "/National/Graphic_reports",
+                           "/Output/", savePath, "/Debido proceso","/Detenciones",
                            "/tiempo_traslado_serie.svg"),
          width = 189.7883,
          height = 100,
@@ -765,9 +762,8 @@ mapa_tiempo_traslado.fn <- function(
   
   ggsave(plot = viz, 
          filename = paste0(path2SP,
-                           "/National/Visualization",
-                           "/Output/Debido proceso/",
-                           savePath,"/Detenciones",
+                           "/National/Graphic_reports",
+                           "/Output/", savePath, "/Debido proceso","/Detenciones",
                            "/tiempo_traslado_mapa.svg"),
          width = 189.7883,
          height = 175,
@@ -1028,9 +1024,8 @@ mapa_lugar_traslado.fn <- function(
   
   ggsave(plot = viz, 
          filename = paste0(path2SP,
-                           "/National/Visualization",
-                           "/Output/Debido proceso/",
-                           savePath,"/Detenciones",
+                           "/National/Graphic_reports",
+                           "/Output/", savePath, "/Debido proceso","/Detenciones",
                            "/lugar_traslado_mapa.svg"),
          width = 189.7883,
          height = 175,
@@ -1048,6 +1043,7 @@ mapa_lugar_traslado.fn <- function(
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+data.df <- master_data.df
 
 # Define a vector containing unique values of Estado_arresto
 estados <- unique(data.df$Estado_arresto)

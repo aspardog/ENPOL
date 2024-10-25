@@ -97,9 +97,8 @@ corrupcion_tiempo.fn <- function(
   
   ggsave(plot = chart, 
          filename = paste0(path2SP,
-                           "/National/Visualization",
-                           "/Output/Debido proceso/",
-                           savePath,"/Corrupción",
+                           "/National/Graphic_reports",
+                           "/Output/", savePath, "/Debido proceso","/Corrupción",
                            "/corrupcion_tiempo.svg"),
          width = 189.7883,
          height = 110,
@@ -256,9 +255,8 @@ corrupcion_elementos.fn <- function(
   
   ggsave(plot = plot, 
          filename = paste0(path2SP,
-                           "/National/Visualization",
-                           "/Output/Debido proceso/",
-                           savePath,"/Corrupción",
+                           "/National/Graphic_reports",
+                           "/Output/", savePath, "/Debido proceso","/Corrupción",
                            "/corrupcion_elementos.svg"),
          width = 189.7883,
          height = 210,
