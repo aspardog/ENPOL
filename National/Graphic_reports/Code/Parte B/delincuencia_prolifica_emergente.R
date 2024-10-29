@@ -109,7 +109,7 @@ reincidentes.fn <- function(
           xlim(c(2, 4)) +
           geom_text( x= 3.5,
                      aes(y    = value2plot -1, 
-                         label = figure), 
+                         label = paste0(figure, "\n"," N = ",Frequency)), 
                      #position = "stack",
                      color    = "white",
                      family   = "Lato Full",
@@ -117,9 +117,9 @@ reincidentes.fn <- function(
                      size = 4, 
                      data = data2plot %>% ungroup() %>%
                        filter(!values %in% selected)) +
-          geom_text( x= 3.5,
+          geom_text( x= 3.4,
                      aes(y    = value2plot -30, 
-                         label = figure), 
+                         label = paste0(figure, "\n"," N = ",Frequency)), 
                      #position = "stack",
                      color    = "white",
                      family   = "Lato Full",
@@ -143,9 +143,9 @@ reincidentes.fn <- function(
             legend.position = "none"); plot
         
         ggsave(plot   = plot,
-               file   = paste0(path2SP,"/National/Visualization",
-                               "/Output/Politica criminal/",
-                               savePath,"/Delincuencia prolifica/Figure2_1.svg"), 
+               file   = paste0(path2SP, "National/Graphic_reports", 
+                               "/Output/", savePath, "/Politica Criminal",
+                               "/Delincuencia prolifica/Figure2_1.svg"), 
                width  = 189.7883, 
                height = 70,
                units  = "mm",
@@ -216,7 +216,7 @@ delito_reincidencia.fn <- function(
                labels = paste0(round(value2plot,0),"%"),
                Delito = reincidentes_tipo,
                Delito = str_wrap(Delito, width = 25)) %>%
-        select(Delito,value2plot,labels) %>%
+        select(Delito,value2plot,labels, n) %>%
         arrange(value2plot) %>%
         mutate(Delito = factor(Delito, levels = Delito)) %>% 
         filter(value2plot>= 1)
@@ -227,7 +227,7 @@ delito_reincidencia.fn <- function(
       plt <- ggplot(data2plot, 
                     aes(x     = Delito,
                         y     = value2plot,
-                        label = labels,
+                        label = paste0(labels, "\n"," N = ", n),
                         color = Delito)) +
         geom_bar(stat = "identity", fill = colors4plot, color = colors4plot,
                  show.legend = F, width = 0.9) +
@@ -266,9 +266,9 @@ delito_reincidencia.fn <- function(
       
       
       ggsave(plot   = plt,
-             file   = paste0(path2SP,"/National/Visualization",
-                             "/Output/Politica criminal/",
-                             savePath,"/Delincuencia prolifica/Figure2_2.svg"), 
+             file   = paste0(path2SP, "National/Graphic_reports", 
+                             "/Output/", savePath, "/Politica Criminal",
+                             "/Delincuencia prolifica/Figure2_2.svg"), 
              width  = 189.7883, 
              height = 65,
              units  = "mm",
@@ -325,7 +325,7 @@ varios_delitos.fn <- function(
       xlim(c(2, 4)) +
       geom_text( x= 3.5,
                  aes(y    = value2plot-4 , 
-                     label = paste0(figure)), 
+                     label = paste0(figure, "\n"," N = ",Frequency)), 
                  # position = "stack",
                  color    = "white",
                  family   = "Lato Full",
@@ -359,9 +359,9 @@ varios_delitos.fn <- function(
         legend.position      = "none"); plot
     
     ggsave(plot   = plot,
-           file   = paste0(path2SP,"/National/Visualization",
-                           "/Output/Politica criminal/",
-                           savePath,"/Delincuencia prolifica/Figure2_3.svg"), 
+           file   = paste0(path2SP, "National/Graphic_reports", 
+                           "/Output/", savePath, "/Politica Criminal",
+                           "/Delincuencia prolifica/Figure2_3.svg"), 
            width  = 189.7883, 
            height = 85,
            units  = "mm",
@@ -428,7 +428,7 @@ delito_unico.fn <- function(
                labels = paste0(round(value2plot,0),"%"),
                Delito = concat,
                Delito = str_wrap(Delito, width = 30)) %>%
-        select(Delito,value2plot,labels) %>%
+        select(Delito,value2plot,labels, n) %>%
         arrange(value2plot) %>%
         mutate(Delito = factor(Delito, levels = Delito)) 
       
@@ -438,7 +438,7 @@ delito_unico.fn <- function(
       plt <- ggplot(data2plot, 
                     aes(x     = Delito,
                         y     = value2plot,
-                        label = labels,
+                        label = paste0(labels, "\n"," N = ",n),
                         color = Delito)) +
         geom_bar(stat = "identity", fill = colors4plot, color = colors4plot,
                  show.legend = F, width = 0.9) +
@@ -477,9 +477,9 @@ delito_unico.fn <- function(
       
       
       ggsave(plot   = plt,
-             file   = paste0(path2SP,"/National/Visualization",
-                                     "/Output/Politica criminal/",
-                                     savePath,"/Delincuencia prolifica/Figure2_4.svg"), 
+             file   = paste0(path2SP, "National/Graphic_reports", 
+                             "/Output/", savePath, "/Politica Criminal",
+                             "/Delincuencia prolifica/Figure2_4.svg"), 
              width  = 189.7883, 
              height = 65,
              units  = "mm",

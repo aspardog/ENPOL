@@ -76,10 +76,10 @@ plot <- data2plot %>%
   geom_text_repel(
     aes(
       y = (ymin + ymax) / 1.95, 
-      label = figure
+      label = paste0(figure, "\n"," N = ",Frequency)
     ), 
     seed= 4,
-    x = 3.4,
+    x = 3.2,
     color = "white",
     family = "Lato Full",
     fontface = "bold", 
@@ -99,9 +99,9 @@ plot <- data2plot %>%
     legend.position = "none"); plot
 
 ggsave(plot   = plot,
-       file   = paste0(path2SP,"/National/Visualization",
-                       "/Output/Politica criminal/",
-                       savePath,"/Conclusion/Figure3_1.svg"), 
+       file   = paste0(path2SP, "National/Graphic_reports", 
+                       "/Output/", savePath, "/Politica Criminal",
+                       "/Conclusion/Figure3_1.svg"), 
        width  = 189.7883, 
        height = 77.5,
        units  = "mm",
@@ -162,7 +162,7 @@ colors4plot <- rep("#2a2a9A", length(data2plot$value2plot))
 plt <- ggplot(data2plot, 
               aes(x     = reorder(labels, order_var),
                   y     = value2plot,
-                  label = figure,
+                  label = paste0(figure, "\n"," N = ",Frequency),
                   color = Delito)) +
   geom_bar(stat = "identity", fill = colors4plot, color = colors4plot,
            show.legend = F, width = 0.9) +
@@ -195,9 +195,9 @@ plt <- ggplot(data2plot,
   coord_flip(); plt
 
 ggsave(plot   = plt,
-       file   = paste0(path2SP,"/National/Visualization",
-                       "/Output/Politica criminal/",
-                       savePath,"/Conclusion/Figure3_2.svg"), 
+       file   = paste0(path2SP, "National/Graphic_reports", 
+                       "/Output/", savePath, "/Politica Criminal",
+                       "/Conclusion/Figure3_2.svg"), 
        width  = 189.7883, 
        height = 77.5,
        units  = "mm",
@@ -268,11 +268,11 @@ plot <- ggplot(data2plot,
                  x     = values, 
                  y     = value2plot,
                  fill  = reorder(tiempo_dictar_sentencia, -order),
-                 label = paste0(figure)
+                 label = paste0(figure, "\n"," N = ",Frequency)
                )) +
   geom_bar(stat = "identity", width = 0.9, position = "stack") +
   geom_text(aes(y    = value2plot -.1,
-                label = paste0(figure)), 
+                label = paste0(figure, "\n"," N = ",Frequency)), 
             position = position_stack(vjust = 0.5),
             color    = "white",
             family   = "Lato Full",
@@ -303,9 +303,9 @@ axis.text.y=element_text(family = "Lato Medium",
 
 
 ggsave(plot   = plot,
-       file   = paste0(path2SP,"/National/Visualization",
-                       "/Output/Politica criminal/",
-                       savePath,"/Conclusion/Figure3_3.svg"), 
+       file   = paste0(path2SP, "National/Graphic_reports", 
+                       "/Output/", savePath, "/Politica Criminal",
+                       "/Conclusion/Figure3_3.svg"), 
        width  = 189.7883, 
        height = 85,
        units  = "mm",

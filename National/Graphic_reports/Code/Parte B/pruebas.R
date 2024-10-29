@@ -138,9 +138,9 @@ plot <- ggplot(data2plot,
 
 
 ggsave(plot   = plot,
-       file   = paste0(path2SP,"/National/Visualization",
-                       "/Output/Politica criminal/",
-                       savePath,"/Pruebas/Figure3_1.svg"), 
+       file   = paste0(path2SP, "National/Graphic_reports", 
+                       "/Output/", savePath, "/Politica Criminal",
+                       "/Pruebas/Figure3_1.svg"), 
        width  = 189.7883, 
        height = 80,
        units  = "mm",
@@ -266,9 +266,9 @@ plot <- ggplot(data2plot,
 
 
 ggsave(plot   = plot,
-       file   = paste0(path2SP,"/National/Visualization",
-                       "/Output/Politica criminal/",
-                       savePath,"/Pruebas/Figure3_2.svg"
+       file   = paste0(path2SP, "National/Graphic_reports", 
+                       "/Output/", savePath, "/Politica Criminal",
+                       "/Pruebas/Figure3_2.svg"
                        ), 
        width  = 189.7883, 
        height = 80,
@@ -364,10 +364,9 @@ pruebas_conclusion_general.fn <- function(
                        orientation                = "horizontal")
   
   ggsave(plot = plot, 
-         filename = paste0(path2SP,
-                           "/National/Visualization",
-                           "/Output/Politica criminal/",
-                           savePath,"/Pruebas/",
+         filename = paste0(path2SP, "National/Graphic_reports", 
+                           "/Output/", savePath, "/Politica Criminal",
+                           "/Pruebas/",
                            "/Pruebas_general.svg"),
          width = 189.7883,
          height = 85,

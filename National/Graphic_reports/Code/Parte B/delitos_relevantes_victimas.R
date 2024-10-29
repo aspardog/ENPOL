@@ -196,7 +196,7 @@ delitos_ENPOL.fn <- function(
   plt <- ggplot(data2plot, 
                 aes(x     = Delito,
                     y     = value2plot,
-                    label = labels,
+                    label = paste0(labels,", N = ",n),
                     group = Delito,
                     color = Delito,
                     fill  = Delito)) +  # Añadido fill para asegurar coincidencia
@@ -230,10 +230,9 @@ delitos_ENPOL.fn <- function(
   
   ggsave(plot   = plt,
          file   = paste0(
-           path2SP,
-           "/National/Visualization",
-           "/Output/Politica criminal/",
-           savePath,"/Delitos victimas",
+           path2SP, "National/Graphic_reports", 
+           "/Output/", savePath, "/Politica Criminal",
+           "/Delitos victimas",
            "/Figure1_1.svg"),
          width  = 180, 
          height = 180,
@@ -294,7 +293,7 @@ delitos_ENVIPE.fn <- function( ){
   plt <- ggplot(data2plot, 
                 aes(x     = Delito,
                     y     = value2plot,
-                    label = labels,
+                    label = paste0(labels,", N = ",n),
                     group = Delito,
                     color = Delito,
                     fill  = Delito)) +  # Añadido fill para asegurar coincidencia
@@ -329,10 +328,9 @@ delitos_ENVIPE.fn <- function( ){
   
   ggsave(plot   = plt,
          file   = paste0(
-           path2SP,
-           "/National/Visualization",
-           "/Output/Politica criminal/",
-           savePath,"/Delitos victimas",
+           path2SP, "National/Graphic_reports", 
+           "/Output/", savePath, "/Politica Criminal",
+           "/Delitos victimas",
            "/Figure1_2.svg"), 
          width  = 180, 
          height = 225,
@@ -1040,10 +1038,8 @@ prevalentes_ENVIPE_nueva.fn <- function(
     
     ggsave(plot   = plot,
            file   = paste0(
-             path2SP,
-             "/National/Visualization",
-             "/Output/Politica criminal/",
-             savePath,"/Delitos victimas",
+             path2SP, "National/Graphic_reports", 
+             "/Output/", savePath, "/Politica Criminal","/Delitos victimas",
              "/Figure1_2_nueva.svg"), 
            width  = 189.7883, 
            height = 100,
@@ -1175,10 +1171,9 @@ prevalentes_ENVIPE.fn <- function(
       
       ggsave(plot   = plt,
              file   = paste0(
-               path2SP,
-               "/National/Visualization",
-               "/Output/Politica criminal/",
-               savePath,"/Delitos victimas",
+               path2SP, "National/Graphic_reports", 
+               "/Output/", savePath, "/Politica Criminal",
+               "/Delitos victimas",
                "/Figure1_3.svg"), 
              width  = 189.7883, 
              height = 85,
@@ -1347,10 +1342,9 @@ homicidios_ENPOL_ENVIPE.fn <- function(
       
       ggsave(plot   = plt,
              file   = paste0(
-               path2SP,
-               "/National/Visualization",
-               "/Output/Politica criminal/",
-               savePath,"/Delitos victimas",
+               path2SP, "National/Graphic_reports", 
+               "/Output/", savePath, "/Politica Criminal",
+               "/Delitos victimas",
                "/Figure1_4.svg"), 
              width  = 189.7883, 
              height = 65,
@@ -1512,10 +1506,9 @@ robo_vehiculos_ENPOL_ENVIPE.fn <- function(
   
   ggsave(plot   = plt,
          file   = paste0(
-           path2SP,
-           "/National/Visualization",
-           "/Output/Politica criminal/",
-           savePath,"/Delitos victimas",
+           path2SP, "National/Graphic_reports", 
+           "/Output/", savePath, "/Politica Criminal",
+           "/Delitos victimas",
            "/Figure1_5.svg"), 
          width  = 189.7883, 
          height = 65,
@@ -1746,10 +1739,9 @@ delitos_ENPOL.fn <- function(
   
   ggsave(plot   = plt,
          file   = paste0(
-           path2SP,
-           "/National/Visualization",
-           "/Output/Politica criminal/",
-           savePath,"/Delitos victimas",
+           path2SP, "National/Graphic_reports", 
+           "/Output/", savePath, "/Politica Criminal",
+           "/Delitos victimas",
            "/Figure1_1_comun_cdmx.svg"),
          width  = 180, 
          height = 180,

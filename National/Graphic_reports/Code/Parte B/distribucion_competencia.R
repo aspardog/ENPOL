@@ -96,9 +96,9 @@ delitos_fuero.fn <- function(
     
     
     ggsave(plot   = plt,
-           file   = paste0(path2SP,"/National/Visualization",
-                           "/Output/Politica criminal/",
-                           savePath,"/Distribucion competencias/Figure2_1_2a.svg"), 
+           file   = paste0(path2SP, "National/Graphic_reports", 
+                           "/Output/", savePath, "/Politica Criminal",
+                           "/Distribucion competencias/Figure2_1_2a.svg"), 
            width  = 189.7883, 
            height = 85,
            units  = "mm",
@@ -180,9 +180,9 @@ delitos_fuero.fn <- function(
   
   
   ggsave(plot   = plt,
-         file   = paste0(path2SP,"/National/Visualization",
-                         "/Output/Politica criminal/",
-                         savePath,"/Distribucion competencias/Figure3_1.svg"), 
+         file   = paste0(path2SP, "National/Graphic_reports", 
+                         "/Output/", savePath, "/Politica Criminal",
+                         "/Distribucion competencias/Figure3_1.svg"), 
          width  = 189.7883, 
          height = 85,
          units  = "mm",
@@ -442,9 +442,9 @@ delitos_comun_porfederales_mapa.fn <- function(
   
   
   ggsave(plot   = viz,
-         file   = paste0(path2SP,"/National/Visualization",
-                         "/Output/Politica criminal/",
-                         savePath,"/Distribucion competencias/Figure2_1_2b.svg"), 
+         file   = paste0(path2SP, "National/Graphic_reports", 
+                         "/Output/", savePath, "/Politica Criminal",
+                         "/Distribucion competencias/Figure2_1_2b.svg"), 
          width  = 189.7883, 
          height = 175,
          units  = "mm",
@@ -542,9 +542,9 @@ delitos_federales_bar.fn <- function(
   
   
   ggsave(plot   = plt,
-         file   = paste0(path2SP,"/National/Visualization",
-                         "/Output/Politica criminal/",
-                         savePath,"/Estudio FGR/Figure2_1.svg"), 
+         file   = paste0(path2SP, "National/Graphic_reports", 
+                         "/Output/", savePath, "/Politica Criminal",
+                         "/Estudio FGR/Figure2_1.svg"), 
          width  = 189.7883, 
          height = 80,
          units  = "mm",
@@ -783,9 +783,9 @@ delitos_federales.fn <- function(
     
     
     ggsave(plot   = viz,
-           file   = paste0(path2SP,"/National/Visualization",
-                           "/Output/Politica criminal/",
-                           savePath,"/Distribucion competencias/Figure3_2.svg"), 
+           file   = paste0(path2SP, "National/Graphic_reports", 
+                           "/Output/", savePath, "/Politica Criminal",
+                           "/Distribucion competencias/Figure3_2.svg"), 
            width  = 189.7883, 
            height = 175,
            units  = "mm",
@@ -1046,9 +1046,9 @@ detenciones_federales.fn <- function(
       
       
       ggsave(plot   = viz,
-             file   = paste0(path2SP,"/National/Visualization",
-                             "/Output/Politica criminal/",
-                             savePath,"/Distribucion competencias/Figure3_3.svg"), 
+             file   = paste0(path2SP, "National/Graphic_reports", 
+                             "/Output/", savePath, "/Politica Criminal",
+                             "/Distribucion competencias/Figure3_3.svg"), 
              width  = 189.7883, 
              height = 175,
              units  = "mm",
@@ -1302,9 +1302,9 @@ detenciones_estatales.fn <- function(
     plot(viz)
     
     ggsave(plot   = viz,
-           file   = paste0(path2SP,"/National/Visualization",
-                           "/Output/Politica criminal/",
-                           savePath,"/Distribucion competencias/Figure3_4.svg"), 
+           file   = paste0(path2SP, "National/Graphic_reports", 
+                           "/Output/", savePath, "/Politica Criminal",
+                           "/Distribucion competencias/Figure3_4.svg"), 
            width  = 189.7883, 
            height = 175,
            units  = "mm",

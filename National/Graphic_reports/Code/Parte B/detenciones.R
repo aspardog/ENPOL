@@ -71,7 +71,7 @@ detenciones_temporal.fn <- function(
     plot <- ggplot(data2table, 
                   aes(x     = Anio_arresto,
                       y     = value2plot,
-                      label = labels,
+                      label = paste0(labels,", N = ",Frequency),
                       group = group_var,
                       color = group_var)) +
       geom_point(size = 2,
@@ -109,9 +109,9 @@ detenciones_temporal.fn <- function(
       ); plot
     
     ggsave(plot   = plot,
-           file   = paste0(path2SP,"/National/Visualization",
-                           "/Output/Politica criminal/",
-                           savePath,"/Detenciones/Figure3_1.svg"), 
+           file   = paste0(path2SP, "National/Graphic_reports", 
+                           "/Output/", savePath, "/Politica Criminal",
+                           "/Detenciones/Figure3_1.svg"), 
            width  = 189.7883, 
            height = 80,
            units  = "mm",
@@ -213,7 +213,7 @@ detenciones_estado.fn <- function(
                        x     = reorder(values, order), 
                        y     = value2plot,
                        fill  = tipo_detencion,
-                       label = paste0(figure)
+                       label = paste0(figure, "\n"," N = ",Frequency)
                      )) +
         geom_bar(stat = "identity", width = 0.9, position = "stack")+
         geom_text(aes(y    = value2plot), 
@@ -253,9 +253,9 @@ detenciones_estado.fn <- function(
       plot
       
       ggsave(plot   = plot,
-             file   = paste0(path2SP,"/National/Visualization",
-                             "/Output/Politica criminal/",
-                             savePath,"/Detenciones/Figure3_2.svg"), 
+             file   = paste0(path2SP, "National/Graphic_reports", 
+                             "/Output/", savePath, "/Politica Criminal",
+                             "/Detenciones/Figure3_2.svg"), 
              width  = 230, 
              height = 200,
              units  = "mm",
@@ -326,7 +326,7 @@ detencion_proceso_tiempo.fn <- function(
                      x     = values, 
                      y     = value2plot,
                      fill  = reorder(tiempo_dictar_sentencia, -order),
-                     label = paste0(figure)
+                     label = paste0(figure, "\n"," N = ",Frequency)
                    )) +
       geom_bar(stat = "identity", width = 0.9, position = "stack")+
       geom_text(aes(y    = value2plot), 
@@ -366,9 +366,9 @@ detencion_proceso_tiempo.fn <- function(
     plot
     
     ggsave(plot   = plot,
-           file   = paste0(path2SP,"/National/Visualization",
-                           "/Output/Politica criminal/",
-                           savePath,"/Detenciones/Figure3_3.svg"), 
+           file   = paste0(path2SP, "National/Graphic_reports", 
+                           "/Output/", savePath, "/Politica Criminal",
+                           "/Detenciones/Figure3_3.svg"), 
            width  = 189.7883, 
            height = 80,
            units  = "mm",

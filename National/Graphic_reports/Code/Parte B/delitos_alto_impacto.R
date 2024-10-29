@@ -129,10 +129,9 @@ control_alto_impacto.fn <- function(
       
       
       ggsave(plot   = p,
-             file   = paste0(path2SP,
-                             "/National/Visualization",
-                             "/Output/Politica criminal/",
-                             savePath,"/Delitos alto impacto/Figure2_1.svg"), 
+             file   = paste0(path2SP, "National/Graphic_reports", 
+                             "/Output/", savePath, "/Politica Criminal",
+                             "/Delitos alto impacto/Figure2_1.svg"), 
              width  = 189.7883, 
              height = 130,
              units  = "mm",
@@ -217,24 +216,25 @@ detencion_alto_impacto.fn <- function(
                                      labels == "extorsion"       ~ 3,
                                      labels == "robo-autopartes" ~ 6,
                                      labels == "robo-vehiculo"   ~ 7,
-                                     T ~ NA_real_)) %>%
-        mutate(
-          figure = 
-            if_else(
-              Delito %in% "extorsion" & tipo_detencion %in% "D)Flagrancia", 
-              "32%", figure
-            ),
-          figure =
-            if_else(
-              Delito %in% "armas" & tipo_detencion %in% "B)Orden de detención", 
-              "7%", figure
-            ),
-          figure =
-            if_else(
-              Delito %in% "robo-vehiculo" & tipo_detencion %in% "D)Flagrancia", 
-              "47%", figure
-            )
-        )
+                                     T ~ NA_real_)) 
+      # %>%
+      #   mutate(
+      #     figure = 
+      #       if_else(
+      #         Delito %in% "extorsion" & tipo_detencion %in% "D)Flagrancia", 
+      #         "32%", figure
+      #       ),
+      #     figure =
+      #       if_else(
+      #         Delito %in% "armas" & tipo_detencion %in% "B)Orden de detención", 
+      #         "7%", figure
+      #       ),
+      #     figure =
+      #       if_else(
+      #         Delito %in% "robo-vehiculo" & tipo_detencion %in% "D)Flagrancia", 
+      #         "47%", figure
+      #       )
+      #   )
       
       colors4plot <- c("A)Inspeccion"         = "#3273ff",
                        "B)Orden de detención" = "#a90099",
@@ -246,11 +246,11 @@ detencion_alto_impacto.fn <- function(
                        x     = reorder(values, -order_var), 
                        y     = value2plot,
                        fill  = tipo_detencion,
-                       label = paste0(figure)
+                       label = paste0(figure, "\n"," N = ",Frequency)
                      )) +
         geom_bar(stat = "identity", width = 0.9, position = "stack")+
         geom_text(aes(y    = value2plot -.1,
-                      label = paste0(figure)), 
+                      label = paste0(figure, "\n"," N = ",Frequency)), 
                   position = position_stack(vjust = 0.5),
                   color    = "white",
                   family   = "Lato Full",
@@ -285,9 +285,9 @@ detencion_alto_impacto.fn <- function(
       
       
       ggsave(plot   = plot,
-             file   = paste0(path2SP,"/National/Visualization",
-                             "/Output/Politica criminal/",
-                             savePath,"/Delitos alto impacto/Figure2_2.svg"), 
+             file   = paste0(path2SP, "National/Graphic_reports", 
+                             "/Output/", savePath, "/Politica Criminal",
+                             "/Delitos alto impacto/Figure2_2.svg"), 
              width  = 189.7883, 
              height = 85,
              units  = "mm",
@@ -371,24 +371,7 @@ detencion_alto_impacto_pres.fn <- function(
                                  labels == "extorsion"       ~ 3,
                                  labels == "robo-autopartes" ~ 6,
                                  labels == "robo-vehiculo"   ~ 7,
-                                 T ~ NA_real_)) %>%
-    mutate(
-      figure = 
-        if_else(
-          Delito %in% "extorsion" & tipo_detencion %in% "C)Flagrancia", 
-          "32%", figure
-        ),
-      figure =
-        if_else(
-          Delito %in% "armas" & tipo_detencion %in% "D)Orden de detención", 
-          "7%", figure
-        ),
-      figure =
-        if_else(
-          Delito %in% "robo-vehiculo" & tipo_detencion %in% "C)Flagrancia", 
-          "47%", figure
-        )
-    )
+                                 T ~ NA_real_)) 
   
   colors4plot <- c("B)Inspeccion"         = "#3273ff",
                    "D)Orden de detención" = "#a90099",
@@ -400,11 +383,11 @@ detencion_alto_impacto_pres.fn <- function(
                    x     = reorder(values, -order_var), 
                    y     = value2plot,
                    fill  = tipo_detencion,
-                   label = paste0(figure)
+                   label = paste0(figure, "\n"," N = ",Frequency)
                  )) +
     geom_bar(stat = "identity", width = 0.9, position = "stack")+
     geom_text(aes(y    = value2plot -.1,
-                  label = paste0(figure)), 
+                  label = paste0(figure, "\n"," N = ",Frequency)), 
               position = position_stack(vjust = 0.5),
               color    = "white",
               family   = "Lato Full",
@@ -439,9 +422,9 @@ detencion_alto_impacto_pres.fn <- function(
   
   
   ggsave(plot   = plot,
-         file   = paste0(path2SP,"/National/Visualization",
-                         "/Output/Politica criminal/",
-                         savePath,"/Delitos alto impacto/Figure2_2.svg"), 
+         file   = paste0(path2SP, "National/Graphic_reports", 
+                         "/Output/", savePath, "/Politica Criminal",
+                         "/Delitos alto impacto/Figure2_2.svg"), 
          width  = 189.7883, 
          height = 85,
          units  = "mm",
@@ -531,11 +514,11 @@ terminacion_alto_impacto.fn <- function(
                        x     = reorder(values, -order_var), 
                        y     = value2plot,
                        fill  = tipo_terminacion,
-                       label = paste0(figure)
+                       label = paste0(figure, "\n"," N = ",Frequency)
                      )) +
         geom_bar(stat = "identity", width = 0.9, position = "stack")+
         geom_text(aes(y    = value2plot -.1,
-                      label = paste0(figure)), 
+                      label = paste0(figure, "\n"," N = ",Frequency)), 
                   position = position_stack(vjust = 0.5),
                   color    = "white",
                   family   = "Lato Full",
@@ -570,9 +553,9 @@ terminacion_alto_impacto.fn <- function(
       plot
       
       ggsave(plot   = plot,
-             file   = paste0(path2SP,"/National/Visualization",
-                             "/Output/Politica criminal/",
-                             savePath,"/Delitos alto impacto/Figure2_3.svg"), 
+             file   = paste0(path2SP, "National/Graphic_reports", 
+                             "/Output/", savePath, "/Politica Criminal",
+                             "/Delitos alto impacto/Figure2_3.svg"), 
              width  = 189.7883, 
              height = 85,
              units  = "mm",
@@ -699,7 +682,7 @@ tipo_prueba_da.fn <- function(){
   plot <- ggplot(data2plot,
                  aes(x    = reorder(labels, -order_values),
                      y     = value2plot,
-                     label = figure,
+                     label = paste0(figure, "\n"," N = ",Frequency),
                      fill  = category)) +
     geom_bar(stat = "identity",
              show.legend = FALSE, width = 0.9)+
@@ -732,9 +715,9 @@ tipo_prueba_da.fn <- function(){
           ));plot
   
   ggsave(plot = plot, 
-         filename = paste0(path2SP,"/National/Visualization",
-                           "/Output/Politica criminal/",
-                           savePath,"/Delitos alto impacto/",
+         filename = paste0(path2SP, "National/Graphic_reports", 
+                           "/Output/", savePath, "/Politica Criminal",
+                           "/Delitos alto impacto/",
                            "delitos_prueba.svg"),
          width = 189.7883,
          height = 189.7883,

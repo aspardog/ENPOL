@@ -105,9 +105,9 @@ señalados.fn <- function(
         legend.position = "none");plot
     
     ggsave(plot   = plot,
-           file   = paste0(path2SP,"/National/Visualization",
-                           "/Output/Politica criminal/",
-                           savePath,"/Señalamientos/Figure3_1.svg"), 
+           file   = paste0(path2SP, "National/Graphic_reports", 
+                           "/Output/", savePath, "/Politica Criminal",
+                           "/Señalamientos/Figure3_1.svg"), 
            width  = 189.7883, 
            height = 80,
            units  = "mm",
@@ -205,9 +205,9 @@ señalamientos_condiciones.fn <- function(
         coord_flip(); plt
       
       ggsave(plot   = plt,
-             file   = paste0(path2SP,"/National/Visualization",
-                             "/Output/Politica criminal/",
-                             savePath,"/Señalamientos/Figure3_2.svg"), 
+             file   = paste0(path2SP, "National/Graphic_reports", 
+                             "/Output/", savePath, "/Politica Criminal",
+                             "/Señalamientos/Figure3_2.svg"), 
              width  = 189.7883, 
              height = 80,
              units  = "mm",

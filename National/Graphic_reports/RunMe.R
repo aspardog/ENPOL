@@ -607,84 +607,84 @@ for (i in Estados) {
   
   print("Delincuencia prolífica y emergente  finalizado")
   
+  # 
+  # print("Distribución de competencias ")
+  # #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  # ####  
+  # #### Distribución de competencias                                                                     ----
+  # ####
+  # #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  # 
+  # dir.create(paste0(
+  #   path2SP,
+  #   "/National/Graphic_reports",
+  #   "/Output/", savePath, "/Politica Criminal","/Distribucion competencias")
+  # )
+  # 
+  # delitos_fuero         <- delitos_fuero.fn()
+  # delitos_federales     <- delitos_federales.fn()
+  # detenciones_federales <- detenciones_federales.fn()
+  # detenciones_estatales <- detenciones_estatales.fn()
+  # delitos_comun_porfederales_mapa <- delitos_comun_porfederales_mapa.fn()
+  # delitos_federales_bar <- delitos_federales_bar.fn()
+  # 
+  # indicador_list <- list(
+  #   
+  #   'Delitos_fuero'    = delitos_fuero,
+  #   'delitos_federales_bar' = delitos_federales_bar
+  #   
+  #   
+  #   
+  # )
+  # 
+  # openxlsx::write.xlsx(x = indicador_list,
+  #                      file = paste0(
+  #                        path2SP,
+  #                        "/National/Graphic_reports",
+  #                        "/Output/", savePath, "/Politica Criminal","/Distribucion competencias",
+  #                        "/Distribucion competencias.xlsx")
+  # )
+  # 
+  # print("Distribución de competencias finalizado") 
   
-  print("Distribución de competencias ")
-  #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  ####  
-  #### Distribución de competencias                                                                     ----
-  ####
-  #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   
-  dir.create(paste0(
-    path2SP,
-    "/National/Graphic_reports",
-    "/Output/", savePath, "/Politica Criminal","/Distribucion competencias")
-  )
-  
-  delitos_fuero         <- delitos_fuero.fn()
-  delitos_federales     <- delitos_federales.fn()
-  detenciones_federales <- detenciones_federales.fn()
-  detenciones_estatales <- detenciones_estatales.fn()
-  delitos_comun_porfederales_mapa <- delitos_comun_porfederales_mapa.fn()
-  delitos_federales_bar <- delitos_federales_bar.fn()
-  
-  indicador_list <- list(
-    
-    'Delitos_fuero'    = delitos_fuero,
-    'delitos_federales_bar' = delitos_federales_bar
-    
-    
-    
-  )
-  
-  openxlsx::write.xlsx(x = indicador_list,
-                       file = paste0(
-                         path2SP,
-                         "/National/Graphic_reports",
-                         "/Output/", savePath, "/Politica Criminal","/Distribucion competencias",
-                         "/Distribucion competencias.xlsx")
-  )
-  
-  print("Distribución de competencias finalizado") 
-  
-  
-  print("Estudio FGR")
-  #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  ####  
-  #### Estudio FGR                                                                     ----
-  ####
-  #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  
-  dir.create(paste0(
-    path2SP,
-    "/National/Graphic_reports",
-    "/Output/", savePath, "/Politica Criminal","/Estudio FGR")
-  )
-  
-  detenciones_FGR         <- detenciones_FGR.fn()
-  detencion_GN_PF         <- detencion_GN_PF.fn()
-  federales_sentenciados  <- federales_sentenciados.fn()
-  conclusion_federales    <- conclusion_federales.fn()
-  
-  indicador_list <- list(
-    
-    'Detenciones FGR'          = detenciones_FGR,
-    'Det_GN/PF_Ministerial'    = detencion_GN_PF,
-    'Delitos_fed_senten'       = federales_sentenciados,
-    'Conlusión_del_fed'        = conclusion_federales
-    
-    
-  )
-  
-  openxlsx::write.xlsx(x = indicador_list,
-                       file = paste0(
-                         path2SP,
-                         "/National/Graphic_reports",
-                         "/Output/", savePath, "/Politica Criminal","/Estudio FGR",
-                         "/Estudio FGR.xlsx")
-  )
-  
-  print("Estudio FGR finalizado") 
+  # print("Estudio FGR")
+  # #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  # ####  
+  # #### Estudio FGR                                                                     ----
+  # ####
+  # #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  # 
+  # dir.create(paste0(
+  #   path2SP,
+  #   "/National/Graphic_reports",
+  #   "/Output/", savePath, "/Politica Criminal","/Estudio FGR")
+  # )
+  # 
+  # detenciones_FGR         <- detenciones_FGR.fn()
+  # detencion_GN_PF         <- detencion_GN_PF.fn()
+  # federales_sentenciados  <- federales_sentenciados.fn()
+  # conclusion_federales    <- conclusion_federales.fn()
+  # 
+  # indicador_list <- list(
+  #   
+  #   'Detenciones FGR'          = detenciones_FGR,
+  #   'Det_GN/PF_Ministerial'    = detencion_GN_PF,
+  #   'Delitos_fed_senten'       = federales_sentenciados,
+  #   'Conlusión_del_fed'        = conclusion_federales
+  #   
+  #   
+  # )
+  # 
+  # openxlsx::write.xlsx(x = indicador_list,
+  #                      file = paste0(
+  #                        path2SP,
+  #                        "/National/Graphic_reports",
+  #                        "/Output/", savePath, "/Politica Criminal","/Estudio FGR",
+  #                        "/Estudio FGR.xlsx")
+  # )
+  # 
+  # print("Estudio FGR finalizado") 
   
   print("Detenciones")
   #### +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

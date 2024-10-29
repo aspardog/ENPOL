@@ -106,9 +106,9 @@ encontro_objeto.fn <- function(
       legend.position = "none");plot
   
   ggsave(plot   = plot,
-         file   = paste0(path2SP,"/National/Visualization",
-                         "/Output/Politica criminal/",
-                         savePath,"/Inspecciones/Figure3_1_3.svg"), 
+         file   = paste0(path2SP, "National/Graphic_reports", 
+                         "/Output/", savePath, "/Politica Criminal",
+                         "/Inspecciones/Figure3_1_3.svg"), 
          width  = 189.7883, 
          height = 80,
          units  = "mm",
@@ -201,9 +201,9 @@ inspecciones_comportamiento.fn <- function(
       coord_flip(); plt
     
     ggsave(plot   = plt,
-           file   = paste0(path2SP,"/National/Visualization",
-                           "/Output/Politica criminal/",
-                           savePath,"/Inspecciones/Figure3_1_4.svg"), 
+           file   = paste0(path2SP, "National/Graphic_reports", 
+                           "/Output/", savePath, "/Politica Criminal",
+                           "/Inspecciones/Figure3_1_4.svg"), 
            width  = 189.7883, 
            height = 80,
            units  = "mm",
@@ -301,9 +301,9 @@ inspecciones_objeto.fn <- function(
   
   # Save the plot
   ggsave(plot = plt,
-         file = paste0(path2SP,"/National/Visualization",
-                       "/Output/Politica criminal/",
-                       savePath,"/Inspecciones/Figure3_2.svg"), 
+         file = paste0(path2SP, "National/Graphic_reports", 
+                       "/Output/", savePath, "/Politica Criminal",
+                       "/Inspecciones/Figure3_2.svg"), 
          width = 189.7883, 
          height = 80,
          units = "mm",
