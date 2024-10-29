@@ -155,13 +155,13 @@ detenciones_estado.fn <- function(
         summarise(Frequency = n(), .groups = 'drop') %>% 
         drop_na() %>% 
         ungroup() %>%
-        rbind(data_subset.df %>%
-                ungroup() %>%
-                group_by(tipo_detencion) %>%
-                summarise(Frequency = n(), .groups = 'drop',
-                          Estado_arresto = "APromedio nacional")%>%
-                drop_na()
-        )  %>%
+         rbind(data_subset.df %>%
+                 ungroup() %>%
+                 group_by(tipo_detencion) %>%
+                 summarise(Frequency = n(), .groups = 'drop',
+                           Estado_arresto = "APromedio nacional")%>%
+                 drop_na()
+         )  %>%
         group_by(Estado_arresto) %>% 
         rename( values = Estado_arresto ) %>%
         arrange(desc(values)) %>%
@@ -188,18 +188,33 @@ detenciones_estado.fn <- function(
         ungroup() %>% 
         group_by(tipo_detencion) %>%
         mutate(order = row_number()) %>%
-        mutate(
-          values = 
-            if_else(values %in% "APromedio nacional", "Promedio nacional", values)
-        ) 
-      # %>%
-      # mutate(figure = case_when(order == 6 & tipo_detencion == "B)Orden de detención" ~ "27%",
-      #                             order == 13 & tipo_detencion == "D)Flagrancia" ~ "24%",
-      #                             order == 14 & tipo_detencion == "C)Irregulares" ~ "28%",
-      #                             order == 27 & tipo_detencion == "B)Orden de detención" ~ "22%",
-      #                             order == 31 & tipo_detencion == "D)Flagrancia" ~ "42%",
-      #                             order == 33 & tipo_detencion == "D)Flagrancia" ~ "35%",
-      #                             T ~ figure)) # redondeos
+         mutate(
+           values = 
+             if_else(values %in% "APromedio nacional", "Promedio nacional", values)
+         )  %>%
+       mutate(figure = case_when(order == 6 & tipo_detencion == "D)Orden de detención" ~ "27%",
+                                   order == 13 & tipo_detencion == "C)Flagrancia" ~ "24%",
+                                   order == 14 & tipo_detencion == "A)Irregulares" ~ "28%",
+                                   order == 27 & tipo_detencion == "D)Orden de detención" ~ "22%",
+                                   order == 31 & tipo_detencion == "C)Flagrancia" ~ "42%",
+                                   order == 33 & tipo_detencion == "C)Flagrancia" ~ "35%",
+                                   T ~ figure)) # redondeos
+    
+      
+      # sort <- data2plot %>%
+      #         filter(tipo_detencion == "D)Orden de detención") %>%
+      #         select(values, tipo_detencion, value2plot) %>%
+      #         arrange(value2plot)%>%
+      #         mutate(order2 = row_number()) %>%
+      #         ungroup() %>%
+      #         select(values, order2)
+      # 
+      # data2plot2 <- left_join(data2plot, sort, by = "values")
+      # 
+      #  openxlsx::write.xlsx(x = data2plot2,
+      #                       file = paste0(path2SP,"/National/Visualization",
+      #                                     "/Output/Politica criminal/",
+      #                                     savePath,"/Detenciones/detenciones_estados.xlsx"))
       
       
       colors4plot <- c("C)Flagrancia" = "#2a2a94" ,
@@ -209,8 +224,10 @@ detenciones_estado.fn <- function(
       
       
       plot <- ggplot(data2plot,
+                     # data2plot2,
                      aes(
                        x     = reorder(values, order), 
+                       # x     = reorder(values, order2), 
                        y     = value2plot,
                        fill  = tipo_detencion,
                        label = paste0(figure)
