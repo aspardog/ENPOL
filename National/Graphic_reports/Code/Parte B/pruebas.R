@@ -107,7 +107,7 @@ plot <- ggplot(data2plot,
                  x     = labels, 
                  y     = value2plot,
                 fill  = labels,
-                 label = figure
+                 label = paste0(figure, "\n"," N = ",Frequency)
                )) +
   geom_bar(stat = "identity",
            show.legend = FALSE, width = 0.9, position = "dodge")+
