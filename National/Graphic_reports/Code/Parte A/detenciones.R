@@ -34,7 +34,7 @@ detenciones_tiempo.fn <- function(
     filter(Anio_arresto > 2014)  %>%
     group_by(Anio_arresto) %>%
     mutate(
-      counter = 1
+      counter = !is.na(det_ninguna)
     ) %>%
     summarise(
       value2plot = mean(det_ninguna, na.rm = T),
@@ -43,7 +43,8 @@ detenciones_tiempo.fn <- function(
     mutate(value2plot = value2plot*100,
            label = paste0(format(round(value2plot, 0),
                                  nsmall = 0),
-                          "%"),
+                          "%, N = ", 
+                          n_obs),
            category = "detenciones_irregulares",
            year = as.numeric(Anio_arresto))
   
@@ -148,7 +149,10 @@ tiempo_traslado.fn <- function(
     mutate(
       value2plot = value2plot,
       labels = category,
-      figure = paste0(round(value2plot,0), "%"),
+      figure = paste0(format(round(value2plot, 0),
+                                     nsmall = 0),
+                              "%, N = ", 
+                              n_obs),
       order_var = 
         case_when(
           Tiempo_traslado %in% c("Menos de 2 horas", "Menos de 4 horas") ~ 1,
@@ -159,9 +163,7 @@ tiempo_traslado.fn <- function(
           Tiempo_traslado %in% c("Más de 48 horas hasta 72 horas") ~ 6,
           Tiempo_traslado %in% c("Más de 72 horas") ~ 7,
           T ~ NA_real_
-        ),
-      figure = case_when(Tiempo_traslado == "Más de 24 horas hasta 48 horas" ~ "5%",
-                         T~ figure)
+        )
     )
   
   colors4plot <- c("#2a2a9A", 
@@ -233,12 +235,13 @@ tiempos_traslado.fn <- function(
     ) %>%
     group_by(Anio_arresto, Tiempo_traslado) %>%
     summarise(
-      value2plot = sum(counter, na.rm = T)
+      value2plot = sum(counter, na.rm = T),
     ) %>%
     ungroup() %>%
     drop_na() %>%
     group_by(Anio_arresto) %>%
     mutate(
+      n_obs = sum(value2plot),
       value2plot = value2plot/sum(value2plot)
     ) %>%
     ungroup() %>%
@@ -247,7 +250,8 @@ tiempos_traslado.fn <- function(
     mutate(value2plot = value2plot*100,
            label = paste0(format(round(value2plot, 0),
                                  nsmall = 0),
-                          "%"),
+                          "%, N = ", 
+                          n_obs),
            category = Tiempo_traslado,
            year = as.numeric(Anio_arresto)) %>%
     mutate(label = if_else(category == "Menos de 4 horas" | category == "Más de 4 horas", 
@@ -345,7 +349,10 @@ lugar_traslado.fn <- function(
     mutate(
       value2plot = value2plot,
       labels = category,
-      figure = paste0(round(value2plot,0), "%"),
+      figure = paste0(format(round(value2plot, 0),
+                                   nsmall = 0),
+                            "%, N = ", 
+                            n_obs),
       order_var = row_number()
     )
   
@@ -417,16 +424,20 @@ lugar_traslado_nueva.fn <- function(
                           P3_19 == "12" ~ 0,
                           P3_19 == "13" ~ 0,
                           P3_19 == "14" ~ 0,
-                          T ~ NA_real_)
+                          T ~ NA_real_),
+           counter = !is.na(det_ninguna)
     ) %>%
     group_by(Anio_arresto) %>%
     summarize(MP = mean(MP, na.rm = T),
-              PO = mean(PO, na.rm = T)) %>% 
-    pivot_longer(cols = -c("Anio_arresto"), names_to = "cat" , values_to = "value2plot" ) %>%
+              PO = mean(PO, na.rm = T),
+              n_obs = sum(counter, na.rm = T),
+              ) %>% 
+    pivot_longer(cols = -c("Anio_arresto", "n_obs"), names_to = "cat" , values_to = "value2plot" ) %>%
     mutate(value2plot = value2plot*100,
            label = paste0(format(round(value2plot, 0),
                                  nsmall = 0),
-                          "%"),
+                          "%, N = ", 
+                          n_obs),
            category = case_when(cat == "MP" ~ "Agencia del Ministerio Público",
                                 cat == "PO" ~ "Instalación de la policía"),
            year = as.numeric(Anio_arresto)) %>%

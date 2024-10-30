@@ -48,7 +48,7 @@ corrupcion_tiempo.fn <- function(
     pivot_longer(cols = c(detencion_corrupcion, mp_corrupcion, juzgado_corrupcion), 
                  names_to = "group_var", values_to = "value2plot"
     ) %>%
-    mutate(counter = 1) %>%
+    mutate(counter = !is.na(value2plot)) %>%
     group_by(Anio_arresto, group_var) %>%
     summarise(
       value2plot = mean(value2plot, na.rm = T),
@@ -59,7 +59,8 @@ corrupcion_tiempo.fn <- function(
     mutate(value2plot = value2plot*100,
            label = paste0(format(round(value2plot, 0),
                                  nsmall = 0),
-                          "%"),
+                          "%, N = ", 
+                          n_obs),
            category = group_var,
            year = as.numeric(Anio_arresto))  %>% 
     ungroup()
@@ -178,7 +179,7 @@ corrupcion_elementos.fn <- function(
     pivot_longer(cols = everything(), 
                  names_to = "group_var", 
                  values_to = "value2plot") %>%
-    mutate(counter = 1) %>%
+    mutate(counter = counter = !is.na(value2plot)) %>%
     group_by(group_var) %>%
     summarise(
       value2plot = mean(value2plot, na.rm = T),
@@ -188,7 +189,9 @@ corrupcion_elementos.fn <- function(
   data2plot <- data_subset.df %>%
     mutate(
       value2plot = value2plot*100,
-      figure   = paste0(round(value2plot,0),"%"),
+      figure   = paste0(round(value2plot,0),
+                        "%, N = ", 
+                        n_obs),
       category =
         case_when(
           grepl("mp", group_var) ~ "Ministerio Público",

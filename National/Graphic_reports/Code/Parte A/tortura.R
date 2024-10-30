@@ -32,7 +32,7 @@ tortura_tiempo.fn <- function(
   
   data_subset.df <- master_data.df %>%
     filter(Anio_arresto > 2014)  %>%
-    mutate(counter = 1) %>%
+    mutate(counter = !is.na(tortura_generalizada)) %>%
     group_by(Anio_arresto) %>%
     summarise(
       value2plot = mean(tortura_generalizada, na.rm = T),
@@ -41,7 +41,7 @@ tortura_tiempo.fn <- function(
     mutate(value2plot = value2plot*100,
            label = paste0(format(round(value2plot, 0),
                                  nsmall = 0),
-                          "%"),
+                          "%, N =", n_obs),
            category = "tortura",
            year = as.numeric(Anio_arresto))
   
@@ -141,29 +141,40 @@ tortura_RND.fn <- function(
           tortura_fisica == 1 & tortura_psicologica == 1 ~ 1,
           tortura_fisica == 0 | tortura_psicologica == 0 ~ 0,
           T ~ NA_real_
-        )
+        ),
+      counter_a = !is.na(tortura_ambas),
+      counter_f = !is.na(tortura_fisica),
+      counter_p = !is.na(tortura_psicologica)
+      
     ) %>%
     select(!tortura_tra_p) %>%
     select(!tortura_tra_f) %>%
     select(!tortura_mp_f) %>%
     select(!tortura_mp_p) %>%
-    pivot_longer(cols = !group_var, 
+    pivot_longer(cols = !c("group_var","counter_a","counter_f","counter_p"), 
                  names_to = "category", 
                  values_to = "value2plot") %>%
     group_by(category, group_var) %>%
-    summarise(value2plot = mean(value2plot, na.rm = T)*100) %>%
+    summarise(value2plot = mean(value2plot, na.rm = T)*100,
+              n_obs_a = sum (counter_a, na.rm = T),
+              n_obs_f = sum (counter_f, na.rm = T),
+              n_obs_p = sum (counter_p, na.rm = T),
+              ) %>%
     drop_na()
   
   data2plot <- data_subset.df %>%
     mutate(
       value2plot = round(value2plot, 0),
+      n_obs= case_when(category == "tortura_fisica" ~ n_obs_f,
+                       category == "tortura_psicologica" ~ n_obs_p,
+                       category == "tortura_ambas" ~ n_obs_a),
       labels = 
         case_when(
           category == "tortura_fisica" ~ "Tortura <br>física",
           category == "tortura_psicologica" ~ "Tortura <br>psicológica",
           category == "tortura_ambas" ~ "Ambas"
         ),
-      figure = paste0(value2plot, "%"),
+      figure = paste0(round(value2plot, 0),", N = ", n_obs),
       order_var = case_when(
         labels == "Ambas" ~ 3,
         labels == "Tortura física" ~ 2,
@@ -233,10 +244,12 @@ tortura_tipo.fn <- function(
       group_var = 
         if_else(
           grepl("tra_", category), 
-          "Traslado", "MP")
+          "Traslado", "MP"),
+      counter = !is.na(value2plot)
     ) %>%
     group_by(category, group_var) %>%
-    summarise(value2plot = mean(value2plot, na.rm = T)*100) 
+    summarise(value2plot = mean(value2plot, na.rm = T)*100,
+              n_obs = sum(counter, na.rm = T)) 
   
   
   data2plot <- data_subset.df %>%
@@ -246,7 +259,7 @@ tortura_tipo.fn <- function(
           category == "tortura_tra_f" | category == "tortura_mp_f" ~"Tortura física",
           category == "tortura_tra_p" | category == "tortura_mp_p" ~"Tortura psicológica",
           T ~ NA_character_),
-      figure = paste0(round(value2plot,0), "%"),
+      figure = paste0(round(value2plot,0), "%, N ",n_obs),
       order_var = case_when(
         labels == "Tortura física" ~ 2,
         labels =="Tortura psicológica" ~ 1,
@@ -317,7 +330,7 @@ tortura_psicologica.fn <- function(
           grepl("P3_17_", category), 
           "Traslado", "MP")
     ) %>%
-    mutate(counter = 1) %>%
+    mutate(counter = !is.na(value2plot)) %>%
     group_by(category, group_var) %>%
     summarise(value2plot = mean(value2plot, na.rm = T),
               n_obs = sum(counter, na.rm = T)) %>%
@@ -378,12 +391,12 @@ tortura_psicologica.fn <- function(
     rename(year = group_var) %>%
     mutate(
       figure1 =
-        if_else(year == "MP", paste0(round(value2plot*100,0), "%"),  NA_character_)
+        if_else(year == "MP", paste0(round(value2plot*100,0), "%, N =", n_obs),  NA_character_)
       )
   
   figure2.df <- data2plot %>% 
     mutate(
-      figure2 = if_else(year == "Traslado", paste0(round(value2plot*100,0), "%"),  NA_character_)
+      figure2 = if_else(year == "Traslado", paste0(round(value2plot*100,0),  "%, N =", n_obs),  NA_character_)
     ) %>%
     drop_na(figure2) %>%
     select(labels, figure2)
@@ -465,7 +478,7 @@ tortura_fisica.fn <- function(
         if_else(
           grepl("P3_18_", category), 
           "Traslado", "MP"),
-      counter = 1
+      counter = !is.na(value2plot)
     ) %>%
     group_by(category, group_var) %>%
     summarise(value2plot = mean(value2plot, na.rm = T),
@@ -538,12 +551,12 @@ tortura_fisica.fn <- function(
     rename(year = group_var) %>%
     mutate(
       figure1 =
-        if_else(year == "MP", paste0(round(value2plot*100,0), "%"),  NA_character_)
+        if_else(year == "MP", paste0(round(value2plot*100,0), "%, N = ", n_obs),  NA_character_)
     )
   
   figure2.df <- data2plot %>% 
     mutate(
-      figure2 = if_else(year == "Traslado", paste0(round(value2plot*100,0), "%"),  NA_character_)
+      figure2 = if_else(year == "Traslado", paste0(round(value2plot*100,0), "%, N = ", n_obs),  NA_character_)
     ) %>%
     drop_na(figure2) %>%
     select(labels, figure2)

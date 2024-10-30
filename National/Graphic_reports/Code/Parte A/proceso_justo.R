@@ -51,16 +51,13 @@ guardar_silencio.fn <- function(
       detencion = mean(guardar_silencio_detencion, na.rm = T),
       mp        = mean(guardar_silencio_mp, na.rm = T),
       juez      = mean(guardar_silencio_juez, na.rm = T),
-      nobs_detencion      = sum(guardar_silencio_detencion, na.rm = T),
-      nobs_mp             = sum(guardar_silencio_mp, na.rm = T),
-      nobs_juez           = sum(guardar_silencio_juez, na.rm = T)
+      nobs_detencion      = sum(!is.na(guardar_silencio_detencion), na.rm = T),
+      nobs_mp             = sum(!is.na(guardar_silencio_mp), na.rm = T),
+      nobs_juez           = sum(!is.na(guardar_silencio_juez), na.rm = T)
     ) %>%
     pivot_longer(cols = c(detencion, mp, juez), 
                  names_to = "category", values_to = "value2plot") %>%
     mutate(value2plot = value2plot*100,
-           label = paste0(format(round(value2plot, 0),
-                                 nsmall = 0),
-                          "%"),
            year  = as.numeric(Anio_arresto),
            n_obs = if_else(
              category == "detencion", nobs_detencion,
@@ -70,8 +67,11 @@ guardar_silencio.fn <- function(
                  category == "juez", nobs_juez, NA_real_
                )
              )
-           )) %>%
-    select(!starts_with("nobs_"))
+           ),
+           label = paste0(format(round(value2plot, 0),
+                                 nsmall = 0),
+                          "%, N =", n_obs)) %>%
+    select(!starts_with("nobs_")) 
   
   # Pulling minimum and maximum available year
   minyear <- 2015
@@ -156,13 +156,18 @@ informacion_detencion.fn <- function(
       detencion = mean(explicacion_detencion, na.rm = T),
       mp = mean(explicacion_mp, na.rm = T),
       juez = mean(explicacion_juez, na.rm = T),
-      n_obs      = sum(counter, na.rm = T)
+      n_obs_d      = sum(is.na(explicacion_detencion), na.rm = T),
+      n_obs_m      = sum(is.na(explicacion_mp), na.rm = T),
+      n_obs_j      = sum(is.na(explicacion_juez), na.rm = T)
     ) %>%
     pivot_longer(cols = c(detencion, mp, juez), names_to = "category", values_to = "value2plot") %>%
     mutate(value2plot = value2plot*100,
+           n_obs = case_when(category == "detencion" ~ n_obs_d,
+                             category == "mp" ~ n_obs_m,
+                             category == "juez" ~ n_obs_j),
            label = paste0(format(round(value2plot, 0),
                                  nsmall = 0),
-                          "%"),
+                          "%, N =",n_obs),
            year = as.numeric(Anio_arresto)
            ) 
            
@@ -257,13 +262,20 @@ claridad_actores.fn <- function(
       juez      = mean(claridad_juez, na.rm = T),
       defensor  = mean(claridad_defensor, na.rm = T),
       defendido = mean(claridad_defendido, na.rm = T),
-      n_obs      = sum(counter, na.rm = T)
+      n_obs_m      = sum(is.na(claridad_mp), na.rm = T),
+      n_obs_j      = sum(is.na(claridad_juez), na.rm = T),
+      n_obs_d1      = sum(is.na(claridad_defensor), na.rm = T),
+      n_obs_d2      = sum(is.na(claridad_defendido), na.rm = T)
     ) %>%
     pivot_longer(cols = c(mp, juez, defensor, defendido), names_to = "category", values_to = "value2plot") %>%
     mutate(value2plot = value2plot*100,
+           n_obs = case_when(category == "defensor" ~ n_obs_d1,
+                             category == "defendido" ~ n_obs_d2,
+                             category == "mp" ~ n_obs_m,
+                             category == "juez" ~ n_obs_j),
            label = paste0(format(round(value2plot, 0),
                                  nsmall = 0),
-                          "%"),
+                          "%, N =", n_obs),
            year = as.numeric(Anio_arresto))
   
   # Pulling minimum and maximum available year
@@ -346,11 +358,13 @@ defensa_oportuna.fn <- function(
   b1151 <- data_subset.df %>%
     group_by(DOMP) %>%
     filter(!is.na(DOMP)) %>%
-    summarize(value2plot = mean(Años, na.rm = T)) 
+    summarize(value2plot = mean(Años, na.rm = T),
+              n_obs = sum(!is.na(Años), na.rm = T)) 
   b1152 <- data_subset.df %>%
     group_by(DOJ) %>%
     filter(!is.na(DOJ)) %>%
-    summarize(value2plot = mean(Años, na.rm = T))
+    summarize(value2plot = mean(Años, na.rm = T),
+              n_obs = sum(!is.na(Años), na.rm = T))
   data2plot <- bind_rows(b1151, b1152) %>%
     mutate(
       category = case_when(DOJ == 1 ~ "Defensa con Juez",
@@ -362,7 +376,7 @@ defensa_oportuna.fn <- function(
                             DOMP == 1 ~ "Sí",
                             DOMP == 0 ~ "No"),
       labels = category,
-      figure = round(value2plot, 0),
+      figure = paste0(round(value2plot, 0), ", N =", n_obs),
       order_var = case_when(category ==  "Defensa en Ministerio Público" ~ 2,
                             category == "Defensa con Juez"               ~ 1,
                             T~NA_real_),
@@ -447,7 +461,7 @@ tipo_defensa.fn <- function(
   
   data2plot <- data_subset.df %>%
     drop_na(defensa_momento, abogado_publico, tiempo_sentencia) %>%
-    mutate(counter = 1) %>%
+    mutate(counter = !is.na(tiempo_sentencia)) %>%
     group_by(defensa_momento, abogado_publico) %>%
     summarise(mean_value = mean(tiempo_sentencia, na.rm = TRUE),
               n_obs = sum(counter, na.rm = TRUE)) %>%
@@ -461,7 +475,7 @@ tipo_defensa.fn <- function(
                               category ==  "Sin defensa en MP y con asesoría previa a la audiencia inicial"                        ~ "Sin defensa en MP <br>y con asesoría previa a <br>la audiencia inicial",
                               category == "Con defensa en MP y sin asesoría previa a la audiencia inicial"            ~ "Con defensa en MP <br>y sin asesoría previa a <br>la audiencia inicial",
                               T~NA_character_),
-           figure = round(mean_value, 0),
+           figure = paste0(round(mean_value, 0),", N =", n_obs),
            order_var = case_when(category == "Defensa en Ministerio Público y con Juez"      ~ 3,
                                  category == "Sin defensa en Ministerio Público ni con Juez" ~ 4,
                                  category ==  "Defensa sólo con Juez"                        ~ 2,
@@ -538,19 +552,23 @@ tribunal_transparente.fn <- function(
           P5_16_5 == 1 | P5_16_5 == 2 | P5_16_5 == 3 ~ 1,
           P5_16_5 == 4 ~ 0
         ),
-      counter = 1
+      counter_v = !is.na(video),
+      counter_p = !is.na(publico),
     ) %>%
     group_by(Anio_arresto) %>%
     summarise(
       video = mean(video, na.rm = T),
       publico = mean(publico, na.rm = T),
-      n_obs = sum(counter, na.rm = T)
+      n_obs_v = sum(counter_v, na.rm = T),
+      n_obs_p = sum(counter_p, na.rm = T)
     ) %>%
     pivot_longer(cols = c(video, publico), names_to = "category", values_to = "value2plot") %>%
     mutate(value2plot = value2plot*100,
+           n_obs = case_when(category == "video" ~ n_obs_v,
+                             category == "publico" ~ n_obs_p),
            label = paste0(format(round(value2plot, 0),
                                  nsmall = 0),
-                          "%"),
+                          "%, N =",n_obs),
            year = as.numeric(Anio_arresto))
   
   # Pulling minimum and maximum available year
@@ -633,19 +651,23 @@ tribunal_imparcial.fn <- function(
           P5_14 == 2 & procedimiento != "Procedimiento abreviado" ~ 0,
           T ~ NA_real_
         ),
-      counter = 1
+      counter_c = !is.na(culpable_antes),
+      counter_j = !is.na(juez_diferente)
     ) %>%
     group_by(Anio_arresto) %>%
     summarise(
       culpable = mean(culpable_antes, na.rm = T),
       juez = mean(juez_diferente, na.rm = T),
-      n_obs = sum(counter, na.rm = T)
+      n_obs_c = sum(counter_c, na.rm = T),
+      n_obs_j = sum(counter_j, na.rm = T)
     ) %>%
     pivot_longer(cols = c(culpable, juez), names_to = "category", values_to = "value2plot") %>%
     mutate(value2plot = value2plot*100,
+           n_obs = case_when(category == "culpable" ~ n_obs_c,
+                             category == "juez" ~ n_obs_j),
            label = paste0(format(round(value2plot, 0),
                                  nsmall = 0),
-                          "%"),
+                          "%, N =",n_obs),
            year = as.numeric(Anio_arresto))
   
   # Pulling minimum and maximum available year
@@ -722,19 +744,23 @@ tribunal_presente.fn <- function(
           P5_18 == 2 ~ 1,
           P5_18 == 1 | P5_18 == 3 | P5_18 == 4 | P5_18 == 5 ~ 0
         ),
-      counter = 1
+      counter_p = !is.na(juez_presente),
+      counter_c = !is.na(juez_control)
     ) %>%
     group_by(Anio_arresto) %>%
     summarise(
       juez_presente = mean(juez_presente, na.rm = T),
       juez_control = mean(juez_control, na.rm = T),
-      n_obs = sum(counter, na.rm = T)
+      n_obs_p = sum(counter_p, na.rm = T),
+      n_obs_c = sum(counter_c, na.rm = T)
     ) %>%
     pivot_longer(cols = c(juez_presente, juez_control), names_to = "category", values_to = "value2plot") %>%
     mutate(value2plot = value2plot*100,
+           n_obs = case_when(category == "juez_presente" ~ n_obs_p,
+                             category == "juez_control" ~ n_obs_c),
            label = paste0(format(round(value2plot, 0),
                                  nsmall = 0),
-                          "%"),
+                          "%, N =",n_obs),
            year = as.numeric(Anio_arresto))
   
   # Pulling minimum and maximum available year
@@ -824,26 +850,28 @@ tiempo_condena.fn <- function(
         case_when(
           P5_10 == 7 ~ 1,
           P5_10 == 1  | P5_10 == 2 | P5_10 == 3 | P5_10 == 4 | P5_10 == 5 | P5_10 == 6 ~ 0
-        )
+        ),
+      counter = !is.na(P5_10)
     ) %>%
     summarise(
       `Menos de seis meses`       = mean(rapida, na.rm = T),
       `Entre seis meses y un año` = mean(corta, na.rm = T),
       `Entre uno y dos años`      = mean(media, na.rm = T),
-      `Más de dos años`           = mean(larga, na.rm = T)
+      `Más de dos años`           = mean(larga, na.rm = T),
+      n_obs = sum(counter, na.rm = T)
     ) %>%
     pivot_longer(cols = c(`Menos de seis meses`, `Entre seis meses y un año`, `Entre uno y dos años`, `Más de dos años`), 
                  names_to = "category", values_to = "value2plot") %>%
     mutate(value2plot = value2plot*100,
            label = paste0(format(round(value2plot, 0),
                                  nsmall = 0),
-                          "%"))
+                          "%, N = ", n_obs))
   
   data2plot <- data_subset.df %>%
     mutate(
       value2plot = value2plot,
       labels = category,
-      figure = paste0(round(value2plot,0), "%"),
+      figure = paste0(round(value2plot,0), "%, N =", n_obs),
       order_var = case_when(
         labels == "Menos de seis meses" ~ 4,
         labels == "Entre seis meses y un año" ~ 3,

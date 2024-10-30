@@ -57,7 +57,7 @@ pp_proporcion.fn <- function(
     mutate(
       value2plot = value2plot*100,
       labels = prision_preventiva,
-      figure = paste0(round(value2plot,0), "%"),
+      figure = paste0(round(value2plot,0), "%, N =", n_obs),
       order_var = case_when(
         labels == "En prisión preventiva" ~ 2,
         labels =="En libertad" ~ 1,
@@ -124,17 +124,19 @@ pp_tiempo_total.fn <- function(
                            P5_10 == "6" ~ 0,
                            P5_10 == "7" ~ 1,
                            T ~ NA_real_),
-           Stat="Nacional"
+           Stat="Nacional",
+           counter = !is.na(P5_10)
     ) %>%
     group_by(Stat) %>%
     summarize(menos2 = mean(menos2, na.rm = T),
-              mas2 = mean(mas2, na.rm = T))  %>% 
-    pivot_longer( cols = -c("Stat"), names_to = "var", values_to = "value2plot") %>%
+              mas2 = mean(mas2, na.rm = T),
+              n_obs = (sum(counter, na.rm = T)))  %>% 
+    pivot_longer( cols = -c("Stat", "n_obs"), names_to = "var", values_to = "value2plot") %>%
     mutate(
       value2plot = value2plot*100,
       labels = case_when(var == "menos2" ~ "Menos de 2 años",
                          var == "mas2" ~ "Más de 2 años"),
-      figure = paste0(round(value2plot,0), "%"),
+      figure = paste0(round(value2plot,0), "%, N =", n_obs),
       order_var = case_when(
         labels == "Más de 2 años" ~ 1,
         labels == "Menos de 2 años" ~ 2,
@@ -188,14 +190,16 @@ pp_tiempo.fn <- function(
     ungroup() %>%
     group_by(Anio_arresto, tipo_prision_preventiva) %>%
     summarise(
-      value2plot = sum(counter, na.rm = T)/n_obs
+      value2plot = sum(counter, na.rm = T)/n_obs,
+      n_obs = n_obs
     ) %>%
     drop_na() %>%
     distinct() %>%
     mutate(value2plot = value2plot*100,
            label = paste0(format(round(value2plot, 0),
                                  nsmall = 0),
-                          "%"),
+                          "%, N =",
+                          n_obs),
            category = tipo_prision_preventiva,
            year = as.numeric(Anio_arresto)) %>%
     mutate(label = if_else(category == "Prisión Preventiva Oficiosa" | category == "Prisión Preventiva Justificada", 
@@ -276,8 +280,9 @@ pp_tipo.fn <- function(
     summarise(Frequency = n()) %>% 
     mutate(Value = Value,
            values = Frequency/sum(Frequency),
+           n_obs = sum(Frequency),
            value2plot = values * 100,
-           figure = paste0(round(value2plot, 0), "%"),
+           figure = paste0(round(value2plot, 0), "%, N =", n_obs),
            labels = case_when(Value == "Prisión Preventiva Justificada" ~ "Prisión Preventiva \nJustificada",
                               Value == "Prisión Preventiva Oficiosa" ~ "Prisión Preventiva \nOficiosa", 
                               Value == "Proceso en libertad" ~ "Proceso en libertad", 
@@ -350,9 +355,10 @@ ppo_defensa.fn <- function(
   
   data2plot <- data_subset.df %>%
     mutate(
+      n_obs = sum(frequency),
       value2plot = frequency/sum(frequency),
       value2plot = value2plot*100,
-      figure = paste0(round(value2plot, 0), "%"),
+      figure = paste0(round(value2plot, 0), "%, N =", n_obs),
       labels = 
         case_when(
           defensa_juez %in% "Abogado juez" & defensa_mp %in% "Abogado MP" ~ "Defensa en el ministerio público<br>y en el juzgado",
@@ -442,7 +448,7 @@ sentencias.fn <- function(
     mutate(
       value2plot = value2plot*100,
       labels = tiempo_sentencia_cat,
-      figure = paste0(round(value2plot,0), "%"),
+      figure = paste0(round(value2plot,0), "%, N =", n_obs),
       order_var = 
         case_when(
           labels == "De 0 a 5 años" ~ 1,
@@ -453,9 +459,7 @@ sentencias.fn <- function(
           labels == "De 25 a 30 años" ~ 6,
           labels == "Más de 30 años" ~ 7
         )
-    ) %>%
-    mutate(figure = case_when(order_var == 1 ~ "32%",
-                              T ~ figure)) # redondeos
+    )
   
   colors4plot <- c(rep(mainColor,7))
   

@@ -51,7 +51,7 @@ proceso_justo.fn <- function(
       n_obs = sum(value2plot),
       value2plot = value2plot / n_obs,
       value2plot = value2plot*100,
-      figure = paste0(round(value2plot, 0), "%"),
+      figure = paste0(round(value2plot, 0), "%, N = ", n_obs),
       order_var = case_when(
         proceso_justo == "Proceso injusto" ~ 1,
         proceso_justo =="Proceso justo" ~ 2,
@@ -105,7 +105,11 @@ percepcion_indicadores.fn <- function(
           as.numeric(P5_26A) == 1 ~ 1,
           as.numeric(P5_26A) == 0 ~ 0,
           T ~ NA_real_
-        )
+        ),
+      counter_I13 = !is.na(indicator_general),
+      counter_gdh = !is.na(indicator_GDH),
+      counter_uaa = !is.na(indicator_UAA),
+      counter_pj = !is.na(indicator_PJ),
     ) 
   
   data2table <- data_subset.df %>%
@@ -114,7 +118,11 @@ percepcion_indicadores.fn <- function(
       `Índice 13 criterios mínimos` = mean(indicator_general, na.rm = T),
       `Sub-Índice de protección de derechos humanos` = mean(indicator_GDH, na.rm = T),
       `Sub-Índice de uso no arbitrario de la autoridad` = mean(indicator_UAA, na.rm = T),
-      `Sub-Índice de proceso justo` = mean(indicator_PJ, na.rm = T)
+      `Sub-Índice de proceso justo` = mean(indicator_PJ, na.rm = T),
+      n_obs_I13 = sum(counter_I13, na.rm = T),
+      n_obs_gdh = sum(counter_gdh, na.rm = T),
+      n_obs_uaa = sum(counter_uaa, na.rm = T),
+      n_obs_pj = sum(counter_pj, na.rm = T),
     ) %>% 
     drop_na() %>%
     mutate(
@@ -124,9 +132,13 @@ percepcion_indicadores.fn <- function(
           proceso_justo == 0 ~ "Proceso injusto"
         )
     ) %>%
-    pivot_longer(cols = !proceso_justo, names_to = "category", values_to = "value2plot") %>%
+    pivot_longer(cols = !c("proceso_justo", "n_obs_I13", "n_obs_gdh", "n_obs_uaa", "n_obs_pj"), names_to = "category", values_to = "value2plot") %>%
     rbind(data.frame(category = c("— — — — — — — — — — — — — — — — — — — — — —", 
                                   "— — — — — — — — — — — — — — — — — — — — — —"),
+                     n_obs_I13 = NA,
+                     n_obs_gdh = NA,
+                     n_obs_uaa = NA,
+                     n_obs_pj = NA,
                      value2plot = c(NA_real_, NA_real_),
                      proceso_justo = c("Proceso justo", "Proceso injusto"))
     ) %>%
@@ -138,7 +150,11 @@ percepcion_indicadores.fn <- function(
           category == "Sub-Índice de protección de derechos humanos" ~ 5,
           category == "Sub-Índice de proceso justo" ~ 3,
           category == "— — — — — — — — — — — — — — — — — — — — — —" ~ 2
-        )
+        ),
+      n_obs = case_when(order_value ==  1 ~ n_obs_I13,
+                        order_value ==  5 ~ n_obs_gdh,
+                        order_value ==  4 ~ n_obs_uaa,
+                        order_value ==  3 ~ n_obs_pj)
     )
   
   justo.df <- data2table %>%
@@ -164,7 +180,7 @@ percepcion_indicadores.fn <- function(
     geom_hline(yintercept = 4, linetype = "longdash", color = "black", size = 0.25) +
     geom_point(aes(x = value2plot, y = category, color = proceso_justo), size = 4, show.legend = F)  +
     geom_text(aes(x = value2plot, y = category, 
-                  label = paste0(round(value2plot*100,0),"%"), 
+                  label = paste0(round(value2plot*100,0),"%, N = ", n_obs), 
                   family = "Lato Full", fontface = "bold"), 
               size= 3.514598, color = "black", vjust = -1) +
     coord_cartesian(clip = "off") +
@@ -233,7 +249,7 @@ procedimiento.fn <- function(
       n_obs = sum(value2plot),
       value2plot = value2plot / n_obs,
       value2plot = value2plot*100,
-      figure = paste0(round(value2plot, 0), "%"),
+      figure = paste0(round(value2plot, 0), "%, N = ", n_obs),
       order_var = case_when(
         procedimiento == "Proceso injusto" ~ 1,
         procedimiento =="Proceso justo" ~ 2,
@@ -295,7 +311,7 @@ percepcion_procedimiento.fn <- function(
           as.numeric(P5_6) == 2 ~ "Procedimiento abreviado",
           T ~ NA_character_
         ),
-      counter = 1
+      counter = !is.na(proceso_justo)
     ) %>%
     group_by(procedimiento) %>%
     summarise(
@@ -308,7 +324,7 @@ percepcion_procedimiento.fn <- function(
     mutate(
       value2plot = value2plot*100,
       labels = procedimiento,
-      figure = paste0(round(value2plot,0), "%"),
+      figure = paste0(round(value2plot,0), "%, N = ",n_obs),
       order_var = case_when(
         labels == "Juicio" ~ 2,
         labels =="Procedimiento abreviado" ~ 1,
@@ -372,7 +388,7 @@ culpabilidad.fn <- function(
       n_obs = sum(value2plot),
       value2plot = value2plot / n_obs,
       value2plot = value2plot*100,
-      figure = paste0(round(value2plot, 0), "%"),
+      figure = paste0(round(value2plot, 0), "%, N =", n_obs),
       order_var = case_when(
         culpabilidad == "Autoidentificación como culpable" ~ 1,
         culpabilidad =="Autoidentificación como inocente" ~ 2,
@@ -433,7 +449,7 @@ percepcion_culpabilidad.fn <- function(
           as.numeric(P3_1) == 3 | as.numeric(P3_1) == 4 ~ "Autoidentificación como inocente",
           T ~ NA_character_
         ),
-      counter = 1
+      counter = !is.na(proceso_justo)
     ) %>%
     group_by(culpabilidad) %>%
     summarise(
@@ -446,7 +462,7 @@ percepcion_culpabilidad.fn <- function(
     mutate(
       value2plot = value2plot*100,
       labels = culpabilidad,
-      figure = paste0(round(value2plot,0), "%"),
+      figure = paste0(round(value2plot,0), "%, N =", n_obs),
       order_var = case_when(
         labels == "Autoidentificación como culpable" ~ 1,
         labels == "Autoidentificación como inocente" ~ 2,
@@ -510,7 +526,7 @@ escucha.fn <- function(
       n_obs = sum(value2plot),
       value2plot = value2plot / n_obs,
       value2plot = value2plot*100,
-      figure = paste0(round(value2plot, 0), "%"),
+      figure = paste0(round(value2plot, 0), "%, N =", n_obs),
       order_var = case_when(
         escucha == "No se sintió escuchado" ~ 1,
         escucha =="Se sintió escuchado" ~ 2,
@@ -571,7 +587,7 @@ percepcion_escucha.fn <- function(
           as.numeric(escuchado_x_juez) == 0 ~ "No se sintió escuchado",
           T ~ NA_character_
         ),
-      counter = 1
+      counter = !is.na(proceso_justo)
     ) %>%
     group_by(escucha) %>%
     summarise(
@@ -584,7 +600,7 @@ percepcion_escucha.fn <- function(
     mutate(
       value2plot = value2plot*100,
       labels = escucha,
-      figure = paste0(round(value2plot,0), "%"),
+      figure = paste0(round(value2plot,0), "%, N =", n_obs),
       order_var = case_when(
         labels == "No se sintió escuchado" ~ 1,
         labels == "Se sintió escuchado" ~ 2,
@@ -640,7 +656,7 @@ percepcion_resumen.fn <- function(
           as.numeric(escuchado_x_juez) == 0 ~ "No se sintió <br>escuchado",
           T ~ NA_character_
         ),
-      counter = 1,
+      counter = !is.na(proceso_justo),
       culpabilidad = 
         case_when(
           as.numeric(P3_1) == 1 | as.numeric(P3_1) == 2 ~ "Autoidentificación <br>como culpable",
@@ -664,12 +680,13 @@ percepcion_resumen.fn <- function(
       rename(category = all_of(var)) %>%
       group_by(category) %>%
       summarise(
-        value2plot = mean(proceso_justo, na.rm = TRUE)
+        value2plot = mean(proceso_justo, na.rm = TRUE),
+        n_obs = sum(counter,na.rm = T)
       ) %>%
       drop_na() %>%
       mutate(
         group = as.character(var),
-        figure = paste0(round(value2plot*100, 0), "%")
+        figure = paste0(round(value2plot*100, 0), "%, N =", n_obs)
       )
     
   })

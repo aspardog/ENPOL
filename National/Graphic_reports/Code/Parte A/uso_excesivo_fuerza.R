@@ -38,7 +38,7 @@ uso_fuerza_tiempo.fn <- function(
           proporcionalidad_uso_fuerza == 0 ~ 1,
           proporcionalidad_uso_fuerza == 1 ~ 0
         ),
-      counter = 1
+      counter = !is.na(proporcionalidad_uso_fuerza)
     ) %>%
     group_by(Anio_arresto) %>%
     summarise(
@@ -48,7 +48,7 @@ uso_fuerza_tiempo.fn <- function(
     mutate(value2plot = value2plot*100,
            label = paste0(format(round(value2plot, 0),
                                  nsmall = 0),
-                          "%"),
+                          "%, N =", n_obs),
            category = "uso_excesivo",
            year = as.numeric(Anio_arresto)
     )
@@ -114,17 +114,19 @@ controles_tipo.fn <- function(
 ){
   
   data_subset.df <- data.df %>%
-    mutate(
-      counter = 1,
-    ) %>%
     ungroup()%>%
     summarise(
-      control_contacto = mean(control_contacto, na.rm = T),
+      control_contactos = mean(control_contacto, na.rm = T),
       control_cooperativo = mean(controles_cooperativos, na.rm = T),
       control_sometimiento = mean(sometimiento, na.rm = T),
       control_defensivo = mean(tacticas_defensivas, na.rm = T),
       control_letal = mean(fuerza_letal, na.rm = T),
-      n_obs = sum(counter, na.rm = T)) %>%
+      n_obs_con = sum(!is.na(control_contacto), na.rm = T),
+      n_obs_coo = sum(!is.na(controles_cooperativos), na.rm = T),
+      n_obs_tac = sum(!is.na(tacticas_defensivas), na.rm = T),
+      n_obs_fue = sum(!is.na(fuerza_letal), na.rm = T),
+      n_obs_som = sum(!is.na(sometimiento), na.rm = T),
+      ) %>%
     ungroup() %>%
     distinct() %>%
     drop_na() %>%
@@ -134,21 +136,26 @@ controles_tipo.fn <- function(
   
   data2plot <- data_subset.df %>%
     mutate(
+      n_obs = case_when(category == "control_contactos" ~ n_obs_con,
+                        category == "control_cooperativo" ~ n_obs_coo,
+                        category == "control_defensivo" ~ n_obs_tac,
+                        category == "control_letal" ~ n_obs_fue,
+                        category == "control_sometimiento" ~ n_obs_som),
       value2plot = value2plot*100,
-      figure = paste0(round(value2plot,0), "%"),
+      figure = paste0(round(value2plot,0), "%, N = ", n_obs),
       labels = category,
       order_var = case_when(
         labels == "control_letal" ~ 1,
         labels == "control_defensivo" ~ 2,
         labels == "control_sometimiento" ~ 3,
-        labels == "control_contacto" ~ 4,
+        labels == "control_contactos" ~ 4,
         labels =="control_cooperativo" ~ 5,
         T ~ NA_real_),
       labels = case_when(
         labels == "control_letal" ~ "Fuerza <br>letal",
         labels == "control_defensivo" ~ "Tácticas <br>defensivas",
         labels == "control_sometimiento" ~ "Tácticas de <br>sometimiento",
-        labels == "control_contacto" ~ "Control mediamente <br>contacto",
+        labels == "control_contactos" ~ "Control mediamente <br>contacto",
         labels =="control_cooperativo" ~ "Controles <br>cooperativos",
         T ~ NA_character_)
     )
@@ -200,11 +207,13 @@ uso_fuerza_corporacion.fn <- function(
           Corporacion_grupos == "Policía Federal" ~ "Policía Federal / Guardia Nacional",
           Corporacion_grupos == "Guardia Nacional" ~ "Policía Federal / Guardia Nacional",
           T ~ Corporacion_grupos
-        )
+        ),
+      counter = !is.na(uso_excesivo)
     ) %>%
     group_by(Corporacion_grupos) %>%
     summarise(
-      value2plot = mean(uso_excesivo, na.rm = T)
+      value2plot = mean(uso_excesivo, na.rm = T),
+      n_obs = sum(counter, na.rm = T)
     ) %>%
     drop_na() %>%
     #filter(Corporacion_grupos != "Guardia Nacional") %>%
@@ -217,7 +226,7 @@ uso_fuerza_corporacion.fn <- function(
     mutate(
       order_var = -row_number(),
       value2plot = value2plot*100,
-      figure = paste0(round(value2plot, 0), "%"),
+      figure = paste0(round(value2plot, 0), "%, N = ", n_obs),
       labels = 
         case_when(
           group_var == "Ejército o Marina"  ~ "Ejército o Marina",
@@ -296,18 +305,38 @@ acciones_detencion.fn <- function(
                                        T ~ NA_real_),
            Acc_detencion_9 = case_when(P3_15_9 == 1 ~ 1,
                                        P3_15_9 == 0 ~ 0,
-                                       T ~ NA_real_)) %>% 
-    select(starts_with("Acc_"))
+                                       T ~ NA_real_),
+           counter_1 = !is.na(Acc_detencion_1),
+           counter_2 = !is.na(Acc_detencion_2),
+           counter_3 = !is.na(Acc_detencion_3),
+           counter_4 = !is.na(Acc_detencion_4),
+           counter_5 = !is.na(Acc_detencion_5),
+           counter_6 = !is.na(Acc_detencion_6),
+           counter_7 = !is.na(Acc_detencion_7),
+           counter_8 = !is.na(Acc_detencion_8),
+           counter_9 = !is.na(Acc_detencion_9)
+           ) %>% 
+    select(starts_with("Acc_"),starts_with("counter_"))
   
   
-  data2plot <- df %>%
-    pivot_longer(everything(), names_to = "Column", values_to = "Percentage") %>% 
+data2plot <- df %>%
+    pivot_longer(cols = starts_with("Acc_"), names_to = "Column", values_to = "Percentage") %>% 
     drop_na() %>% 
     group_by(Column) %>% 
-    summarise(across(everything(), ~ mean(. == 1, na.rm = TRUE) * 100)) %>% 
+    summarise(across(starts_with("Percentage"), ~ mean(. == 1, na.rm = TRUE) * 100),
+              across(starts_with("counter_"), ~ sum(., na.rm = TRUE)))  %>% 
     rename(values = Column, 
            value2plot = Percentage) %>% 
     mutate(
+      n_obs = case_when(values == "Acc_detencion_1" ~ counter_1,
+                        values == "Acc_detencion_2" ~ counter_2,
+                        values == "Acc_detencion_3" ~ counter_3,
+                        values == "Acc_detencion_4" ~ counter_4,
+                        values == "Acc_detencion_5" ~ counter_5,
+                        values == "Acc_detencion_6" ~ counter_6,
+                        values == "Acc_detencion_7" ~ counter_7,
+                        values == "Acc_detencion_8" ~ counter_8,
+                        values == "Acc_detencion_9" ~ counter_9),
       labels = case_when(values == "Acc_detencion_1"     ~ "Obedeció las órdenes de la autoridad que lo detuvo", 
                          values == "Acc_detencion_2"     ~ "Portaba alguna arma punzo cortante",
                          values == "Acc_detencion_3"   ~ "Portaba alguna arma de fuego",
@@ -317,7 +346,7 @@ acciones_detencion.fn <- function(
                          values == "Acc_detencion_7"   ~ "Trató de sobornar a la autoridad para evitar su detención", 
                          values == "Acc_detencion_8"   ~ "Trató de defenderse físicamente", 
                          values == "Acc_detencion_9"   ~ "Trató de escapar para que no lo detuvieran"),
-      figure = paste0(round(value2plot, 0), "%"),
+      figure = paste0(round(value2plot, 0), "%, N = ", n_obs),
       labels = str_wrap(labels, width = 40),
       order_var = rank(value2plot))
   
@@ -417,11 +446,13 @@ uso_fuerza_delito.fn <- function(
           Delito == "robo-vehiculo"   ~ "Robo de vehículo",
           Delito == "extorsion"       ~ "Extorsión",
           T ~ NA_character_
-        )
+        ),
+      counter = !is.na(uso_excesivo)
     ) %>%
     group_by(delitos_alto_impacto) %>%
     summarise(
-      value2plot = mean(uso_excesivo, na.rm = T)
+      value2plot = mean(uso_excesivo, na.rm = T),
+      n_obs = sum(counter, na.rm = T)
     ) %>%
     drop_na() %>%
     rename(group_var = delitos_alto_impacto) 
@@ -432,7 +463,7 @@ uso_fuerza_delito.fn <- function(
     mutate(
       order_var = -row_number(),
       value2plot = value2plot*100,
-      figure = paste0(round(value2plot, 0), "%"),
+      figure = paste0(round(value2plot, 0), "%, N = ", n_obs),
       labels = 
         case_when(
           group_var == "Homicidio doloso"              ~ "Homicidio doloso",

@@ -17,6 +17,28 @@
 ##
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+#funcion con n_obs
+
+index_setUp_edos.fn <- function(data = master_data.df,
+                                main_var){
+  
+  data_subset.df <- data %>%
+    rename(main_var = all_of(main_var)) %>%
+    group_by(main_var) %>%
+    summarise(counter = n()) %>%
+    drop_na %>%
+    mutate(
+      n_obs = sum(counter),
+      value2plot = counter / sum(counter),
+      value2plot = value2plot*100,
+      figure = paste0(round(value2plot,0), "%, N =", n_obs),
+      order_var = rank(main_var),
+      labelx =paste0(round(main_var*100,0), "%")
+    )  
+  
+}
+
+
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ##
 ## Indicador general barras                                             ----
@@ -29,7 +51,7 @@ indicador_general.fn <- function(
   
 ){
   
-  data2plot <- index_setUp.fn(data = data.df,
+  data2plot <- index_setUp_edos.fn(data = data.df,
                               main_var ="indicator_general") 
   
   
@@ -77,7 +99,7 @@ indicador_general_infografias.fn <- function(
     if (nrow(data_state) == 0) next
     
     # Prepare the data for plotting using the filtered data
-    data2plot <- index_setUp.fn(data = data_state,
+    data2plot <- index_setUp_edos.fn(data = data_state,
                                 main_var = "indicator_general")
     
     # Extract labels for plotting
@@ -367,7 +389,7 @@ indicador_proceso_justo.fn <- function(
   
 ){
   
-  data2plot <- index_setUp.fn(data = master_data.df,
+  data2plot <- index_setUp_edos.fn(data = master_data.df,
                               main_var ="indicator_PJ")
   
   etiquetas <- data2plot$labelx
@@ -407,7 +429,7 @@ indicador_uso_fuerza.fn <- function(
   
 ){
   
-  data2plot <- index_setUp.fn(data = master_data.df,
+  data2plot <- index_setUp_edos.fn(data = master_data.df,
                               main_var ="indicator_UAA")
   
   etiquetas <- data2plot$labelx
@@ -445,7 +467,7 @@ indicador_tortura.fn <- function(
   
 ){
   
-  data2plot <- index_setUp.fn(data = master_data.df,
+  data2plot <- index_setUp_edos.fn(data = master_data.df,
                               main_var ="indicator_GDH")
   
   
