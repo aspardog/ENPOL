@@ -71,7 +71,7 @@ señalados.fn <- function(
       xlim(c(2, 4)) +
       geom_text( x= 3.5,
                  aes(y    = value2plot -15, 
-                     label = figure), 
+                     label = paste0(figure, "\n"," N = ",Frequency)), 
                  # position = "stack",
                  color    = "white",
                  family   = "Lato Full",
@@ -81,7 +81,7 @@ señalados.fn <- function(
                    filter(!values %in% selected)) +
       geom_text( x= 3.5,
                  aes(y    = value2plot-15 , 
-                     label = figure), 
+                     label = paste0(figure, "\n"," N = ",Frequency)), 
                  # position = "stack",
                  color    = "white",
                  family   = "Lato Full",
@@ -172,7 +172,7 @@ señalamientos_condiciones.fn <- function(
       plt <- ggplot(data2plot, 
                     aes(x     = reorder(labels, order_var),
                         y     = value2plot,
-                        label = figure,
+                        label = paste0(figure, "\n"," N = "),
                         color = labels)) +
         geom_bar(stat = "identity", fill = colors4plot, color = colors4plot,
                  show.legend = F, width = 0.9) +

@@ -365,10 +365,8 @@ trato_diferenciado.fn <- function(){
     
     ggsave(plot = chart, 
            filename = paste0(
-             path2SP,
-             "/National/Visualization",
-             "/Output/Trato Diferenciado/",
-             savePath, "/",
+             path2SP, "National/Graphic_reports", 
+             "/Output/", savePath,"/Trato Diferenciado", "/",
              "/dotCharts", group_var, ".svg"), 
            width = 250, 
            height = 125,

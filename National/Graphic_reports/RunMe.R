@@ -149,7 +149,7 @@ for (i in Estados) {
                          recursive = FALSE, full.names = TRUE)
     
     # Borrar todas las subcarpetas dentro de "nacional"
-    sapply(subdirs, unlink, recursive = TRUE)
+    # sapply(subdirs, unlink, recursive = TRUE)
     
     dir.create(paste0(
       path2SP,
@@ -707,7 +707,7 @@ for (i in Estados) {
     
     'Detenciones tiempo'  = detenciones_temporal,
     'Detenciones estado'    = detenciones_estado,
-    'Detenciones fuero'     = delitos_fuero
+    'Detenciones tiempo'     = detencion_proceso_tiempo
     
     
     
