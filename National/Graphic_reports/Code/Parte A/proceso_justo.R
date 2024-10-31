@@ -156,9 +156,9 @@ informacion_detencion.fn <- function(
       detencion = mean(explicacion_detencion, na.rm = T),
       mp = mean(explicacion_mp, na.rm = T),
       juez = mean(explicacion_juez, na.rm = T),
-      n_obs_d      = sum(is.na(explicacion_detencion), na.rm = T),
-      n_obs_m      = sum(is.na(explicacion_mp), na.rm = T),
-      n_obs_j      = sum(is.na(explicacion_juez), na.rm = T)
+      n_obs_d      = sum(!is.na(explicacion_detencion), na.rm = T),
+      n_obs_m      = sum(!is.na(explicacion_mp), na.rm = T),
+      n_obs_j      = sum(!is.na(explicacion_juez), na.rm = T)
     ) %>%
     pivot_longer(cols = c(detencion, mp, juez), names_to = "category", values_to = "value2plot") %>%
     mutate(value2plot = value2plot*100,
@@ -262,10 +262,10 @@ claridad_actores.fn <- function(
       juez      = mean(claridad_juez, na.rm = T),
       defensor  = mean(claridad_defensor, na.rm = T),
       defendido = mean(claridad_defendido, na.rm = T),
-      n_obs_m      = sum(is.na(claridad_mp), na.rm = T),
-      n_obs_j      = sum(is.na(claridad_juez), na.rm = T),
-      n_obs_d1      = sum(is.na(claridad_defensor), na.rm = T),
-      n_obs_d2      = sum(is.na(claridad_defendido), na.rm = T)
+      n_obs_m      = sum(!is.na(claridad_mp), na.rm = T),
+      n_obs_j      = sum(!is.na(claridad_juez), na.rm = T),
+      n_obs_d1      = sum(!is.na(claridad_defensor), na.rm = T),
+      n_obs_d2      = sum(!is.na(claridad_defendido), na.rm = T)
     ) %>%
     pivot_longer(cols = c(mp, juez, defensor, defendido), names_to = "category", values_to = "value2plot") %>%
     mutate(value2plot = value2plot*100,
