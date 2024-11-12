@@ -367,9 +367,8 @@ lugar_traslado.fn <- function(
   
   ggsave(plot = plot, 
          filename = paste0(path2SP,
-                           "/National/Visualization",
-                           "/Output/Debido proceso/",
-                           savePath,"/Detenciones",
+                           "/National/Graphic_reports",
+                           "/Output/", savePath,"/Debido proceso", "/Detenciones",
                            "/lugar_traslado.svg"),
          width = 189.7883,
          height = 85,
@@ -479,9 +478,8 @@ lugar_traslado_nueva.fn <- function(
   
   ggsave(plot = chart, 
          filename = paste0(path2SP,
-                           "/National/Visualization",
-                           "/Output/Debido proceso/",
-                           savePath,"/Detenciones",
+                           "/National/Graphic_reports",
+                           "/Output/", savePath,"/Debido proceso","/Detenciones",
                            "/lugar_traslado_serie.svg"),
          width = 189.7883,
          height = 100,

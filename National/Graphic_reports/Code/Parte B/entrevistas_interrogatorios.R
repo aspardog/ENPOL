@@ -54,7 +54,8 @@ data2plot <- df %>%
   pivot_longer(everything(), names_to = "Column", values_to = "Percentage") %>% 
   drop_na() %>% 
   group_by(Column) %>% 
-  summarise(across(everything(), ~ mean(. == 1, na.rm = TRUE) * 100)) %>% 
+  summarise(across(everything(), ~ mean(. == 1, na.rm = TRUE) * 100),
+            N = sum(!is.na(Column))) %>% 
   rename(values = Column, 
          value2plot = Percentage) %>% 
   mutate(
@@ -71,7 +72,7 @@ colors4plot <- rep("#2a2a94", length(data2plot$value2plot))
 plt <- ggplot(data2plot, 
               aes(x     = reorder(labels, order_var),
                   y     = value2plot,
-                  label = figure,
+                  label = paste0(figure, "\n"," N = ",N),
                   color = labels)) +
   geom_bar(stat = "identity", fill = colors4plot, color = colors4plot,
            show.legend = F, width = 0.9) +
@@ -172,7 +173,8 @@ data2plot <- df %>%
   pivot_longer(everything(), names_to = "Column", values_to = "Percentage") %>% 
   drop_na() %>% 
   group_by(Column) %>% 
-  summarise(across(everything(), ~ mean(. == 1, na.rm = TRUE) * 100)) %>% 
+  summarise(across(everything(), ~ mean(. == 1, na.rm = TRUE) * 100),
+            N = sum(!is.na(Column))) %>% 
   rename(values = Column, 
          value2plot = Percentage) %>% 
   mutate(
@@ -194,7 +196,7 @@ colors4plot <- rep("#2a2a94", length(data2plot$value2plot))
 plt <- ggplot(data2plot, 
               aes(x     = reorder(labels, order_var),
                   y     = value2plot,
-                  label = figure,
+                  label = paste0(figure, "\n"," N = ",N),
                   color = labels)) +
   geom_bar(stat = "identity", fill = colors4plot, color = colors4plot,
            show.legend = F, width = 0.9) +
@@ -302,7 +304,7 @@ colors4plot <- c("Ministerio \nPúblico"              = "#F43152",
 plot <- ggplot(data2plot,
                aes(x    = category,
                    y     = value2plot,
-                   label = figure, 
+                   label = paste0(figure, "\n"," N = ", Frequency), 
                    fill = values)) +
   geom_bar(stat = "identity",
            show.legend = FALSE, width = 0.9) +
@@ -457,8 +459,8 @@ plot <- ggplot(data2plot,
                  x     = category,
                  y     = value2plot,
                  fill  = values,
-                 label = figure
-               )) +
+                 label = paste0(figure, "\n"," N = ", Frequency)
+                 )) +
   geom_bar(stat = "identity",
            show.legend = FALSE, width = 0.9, position = "stack")+
   geom_text(aes(y    = value2plot), 
@@ -488,9 +490,8 @@ plot <- ggplot(data2plot,
 
 
 ggsave(plot   = plot,
-       file   = paste0(path2SP,"/National/Visualization",
-                       "/Output/Politica criminal/",
-                       savePath,"/Entrevistas/Figure3_4.svg"), 
+       file   = paste0(path2SP, "National/Graphic_reports", 
+                       "/Output/", savePath, "/Politica Criminal", "/Entrevistas/Figure3_4.svg"), 
        width  = 189.7883, 
        height = 65,
        units  = "mm",
@@ -542,7 +543,8 @@ data2plot <- Main_database_2008 %>%
   select(tortura_mp, identifica_culpable, declaro_culpable) %>% 
   group_by(tortura_mp, identifica_culpable) %>%
   drop_na() %>% 
-  summarise(Percentage = mean(declaro_culpable, na.rm = T)) %>% 
+  summarise(Percentage = mean(declaro_culpable, na.rm = T),
+            N = sum(!is.na(identifica_culpable))) %>% 
   group_by(identifica_culpable) %>% 
   rename(category = identifica_culpable, 
          values = tortura_mp) %>% 
@@ -560,7 +562,7 @@ plot <- ggplot(data2plot,
                  x     = labels, 
                  y     = value2plot,
                  fill  = category,
-                 label = figure
+                 label = paste0(figure, "\n"," N = ",N)
                )) +
   geom_bar(stat = "identity",
            show.legend = FALSE, width = 0.9, position = "dodge")+

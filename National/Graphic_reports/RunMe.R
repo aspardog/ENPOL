@@ -130,6 +130,7 @@ for (i in Estados) {
     
   } else {
     
+    
     master_data.df <- Main_database %>% 
       filter(Estado_arresto == i) %>%
       filter(Anio_arresto >= as.numeric(2015)) %>% 
@@ -149,8 +150,21 @@ for (i in Estados) {
                          recursive = FALSE, full.names = TRUE)
     
     # Borrar todas las subcarpetas dentro de "nacional"
-    # sapply(subdirs, unlink, recursive = TRUE)
+     sapply(D, unlink, recursive = TRUE)
     
+     # Definir la ruta al directorio "nacional"
+     nacional_dir <- paste0(
+       path2SP, "National/Graphic_reports", 
+       "/Output/", savePath, "/Politica Criminal/"
+     )
+     
+     # Listar todas las subcarpetas dentro de "nacional"
+     D <- list.dirs(nacional_dir, 
+                    recursive = FALSE, full.names = TRUE)
+     
+     # Borrar todas las subcarpetas dentro de "nacional"
+     sapply(D, unlink, recursive = TRUE)
+     
     dir.create(paste0(
       path2SP,
       "/National/Graphic_reports",
@@ -707,7 +721,7 @@ for (i in Estados) {
     
     'Detenciones tiempo'  = detenciones_temporal,
     'Detenciones estado'    = detenciones_estado,
-    'Detenciones tiempo'     = detencion_proceso_tiempo
+    'Detenciones proceso tiempo'     = detencion_proceso_tiempo
     
     
     

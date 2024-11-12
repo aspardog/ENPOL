@@ -143,7 +143,8 @@ data2plot <- data_subset.df %>%
   pivot_longer(everything(), names_to = "Column", values_to = "Percentage") %>% 
   drop_na() %>% 
   group_by(Column) %>% 
-  summarise(across(everything(), ~ mean(. == 1, na.rm = TRUE) * 100)) %>% 
+  summarise(across(everything(), ~ mean(. == 1, na.rm = TRUE) * 100),
+            N = sum(!is.na(Column))) %>% 
   rename(values = Column, 
          value2plot = Percentage)%>% 
   mutate(
@@ -162,7 +163,7 @@ colors4plot <- rep("#2a2a9A", length(data2plot$value2plot))
 plt <- ggplot(data2plot, 
               aes(x     = reorder(labels, order_var),
                   y     = value2plot,
-                  label = paste0(figure, "\n"," N = ",Frequency),
+                  label = paste0(figure, "\n"," N = ", N),
                   color = Delito)) +
   geom_bar(stat = "identity", fill = colors4plot, color = colors4plot,
            show.legend = F, width = 0.9) +
@@ -203,6 +204,7 @@ ggsave(plot   = plt,
        units  = "mm",
        dpi    = 72,
        device = "svg")
+
 
 return(data2plot)
 }

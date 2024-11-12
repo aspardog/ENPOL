@@ -179,7 +179,7 @@ corrupcion_elementos.fn <- function(
     pivot_longer(cols = everything(), 
                  names_to = "group_var", 
                  values_to = "value2plot") %>%
-    mutate(counter = counter = !is.na(value2plot)) %>%
+    mutate(counter = !is.na(value2plot)) %>%
     group_by(group_var) %>%
     summarise(
       value2plot = mean(value2plot, na.rm = T),

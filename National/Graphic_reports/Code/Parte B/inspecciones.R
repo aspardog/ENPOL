@@ -72,7 +72,7 @@ encontro_objeto.fn <- function(
     xlim(c(2, 4)) +
     geom_text( x= 3.5,
                aes(y    = value2plot -15, 
-                   label = figure), 
+                   label = paste0(figure, "\n"," N = ",Frequency)), 
                # position = "stack",
                color    = "white",
                family   = "Lato Full",
@@ -148,7 +148,8 @@ inspecciones_comportamiento.fn <- function(
       pivot_longer(everything(), names_to = "Column", values_to = "Percentage") %>% 
       drop_na() %>% 
       group_by(Column) %>% 
-      summarise(across(everything(), ~ mean(. == 1, na.rm = TRUE) * 100)) %>% 
+      summarise(across(everything(), ~ mean(. == 1, na.rm = TRUE) * 100),
+                N = sum(!is.na(Column))) %>% 
       rename(values = Column, 
              value2plot = Percentage) %>% 
       mutate(
@@ -165,7 +166,7 @@ inspecciones_comportamiento.fn <- function(
     plt <- ggplot(data2plot, 
                   aes(x     = reorder(labels, order_var),
                       y     = value2plot,
-                      label = figure,
+                      label = paste0(figure, "\n"," Nt = ",N),
                       color = labels)) +
       geom_bar(stat = "identity", fill = colors4plot, color = colors4plot,
                show.legend = F, width = 0.9) +

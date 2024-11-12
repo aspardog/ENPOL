@@ -633,7 +633,8 @@ tipo_prueba_da.fn <- function(){
     select(delitos_alto_impacto, prueba_confesion, prueba_declaraciones, prueba_fisicas) %>% 
     pivot_longer(cols = c(prueba_confesion, prueba_declaraciones, prueba_fisicas), names_to = "tipo_prueba", values_to = "value2plot") %>%
     group_by(tipo_prueba, delitos_alto_impacto) %>%
-    summarise(value2plot = mean(value2plot, na.rm = T)*100) %>%
+    summarise(value2plot = mean(value2plot, na.rm = T)*100,
+              N = sum(!is.na(delitos_alto_impacto))) %>%
     drop_na() %>% 
     rename(values = tipo_prueba) %>% 
     mutate(figure = paste0(round(value2plot, 0), "%"),
@@ -682,7 +683,7 @@ tipo_prueba_da.fn <- function(){
   plot <- ggplot(data2plot,
                  aes(x    = reorder(labels, -order_values),
                      y     = value2plot,
-                     label = paste0(figure, "\n"," N = ",Frequency),
+                     label = paste0(figure, "\n"," N = ", N),
                      fill  = category)) +
     geom_bar(stat = "identity",
              show.legend = FALSE, width = 0.9)+

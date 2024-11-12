@@ -55,7 +55,8 @@ delitos_fuero.fn <- function(
              order_var = rank(Value), 
              labels = case_when(labels == "Algunos delitos de fuero común\ny algunos de fuero federal" ~ "Ambos fueros",
                                 labels == "Sólo común" ~ "Sólo fuero común",
-                                labels == "Sólo federal" ~ "Sólo fuero federal ")) %>%
+                                labels == "Sólo federal" ~ "Sólo fuero federal ")) 
+    #%>%
       # mutate(
       #   figure = if_else(Value %in% "Algunos delitos de fuero común y algunos de fuero federal", 
       #                    "3%", 
@@ -69,7 +70,7 @@ delitos_fuero.fn <- function(
     plt <- data2plot %>%  
           ggplot(aes(x     = reorder(labels, order_var),
                       y     = value2plot,
-                      label = figure,
+                      label = paste0(figure, "\n"," N = ",Frequency),
                       fill  = labels)) +
       geom_bar(stat = "identity",
                show.legend = FALSE, width = 0.9) +
@@ -153,7 +154,7 @@ delitos_fuero.fn <- function(
   plt <- data2plot %>%  
     ggplot(aes(x     = reorder(labels, order_var),
                y     = value2plot,
-               label = figure,
+               label = paste0(figure, "\n"," N = ",Frequency),
                fill  = labels)) +
     geom_bar(stat = "identity",
              show.legend = FALSE, width = 0.9) +
@@ -500,7 +501,7 @@ delitos_federales_bar.fn <- function(
   plt <- ggplot(data2table, 
                 aes(x     = Anio_arresto,
                     y     = value2plot,
-                    label = labels,
+                    label = paste0(figure, "\n"," N = ",Frequency),
                     group = group_var,
                     color = group_var)) +
     geom_point(size = 2,

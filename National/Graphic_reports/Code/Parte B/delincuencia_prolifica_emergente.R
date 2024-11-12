@@ -78,20 +78,21 @@ reincidentes.fn <- function(
           mutate(
             value2plot = Frequency / sum(Frequency) * 100,
             figure = paste0(round(value2plot, 0), "%"),
-            labels = str_wrap(values, width = 20),
-            ymin = c(0, head(value2plot, -1))) %>% 
-          mutate(value2plot= case_when(values == "Distinto delito" ~ 7,
-                                 T ~ value2plot ),
-                  ymin= case_when(values == "Mismo delito" ~ 7,
-                                  values == "No reincidentes" ~ 8.77,
-                                        T ~ ymin ),
-                  figure = case_when(values == "Distinto delito" ~ "7%",
-                                     T ~ figure))
-           # %>%
-           # arrange(desc(value2plot)) 
-           # 
+            labels = str_wrap(values, width = 20)) %>% 
+          arrange(value2plot) %>% 
+          mutate(  ymin = c(0, head(value2plot, -1)))  
+          # %>% 
+          #  mutate(value2plot= case_when(values == "Distinto delito" ~ 7,
+          #                         T ~ value2plot ),
+          #          ymin= case_when(values == "Mismo delito" ~ ,
+          #                          values == "Distinto delito" ~ ,
+          #                          values == "No reincidentes" ~ ,
+          #                                T ~ ymin ),
+          #          figure = case_when(values == "Distinto delito" ~ "7%",
+          #                             T ~ figure)) 
+            
         
-        colors4plot <- c("Mismo delito" = "#2a2a9A", 
+      colors4plot <- c("Mismo delito" = "#2a2a9A", 
                          "No reincidentes" = "#a90099", 
                          "Distinto delito" = "#3273ff")
         
@@ -107,9 +108,9 @@ reincidentes.fn <- function(
           geom_rect( ) +
           coord_polar(theta="y") + 
           xlim(c(2, 4)) +
-          geom_text( x= 3.5,
-                     aes(y    = value2plot -1, 
-                         label = paste0(figure, "\n"," N = ",Frequency)), 
+          geom_text_repel( x= 3.5,
+                     aes(y    = value2plot -1.5, 
+                         label = paste0(figure, "\n"," N=",Frequency)), 
                      #position = "stack",
                      color    = "white",
                      family   = "Lato Full",

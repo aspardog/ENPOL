@@ -78,7 +78,7 @@ tortura_tiempo.fn <- function(
                          sec.ticks      = sec.ticks)
   
   ggsave(plot = chart, 
-         filename = paste0(ppath2SP,
+         filename = paste0(path2SP,
                            "/National/Graphic_reports",
                            "/Output/", savePath, "/Debido proceso","/Tortura",
                            "/tortura_tiempo.svg"),

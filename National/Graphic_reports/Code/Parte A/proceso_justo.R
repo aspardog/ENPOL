@@ -376,6 +376,7 @@ defensa_oportuna.fn <- function(
                             DOMP == 1 ~ "Sí",
                             DOMP == 0 ~ "No"),
       labels = category,
+      #figure = round(value2plot, 0),
       figure = paste0(round(value2plot, 0), ", N =", n_obs),
       order_var = case_when(category ==  "Defensa en Ministerio Público" ~ 2,
                             category == "Defensa con Juez"               ~ 1,

@@ -33,11 +33,11 @@
 
 pruebas_pp.fn <- function(
     
-  datas.df = master_data.df
+  data.df = master_data.df
   
   ) {
 
-Main_database_2008 <- datas.df %>% 
+Main_database_2008 <- data.df %>% 
   filter(Anio_arresto >= 2008,
          NSJP == 1) %>% 
   mutate( prueba_confesion = case_when(P5_15_01 == 1 ~ 1,
@@ -82,7 +82,8 @@ data2plot <- Main_database_2008 %>%
   select(prueba_confesion, prueba_declaraciones, prueba_fisicas) %>% 
   pivot_longer(cols = c(prueba_confesion, prueba_declaraciones, prueba_fisicas), names_to = "tipo_prueba", values_to = "value2plot") %>%
   group_by(tipo_prueba) %>%
-  summarise(value2plot = mean(value2plot, na.rm = T)) %>%
+  summarise(value2plot = mean(value2plot, na.rm = T),
+            N = sum(!is.na(tipo_prueba))) %>%
   drop_na() %>% 
   rename(values = tipo_prueba) %>% 
   mutate(figure = paste0(round(value2plot*100, 0), "%"),
@@ -107,7 +108,7 @@ plot <- ggplot(data2plot,
                  x     = labels, 
                  y     = value2plot,
                 fill  = labels,
-                 label = paste0(figure, "\n"," N = ",Frequency)
+                 label = paste0(figure, "\n"," N = ", N)
                )) +
   geom_bar(stat = "identity",
            show.legend = FALSE, width = 0.9, position = "dodge")+
@@ -217,7 +218,8 @@ data2plot <- Main_database_2008 %>%
   select(juicio_abreviado, prueba_confesion, prueba_declaraciones, prueba_fisicas) %>% 
   pivot_longer(cols = c(prueba_confesion, prueba_declaraciones, prueba_fisicas), names_to = "tipo_prueba", values_to = "value2plot") %>%
   group_by(juicio_abreviado, tipo_prueba) %>%
-  summarise(value2plot = mean(value2plot, na.rm = T)) %>%
+  summarise(value2plot = mean(value2plot, na.rm = T),
+            N = sum(!is.na(juicio_abreviado))) %>%
   drop_na() %>% 
   rename(values = tipo_prueba, 
          category = juicio_abreviado) %>% 
@@ -235,7 +237,7 @@ plot <- ggplot(data2plot,
                  x     = category, 
                  y     = value2plot,
                  fill  = labels,
-                 label = figure
+                 label = paste0(figure, "\n"," Nt = ",N)
                )) +
   geom_bar(stat = "identity",
            show.legend = FALSE, width = 0.9, position = "dodge")+
@@ -334,7 +336,8 @@ pruebas_conclusion_general.fn <- function(
     select(prueba_confesion, prueba_declaraciones, prueba_fisicas) %>% 
     pivot_longer(cols = c(prueba_confesion, prueba_declaraciones, prueba_fisicas), names_to = "tipo_prueba", values_to = "value2plot") %>%
     group_by(tipo_prueba) %>%
-    summarise(value2plot = mean(value2plot, na.rm = T)*100) %>%
+    summarise(value2plot = mean(value2plot, na.rm = T)*100,
+              N = sum(!is.na(tipo_prueba))) %>%
     drop_na() %>% 
     rename(values = tipo_prueba) %>% 
     mutate(figure = paste0(round(value2plot, 0), "%"),
