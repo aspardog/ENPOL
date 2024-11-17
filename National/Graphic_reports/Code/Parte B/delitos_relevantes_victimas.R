@@ -42,7 +42,7 @@ delitos_ENPOL.fn <- function(
     "Lesiones",
     "Homicidio culposo",
     "Homicidio doloso",
-    "Portación ilegal de armas",
+    # "Portación ilegal de armas",
     "Incumplimiento de obligaciones de asistencia familiar",
     "Violencia familiar",
     "Daño a la propiedad",
@@ -111,10 +111,10 @@ delitos_ENPOL.fn <- function(
         case_when(
           P5_11_12 == 1 ~ 1
         ),
-      `Portación ilegal de armas` =
-        case_when(
-          P5_11_13 == 1 ~ 1
-        ),
+      # `Portación ilegal de armas` =
+      #   case_when(
+      #     P5_11_13 == 1 ~ 1
+      #   ),
       `Incumplimiento de obligaciones de asistencia familiar` =
         case_when(
           P5_11_14 == 1 ~ 1
@@ -196,7 +196,8 @@ delitos_ENPOL.fn <- function(
   plt <- ggplot(data2plot, 
                 aes(x     = Delito,
                     y     = value2plot,
-                    label = paste0(labels,", N = ",n),
+                    label = paste0(labels),
+                    # label = paste0(labels,", N = ",n),
                     group = Delito,
                     color = Delito,
                     fill  = Delito)) +  # Añadido fill para asegurar coincidencia
@@ -233,7 +234,7 @@ delitos_ENPOL.fn <- function(
            path2SP, "National/Graphic_reports", 
            "/Output/", savePath, "/Politica Criminal",
            "/Delitos victimas",
-           "/Figure1_1.svg"),
+           "/Figure1_1_1.svg"),
          width  = 180, 
          height = 180,
          units  = "mm",

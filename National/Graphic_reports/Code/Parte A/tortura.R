@@ -174,7 +174,9 @@ tortura_RND.fn <- function(
           category == "tortura_psicologica" ~ "Tortura <br>psicológica",
           category == "tortura_ambas" ~ "Ambas"
         ),
-      figure = paste0(round(value2plot, 0),", N = ", n_obs),
+      figure = paste0(round(value2plot, 0)
+                      # ,", N = ", n_obs
+                      ),
       order_var = case_when(
         labels == "Ambas" ~ 3,
         labels == "Tortura física" ~ 2,
@@ -203,7 +205,7 @@ tortura_RND.fn <- function(
          filename = paste0(path2SP,
                            "/National/Graphic_reports",
                            "/Output/", savePath, "/Debido proceso","/Tortura",
-                           "/tortura_RND.svg"),
+                           "/tortura_RND_1.svg"),
          width = 189.7883,
          height = 105,
          units  = "mm",

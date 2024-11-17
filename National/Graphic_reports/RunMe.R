@@ -132,7 +132,7 @@ for (i in Estados) {
     
     
     master_data.df <- Main_database %>% 
-      filter(Estado_arresto == i) %>%
+      filter(P3_3 == i) %>%
       filter(Anio_arresto >= as.numeric(2015)) %>% 
       filter(NSJP == 1) %>% 
       filter(fuero == "Sólo común")

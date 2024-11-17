@@ -110,7 +110,8 @@ reincidentes.fn <- function(
           xlim(c(2, 4)) +
           geom_text_repel( x= 3.5,
                      aes(y    = value2plot -1.5, 
-                         label = paste0(figure, "\n"," N=",Frequency)), 
+                         # label = paste0(figure, "\n"," N=",Frequency)
+                         label = paste0(figure)), 
                      #position = "stack",
                      color    = "white",
                      family   = "Lato Full",
@@ -120,7 +121,8 @@ reincidentes.fn <- function(
                        filter(!values %in% selected)) +
           geom_text( x= 3.4,
                      aes(y    = value2plot -30, 
-                         label = paste0(figure, "\n"," N = ",Frequency)), 
+                         # label = paste0(figure, "\n"," N = ",Frequency)
+                         label = paste0(figure)), 
                      #position = "stack",
                      color    = "white",
                      family   = "Lato Full",
@@ -146,7 +148,7 @@ reincidentes.fn <- function(
         ggsave(plot   = plot,
                file   = paste0(path2SP, "National/Graphic_reports", 
                                "/Output/", savePath, "/Politica Criminal",
-                               "/Delincuencia prolifica/Figure2_1.svg"), 
+                               "/Delincuencia prolifica/Figure2_1_1.svg"), 
                width  = 189.7883, 
                height = 70,
                units  = "mm",
