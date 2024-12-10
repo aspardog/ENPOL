@@ -17,9 +17,18 @@
 ## +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
+> # Loading data
+  > load(paste0(path2SP,
+                +             "/National/Data_cleaning/Output/Main_database.RData"))
+
 library(stargazer)
 
+base <- Main_database %>% 
+filter(Anio_arresto >= as.numeric(2015)) %>% 
+  filter(NSJP == 1) 
+
 # Sociodemograficos
+
 
 Main_database %>% 
   mutate(
@@ -27,8 +36,10 @@ Main_database %>%
       Educacion_superior == 1 ~ 0,
       Educacion_superior == 0 ~ 1,
       TRUE ~ NA_real_
-    )) %>%
-  select(Sexo, Educacion_inferior, Color_piel_oscuro, LGBTQ, Etnia, 
+    ),
+    Mujer = case_when(Sexo == "Femenino" ~ 1,
+                      Sexo == "Masculino" ~ 0)) %>%
+  select(Mujer, Educacion_inferior, Color_piel_oscuro, LGBTQ, Etnia, 
          vulnerabilidad_economica, Edad, discapacidad) %>%
   stargazer(as.data.frame(.),type = "text")
 
@@ -38,8 +49,10 @@ base %>%
       Educacion_superior == 1 ~ 0,
       Educacion_superior == 0 ~ 1,
       TRUE ~ NA_real_
-    )) %>%
-  select(Sexo, Educacion_inferior, Color_piel_oscuro, LGBTQ, Etnia, 
+    ),
+    Mujer = case_when(Sexo == "Femenino" ~ 1,
+                       Sexo == "Masculino" ~ 0)) %>%
+  select(Mujer, Educacion_inferior, Color_piel_oscuro, LGBTQ, Etnia, 
          vulnerabilidad_economica, Edad, discapacidad) %>%
   stargazer(as.data.frame(.),type = "text")
 
