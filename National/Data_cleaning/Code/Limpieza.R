@@ -4768,7 +4768,7 @@ Main_database %<>%
                      P3_3 == "97" ~ NA_character_ ,
                      P3_3 == "99" ~ NA_character_ ,
                      T ~ NA_character_),
-
+    Estado_detencion = P3_3,
     # Color de piel
     Color_piel_1 = case_when(P10_10 == "A" ~ 1 ,
                            P10_10 == "B" ~ 2 ,
